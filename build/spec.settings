@@ -1,0 +1,19 @@
+%packager mattias@ryrlen.org
+%product HlstatsX Community Edition (HLX:CE)
+%vendor HLX:CE
+%version 1.6.1
+%release hlx.1
+%copyright GPLv2
+%readme ../CHANGELOG.txt
+%license ../LICENSE
+%description HlstatsX Community Edition, log gathering tool for various fps games
+%description with a webgui for presentation. http://www.hlxcommunity.com
+
+$prefix=/usr/local/games/hlstatsx
+%postinstall echo "==================================================================================="
+%postinstall echo "== please run $prefix/setup.sh to configure your installation. =="
+%postinstall echo "==                                                                               =="
+%postinstall echo "== for more information on directories and files run \"man hlstatsx\"              =="
+%postinstall echo "==================================================================================="
+
+d 775 root root $prefix -
