@@ -1158,7 +1158,7 @@ sub messageAll
 
 			foreach $player (values(%{$self->{srv_players}}))
 			{
-				if (($player->{is_bot} == 0) && ($player->{userid} > 0) && ($player->{playerid} != $noshow) && ($player->{display_events} == 1 || $force == 1)))
+				if (($player->{is_bot} == 0) && ($player->{userid} > 0) && ($player->{playerid} != $noshow) && ($player->{display_events} == 1 || $force == 1))
 				{
 					push(@userlist, $player->{userid});
 				}
