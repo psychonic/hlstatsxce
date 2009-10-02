@@ -1149,7 +1149,8 @@ $metro_code, $area_code) = $::g_gi->get_city_record($server_ip);
 sub messageAll
 {
 	my($self, $msg, $noshow, $force) = @_;
-	if ($self->{public_commands} == 1 || $force == 1)
+	
+	if ($self->{broadcasting_events} == 1)
 	{
 		if ($self->{mod} eq "SOURCEMOD" || $self->{mod} eq "AMXX")
 		{
@@ -1157,7 +1158,7 @@ sub messageAll
 
 			foreach $player (values(%{$self->{srv_players}}))
 			{
-				if (($player->{is_bot} == 0) && ($player->{userid} > 0) && ($player->{playerid} != $noshow))
+				if (($player->{is_bot} == 0) && ($player->{userid} > 0) && ($player->{playerid} != $noshow) && ($player->{display_events} == 1 || $force == 1)))
 				{
 					push(@userlist, $player->{userid});
 				}
