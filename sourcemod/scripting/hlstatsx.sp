@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.1"
+#define VERSION "1.6.2-pre1"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -1514,7 +1514,7 @@ public Action:hlx_block_commands(client, args)
 							LogPlayerEvent(client, command_type, origin_command);
 						}
 					}
-					return Plugin_Handled;
+					return Plugin_Stop;
 				}
 				else
 				{
