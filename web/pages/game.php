@@ -278,49 +278,28 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<div class="opener">
 					<?php printserverstats($server_id); ?>
 					<div class="subblock">
-		<table class="data-table">
-			<tr class="data-table-head">
-				<td class="fSmall">&nbsp;24h View</td>
-			</tr>
-			<tr class="data-table-head">
-				<td style="text-align:center;">
-					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=1" alt="24h View" title="24h View" />
-				</td>
-			</tr>
-		</table>
-		<br /><br />
-		<table class="data-table">
-			<tr class="data-table-head">
-				<td class="fSmall">&nbsp;Last Week</td>
-			</tr>
-			<tr class="data-table-head">
-				<td style="text-align:center;">
-					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=2" alt="Last Week" title="Last Week" />
-				</td>
-			</tr>
-		</table>
-		<br /><br />
-		<table class="data-table">
-			<tr class="data-table-head">
-				<td class="fSmall">&nbsp;Last Month</td>
-			</tr>
-			<tr class="data-table-head">
-				<td style="text-align:center;">
-					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=3" alt="Last Month" title="Last Month" />
-				</td>
-			</tr>
-		</table>
-		<br /><br />
-		<table class="data-table">
-			<tr class="data-table-head">
-				<td class="fSmall">&nbsp;Last Year</td>
-			</tr>
-			<tr class="data-table-head">
-				<td style="text-align:center;">
-					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=4" alt="Last Year" title="Last Year" />
-				</td>
-			</tr>
-		</table>
+<?php
+				$range_arr = array(1=>"24h View", 2=>"Last Week", 3=>"Last Month", 4=>"Last Year");
+				foreach($range_arr as $range_code => $range_name) {
+					print('<table class="data-table"><tr class="data-table-head">');
+					print('<td class="fSmall">&nbsp;'.$range_name.'</td></tr>');
+					print('<tr class="data-table-head"><td style="text-align:center;">');
+					print('<img ');
+					if(!$_SESSION['nojs']) {
+						/* Javascript is on, so delay loading the image, 
+							until the accordion code is called below.  We do this
+							by setting src to a static image, and storing the 'real' image
+							URL in delaysrc. */
+						print('src="hlstatsimg/graph/trendgraph1.png" height=200  delay');
+					}
+					
+					print('src="show_graph.php?type=0&amp;width=870&amp;height=200&amp;'.
+						'game='.$game.'&amp;server_id='.$server_id.'&amp;'.
+						'bgcolor='.$g_options['graphbg_load'].'&amp;color='.$g_options['graphtxt_load'].
+						'&amp;range='.$range_code.'" alt="'.$range_name.'" title="'.$range_name.'" />');
+					print('</td></tr>	</table><br /><br />');					
+				}
+?>
 	</div>
 				</div>
 			</td>
@@ -339,6 +318,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 			alwaysHide: true,
 			onActive: function(toggler, element){
 				toggler.setStyle('color', '#ff3300');
+				/* here we set the 'src' attribute properly, 
+					so that the images load once the accordion is opened */
+				element.getElements('img').each(function(el) {
+					el.set('src', el.get('delaysrc'));
+				});
 			},
 			onBackground: function(toggler, element){
 				toggler.setStyle('color', '#222');
