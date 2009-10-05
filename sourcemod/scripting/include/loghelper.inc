@@ -1,3 +1,6 @@
+#include <sourcemod>
+#include <sdktools>
+
 new String: g_team_list[16][64];
 
 // Call this on map start to cache team names in g_team_list

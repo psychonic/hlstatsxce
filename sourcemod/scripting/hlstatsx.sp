@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2-pre1"
+#define VERSION "1.6.2-pre2"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -1372,10 +1372,8 @@ public Action:hlx_sm_player_action(args)
 	GetCmdArg(2, player_action, sizeof(player_action));
 
 	new client = StringToInt(client_id);
-	if (client > 0)
-	{
-		LogPlayerEvent(client, "triggered", player_action);
-	}
+
+	LogPlayerEvent(client, "triggered", player_action);
 
 	return Plugin_Handled;
 }
@@ -1691,10 +1689,7 @@ public CreateHLstatsXMenuEvents(&Handle: MenuHandle)
 
 make_player_command(client, String: player_command[192]) 
 {
-	if (client > 0)
-	{
-		LogPlayerEvent(client, "say", player_command);
-	}
+	LogPlayerEvent(client, "say", player_command);
 }
 
 
