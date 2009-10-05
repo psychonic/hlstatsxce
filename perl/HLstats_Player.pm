@@ -919,6 +919,12 @@ sub getRank
 	
 	if ($::g_ranktype ne "kills")
 	{
+		if (!defined($self->{skill}))
+		{
+			&::printEvent("ERROR","Attempted to get rank for uninitialized player \"".$self->{name}."\"");
+			return 0;
+		}
+		
 		my $rankresult = &::doQuery("
 			SELECT
 				COUNT(*)
