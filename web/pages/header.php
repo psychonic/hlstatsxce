@@ -72,6 +72,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 	<link rel="stylesheet" type="text/css" href="hlstats.css" />
 	<link rel="stylesheet" type="text/css" href="styles/<?php echo $selectedStyle; ?>" />
 	<link rel="stylesheet" type="text/css" href="css/SqueezeBox.css" />
