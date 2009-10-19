@@ -544,7 +544,7 @@ class TableColumn
 		{
 			if (isset($$a))
 			{
-				$this->$a = $$a;
+				$this->$a = mystripslashes($$a);
 			}
 		}
 		$this->fname = $fname;
