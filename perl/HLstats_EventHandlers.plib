@@ -736,7 +736,7 @@ sub doEvent_Suicide
 			}
 			$player->{kills_per_life}=0;
 			
-			if ($g_servers{$s_addr}->{play_game} eq "tf" && defined($properties{customkill}))
+			if ($g_servers{$s_addr}->{play_game} eq "tf" && defined($properties{customkill})) {
 				if ($properties{customkill} eq "train") {
 					&doEvent_PlayerAction(
 						$player->{userid},
