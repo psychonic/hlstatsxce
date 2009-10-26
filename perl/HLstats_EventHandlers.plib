@@ -736,15 +736,26 @@ sub doEvent_Suicide
 			}
 			$player->{kills_per_life}=0;
 			
-			if ($g_servers{$s_addr}->{play_game} eq "tf" && defined($properties{customkill}) && $properties{customkill} eq "saw") {
-				&doEvent_PlayerAction(
-					$player->{userid},
-					$player->{uniqueid},
-					"death_sawblade",
-					$x,
-					$y,
-					$z
-				);
+			if ($g_servers{$s_addr}->{play_game} eq "tf" && defined($properties{customkill}))
+				if ($properties{customkill} eq "train") {
+					&doEvent_PlayerAction(
+						$player->{userid},
+						$player->{uniqueid},
+						"hit_by_train",
+						$x,
+						$y,
+						$z
+					);
+				} elsif ($properties{customkill} eq "saw") {
+					&doEvent_PlayerAction(
+						$player->{userid},
+						$player->{uniqueid},
+						"death_sawblade",
+						$x,
+						$y,
+						$z
+					);
+				}
 			}
 			
 			&recordEvent(

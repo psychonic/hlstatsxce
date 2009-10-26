@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2-pre2"
+#define VERSION "1.6.2-pre3"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -96,7 +96,8 @@ new const String: modnamelist[][] = {
 };
 
 new String: message_prefix[32];
-new bool:g_bCanDoMotd[MAXPLAYERS];
+new bool:g_bPlyrCanDoMotd[MAXPLAYERS+1];
+new bool:g_bGameCanDoMotd = true;
 
 public Plugin:myinfo = {
 	name = "HLstatsX CE Ingame Plugin",
@@ -157,6 +158,11 @@ public OnPluginStart()
 	if ((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC))
 	{
 		HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
+	}
+	
+	if (gamemod == INSMOD || gamemod == L4D || gamemod == HL2MP || gamemod == GES)
+	{
+		g_bGameCanDoMotd = false;
 	}
 	
 	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
@@ -341,7 +347,7 @@ get_server_mod()
 
 public OnClientPostAdminCheck(client)
 {
-	if (IsClientInGame(client) && IsClientConnected(client))
+	if (g_bGameCanDoMotd && IsClientInGame(client) && IsClientConnected(client))
 	{
 		QueryClientConVar(client, "cl_disablehtmlmotd", motdQuery);
 	}
@@ -352,7 +358,7 @@ public motdQuery(QueryCookie:cookie, client, ConVarQueryResult:result, const Str
 {
 	if (result == ConVarQuery_Okay && StringToInt(cvarValue) == 0 || result != ConVarQuery_Okay)
 	{
-		g_bCanDoMotd[client] = true;
+		g_bPlyrCanDoMotd[client] = true;
 	}
 }
 
@@ -523,7 +529,7 @@ public OnClientDisconnect(client)
 			ColorSlotArray[team_index] = -1;
 		}
 	}
-	g_bCanDoMotd[client] = false;
+	g_bPlyrCanDoMotd[client] = false;
 }
 
 color_player(color_type, player_index, String: client_message[192]) 
@@ -535,11 +541,11 @@ color_player(color_type, player_index, String: client_message[192])
 		GetClientName(player_index, client_name, sizeof(client_name));
 		if ((strcmp(client_message, "") != 0) && (strcmp(client_name, "") != 0))
 		{
-			decl String: search_client_name[192];
-			Format(search_client_name, sizeof(search_client_name), "%s ", client_name);
-			decl String: colored_player_name[192];
 			if (color_type == 1)
 			{
+				decl String: search_client_name[192];
+				Format(search_client_name, sizeof(search_client_name), "%s ", client_name);
+				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
 					case ZPS:
@@ -556,6 +562,9 @@ color_player(color_type, player_index, String: client_message[192])
 			}
 			else
 			{
+				decl String: search_client_name[192];
+				Format(search_client_name, sizeof(search_client_name), " %s ", client_name);
+				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
 					case ZPS:
@@ -1124,11 +1133,6 @@ public Action:hlx_sm_msay(args)
 		return Plugin_Handled;
 	}
 	
-	if (CheckVoteDelay() != 0)
-	{
-		return Plugin_Handled;
-	}
-	
 	decl String: display_time[16];
 	GetCmdArg(1, display_time, sizeof(display_time));
 	
@@ -1140,12 +1144,7 @@ public Action:hlx_sm_msay(args)
 	
 	new ignore_param = 0;
 	new need_handler = 0;
-	if (strcmp(handler_param, "1") == 0)
-	{
-		need_handler = 1;
-		ignore_param = 1;
-	}
-	if (strcmp(handler_param, "0") == 0)
+	if (handler_param[1] == 0 && (handler_param[0] == '1' || handler_param[0] == '0'))
 	{
 		need_handler = 1;
 		ignore_param = 1;
@@ -1268,13 +1267,20 @@ public Action:hlx_sm_browse(args)
 			new player_index = GetClientOfUserId(recipient_client);
 			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
 			{
-				if (g_bCanDoMotd[player_index])
+				if (g_bGameCanDoMotd)
 				{
-					ShowMOTDPanel(player_index, "HLstatsX:CE", client_url, MOTDPANEL_TYPE_URL);
+					if (g_bPlyrCanDoMotd[player_index])
+					{
+						ShowMOTDPanel(player_index, "HLstatsX:CE", client_url, MOTDPANEL_TYPE_URL);
+					}
+					else
+					{
+						PrintToChat(player_index, "HTML MOTD needs to be enabled in your game options to use this command");
+					}
 				}
 				else
 				{
-					PrintToChat(player_index, "HTML MOTD needs to be enabled in your game options to use this command");
+					PrintToChat(player_index, "This game does not support the HTML MOTD window required for this command");
 				}
 			}
 		}
@@ -1625,7 +1631,7 @@ public CreateHLstatsXMenuMain(&Handle: MenuHandle)
 {
 	MenuHandle = CreateMenu(HLstatsXMainCommandHandler, MenuAction_Select|MenuAction_Cancel);
 
-	if (gamemod == INSMOD)
+	if (!g_bGameCanDoMotd)
 	{
 		SetMenuTitle(MenuHandle, "HLstatsX - Main Menu");
 		AddMenuItem(MenuHandle, "", "Display Rank");
@@ -1699,7 +1705,7 @@ public HLstatsXMainCommandHandler(Handle:menu, MenuAction:action, param1, param2
 	{
 		if (IsClientInGame(param1) && IsClientConnected(param1))
 		{
-			if (gamemod == INSMOD)
+			if (!g_bGameCanDoMotd)
 			{
 				switch (param2)
 				{

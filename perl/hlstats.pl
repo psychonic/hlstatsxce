@@ -165,7 +165,8 @@ sub track_hlstats_trend
 	my $new_timestamp  = time();
 	if ($last_trend_timestamp > 0) {
 		if ($last_trend_timestamp+299 < $new_timestamp) {
-			my $result = &doQuery("SELECT COUNT(*), a.game FROM hlstats_Players a INNER JOIN (SELECT DISTINCT(game) FROM hlstats_Servers WHERE last_event>$last_trend_timestamp) AS b ON a.game=b.game WHERE a.hideranking=0 GROUP BY a.game;");
+			my $result = &doQuery("SELECT COUNT(*), a.game FROM hlstats_Players a INNER JOIN (SELECT game FROM hlstats_Servers GROUP BY game) AS b ON a.game=b.game WHERE a.hideranking=0 GROUP BY a.game");
+			my $insvales = "";
 			while ( my($total_players, $game) = $result->fetchrow_array) {
 				my $data = &doQuery("SELECT SUM(kills), SUM(headshots), COUNT(serverId), SUM(act_players), SUM(max_players) FROM hlstats_Servers WHERE game='".&quoteSQL($game)."'");
 				my ($total_kills, $total_headshots, $total_servers, $act_slots, $max_slots) = $data->fetchrow_array;
@@ -174,6 +175,23 @@ sub track_hlstats_trend
 						$act_slots = $max_slots;
 					}
 				}
+				if ($insvalues ne "") {
+					$insvalues .= ",";
+				}
+				$insvalues .= "
+					(
+						$new_timestamp,
+						'".&quoteSQL($game)."',
+						$total_players,
+						$total_kills,
+						$total_headshots,
+						$total_servers,
+						$act_slots,
+						$max_slots
+					)
+				";
+			}
+			if ($insvalues ne "") {
 				&execNonQuery("
 					INSERT INTO
 						hlstats_Trend
@@ -187,19 +205,9 @@ sub track_hlstats_trend
 							act_slots,
 							max_slots
 						)
-						VALUES
-						(
-							$new_timestamp,
-							'".&quoteSQL($game)."',
-							$total_players,
-							$total_kills,
-							$total_headshots,
-							$total_servers,
-							$act_slots,
-							$max_slots
-						)
+						VALUES $insvalues
 				");
-			}  
+			}
 			$last_trend_timestamp = $new_timestamp;
 			&::printEvent("HLSTATSX", "Insert new server trend timestamp", 1);
 		}
@@ -211,32 +219,32 @@ sub track_hlstats_trend
 sub send_global_chat
 {
 	my ($message) = @_;
-	while( my($server, $notused) = each(%g_servers))
+	while( my($server) = each(%g_servers))
 	{	
-		if(!$g_servers{$server}->{"srv_players"})
-		{
-			&printEvent(400, "$server srv_players doesn't exist!");
-		}
-		elsif ($server ne $s_addr)
+		if ($server ne $s_addr)
 		{
 			my @userlist;
 			my %players_temp=%{$g_servers{$server}->{"srv_players"}};
-			while ( my($pl, $player) = each(%players_temp) ) {
-				my $b_userid  = $b_player->{userid};
-				if ($g_global_chat == 2)  {
-					my $b_steamid = $b_player->{uniqueid};
-					if ($g_servers{$server}->is_admin($b_steamid) == 1) {
+			my $pcount = scalar keys %players_temp;
+			
+			if ($pcount > 0) {
+				while ( my($pl, $player) = each(%players_temp) ) {
+					my $b_userid  = $b_player->{userid};
+					if ($g_global_chat == 2)  {
+						my $b_steamid = $b_player->{uniqueid};
+						if ($g_servers{$server}->is_admin($b_steamid) == 1) {
+							if (($b_player->{display_events} == 1) && ($b_player->{display_chat} == 1)) {
+								push(@userlist, $b_player->{userid});
+							} 
+						}
+					} else {  
 						if (($b_player->{display_events} == 1) && ($b_player->{display_chat} == 1)) {
 							push(@userlist, $b_player->{userid});
-						} 
-					}
-				} else {  
-					if (($b_player->{display_events} == 1) && ($b_player->{display_chat} == 1)) {
-						push(@userlist, $b_player->{userid});
+						}
 					}
 				}
+				$g_servers{$server}->messageMany($message, 0, @userlist);
 			}
-			$g_servers{$server}->messageMany($message, 0, @userlist);
 		}
 	}
 }
@@ -276,27 +284,26 @@ sub recordEvent
 		}
 		$j++;
 	}
+	
+	my @vals = ($::ev_unixtime,$g_servers{$s_addr}->{"id"}, $g_servers{$s_addr}->get_map());
 			
-	$query .= "
-		)
-		VALUES
-		(
-			FROM_UNIXTIME($::ev_unixtime),
-			'$g_servers{$s_addr}->{id}',
-			'".$g_servers{$s_addr}->get_map()."'"
-			;
+	$query .= ") VALUES (FROM_UNIXTIME(?),?,?";
 	$j = 0;
 	for $i (@coldata) {
-		my $value_string = (($allownullcols & (1 << $j) && $i eq "")?"NULL":"'" . &quoteSQL($i) . "'");
-		$query .= ",\n" . $value_string;
+		my $value_string = $i;
+		if ($allownullcols & (1 << $j) && $i eq "") {
+			$value_string = undef;
+		} elsif (!defined($i)) {
+			$value_string = "";
+		}
+		$query .= ",?" ;
+		push(@vals, $value_string);
 		$j++;
 	}
 		
-	$query .= "
-		)
-		";
+	$query .= ")";
 	
-	&execNonQuery($query);
+	&execCached("recordEvent_$table", $query, @vals);
 	
 	if ($getid) {
 		return $db_conn->{'mysql_insertid'};
@@ -1922,12 +1929,12 @@ while ($loop = &getLine()) {
 		$s_output =~ s/\([12]\)//g;	# strip (1) and (2) from player names
 
 		# Get the server info, if we know the server, otherwise ignore the data
-		if (!$g_servers{$s_addr}) {
-			if (($g_onlyconfig_servers == 1) && (!$g_config_servers{$s_addr})) {
+		if (!defined($g_servers{$s_addr})) {
+			if (($g_onlyconfig_servers == 1) && (!defined($g_config_servers{$s_addr}))) {
 				# HELLRAISER disabled this for testing
 				&printEvent(997, "NOT ALLOWED SERVER: " . $s_output);
 				next;
-			} elsif (!$g_config_servers{$s_addr}) { # create std cfg.
+			} elsif (!defined($g_config_servers{$s_addr})) { # create std cfg.
 				my %std_cfg;
 				$std_cfg{"MinPlayers"}						= 6;
 				$std_cfg{"HLStatsURL"}						= "";
@@ -3259,9 +3266,9 @@ EOT
 		$s_addr = "";
 	}
 
-	while( my($server, $notused) = each(%g_servers))
+	while( my($server) = each(%g_servers))
 	{	
-		if($g_servers{$server} && $g_servers{$server}->{next_timeout}<$ev_unixtime)
+		if($g_servers{$server}->{next_timeout}<$ev_unixtime)
 		{
 			#print "checking $ev_unixtime\n";
 			# Clean up
