@@ -37,6 +37,7 @@
 # HLstatsX CE release version number
 
 $g_version = "<Unable to Detect>";
+my %db_stmt_cache = ();
 
 ##
 ## Common Functions
@@ -111,6 +112,7 @@ sub doConnect
 		"Server error: $DBI::errstr\n");
 	$db_conn->do("SET NAMES 'utf8'");
 	&printEvent("MYSQL", "Connecting to MySQL database '$db_name' on '$db_host' as user '$db_user' ... connected ok", 1);
+	%db_stmt_cache = ();
 }
 
 #
@@ -142,6 +144,20 @@ sub execNonQuery
 	}
 	#&printEvent("DEBUG","execNonQuery:\n".$query);
 	$db_conn->do($query);
+}
+
+sub execCached {
+	my ($query_id,$query, @bind_args) = @_;
+	
+	if(!$db_conn->ping()) {
+		&printEvent("HLSTATSX", "Lost database connection. Trying to reconnect...", 1);
+		&doConnect();
+	}
+	
+	if(!$db_stmt_cache{$query_id}) {
+		$db_stmt_cache{$query_id} = $db_conn->prepare($query) or die("Unable to prepare query ($query_id):\n$query\n$DBI::errstr");
+	} 
+	$db_stmt_cache{$query_id}->execute(@bind_args) or die ("Unable to execute query ($query_id):\n$query\n$DBI::errstr");
 }
 
 #
