@@ -5134,7 +5134,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('l4d2', 'sniper_military', 'Sniper Rifle', 1),
 ('l4d2', 'vomitjar', 'Vomit Jar Smash', 1.5),
 ('l4d2', 'baseball_bat', 'Baseball Bat', 1.5),
-('l4d2', 'cricket_bat', 'Cricket Bat, 1.5),
+('l4d2', 'cricket_bat', 'Cricket Bat', 1.5),
 ('l4d2', 'crowbar', 'Crowbar', 1.5),
 ('l4d2', 'electric_guitar', 'Electric Guitar', 1.5),
 ('l4d2', 'fireaxe', 'Fireaxe', 1.5),
