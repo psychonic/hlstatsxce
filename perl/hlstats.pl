@@ -759,6 +759,10 @@ sub getServer
 		if (!defined($g_games{$game})) {
 			$g_games{$game} = new HLstats_Game($game);
 		}
+		# l4d code should be reused for l4d2
+		# trying first using l4d as "realgame" code for l4d2 in db. if default server config settings won't work, will leave as own "realgame" code in db but uncomment line.
+		#$realgame = "l4d" if $realgame eq "l4d2";
+		
 		return new HLstats_Server($serverId, $address, $port, $name, $rcon_pass, $game, $publicaddress, $gameengine, $realgame, $maxplayers);
 	} else {
 		$result->finish;
@@ -994,7 +998,7 @@ sub getPlayerInfo
 				}
 			} elsif ($uniqueid eq "BOT") {
 				#all other bots have BOT for steamid
-				if ($team eq "Survivor" || $name eq "Zoey" || $name eq "Francis" || $name eq "Bill" || $name eq "Louis") {
+				if ($team eq "Survivor") {
 					if ($name eq "Zoey") {
 						$userid = -1;
 					} elsif ($name eq "Francis") {
@@ -1003,11 +1007,19 @@ sub getPlayerInfo
 						$userid = -3;
 					} elsif ($name eq "Louis") {
 						$userid = -4;
+					} elsif ($name eq "Nick") {
+						$userid = -11;
+					} elsif ($name eq "Coach") {
+						$userid = -12;
+					} elsif ($name eq "Ellis") {
+						$userid = -13;
+					} elsif ($name eq "Rochelle") {
+						$userid = -14;
 					} else {
 						&printEvent("ERROR", "No survivor match for $name",0,1);
 						$userid = -4;
 					}
-				} elsif ($team eq "Infected" || $name eq "Tank" || $name eq "Smoker" || $name eq "Hunter" || $name eq "Boomer") {
+				} else {
 					if ($name eq "Smoker") {
 						$userid = -5;
 					} elsif ($name eq "Boomer") {
@@ -1016,12 +1028,16 @@ sub getPlayerInfo
 						$userid = -7;
 					} elsif ($name eq "Tank") {
 						$userid = -8;
-					}else {
+					} elsif ($name eq "Spitter") {
+						$userid = -15;
+					} elsif ($name eq "Jockey") {
+						$userid = -16;
+					} elsif ($name eq "Charger") {
+						$userid = -17;
+					} else {
 						&printEvent("DEBUG", "No infected match for $name",0,1);
 						$userid = -8;
 					}
-				} else {
-					return 0;
 				}
 				$uniqueid = "BOT-".$name;
 				$name = "BOT-".$name;
