@@ -851,6 +851,8 @@ sub getServerMod
 		$playgame = "hidden";
 	} elsif ($gamename =~ /^L4D /i) {
 		$playgame = "l4d";
+	} elsif ($gamename =~ /^Left 4 Dead 2/i) {
+		$playgame = "l4d2";
 	} elsif ($gamename =~ /^ZPS /i) {
 		$playgame = "zps";
 	} elsif ($gamename =~ /^NS /i) {
@@ -881,8 +883,10 @@ sub getServerMod
 		$playgame = "sgtls";
 	} elsif ($gamedir =~ /^hidden/i) {
 		$playgame = "hidden";
-	} elsif ($gamedir =~ /^left4dead /i) {
+	} elsif ($gamedir =~ /^left4dead/i) {
 		$playgame = "l4d";
+	} elsif ($gamedir =~ /^left4dead2/i) {
+		$playgame = "l4d2";
 	} elsif ($gamedir =~ /^zps/i) {
 		$playgame = "zps";
 	} elsif ($gamedir =~ /^ns/i) {
@@ -3337,7 +3341,9 @@ EOT
 			track_hlstats_trend();
 		}  
 		while (my($addr, $server) = each(%g_servers)) {
-			$server->track_server_load();
+			if (defined($server)) {
+				$server->track_server_load();
+			}
 		}
 	}
 	
