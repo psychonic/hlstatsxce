@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2-pre3"
+#define VERSION "1.6.2-pre4"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -165,13 +165,13 @@ public OnPluginStart()
 		g_bGameCanDoMotd = false;
 	}
 	
-	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message");
+	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_PLUGIN);
+	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message", FCVAR_PLUGIN);
 	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
-	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding");
+	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
 	
 	RegServerCmd("log", ProtectLoggingChange);
@@ -339,7 +339,7 @@ get_server_mod()
 
 		if (gamemod > 0)
 		{
-			LogToGame("HLX:CE Mod Detection: %s", game_description, modnamelist[gamemod-1]);
+			LogToGame("HLX:CE Mod Detection: %s", modnamelist[gamemod-1]);
 			LogToGame("HLX:CE If this is incorrect, please file a bug at hlxcommunity.com");
 		}
 	}
