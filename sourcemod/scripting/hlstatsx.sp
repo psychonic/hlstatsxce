@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2-pre4"
+#define VERSION "1.6.2-pre5"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -1638,7 +1638,7 @@ public CreateHLstatsXMenuMain(&Handle: MenuHandle)
 		AddMenuItem(MenuHandle, "", "Next Players");
 		AddMenuItem(MenuHandle, "", "Top10 Players");
 		AddMenuItem(MenuHandle, "", "Auto Ranking");
-		AddMenuItem(MenuHandle, "", "Console Events");
+		AddMenuItem(MenuHandle, "", "Toggle Point Msgs");
 		AddMenuItem(MenuHandle, "", "Toggle Ranking Display");
 	}
 	else
@@ -1651,7 +1651,7 @@ public CreateHLstatsXMenuMain(&Handle: MenuHandle)
 		AddMenuItem(MenuHandle, "", "Server Status");
 		AddMenuItem(MenuHandle, "", "Statsme");
 		AddMenuItem(MenuHandle, "", "Auto Ranking");
-		AddMenuItem(MenuHandle, "", "Console Events");
+		AddMenuItem(MenuHandle, "", "Toggle Point Msgs");
 		AddMenuItem(MenuHandle, "", "Weapon Usage");
 		AddMenuItem(MenuHandle, "", "Weapons Accuracy");
 		AddMenuItem(MenuHandle, "", "Weapons Targets");
