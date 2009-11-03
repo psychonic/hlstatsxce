@@ -42,7 +42,7 @@ function printMap($type = 'main')
 	
 	if ($type == 'main')
 	{
-		echo ('<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$g_options['google_map_key'].'" type="text/javascript"></script>');
+		echo ('<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>');
 	}
 ?> 
 		<script type="text/javascript">
@@ -56,70 +56,79 @@ function printMap($type = 'main')
 		}
 
 		<?php echo "preloadImages('".IMAGE_PATH."/mm_20_blue.png', ".(($type == 'main')?"'".IMAGE_PATH."/mm_20_red.png', ":'')."'".IMAGE_PATH."/mm_20_shadow.png');"; ?>
-			var icon = new GIcon();
-			icon.image = "<?php echo IMAGE_PATH; ?>/mm_20_blue.png";
-			icon.shadow = "<?php echo IMAGE_PATH; ?>/mm_20_shadow.png";
-			icon.iconSize = new GSize(12, 20);
-			icon.shadowSize = new GSize(22, 20);
-			icon.iconAnchor = new GPoint(6, 20);
-			icon.infoWindowAnchor = new GPoint(5, 1);
+
+
+			var point_icon = "http://www.tf2newbs.com/test/web/<?php echo IMAGE_PATH; ?>/mm_20_blue.png";
+			var point_icon_red = "http://www.tf2newbs.com/test/web/<?php echo IMAGE_PATH; ?>/mm_20_red.png";
 
 <?php
 		if ($type == 'main') {
-?>
-			var iconS = new GIcon();
-			iconS.image = "<?php echo IMAGE_PATH; ?>/mm_20_red.png";
-			iconS.shadow = "<?php echo IMAGE_PATH; ?>/mm_20_shadow.png";
-			iconS.iconSize = new GSize(12, 20);
-			iconS.shadowSize = new GSize(22, 20);
-			iconS.iconAnchor = new GPoint(6, 20);
-			iconS.infoWindowAnchor = new GPoint(5, 1);
-<?php
 		}
-?>
-			var map = new GMap2(document.getElementById("map"));
-
-			map.addControl(new GLargeMapControl());
-			map.addControl(new GMapTypeControl());
-			map.enableDoubleClickZoom();
-	<?php
+			// this create mapLatLng
 			printMapCenter(($type == 'clan' && $clandata['mapregion'] != '') ? $clandata['mapregion'] : $g_options['google_map_region']);
+			// this creates mapType
 			printMapType($g_options['google_map_type']);
-	?>       
-				 
+?>
+			var mapZoom = 3;
+              		var myOptions = {
+				center: mapLatLng,
+				mapTypeId: mapType,
+				zoom: mapZoom, 
+				scrollwheel: false,
+				mapTypeControl: true,
+				mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+				navigationControl: true,
+				navigationControlOptions: {style: google.maps.NavigationControlStyle.ZOOM_PAN}
+			};
+
+			var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+
+
 			function createMarker(point, city, country, player_info) {
-				var marker    = new GMarker(point, icon);
 				var html_text = '<table class="gmapstab"><tr><td colspan="2" class="gmapstabtitle" style="border-bottom:1px solid black;">'+city+', '+country+'</td></tr>';
 				for ( i=0; i<player_info.length; i++) {
-					html_text += '<tr><td><a href="hlstats.php?mode=playerinfo&amp;player='+player_info[i][0]+'">'+player_info[i][1]+'</a></td></tr>'+
-								'<tr><td>Kills/Deaths</td><td>'+player_info[i][2]+':'+player_info[i][3]+'</td></tr>'<?php
-			if ($type == 'main') {
-				echo "+
-				'<tr><td>Time</td><td>'+player_info[i][4]+'</td></tr>';";
-			} else {
-				echo ";";
-			}
+					html_text += '<tr><td><a href="hlstats.php?mode=playerinfo&amp;player='+player_info[i][0]+'">'+player_info[i][1]+'</a></td></tr>';
+					html_text += '<tr><td>Kills/Deaths</td><td>'+player_info[i][2]+':'+player_info[i][3]+'</td></tr>';
+<?php
+					if ($type == 'main') {
+						echo "html_text += '<tr><td>Time</td><td>'+player_info[i][4]+'</td></tr>';";
+					} 
 ?>
 				}
-				html_text +=   '</table>';
-				map.addOverlay(marker);
-				GEvent.addListener(marker, "click", function() {marker.openInfoWindowHtml(html_text);});
+				html_text += '</table>';
+		    		var infowindow = new google.maps.InfoWindow({
+	             			content: html_text
+                   		})
+                   		var marker = new google.maps.Marker({
+	                     		position: point, 
+       	              			map: map,
+                     			icon: point_icon
+                   		}); 
+ 
+				google.maps.event.addListener(marker, "click", function() {infowindow.open(map, marker);});
 			}
 
 <?php
 			if ($type == 'main') {
 ?>
 			function createMarkerS(point, servers, city, country, kills) {
-				var marker    = new GMarker(point, iconS);
 				var html_text =   '<table class="gmapstab"><tr><td colspan="2" class="gmapstabtitle" style="border-bottom:1px solid black;">'+city+', '+country+'</td></tr>';
 				for ( i=0; i<servers.length; i++) {
-					html_text +=  '<tr><td><a href=\"hlstats.php?mode=servers&server_id=' + servers[i][0] + '&amp;game=<?php echo $game; ?>\">' + servers[i][2] + '</a></td></tr>'+
-					'<tr><td>' + servers[i][1] + ' (<a href=\"steam://connect/' + servers[i][1] + '\">connect</a>)</td></tr>';
+					html_text += '<tr><td><a href=\"hlstats.php?mode=servers&server_id=' + servers[i][0] + '&amp;game=<?php echo $game; ?>\">' + servers[i][2] + '</a></td></tr>';
+					html_text += '<tr><td>' + servers[i][1] + ' (<a href=\"steam://connect/' + servers[i][1] + '\">connect</a>)</td></tr>';
 				}
-				html_text +=      '<tr><td>'+kills+' kills</td></tr>'+
-							  '</table>';  
-				map.addOverlay(marker);
-				GEvent.addListener(marker, "click", function() {marker.openInfoWindowHtml(html_text);});
+				html_text += '<tr><td>'+kills+' kills</td></tr></table>';  
+		    		var infowindow = new google.maps.InfoWindow({
+	             			content: html_text
+                   		})
+                   		var marker = new google.maps.Marker({
+	                     		position: point, 
+       	              			map: map,
+                     			icon: point_icon_red
+                   		}); 
+ 
+				google.maps.event.addListener(marker, "click", function() {infowindow.open(map, marker);});
 			}
 	<?php
 
@@ -151,7 +160,7 @@ function printMap($type = 'main')
 						$servers_js[] = $temp;
 						$kills += $server['kills'];
 					}
-					echo 'createMarkerS(new GLatLng(' . $map_location['lat'] . ', ' . $map_location['lng'] . '), [' . implode(',', $servers_js) . '], "' . htmlspecialchars(urldecode($map_location['city']), ENT_QUOTES) . '", "' . htmlspecialchars(urldecode($map_location['country']), ENT_QUOTES) . '", ' . $kills . ");\n";
+					echo 'createMarkerS(new google.maps.LatLng(' . $map_location['lat'] . ', ' . $map_location['lng'] . '), [' . implode(',', $servers_js) . '], "' . htmlspecialchars(urldecode($map_location['city']), ENT_QUOTES) . '", "' . htmlspecialchars(urldecode($map_location['country']), ENT_QUOTES) . '", ' . $kills . ");\n";
 				}
 
 				$data = array();
@@ -202,7 +211,7 @@ function printMap($type = 'main')
 						$players_js[] = $temp;
 					}
 
-					echo "createMarker(new GLatLng(" . $map_location['cli_lat'] . ", " . $map_location['cli_lng'] . "), \"" . htmlspecialchars(urldecode($map_location['cli_city']), ENT_QUOTES) . "\", \"" . htmlspecialchars(urldecode($map_location['cli_country']), ENT_QUOTES) . '", [' . implode(',', $players_js) . "]);\n";
+					echo "createMarker(new google.maps.LatLng(" . $map_location['cli_lat'] . ", " . $map_location['cli_lng'] . "), \"" . htmlspecialchars(urldecode($map_location['cli_city']), ENT_QUOTES) . "\", \"" . htmlspecialchars(urldecode($map_location['cli_country']), ENT_QUOTES) . '", [' . implode(',', $players_js) . "]);\n";
 				}
 			} else if ($type == 'clan') {
 				$db->query("
@@ -264,7 +273,7 @@ function printMap($type = 'main')
 						$players_js[] = $temp;
 					}
 					
-					echo "createMarker(new GLatLng(" . $location['lat'] . ", " . $location['lng'] . "), \"" . htmlspecialchars(urldecode($location['city']), ENT_QUOTES) . "\", \"" . htmlspecialchars(urldecode($location['country']), ENT_QUOTES) . "\", [" . implode(",", $players_js) . "]);\n";
+					echo "createMarker(new google.maps.LatLng(" . $location['lat'] . ", " . $location['lng'] . "), \"" . htmlspecialchars(urldecode($location['city']), ENT_QUOTES) . "\", \"" . htmlspecialchars(urldecode($location['country']), ENT_QUOTES) . "\", [" . implode(",", $players_js) . "]);\n";
 				}
 			}
 ?>
@@ -278,106 +287,106 @@ function printMapCenter($country)
 	switch (strtoupper($country))
 	{
 		case 'EUROPE':
-			echo 'map.setCenter(new GLatLng(48.8, 8.5),     4);';
+			echo 'var mapLatLng = new google.maps.LatLng(48.8, 8.5);';
 			break;
 		case 'NORTH AMERICA':
-			echo 'map.setCenter(new GLatLng(45.0, -97.0),   3);';
+			echo 'var mapLatLng = new google.maps.LatLng(45.0, -97.0);';
 			break;
 		case 'SOUTH AMERICA':
-			echo 'map.setCenter(new GLatLng(-14.8, -61.2),  3);';
+			echo 'var mapLatLng = new google.maps.LatLng(-14.8, -61.2);';
 			break;
 		case 'NORTH AFRICA':
-			echo 'map.setCenter(new GLatLng(25.4, 8.4),     4);';
+			echo 'var mapLatLng = new google.maps.LatLng(25.4, 8.4);';
 			break;
 		case 'SOUTH AFRICA':
-			echo 'map.setCenter(new GLatLng(-29.0, 23.7),   5);';
+			echo 'var mapLatLng = new google.maps.LatLng(-29.0, 23.7);';
 			break;
 		case 'NORTH EUROPE':
-			echo 'map.setCenter(new GLatLng(62.6, 15.4),    4);';
+			echo 'var mapLatLng = new google.maps.LatLng(62.6, 15.4);';
 			break;
 		case 'EAST EUROPE':
-			echo 'map.setCenter(new GLatLng(51.9, 31.8),    4);';
+			echo 'var mapLatLng = new google.maps.LatLng(51.9, 31.8);';
 			break;
 		case 'GERMANY':
-			echo 'map.setCenter(new GLatLng(51.1, 10.1),    5);';
+			echo 'var mapLatLng = new google.maps.LatLng(51.1, 10.1);';
 			break;
 		case 'FRANCE':
-			echo 'map.setCenter(new GLatLng(47.2, 2.4),     5);';
+			echo 'var mapLatLng = new google.maps.LatLng(47.2, 2.4);';
 			break;
 		case 'SPAIN':
-			echo 'map.setCenter(new GLatLng(40.3, -4.0),    5);';
+			echo 'var mapLatLng = new google.maps.LatLng(40.3, -4.0);';
 			break;
 		case 'UNITED KINGDOM':
-			echo 'map.setCenter(new GLatLng(54.0, -4.3),    5);';
+			echo 'var mapLatLng = new google.maps.LatLng(54.0, -4.3);';
 			break;
 		case 'DENMARK':
-			echo 'map.setCenter(new GLatLng(56.1, 9.2),     6);';
+			echo 'var mapLatLng = new google.maps.LatLng(56.1, 9.2);';
 			break;
 		case 'SWEDEN':
-			echo 'map.setCenter(new GLatLng(63.2, 16.3),    4);';
+			echo 'var mapLatLng = new google.maps.LatLng(63.2, 16.3);';
 			break;
 		case 'NORWAY':
-			echo 'map.setCenter(new GLatLng(65.6, 13.1),    4);';
+			echo 'var mapLatLng = new google.maps.LatLng(65.6, 13.1);';
 			break;
 		case 'FINLAND':
-			echo 'map.setCenter(new GLatLng(65.1, 26.6),    4);';
+			echo 'var mapLatLng = new google.maps.LatLng(65.1, 26.6);';
 			break;
 		case 'NETHERLANDS':
-			echo 'map.setCenter(new GLatLng(52.3, 5.4),     7);';
+			echo 'var mapLatLng = new google.maps.LatLng(52.3, 5.4);';
 			break;
 		case 'BELGIUM':
-			echo 'map.setCenter(new GLatLng(50.7, 4.5),     7);';
+			echo 'var mapLatLng = new google.maps.LatLng(50.7, 4.5);';
 			break;
 		case 'SUISSE':
-			echo 'map.setCenter(new GLatLng(46.8, 8.2),     7);';
+			echo 'var mapLatLng = new google.maps.LatLng(46.8, 8.2);';
 			break;
 		case 'AUSTRIA':
-			echo 'map.setCenter(new GLatLng(47.7, 14.1),    7);';
+			echo 'var mapLatLng = new google.maps.LatLng(47.7, 14.1);';
 			break;
 		case 'POLAND':
-			echo 'map.setCenter(new GLatLng(52.1, 19.3),    6);';
+			echo 'var mapLatLng = new google.maps.LatLng(52.1, 19.3);';
 			break;
 		case 'ITALY':
-			echo 'map.setCenter(new GLatLng(42.6, 12.7),    5);';
+			echo 'var mapLatLng = new google.maps.LatLng(42.6, 12.7);';
 			break;
 		case 'TURKEY':
-			echo 'map.setCenter(new GLatLng(39.0, 34.9),    6);';
+			echo 'var mapLatLng = new google.maps.LatLng(39.0, 34.9);';
 			break;
 		case 'ROMANIA':
-			echo 'map.setCenter(new GLatLng(45.94, 24.96),	6);';
+			echo 'var mapLatLng = new google.maps.LatLng(45.94, 24.96);';
 			break;
 		case 'BRAZIL':
-			echo 'map.setCenter(new GLatLng(-12.0, -53.1),  4);';
+			echo 'var mapLatLng = new google.maps.LatLng(-12.0, -53.1);';
 			break;
 		case 'ARGENTINA':
-			echo 'map.setCenter(new GLatLng(-34.3, -65.7),  3);';
+			echo 'var mapLatLng = new google.maps.LatLng(-34.3, -65.7);';
 			break;
 		case 'RUSSIA':
-			echo 'map.setCenter(new GLatLng(65.7, 98.8),    3);';
+			echo 'var mapLatLng = new google.maps.LatLng(65.7, 98.8);';
 			break;
 		case 'ASIA':
-			echo 'map.setCenter(new GLatLng(20.4, 95.6),    3);';
+			echo 'var mapLatLng = new google.maps.LatLng(20.4, 95.6);';
 			break;
 		case 'CHINA':
-			echo 'map.setCenter(new GLatLng(36.2, 104.0),   4);';
+			echo 'var mapLatLng = new google.maps.LatLng(36.2, 104.0);';
 			break;
 		case 'JAPAN':
-			echo 'map.setCenter(new GLatLng(36.2, 136.8),   5);';
+			echo 'var mapLatLng = new google.maps.LatLng(36.2, 136.8);';
 			break;
 		case 'SOUTH KOREA':
-			echo 'map.setCenter(new GLatLng(36.6, 127.8),   6);';
+			echo 'var mapLatLng = new google.maps.LatLng(36.6, 127.8);';
 			break;
 		case 'AUSTRALIA':
-			echo 'map.setCenter(new GLatLng(-26.1, 134.8),  4);';
+			echo 'var mapLatLng = new google.maps.LatLng(-26.1, 134.8);';
 			break;
 		case 'CANADA':
-			echo 'map.setCenter(new GLatLng(60.0, -97.0),   3);';
+			echo 'var mapLatLng = new google.maps.LatLng(60.0, -97.0);';
 			break;
 		case 'WORLD':
-			echo 'map.setCenter(new GLatLng(25.0, 8.5),     2);';
+			echo 'var mapLatLng = new google.maps.LatLng(25.0, 8.5);';
 			break;
 		default:
-			echo 'map.setCenter(new GLatLng(48.8, 8.5),     4);';
+			echo 'var mapLatLng = new google.maps.LatLng(48.8, 8.5);';
 			break;
 	}
 	echo "\n";
@@ -388,19 +397,18 @@ function printMapType($maptype)
 	switch (strtoupper($maptype))
 	{
 		case 'SATELLITE':
-			echo 'map.setMapType(G_SATELLITE_MAP);';
+			echo 'var mapType = google.maps.MapTypeId.SATELLITE;';
 			break;
 		case 'MAP':
-			echo 'map.setMapType(G_NORMAL_MAP);';
+			echo 'var mapType = google.maps.MapTypeId.ROADMAP;';
 			break;
 		case 'HYBRID':
-			echo 'map.setMapType(G_HYBRID_MAP);';
+			echo 'var mapType = google.maps.MapTypeId.HYBRID;';
 			break;
 		case 'PHYSICAL':
-			echo 'map.setMapType(G_PHYSICAL_MAP);';
+			echo 'var mapType = google.maps.MapTypeId.TERRAIN;';
 			break;
 		default:
-			echo 'map.setMapType(G_HYBRID_MAP);';
 			break;
 	}
 	echo "\n";

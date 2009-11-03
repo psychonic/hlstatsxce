@@ -137,7 +137,7 @@
 	);
 
 	if ( $g_options['show_google_map'] == 1 ) {
-		echo ('<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$g_options['google_map_key'].'" type="text/javascript"></script>');
+		echo ('<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>');
 	}
 ?>
 
