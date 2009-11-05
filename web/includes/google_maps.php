@@ -58,8 +58,8 @@ function printMap($type = 'main')
 		<?php echo "preloadImages('".IMAGE_PATH."/mm_20_blue.png', ".(($type == 'main')?"'".IMAGE_PATH."/mm_20_red.png', ":'')."'".IMAGE_PATH."/mm_20_shadow.png');"; ?>
 
 
-			var point_icon = "http://www.tf2newbs.com/test/web/<?php echo IMAGE_PATH; ?>/mm_20_blue.png";
-			var point_icon_red = "http://www.tf2newbs.com/test/web/<?php echo IMAGE_PATH; ?>/mm_20_red.png";
+			var point_icon = "<?php echo IMAGE_PATH; ?>/mm_20_blue.png";
+			var point_icon_red = "<?php echo IMAGE_PATH; ?>/mm_20_red.png";
 
 <?php
 		if ($type == 'main') {
@@ -70,7 +70,7 @@ function printMap($type = 'main')
 			printMapType($g_options['google_map_type']);
 ?>
 			var mapZoom = 3;
-              		var myOptions = {
+			var myOptions = {
 				center: mapLatLng,
 				mapTypeId: mapType,
 				zoom: mapZoom, 
@@ -97,15 +97,15 @@ function printMap($type = 'main')
 ?>
 				}
 				html_text += '</table>';
-		    		var infowindow = new google.maps.InfoWindow({
-	             			content: html_text
-                   		})
-                   		var marker = new google.maps.Marker({
-	                     		position: point, 
-       	              			map: map,
-                     			icon: point_icon
-                   		}); 
- 
+				var infowindow = new google.maps.InfoWindow({
+					content: html_text
+				})
+				var marker = new google.maps.Marker({
+					position: point, 
+					map: map,
+					icon: point_icon
+				});
+
 				google.maps.event.addListener(marker, "click", function() {infowindow.open(map, marker);});
 			}
 
@@ -118,16 +118,16 @@ function printMap($type = 'main')
 					html_text += '<tr><td><a href=\"hlstats.php?mode=servers&server_id=' + servers[i][0] + '&amp;game=<?php echo $game; ?>\">' + servers[i][2] + '</a></td></tr>';
 					html_text += '<tr><td>' + servers[i][1] + ' (<a href=\"steam://connect/' + servers[i][1] + '\">connect</a>)</td></tr>';
 				}
-				html_text += '<tr><td>'+kills+' kills</td></tr></table>';  
-		    		var infowindow = new google.maps.InfoWindow({
-	             			content: html_text
-                   		})
-                   		var marker = new google.maps.Marker({
-	                     		position: point, 
-       	              			map: map,
-                     			icon: point_icon_red
-                   		}); 
- 
+				html_text += '<tr><td>'+kills+' kills</td></tr></table>';
+				var infowindow = new google.maps.InfoWindow({
+					content: html_text
+				})
+				var marker = new google.maps.Marker({
+					position: point, 
+					map: map,
+					icon: point_icon_red
+				});
+
 				google.maps.event.addListener(marker, "click", function() {infowindow.open(map, marker);});
 			}
 	<?php
