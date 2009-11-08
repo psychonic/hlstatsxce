@@ -53,4 +53,4 @@ INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`)
 (SELECT code, 'tf_pumpkin_bomb', 'Pumpkin Bomb', 2 FROM hlstats_Games WHERE `realgame` = 'tf');
 
 INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`)
-(SELECT 'W',code,'tf_pumpkin_bomb', 'Pumpkin Bomber', 'kills by pumpkin bomb' FROM hlstats_Games WHERE `realgame` = 'tf');
+(SELECT 'W',code,'tf_pumpkin_bomb', 'Pumpkin Bomber', 'kills with a pumpkin bomb' FROM hlstats_Games WHERE `realgame` = 'tf');
