@@ -1762,49 +1762,6 @@ if ($g_global_chat == 1) {
 
 %g_servers = ();
 
-%g_eventTables = (
-	"TeamBonuses",
-		["playerId", "actionId", "bonus"],
-	"ChangeRole",
-		["playerId", "role"],
-	"ChangeName",
-		["playerId", "oldName", "newName"],
-	"ChangeTeam",
-		["playerId", "team"],
-	"Connects",
-		["playerId", "ipAddress", "hostname", "hostgroup"],
-	"Disconnects",
-		["playerId"],
-	"Entries",
-		["playerId"],
-	"Frags",
-		["killerId", "victimId", "weapon", "headshot", "killerRole", "victimRole", "pos_x","pos_y","pos_z", "pos_victim_x","pos_victim_y","pos_victim_z"],
-	"PlayerActions",
-		["playerId", "actionId", "bonus", "pos_x","pos_y","pos_z"],
-	"PlayerPlayerActions",
-		["playerId", "victimId", "actionId", "bonus", "pos_x","pos_y","pos_z", "pos_victim_x","pos_victim_y","pos_victim_z"],
-	"Suicides",
-		["playerId", "weapon", "pos_x","pos_y","pos_z"],
-	"Teamkills",
-		["killerId", "victimId", "weapon", "pos_x","pos_y","pos_z", "pos_victim_x","pos_victim_y","pos_victim_z"],
-	"Rcon",
-		["type", "remoteIp", "password", "command"],
-	"Admin",
-		["type", "message", "playerName"],
-	"Statsme",
-		["playerId", "weapon", "shots", "hits", "headshots", "damage", "kills", "deaths"],
-	"Statsme2",
-		["playerId", "weapon", "head", "chest", "stomach", "leftarm", "rightarm", "leftleg", "rightleg"],
-	"StatsmeLatency",
-		["playerId", "ping"],
-	"StatsmeTime",
-		["playerId", "time"],
-	"Latency",
-		["playerId", "ping"],
-	"Chat",
-		["playerId", "message_mode", "message"]
-);
-
 &printEvent("HLSTATSX", "HLstatsX is now running ($g_mode mode, debug level $g_debug)", 1);
 
 $start_time    = time();
