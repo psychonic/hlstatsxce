@@ -26,43 +26,43 @@ INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`)
 (SELECT code, 'melee', 'Melee', 1.5 FROM hlstats_Games WHERE realgame = 'l4d2');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'headshot', 5, 0, '', 'Headshot Kill', '1', '0', '0', '0', 0 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'headshot', 5, 0, '', 'Headshot Kill', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0', 1 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0', 0 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_12', 15, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0', 3 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_12', 15, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0', 26 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0', 7 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0', 11 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0', 1 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0', 5 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0', 3 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0', 0 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0', 0 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
-(SELECT code, 'Round_Win', 0, 20, '', 'Team Round Win', '0', '0', '1', '0', 0 FROM hlstats_Games WHERE `realgame` = 'nts');
+(SELECT code, 'Round_Win', 0, 20, '', 'Team Round Win', '0', '0', '1', '0' FROM hlstats_Games WHERE `realgame` = 'nts');
 
 
 INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
