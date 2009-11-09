@@ -169,21 +169,22 @@ if ($configfile && -r $configfile) {
 	&doConf($conf, %directives);
 }
 
+&doConnect;
+$result = &doQuery("
+	SELECT
+		value
+	FROM
+		hlstats_Options
+	WHERE
+		keyname='version'
+");
+
+if ($result->rows > 0) {
+	$g_version = $result->fetchrow_array;
+}
+
 if ($opt_version)
 {
-	&doConnect;
-	$result = &doQuery("
-		SELECT
-			value
-		FROM
-			hlstats_Options
-		WHERE
-			keyname='version'
-	");
-
-	if ($result->rows > 0) {
-		$g_version = $result->fetchrow_array;
-	}
 	print "\nhlstats-awards.pl (HLX:CE Awards Script) Version $g_version\n"
 		. "Real-time player and clan rankings and statistics for Half-Life\n\n"
 		. "Copyright (C) 2001  Simon Garner\n"
