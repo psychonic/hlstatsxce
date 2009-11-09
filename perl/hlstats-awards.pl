@@ -893,10 +893,10 @@ sub trim {
 	return $string;
 }
 $cnt = 0;
-$result = &doQuery("SELECT playerId, lastAddress FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
+$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
 		
-while (my($pid,$address) = $result->fetchrow_array) {
-	print "1 ".$pid." ".$address."\n";
+while (my($pid,$address, $name) = $result->fetchrow_array) {
+	print "Attempting to find location for: ".$name." (".$address.")\n";
 	my $number = ip2number($address);
 	my $update = 0;
 	my $foundflag = "";
@@ -966,11 +966,20 @@ foreach $eventTable (keys(%g_eventTables)) {
 		");
 }
 
+print "\n++ Cleaning up database: deleting player history older than $g_deletedays days ...\n";
 &execNonQuery("
 	DELETE FROM
 		hlstats_Players_History
 	WHERE
 		eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
+");
+
+print "\n++ Cleaning up database: deleting stale trend samples ...\n";
+&execNonQuery("
+	DELETE FROM
+		hlstats_Trend
+	WHERE
+		timestamp < (UNIX_TIMESTAMP() - 172800)
 ");
 
 print "\n++ Optimizing all tables ...\n";

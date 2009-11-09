@@ -1,4 +1,5 @@
 ALTER TABLE `hlstats_Players` ADD COLUMN `createdate` int(11);
+UPDATE `hlstats_Players` SET `createdate` = UNIX_TIMESTAMP();
 
 INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`)
 (SELECT code, 'jarate', 1, 0, '', 'Jarated player', '0', '1', '0', '0' FROM hlstats_Games WHERE `realgame` = 'tf');

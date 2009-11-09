@@ -339,7 +339,8 @@ sub setUniqueId
 					lastName,
 					clan,
 					game,
-					displayEvents
+					displayEvents,
+					createdate
 					$hideins
 				)
 			VALUES
@@ -347,7 +348,8 @@ sub setUniqueId
 				'" . &::quoteSQL($self->{name}) . "',
 				" . $self->{clan} . ",
 				'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "',
-				" . $self->{display_events} . "
+				" . $self->{display_events} . ",
+				UNIX_TIMESTAMP()
 				$hideval
 			)
 		";
