@@ -169,7 +169,12 @@ if ($configfile && -r $configfile) {
 	&doConf($conf, %directives);
 }
 
+print "-- Connecting to MySQL database '$db_name' on '$db_host' as user '$db_user' ... ";
+
 &doConnect;
+
+print "connected OK\n";
+
 $result = &doQuery("
 	SELECT
 		value
@@ -205,13 +210,6 @@ if($date_ubase)
 
 print "++ HLstats Awards $g_version starting...\n\n";
 
-# Connect to the database
-
-print "-- Connecting to MySQL database '$db_name' on '$db_host' as user '$db_user' ... ";
-
-&doConnect;
-
-print "connected OK\n";
 
 $g_minactivity = 2419200;
 # Inactive Players
