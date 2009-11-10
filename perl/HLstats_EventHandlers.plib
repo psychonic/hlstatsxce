@@ -1354,6 +1354,8 @@ sub doEvent_PlayerPlayerAction
 		} elsif ($player && $victim) {
 			if (($g_servers{$s_addr}->{ignore_bots} == 1) && (($killer->{is_bot} == 1) || ($victim->{is_bot} == 1))) {
 				$desc = "(IGNORED) BOT: ";
+			} elsif ($player->{id} == $victim->{id}) {
+				$desc = "(IGNORED) PLAYER = VICTIM";
 			} else {
 				if ($g_servers{$s_addr}->{play_game} eq "tf" && $action eq "medic_death") {
 					#do heal points
