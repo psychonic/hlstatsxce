@@ -5,15 +5,15 @@
 		
 	$db->query("
 		ALTER TABLE `hlstats_Players` ADD COLUMN `createdate` int(11)
-		";
+		");
 		
 	$db->query("
 		UPDATE `hlstats_Players` SET `createdate` = UNIX_TIMESTAMP()
-		";
+		");
 	
 	$db->query("
 		UPDATE hlstats_Options SET `value` = '1.6.2' WHERE `keyname` = 'version'
-		";
+		");
 	
 	$db->query("
 		UPDATE hlstats_Options SET `value` = '10' WHERE `keyname` = 'dbversion'
@@ -53,7 +53,7 @@
 			('l4d2', 'protect_teammate', 0, 0, '', 'Protected Teammate', '1', '', '', ''),
 			('l4d2', 'no_death_on_tank', 0, 0, '', 'No survivors died/incapped from tank', '1', '', '', ''),
 			('l4d2', 'killed_all_survivors', 0, 0, '', 'Killed all survivors', '1', '', '', '');
-		";
+		");
 		
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
@@ -127,7 +127,7 @@
 			('W', 'l4d2', 'machete', 'Machete', 'kills with the Machete'),
 			('W', 'l4d2', 'tonfa', 'Tonfa', 'kills with the Tonfa'),
 			('W', 'l4d2', 'melee', 'Fists of RAGGEE', 'melee kills');
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Roles` (`game`, `code`, `name`, `hidden`) VALUES
@@ -144,11 +144,11 @@
 			('l4d2', 'JOCKEY', 'Jockey', '0'),
 			('l4d2', 'infected', 'Infected Horde', '0'),
 			('l4d2', 'witch', 'Witch', '0');
-		";
+		");
 
 	$db->query("
 		UPDATE IGNORE `hlstats_Roles` SET `name` = 'Tank' WHERE `game` = 'l4d' AND `code` = 'TANK';
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
@@ -203,22 +203,22 @@
 			('l4d2', 'tonfa', 'Tonfa', 1.5),
 			('l4d2', 'insect_swarm', 'insect_swarm', 1),
 			('l4d2', 'melee', 'Melee', 1.5);
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Games` (`code`, `name`, `realgame`, `hidden`) VALUES
 			('l4d2', 'Left 4 Dead 2', 'l4d', '1');
-		";
+		");
 
 	$db->query("
 		UPDATE `hlstats_Games_Supported` SET `name` = 'Left 4 Dead (Orig. & 2)' WHERE `code` = 'l4d';
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcolor`, `playerlist_color`, `playerlist_index`) VALUES
 			('l4d2', 'Survivor', 'Survivors', '0', '#E0E4E5', '#4B6168', 1),
 			('l4d2', 'Infected', 'Infected', '0', '#E5D5D5', '#68090B', 2);
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
@@ -262,7 +262,7 @@
 			('l4d2', 'high-commander', 27500, 29999, 'High Commander'),
 			('l4d2', 'supreme-commander', 30000, 34999, 'Supreme Commander'),
 			('l4d2', 'terminator', 35000, 9999999, 'Terminator');
-		";
+		");
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
@@ -346,7 +346,7 @@
 		('tank_claw', '50', '0', 'l4d2', '4_tank_claw.png', 'Bloody Lambs 2 Slaughter'),
 		('tongue_grab', '50', '0', 'l4d2', '4_tongue_grab.png', 'Bloody Drag &amp; Drop'),
 		('vomit', '50', '0', 'l4d2', '4_vomit.png', 'Bloody Barf Bagged');
-	";
+	");
 	
 	$tf2games = array();
 	$result = "SELECT code FROM hlstats_Games WHERE realgame = 'tf'";
@@ -360,20 +360,20 @@
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 				('$game', 'tf_pumpkin_bomb', 'Pumpkin Bomb', 2);
-			";
+			");
 			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
 				('W','$game','tf_pumpkin_bomb', 'Pumpkin Bomber', 'kills with a pumpkin bomb'),
 				('O','$game', 'engineer_extinguish', 'Dispensing a little love', 'extinguishes with a Dispensor'),
 				('O','$game', 'medic_extinguish', 'You want a second opinion? You''re also ugly! ', 'extinguishes with Medic Gun');
-			";
+			");
 			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
 				('$game', 'jarate', 1, 0, '', 'Jarated player', '0', '1', '0', '0'),
 				('$game', 'shield_blocked', 0, 0, '', 'Blocked with Shield', '0', '1', '0', '0');
-			";
+			");
 	}
 	
 			
@@ -393,7 +393,7 @@
 				('$game', 'm4', 'M4', 1),
 				('$game', 'pipe', 'Pipe', 1),
 				('$game', 'slam', 'IED', 1);
-			";
+			");
 			
 
 		$db->query("
@@ -403,7 +403,7 @@
 				('W', '$game', 'm4','M4','kills with M4'),
 				('W', '$game', 'pipe','Piping hot','kills with Pipe'),
 				('W', '$game', 'slam','IEDs','kills with IED');
-			";
+			");
 			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
@@ -461,7 +461,7 @@
 				('zr68s', 1, 0, '$game', '1_zr68s.png', 'Bronze ZR68S'),
 				('zr68s', 5, 0, '$game', '2_zr68s.png', 'Silver ZR68S'),
 				('zr68s', 10, 0, '$game', '3_zr68s.png', 'Gold ZR68S');
-		";
+		");
 	}
 
 	$ntsgames = array();
@@ -475,11 +475,11 @@
 	{
 		$db->query("
 			DELETE FROM hlstats_Awards WHERE `code` = 'mp5' AND `game` = '$game'
-			";
+			");
 	
 		$db->query("
 			DELETE FROM hlstats_Weapons WHERE `code` = 'mp5' AND `game` = '$game'
-			";
+			");
 			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
@@ -496,6 +496,6 @@
 				('$game', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0'),
 				('$game', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0'),
 				('$game', 'Round_Win', 0, 20, '', 'Team Round Win', '0', '0', '1', '0');
-			";
+			");
 	}
 ?>
