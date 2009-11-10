@@ -180,9 +180,15 @@ $valid_modes = array(
 	'countryclans',
 	'countryclansinfo',
 	'teamspeak',
-	'ventrilo'
+	'ventrilo',
+	'updater'
 );
-    
+   
+if (file_exists('./updater') && $mode != 'updater')
+{
+	die('Please finish update @ <a href="'.$g_options['scripturl'].'?mode=updater">'.$g_options['scripturl'].'?mode=updater</a> and/or remove the updater directory.');
+}
+   
 if ( !in_array($mode, $valid_modes) )
 {
 	$mode = 'contents';

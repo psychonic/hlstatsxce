@@ -1,4 +1,10 @@
 <?php
+	
+	if ( !defined('IN_UPDATER') )
+	{
+		die('Do not access this file directly.');
+	}
+	
 	$db->query("
 		ALTER TABLE hlstats_Players ADD KEY `playerclan` (`clan`,`playerId`)
 		", false);
