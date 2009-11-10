@@ -401,6 +401,10 @@
 				('$game', 'slam', 'IED', 1);
 			");
 			
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+				('$game', 'headshot', 1, 0, '', 'Headshot Kill', '1', '0', '0', '0')
+			");
 
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
@@ -408,7 +412,48 @@
 				('W', '$game', 'bat_wood','Corked','kills with Bat (Wood)'),
 				('W', '$game', 'm4','M4','kills with M4'),
 				('W', '$game', 'pipe','Piping hot','kills with Pipe'),
-				('W', '$game', 'slam','IEDs','kills with IED');
+				('W', '$game', 'slam','IEDs','kills with IED'),
+				('O', '$game', 'headshot', 'Headshot King', 'headshot kills');
+			");
+	}
+
+	$ntsgames = array();
+	$result = "SELECT code FROM hlstats_Games WHERE realgame = 'nts'";
+	while ($rowdata = $db->fetch_row($result))
+	{ 
+		array_push($ntsgames, $db->escape($rowdata[0]));
+	}
+	
+	foreach($ntsgames as $game)
+	{
+		$db->query("
+			DELETE FROM hlstats_Awards WHERE `code` = 'mp5' AND `game` = '$game'
+			");
+	
+		$db->query("
+			DELETE FROM hlstats_Weapons WHERE `code` = 'mp5' AND `game` = '$game'
+			");
+			
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+				('$game', 'headshot', 5, 0, '', 'Headshot Kill', '1', '0', '0', '0'),
+				('$game', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_12', 15, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0'),
+				('$game', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0'),
+				('$game', 'Round_Win', 0, 20, '', 'Team Round Win', '0', '0', '1', '0');
+			");
+			
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
+				('O', '$game', 'headshot', 'Headshot King', 'headshot kills');
 			");
 			
 		$db->query("
@@ -468,40 +513,5 @@
 				('zr68s', 5, 0, '$game', '2_zr68s.png', 'Silver ZR68S'),
 				('zr68s', 10, 0, '$game', '3_zr68s.png', 'Gold ZR68S');
 		");
-	}
-
-	$ntsgames = array();
-	$result = "SELECT code FROM hlstats_Games WHERE realgame = 'nts'";
-	while ($rowdata = $db->fetch_row($result))
-	{ 
-		array_push($ntsgames, $db->escape($rowdata[0]));
-	}
-	
-	foreach($ntsgames as $game)
-	{
-		$db->query("
-			DELETE FROM hlstats_Awards WHERE `code` = 'mp5' AND `game` = '$game'
-			");
-	
-		$db->query("
-			DELETE FROM hlstats_Weapons WHERE `code` = 'mp5' AND `game` = '$game'
-			");
-			
-		$db->query("
-			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
-				('$game', 'headshot', 5, 0, '', 'Headshot Kill', '1', '0', '0', '0'),
-				('$game', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_12', 15, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0'),
-				('$game', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0'),
-				('$game', 'Round_Win', 0, 20, '', 'Team Round Win', '0', '0', '1', '0');
-			");
 	}
 ?>
