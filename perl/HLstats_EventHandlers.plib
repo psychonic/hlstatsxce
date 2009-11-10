@@ -997,10 +997,17 @@ sub doEvent_Frag
 				} else {
 					$weapon = "world";
 				}
+			} elsif ($g_servers{$s_addr}->{play_game} eq "zps") {
+				# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
+				if ($weapon eq "broom") {
+					$weapon = "crowbar";
+				}
 			} elsif ($g_servers{$s_addr}->{play_game} eq "fof") {
 				# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
 				$weapon =~ s/2$//;
-				$weapon =~ s/^bow$/arrow/;
+				if ($weapon = "bow") {
+					$weapon = "arrow";
+				}
 			}
 			
 			# if plugin marked next kill as headshot for this player, headshot
