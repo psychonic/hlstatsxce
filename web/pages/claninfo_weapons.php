@@ -477,7 +477,7 @@ if ($db->num_rows($result) != 0)
 					$weapon_data[$rowdata['smweapon']]['model']  = 'insmod1';
 					break;
 				case 'zps':
-					$weapon_data[$rowdata["smweapon"]]['model'] = 'zombie1';
+					$weapon_data[$rowdata["smweapon"]]['model'] = 'zps1';
 					break;
 				case 'ges':
 					$weapon_data[$rowdata["smweapon"]]['model']  = 'ges-bond';
@@ -523,7 +523,7 @@ if ($db->num_rows($result) != 0)
 				$start_model = $insmod_models[array_rand($insmod_models)];
 				break;
 			case 'zps':
-				$start_model = 'zombie1';
+				$start_model = 'zps1';
 				break;
 			case 'ges':
 				$start_model = $ges_models[array_rand($ges_models)];
