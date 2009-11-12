@@ -3,14 +3,14 @@ input, textarea, select {font-family: Verdana, Arial, sans-serif;font-size: 11px
 input.textbox, input.checkbox {border-width: 1px;}
 input.submit {height: 22px;}
 input.smallsubmit {font-size: 9px;height: 20px;}
-tt { font-family: Arial, Courier New, Courier, fixed; font-size: 12px;}
+tt { font-family: Verdana, Arial, Helvetica, sans-serif, fixed; font-size: 12px;}
 
-BODY {font: 10pt Arial; }
+BODY {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif; }
 
-TD {font: 11pt Arial; } 
-h2 {font: 11px Arial; } 
-h1 {font: 11px Arial; } 
-h3 {font: 11px Arial; }
+TD {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
+h2 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
+h1 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
+h3 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;}
 
 .helpwindow {
   position:fixed;
@@ -21,8 +21,8 @@ h3 {font: 11px Arial; }
   border:thin solid red;
   background-color:#AAAAAA;
   color:#FFFFFF;
-  font-family: Courier New, Courier, Arial, fixed;
-  font-size:10pt;
+  font-family: Verdana, Arial, Helvetica, sans-serif, fixed;
+  font-size: 11px; 
 }
 
 table#accordion
@@ -32,5 +32,6 @@ table#accordion
 
 table#accordion tr.toggler td
 {
-	border-width:0 0 1px 1px;
+	border-width: 0 0 0px 1px; 
 }
+
