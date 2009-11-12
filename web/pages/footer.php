@@ -49,16 +49,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br />
 	</div></div>
 	<div id="footer">
-		<div id="gc">
-		By <a href="http://www.hlxcommunity.com" target="_blank" class="footer_link">InterWave Studios</a>		</div>
-		<div id="sb"><br/>
 		<a href="http://www.hlxcommunity.com" target="_blank"><img src="styles/sourcebans/sb.png" alt="SourceBans" border="0" /></a><br/>
-		<br />
-		<div id="footquote">"Only a real fake is a good fake" - <i>R3M</i></div>
-		</div>
-		<div id="sm">
-		Powered by <a class="footer_link" href="http://www.sourcemod.net" target="_blank">SourceMod</a>
-		</div>
+		<div id="gc">
+		By <a href="http://www.hlxcommunity.com" target="_blank" class="footer_link">InterWave Studios</a></div>
+
 	</div>
 </div>
 <br />
