@@ -138,7 +138,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<a href="<?php echo $g_options['scripturl']; ?>"><img src="<?php echo IMAGE_PATH; ?>/icons/title.png" alt="HLstatsX" title="HLstatsX" /></a>
 		</div>
 	
-		<div class="header_gameslist"><?php @include(PAGE_PATH .'/gameslist.php'); ?></div>
+		<div class="header_gameslist"><?php //@include(PAGE_PATH .'/gameslist.php'); ?></div>
 	 
 		<div class="headertabs"> 
 			<ul>
