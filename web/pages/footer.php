@@ -49,7 +49,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br />
 	</div></div>
 	<div id="footer">
-		<a href="http://www.hlxcommunity.com" target="_blank"><img src="hlstatsimg/title-small.png" alt="HLStatsX Community Edition" border="0" /></a><br/>
+		<a href="http://www.hlxcommunity.com" target="_blank"><img src="hlstatsimg/icons/title-small.png" alt="HLStatsX Community Edition" border="0" /></a><br/>
 		<div id="gc">
 		an <a href="http://www.interwavestudios.com" target="_blank" class="footer_link">InterWave Studios</a> community project</div>
 
