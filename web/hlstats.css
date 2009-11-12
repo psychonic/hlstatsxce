@@ -36,10 +36,6 @@ table#accordion tr.toggler td
 }
 
 #footer {
-	clear:both;
-	color: #000;
-	width: 80%;
-	margin-left:10%;
-	height: 68px;  
+    text-align: center; 
 }
 
