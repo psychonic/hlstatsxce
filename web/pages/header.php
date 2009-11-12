@@ -145,9 +145,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo IMAGE_PATH ?>/icons/title-contents.gif" alt="Contents" /></a></li>
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo IMAGE_PATH ?>/icons/title-search.gif" alt="Search" /></a></li>
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo IMAGE_PATH ?>/icons/title-help.gif" alt="Help" /></a></li>
+<!--  Disabled temporarily until we build in handling in the admin center.
 				<li><a href="http://bans.econsole.de" target="_blank"><img src="<?php echo IMAGE_PATH ?>/icons/title-sourcebans.gif" alt="SourceBans" /></a></li>
 				<li><a href="http://www.econsole.de/web/index.php?mod=board&action=list" target="_blank"><img src="<?php echo IMAGE_PATH ?>/icons/title-forum.gif" alt="Forum" /></a></li>
-			</ul>		
+-->
+				</ul>		
 
 	</div> </div>
 	<div class="location" style="clear:both;width:100%;">

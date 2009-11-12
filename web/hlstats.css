@@ -35,3 +35,11 @@ table#accordion tr.toggler td
 	border-width: 0 0 0px 1px; 
 }
 
+#footer {
+	clear:both;
+	color: #000;
+	width: 80%;
+	margin-left:10%;
+	height: 68px;  
+}
+
