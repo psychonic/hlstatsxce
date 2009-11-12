@@ -82,7 +82,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>
 <br />
 All images are copyrighted by their respective owners.<br />
-SourceBans theme by R3M <a href="http://www.econsole.de" target="_blank">www.econsole.de</a>
 </div>
 <br />
 
