@@ -300,7 +300,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 					print('</td></tr>	</table><br /><br />');					
 				}
 ?>
-
 	</div>
 				</div>
 			</td>
