@@ -286,7 +286,7 @@ printSectionTitle('Clan Information');
 			</tr>
 			<tr class="bg1">
 				<td>
-					<div id="map" style="margin:10px auto;width: 430px; height: 290px;"></div>
+					<div id="map" style="margin:10px auto;width: 460px; height: 305px;"></div>
 				</td>
 			</tr>
 		</table>
@@ -402,7 +402,7 @@ printSectionTitle('Clan Information');
 	printSectionTitle('Members');
 	$tblMembers->draw($result, $numitems, 95);
 ?>
-<br /><br />
+<p />
 <?php
 	if ( $g_options['show_google_map'] == 1 ) {
 		include(INCLUDE_PATH . '/google_maps.php');

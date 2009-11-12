@@ -146,7 +146,7 @@
 ?>
     </table>
 	</div>
-<br /><br />
+<p />
 <?php
 	}
 	// VOICECOMM MODULE END

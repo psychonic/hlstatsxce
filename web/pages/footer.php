@@ -45,7 +45,23 @@ For support and installation notes visit http://www.hlxcommunity.com
 	global $scripttime, $db;
 	$scripttime = round(microtime(true) - $scripttime, 4);
 ?>
-<div style="clear:both;"></div>
+<div style="clear:both;" />
+<br />
+	</div></div>
+	<div id="footer">
+		<div id="gc">
+		By <a href="http://www.hlxcommunity.com" target="_blank" class="footer_link">InterWave Studios</a>		</div>
+		<div id="sb"><br/>
+		<a href="http://www.hlxcommunity.com" target="_blank"><img src="styles/sourcebans/sb.png" alt="SourceBans" border="0" /></a><br/>
+		<br />
+		<div id="footquote">"Only a real fake is a good fake" - <i>R3M</i></div>
+		</div>
+		<div id="sm">
+		Powered by <a class="footer_link" href="http://www.sourcemod.net" target="_blank">SourceMod</a>
+		</div>
+	</div>
+</div>
+<br />
 <br />
 <div class="fSmall" style="text-align:center;">
 <?php
@@ -53,7 +69,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if($_SESSION['nojs'] == 1) {
 		echo 'You are currently viewing the basic version of this page, please enable JavaScript and reload the page to access full functionality.<br />';
 	}
-	echo 'Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a> - an <a href="http://www.interwavestudios.com" target="_blank">InterWave Studios</a> community project';
+	echo 'Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a> - 
+		[<a href="'.$g_options['scripturl']."?mode=admin\">Admin</a>]";
+	if (isset($_SESSION['loggedin'])) {
+		echo '&nbsp;[<a href="hlstats.php?logout=1">Logout</a>]';
+	}
 	if ($g_options['showqueries'] == 1) {
 		echo '
 			<br />
@@ -61,19 +81,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 ?>
 <br />
-All images are copyrighted by their respective owners.
-
-<?php
-	echo '<br /><br />[<a href="'.$g_options['scripturl']."?mode=admin\">Admin</a>]";
-
-	if (isset($_SESSION['loggedin'])) {
-
-		echo '&nbsp;[<a href="hlstats.php?logout=1">Logout</a>]';
-
-	}
-?>
+All images are copyrighted by their respective owners.<br />
+SourceBans theme by R3M <a href="http://www.econsole.de" target="_blank">www.econsole.de</a>
 </div>
-</div>
+<br />
+
 <?php
 	global $mode, $redirect_to_game;
 	if (($g_options["show_google_map"] == 1) && ($mode == "contents") && ($redirect_to_game > 0))
@@ -82,5 +94,6 @@ All images are copyrighted by their respective owners.
 		printMap();
 	}
 ?>
+
 </body>
 </html>

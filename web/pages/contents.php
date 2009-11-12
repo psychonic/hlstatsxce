@@ -223,7 +223,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>	
 				</table>
 		
-		</div><br /><br />
+		</div><p />
 		<br />
 		
 <?php

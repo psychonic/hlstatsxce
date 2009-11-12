@@ -132,25 +132,30 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 ?>
 <div class="block">
-		
+	
 	<div class="headerblock">
-		<div>
+		<div class="title">
 			<a href="<?php echo $g_options['scripturl']; ?>"><img src="<?php echo IMAGE_PATH; ?>/icons/title.png" alt="HLstatsX" title="HLstatsX" /></a>
 		</div>
-		<div class="headertabs">
+	
+		<div class="header_gameslist"><?php @include(PAGE_PATH .'/gameslist.php'); ?></div>
+	 
+		<div class="headertabs"> 
 			<ul>
 				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo IMAGE_PATH ?>/icons/title-contents.gif" alt="Contents" /></a></li>
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo IMAGE_PATH ?>/icons/title-search.gif" alt="Search" /></a></li>
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo IMAGE_PATH ?>/icons/title-help.gif" alt="Help" /></a></li>
-			</ul>
-		</div>
-	</div>
+				<li><a href="http://bans.econsole.de" target="_blank"><img src="<?php echo IMAGE_PATH ?>/icons/title-sourcebans.gif" alt="SourceBans" /></a></li>
+				<li><a href="http://www.econsole.de/web/index.php?mod=board&action=list" target="_blank"><img src="<?php echo IMAGE_PATH ?>/icons/title-forum.gif" alt="Forum" /></a></li>
+			</ul>		
+
+	</div> </div>
 	<div class="location" style="clear:both;width:100%;">
-		<ul class="fNormal" style="float:left;">
+		<ul class="fNormal">
 <?php
 			if ($g_options['sitename'] && $g_options['siteurl'])
 			{
-				echo '<li><a href="http://' . preg_replace('/http:\/\//', '', $g_options['siteurl']) . '">'. $g_options['sitename'] . '</a>:</li>';
+				echo '<li><a href="http://' . preg_replace('/http:\/\//', '', $g_options['siteurl']) . '">'. $g_options['sitename'] . '</a> |</li>';
 			}
 			echo '<li><a href="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '">HLstatsX</a>';
 
@@ -160,7 +165,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			{
 				$url = preg_replace('/%s/', $g_options['scripturl'], $url);
 				$url = preg_replace('/&/', '&amp;', $url);
-				echo ':</li><li>';
+				echo ' |</li><li>';
 				if ($url) {
 					echo "<a href=\"$url\">$l</a>";
 				} else {
@@ -171,6 +176,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>			</li>
 		</ul>
 	</div>
+	<div class="location_under" style="clear:both;width:100%;"></div>
 </div>
 
 <br />
@@ -191,7 +197,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ($game != '') {
 ?>    
 
-    <span class="fHeading">&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" alt="" />&nbsp;Sections</span><br /><br />
+    <span class="fHeading">&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" alt="" />&nbsp;Sections</span><p />
 		<ul class="navbar">
 			<li><a href="<?php echo $g_options['scripturl']  . "?game=$game";  ?>" class="fHeading"><img src="<?php echo IMAGE_PATH; ?>/icons/nav-servers.png" alt="Servers" />Servers</a></li>
 
@@ -208,7 +214,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 	if ($g_options["countrydata"]==1) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game";  ?>" class="fHeading"><img src="<?php echo IMAGE_PATH; ?>/icons/nav-countryclans.png" alt="CountryClans" />Countries</a></li>
+			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading"><img src="<?php echo IMAGE_PATH; ?>/icons/nav-countryclans.png" alt="CountryClans" />Countries</a></li>
 <?php
 	}
 ?>
