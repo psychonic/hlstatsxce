@@ -51,7 +51,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<div id="footer">
 		<a href="http://www.hlxcommunity.com" target="_blank"><img src="styles/sourcebans/sb.png" alt="SourceBans" border="0" /></a><br/>
 		<div id="gc">
-		By <a href="http://www.hlxcommunity.com" target="_blank" class="footer_link">InterWave Studios</a></div>
+		an <a href="http://www.hlxcommunity.com" target="_blank" class="footer_link">InterWave Studios</a> community project</div>
 
 	</div>
 </div>
