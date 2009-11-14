@@ -166,7 +166,7 @@ sub track_hlstats_trend
 	if ($last_trend_timestamp > 0) {
 		if ($last_trend_timestamp+299 < $new_timestamp) {
 			my $result = &doQuery("SELECT COUNT(*), a.game FROM hlstats_Players a INNER JOIN (SELECT game FROM hlstats_Servers GROUP BY game) AS b ON a.game=b.game GROUP BY a.game");
-			my $insvales = "";
+			my $insvalues = "";
 			while ( my($total_players, $game) = $result->fetchrow_array) {
 				my $data = &doQuery("SELECT SUM(kills), SUM(headshots), COUNT(serverId), SUM(act_players), SUM(max_players) FROM hlstats_Servers WHERE game='".&quoteSQL($game)."'");
 				my ($total_kills, $total_headshots, $total_servers, $act_slots, $max_slots) = $data->fetchrow_array;
