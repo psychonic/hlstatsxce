@@ -1,0 +1,1 @@
+ALTER TABLE hlstats_Players ADD KEY `hideranking` (`hideranking`);
