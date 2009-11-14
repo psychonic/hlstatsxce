@@ -152,15 +152,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 ?>
 <div class="block">
-		
+	
 	<div class="headerblock">
 		<div class="title">
-		<div>
 			<a href="<?php echo $g_options['scripturl']; ?>"><img src="<?php echo $iconpath; ?>title.png" alt="HLstatsX" title="HLstatsX" /></a>
 		</div>
-		<div class="headertabs">
+
+<?php
+		if ($g_options['display_gamelist'] == 1) {
+?>
 		<div class="header_gameslist"><?php @include(PAGE_PATH .'/gameslist.php'); ?></div>
-	 
+<?php	
+		}
+?>
 		<div class="headertabs"> 
 			<ul>
 				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath ?>title-contents.gif" alt="Contents" /></a></li>
@@ -171,7 +175,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	</div> </div>
 	<div class="location" style="clear:both;width:100%;">
-		<ul class="fNormal" style="float:left;">
+		<ul class="fNormal" style="float:left">
 <?php
 			if ($g_options['sitename'] && $g_options['siteurl'])
 			{
@@ -241,7 +245,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 ?>    
 
-    <span class="fHeading">&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" alt="" />&nbsp;Sections</span><br /><br />
+    <span class="fHeading">&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" alt="" />&nbsp;Sections</span><p />
 		<ul class="navbar">
 			<li><a href="<?php echo $g_options['scripturl']  . "?game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-servers.png" alt="Servers" />Servers</a></li>
 

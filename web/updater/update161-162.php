@@ -535,5 +535,18 @@
 				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_hegrenade.png' WHERE `awardCode` = 'grenade' AND `awardCount` = 5 AND `game` = 'cstrike';
 				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_defused_the_bomb.png' WHERE `awardCode` = 'defused_the_bomb' AND `awardCount` = 5 AND `game` = 'cstrike';
 		");
+		
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
+				('sourcebans_address', '',  2),
+				('forum_address', '',  2),
+				('display_gamelist', '1', 0);
+		");		
+		
+		$db->query("
+			INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) VALUES		
+				('display_gamelist', '1', 'Yes', 1),
+				('display_gamelist', '0', 'No', 0);
+		");	
 	}
 ?>
