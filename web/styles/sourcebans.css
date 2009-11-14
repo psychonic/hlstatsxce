@@ -142,8 +142,8 @@ img {
 	color:#AEAEAE;
 }
 
-.data-table-head #player_avatar td{
-	height:158px;
+#player_avatar{
+	padding-top:26px;
 }
 
 .gmapstab a:link {
