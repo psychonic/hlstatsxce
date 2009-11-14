@@ -243,7 +243,7 @@ RewriteRule sig-(.*)-(.*).png$ sig.php?player_id=$1&background=$2 [L]</textarea>
 	$optiongroups[20]->options[] = new Option('map_dlurl', 'Map Download URL<br /><span class="fSmall">(%MAP% = map, %GAME% = gamecode)</span>. Leave blank to suppress download link.', 'text');
 
 	$optiongroups[30] = new OptionGroup('Visual style settings');
-	$optiongroups[30]->options[] = new Option('trendgraphfile', 'Player Trend Graph background file<br />(leave empty for white background)', 'text');
+	// Removed for 1.6.2 -- now placing HLXCE logo in background. $optiongroups[30]->options[] = new Option('trendgraphfile', 'Player Trend Graph background file<br />(leave empty for white background)', 'text');
 	$optiongroups[30]->options[] = new Option('graphbg_load', 'Server Load graph: background color hex# (RRGGBB)', 'text');
 	$optiongroups[30]->options[] = new Option('graphtxt_load', 'Server Load graph: text color# (RRGGBB)', 'text');
 	$optiongroups[30]->options[] = new Option('graphbg_trend', 'Player Trend graph: background color hex# (RRGGBB)', 'text');
