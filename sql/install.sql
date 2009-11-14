@@ -3223,7 +3223,8 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('Proxy_Key', '', 1),
 ('Proxy_Daemons', '', 2),
 ('sourcebans_address', '', 2),
-('forum_address', '', 2);
+('forum_address', '', 2),
+('display_gamelist', '1', 0);
 
 
 CREATE TABLE IF NOT EXISTS `hlstats_Options_Choices` (
@@ -3329,7 +3330,9 @@ INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) 
 ('UseGeoIPBinary', '0', 'GeoIP lookup via database', 1),
 ('UseGeoIPBinary', '1', 'GeoIP lookup via binary file', 0),
 ('showqueries', '0', 'No', 1),
-('showqueries', '1', 'Yes', 0);
+('showqueries', '1', 'Yes', 0),
+('display_gamelist', '1', 'Yes', 1),
+('display_gamelist', '0', 'No', 0);
 -- --------------------------------------------------------
 
 --
