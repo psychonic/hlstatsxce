@@ -3221,7 +3221,9 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('modrewrite','0',2),
 ('showqueries','0',2),
 ('Proxy_Key', '', 1),
-('Proxy_Daemons', '', 2);
+('Proxy_Daemons', '', 2),
+('sourcebans_address', '', 2),
+('forum_address', '', 2);
 
 
 CREATE TABLE IF NOT EXISTS `hlstats_Options_Choices` (
@@ -3391,7 +3393,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Players` (
   KEY `playerclan` (`clan`,`playerId`),
   KEY `skill` (`skill`),
   KEY `game` (`game`),
-  KEY `kills` (`kills`)
+  KEY `kills` (`kills`),
+  KEY `hideranking` (`hideranking`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
