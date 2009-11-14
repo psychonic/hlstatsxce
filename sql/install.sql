@@ -3159,8 +3159,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '6', 2),
-('version', '1.6.1', 1),
+('dbversion', '10', 2),
+('version', '1.6.2', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
 ('Rcon', '1',0),
@@ -3186,7 +3186,7 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('contact', 'your@email.address',2),
 ('sitename', 'HLstatsX',2),
 ('siteurl', 'http://your.stats.url.here',2),
-('style', 'classic.css',2),
+('style', 'sourcebans.css',2),
 ('imgpath', 'hlstatsimg',2),
 ('map_dlurl', 'http://your.server.here/fastdownload/%GAME%/%MAP%.bsp.bz2',2),
 ('awards_d_date', '2008-08-30',2),
