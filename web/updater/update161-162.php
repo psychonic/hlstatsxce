@@ -6,10 +6,13 @@
 	}
 	
 	$db->query("
-		ALTER TABLE hlstats_Players ADD KEY `playerclan` (`clan`,`playerId`);
-		ALTER TABLE hlstats_Players ADD KEY `hideranking` (`hideranking`);
+		ALTER TABLE hlstats_Players ADD KEY `playerclan` (`clan`,`playerId`)
 		", false);
 		
+	$db->query("
+		ALTER TABLE hlstats_Players ADD KEY `hideranking` (`hideranking`)
+		", false);
+
 	$db->query("
 		ALTER TABLE `hlstats_Players` ADD COLUMN `createdate` int(11)
 		");
@@ -513,28 +516,35 @@
 				('zr68s', 1, 0, '$game', '1_zr68s.png', 'Bronze ZR68S'),
 				('zr68s', 5, 0, '$game', '2_zr68s.png', 'Silver ZR68S'),
 				('zr68s', 10, 0, '$game', '3_zr68s.png', 'Gold ZR68S');
-		");
-		$db->query("
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_ak47.png' WHERE `awardCode` = 'ak47' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_awp.png' WHERE `awardCode` = 'awp' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_deagle.png' WHERE `awardCode` = 'deagle' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_elite.png' WHERE `awardCode` = 'elite' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_famas.png' WHERE `awardCode` = 'famas' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_galil.png' WHERE `awardCode` = 'galil' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_glock.png' WHERE `awardCode` = 'glock18' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_knife.png' WHERE `awardCode` = 'knife' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_latency.png' WHERE `awardCode` = 'latency' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_m3.png' WHERE `awardCode` = 'm3' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_m4a1.png' WHERE `awardCode` = 'm4a1' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_p90.png' WHERE `awardCode` = 'p90' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_scout.png' WHERE `awardCode` = 'scout' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_usp.png' WHERE `awardCode` = 'usp' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_killed_a_hostage.png' WHERE `awardCode` = 'killed_a_hostage' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_rescued_a_hostage.png' WHERE `awardCode` = 'rescued_a_hostage' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_planted_the_bomb.png' WHERE `awardCode` = 'planted_the_bomb' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_hegrenade.png' WHERE `awardCode` = 'grenade' AND `awardCount` = 5 AND `game` = 'cstrike';
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '2_defused_the_bomb.png' WHERE `awardCode` = 'defused_the_bomb' AND `awardCount` = 5 AND `game` = 'cstrike';
-		");
+			");
+			
+		$cs16ribbonfix = array(
+			'ak47' => '2_ak47.png',
+			'awp' => '2_awp.png',
+			'deagle' => '2_deagle.png',
+			'2_elite.png' => 'elite',
+			'2_famas.png' => 'famas',
+			'2_galil.png' => 'galil',
+			'2_glock.png' => 'glock18',
+			'2_knife.png' => 'knife',
+			'2_latency.png' => 'latency',
+			'2_m3.png' => 'm3',
+			'2_m4a1.png' => 'm4a1',
+			'2_p90.png' => 'p90',
+			'2_scout.png' => 'scout',
+			'2_usp.png' => 'usp',
+			'2_killed_a_hostage.png' => 'killed_a_hostage',
+			'2_rescued_a_hostage.png' => 'rescued_a_hostage',
+			'2_planted_the_bomb.png' => 'planted_the_bomb',
+			'2_hegrenade.png' => 'grenade',
+			'2_defused_the_bomb.png' => 'defused_the_bomb'
+			);
+		foreach ($cs16ribbonfix as $code => $img)
+		{
+			$db->query("
+				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '$img' WHERE `awardCode` = '$code' AND `awardCount` = 5 AND `game` = 'cstrike';
+				");
+		}
 		
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
