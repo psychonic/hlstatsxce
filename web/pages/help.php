@@ -308,12 +308,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 			
 				<li><strong>email</strong><br />
 					Sets your E-mail Address as shown in your profile.<br />
-					Example: &nbsp; <strong>/hlx_set email joe@hotmail.com</strong><br /><br />
+					Example: &nbsp; <strong>/hlx_set email joe@joebloggs.com</strong><br /><br />
 				</li>
 				
 				<li><strong>homepage</strong><br />
 					Sets your Home Page as shown in your profile.<br />
-					Example: &nbsp; <strong>/hlx_set homepage http://www.BUUUUURRRRP.burp/littleburp</strong><br /><br />
+					Example: &nbsp; <strong>/hlx_set homepage http://www.joebloggs.com/</strong><br /><br />
 				</li>
 			</ul>
 			<strong>Note:</strong> These are not standard Half-Life console commands. If you type them in the console, Half-Life will give you an error.<br /><br />For a full list of supported ingame commands, type the word help into ingame chat.<br /><br />
