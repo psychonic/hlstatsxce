@@ -172,7 +172,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				echo $image['url'];
 			else
 				echo IMAGE_PATH . '/game.gif';
-               ?>"  style="margin-left: 3px; margin-right: 4px;" alt="Game" /><?php echo $gamedata[1]; ?></a>
+               ?>"  style="margin-left: 3px; margin-right: 4px;" alt="Game" /></a><a href="<?php echo $g_options['scripturl'] . "?game=$gamedata[0]"; ?>"><?php echo $gamedata[1]; ?></a>
 						</div>
 						<div style="float:right;">
 							<div style="margin-left: 3px; margin-right: 4px; vertical-align:top; text-align:center;"><a href="<?php echo $g_options['scripturl'] . "?mode=clans&amp;game=$gamedata[0]"; ?>"><img src="<?php echo IMAGE_PATH; ?>/clan.gif" alt="Clan Rankings" /></a></div>
@@ -231,15 +231,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		
 		$nonhiddengamestring = preg_replace('/,$/', ')', $nonhiddengamestring);
 		
-		$result = $db->query("SELECT COUNT(*) FROM hlstats_Players WHERE game IN $nonhiddengamestring");
+		$result = $db->query("SELECT COUNT(playerId) FROM hlstats_Players WHERE game IN $nonhiddengamestring");
 		list($num_players) = $db->fetch_row($result);
 		$num_players = number_format($num_players);
 
-		$result = $db->query("SELECT COUNT(*) FROM hlstats_Clans WHERE game IN $nonhiddengamestring");
+		$result = $db->query("SELECT COUNT(clanId) FROM hlstats_Clans WHERE game IN $nonhiddengamestring");
 		list($num_clans) = $db->fetch_row($result);
 		$num_clans = number_format($num_clans);
 
-		$result = $db->query("SELECT COUNT(*) FROM hlstats_Servers WHERE game IN $nonhiddengamestring");
+		$result = $db->query("SELECT COUNT(serverId) FROM hlstats_Servers WHERE game IN $nonhiddengamestring");
 		list($num_servers) = $db->fetch_row($result);
 		$num_servers = number_format($num_servers);
 		
@@ -249,7 +249,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 		$result = $db->query("
 			SELECT 
-				DATE_FORMAT(eventTime, '%r, %a. %e %b.')
+				eventTime
 			FROM
 				hlstats_Events_Frags
 			ORDER BY
@@ -269,7 +269,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 		if ($lastevent)
 		{
-			echo "\t\t\t\t<li>Last Kill <strong>$lastevent</strong></li>";
+			echo "\t\t\t\t<li>Last Kill <strong> " . date('g:i:s A, D. d Y', strtotime($lastevent)) . "</strong></li>";
 		}
 ?>
 				<li>All statistics are generated in real-time. Event history data expires after <strong><?php echo $g_options['DeleteDays']; ?></strong> days.</li>

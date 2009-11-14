@@ -194,9 +194,9 @@ img {
 }
 
 .headerblock {
-	border:1px solid #A8B090;
-	height:36px;
-	background-image:url(../hlstatsimg/icons/title-background.gif);
+	/*border:1px solid #A8B090;*/
+	height:50px;
+	/*background-image:url(../hlstatsimg/icons/title-background.gif);*/
 	position:relative;
 }
 

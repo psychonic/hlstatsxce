@@ -210,6 +210,8 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$optiongroups[0]->options[] = new Option('slider', 'Enable AJAX gliding server list (accordion effect) on homepage of each game (only affects games with more than one server)', 'select');
 	$optiongroups[0]->options[] = new Option('nav_globalchat', 'Show Chat nav-link', 'select');
 	$optiongroups[0]->options[] = new Option('nav_cheaters', 'Show Banned Players nav-link', 'select');
+	$optiongroups[0]->options[] = new Option('sourcebans_address', 'SourceBans URL<br />Enter the relative or full path to your SourceBans web site, if you have one. Ex: http://www.yoursite.com/sourcebans/ or /sourcebans/', 'text');
+	$optiongroups[0]->options[] = new Option('forum_address', 'Forum URL<br />Enter the relative or full path to your forum/message board, if you have one. Ex: http://www.yoursite.com/forum/ or /forum/', 'text');
 	$optiongroups[0]->options[] = new Option('show_weapon_target_flash', 'Show hitbox flash animation instead of plain html table for games with accuracy tracking (css, dods, & cstrike)', 'select');
 	$optiongroups[0]->options[] = new Option('show_server_load_image', 'Show load summaries from all monitored servers', 'select');
 	$optiongroups[0]->options[] = new Option('showqueries', 'Show "Executed X queries, generated this page in Y Seconds." message in footer?', 'select');
@@ -247,6 +249,7 @@ RewriteRule sig-(.*)-(.*).png$ sig.php?player_id=$1&background=$2 [L]</textarea>
 	$optiongroups[30]->options[] = new Option('graphbg_trend', 'Player Trend graph: background color hex# (RRGGBB)', 'text');
 	$optiongroups[30]->options[] = new Option('graphtxt_trend', 'Player Trend graph: text color hex# (RRGGBB)', 'text');
 	$optiongroups[30]->options[] = new Option('style', 'Stylesheet filename to use', 'styles');
+
 	
 	$optiongroups[35] = new OptionGroup('Ranking settings');
 	$optiongroups[35]->options[] = new Option('rankingtype', '*Ranking type', 'select');

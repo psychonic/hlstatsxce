@@ -45,6 +45,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 * This file can contain PHP code.
 	 */
 Header ('Cache-Control: no-cache');
+$lastpage = $_SERVER['HTTP_REFERER'];
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -55,8 +56,20 @@ Header ('Cache-Control: no-cache');
 	<link rel="stylesheet" type="text/css" href="styles/<?php echo $g_options['style']; ?>">
 	<title>HLstatsX</title>
 </head>
-<body style="margin:0px;padding:0px;"> 
+<body style="margin:0px;padding:0px;" id="ingame"> 
     
-<div style="width:100%;background-image:url(<?php echo IMAGE_PATH; ?>/icons/title-background.gif);">
-	<img src="<?php echo IMAGE_PATH; ?>/icons/title.png" alt="HLstats"></td>
+<div style="width:100%;height:0%" class="headerblock">
+	<img src="<?php echo IMAGE_PATH; ?>/icons/title.png" alt="HLstats" />
+	<?php 
+	if ($lastpage) {
+		?>
+		<div style="position: absolute; bottom:0; right:0; color #FFFFFF;">
+			<a href="<?php echo $lastpage; ?>">Go Back</a>
+		</div>
+		<?php 
+	} ?>
 </div>
+
+
+
+

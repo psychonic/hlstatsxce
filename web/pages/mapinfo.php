@@ -73,12 +73,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 			new TableColumn(
 				'killerName',
 				'Player',
-				'width=60&align=left&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k') 
+				'width=50&align=left&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k') 
 			),
 			new TableColumn(
 				'frags',
 				"Kills on $map",
-				'width=15&align=right'
+				'width=25&align=right'
 			),
 			new TableColumn(
 				'headshots',
