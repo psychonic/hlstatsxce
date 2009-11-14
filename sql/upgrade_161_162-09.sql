@@ -15,5 +15,5 @@ UPDATE IGNORE hlstats_Ribbons SET `image` = '2_usp.png' WHERE `awardCode` = 'usp
 UPDATE IGNORE hlstats_Ribbons SET `image` = '2_killed_a_hostage.png' WHERE `awardCode` = 'killed_a_hostage' AND `awardCount` = 5 AND `game` = 'cstrike';
 UPDATE IGNORE hlstats_Ribbons SET `image` = '2_rescued_a_hostage.png' WHERE `awardCode` = 'rescued_a_hostage' AND `awardCount` = 5 AND `game` = 'cstrike';
 UPDATE IGNORE hlstats_Ribbons SET `image` = '2_planted_the_bomb.png' WHERE `awardCode` = 'planted_the_bomb' AND `awardCount` = 5 AND `game` = 'cstrike';
-UPDATE IGNORE hlstats_Ribbons SET `image` = '2_grenade.png' WHERE `awardCode` = 'grenade' AND `awardCount` = 5 AND `game` = 'cstrike';
+UPDATE IGNORE hlstats_Ribbons SET `image` = '2_hegrenade.png' WHERE `awardCode` = 'grenade' AND `awardCount` = 5 AND `game` = 'cstrike';
 UPDATE IGNORE hlstats_Ribbons SET `image` = '2_defused_the_bomb.png' WHERE `awardCode` = 'defused_the_bomb' AND `awardCount` = 5 AND `game` = 'cstrike';
