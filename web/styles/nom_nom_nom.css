@@ -192,11 +192,12 @@ img {
 }
 
 .headerblock {
-	border:1px solid #A8B090;
-	height:36px;
-	background-image:url(../hlstatsimg/icons/title-background.gif);
+	border:0px solid #A8B090;
+	height:50px;
+	/*background-image:url(../hlstatsimg/icons/title-background.png);*/
 	position:relative;
 }
+
 
 .tableicon {
 	margin-bottom: 0px;
@@ -305,4 +306,27 @@ img {
 #main ul.register_tabs li a.active {
 	background-color:#6d7a81;
 	color:#fff;
+}
+
+.header_gameslist {
+	margin: 0 auto;
+	padding-right: 13%;
+} 
+
+#header_gameslist {
+    float: right;
+	position: absolute;
+	top:0;
+	right:0;
+}
+
+ul#header_gameslist{
+	margin: auto;
+	text-align: right;
+}
+
+ul#header_gameslist li{
+	list-style: none;
+	float: left;
+	padding: 0 10px;
 }

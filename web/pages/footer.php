@@ -47,6 +47,14 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>
 <div style="clear:both;"></div>
 <br />
+	<div id="footer">
+			<a href="http://www.hlxcommunity.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/title-small.png" alt="HLstatsX Community Edition" border="0" /></a><br/>
+			<br />
+			an <a href="http://www.interwavestudios.com" target="_blank" class="footer_link">InterWave Studios</a> community project
+	</div>
+</div>
+<br />
+<br />
 <div class="fSmall" style="text-align:center;">
 <?php
 

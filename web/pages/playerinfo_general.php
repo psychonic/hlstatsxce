@@ -48,7 +48,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<table class="data-table">
 				<tr class="data-table-head">
 					<td style="vertical-align:top;">Player Profile<br /><br /></td>
-					<td style="text-align:center; vertical-align:middle;" rowspan="7">
+					<td style="text-align:center; vertical-align:middle;" rowspan="7" id="player_avatar">
 						<?php
 							$db->query
 							("
