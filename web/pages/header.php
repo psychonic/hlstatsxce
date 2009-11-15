@@ -173,7 +173,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		
 		list($num_games) = $db->fetch_row($resultGames);
 		
-		if ($g_options['display_gamelist'] == 1 && $num_games > 1) {
+		if ($num_games > 1 && $g_options['display_gamelist'] == 1) {
 ?>
 		<div class="header_gameslist"><?php @include(PAGE_PATH .'/gameslist.php'); ?></div>
 <?php	
