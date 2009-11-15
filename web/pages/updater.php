@@ -29,7 +29,6 @@
 	{
 		// at 1.6.1, up to 1.6.2
 		include ("./updater/update161-162.php");		
-		echo "Update to 1.6.2 completed successfully.";
 	}
 	else
 	{
@@ -53,6 +52,7 @@
 		{
 			echo "Successfully updated to db version ".($i-1);
 		}
-		
 	}
+	
+	echo "<br /><br />You <strong>must delete</strong> the \"updater\" folder from your web site before your site will be operational.";
 ?>
