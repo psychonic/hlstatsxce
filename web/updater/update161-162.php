@@ -15,7 +15,7 @@
 
 	$db->query("
 		ALTER TABLE `hlstats_Players` ADD COLUMN `createdate` int(11)
-		");
+		", false);
 		
 	$db->query("
 		UPDATE `hlstats_Players` SET `createdate` = UNIX_TIMESTAMP()
