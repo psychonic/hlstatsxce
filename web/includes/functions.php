@@ -49,7 +49,7 @@ if (!defined('IN_HLSTATS'))
 function getOptions()
 {
 	global $db;
-	$result = $db->query("SELECT `keyname`,`value` FROM hlstats_Options WHERE opttype >= 1 OR `keyname` = 'display_gamelist'");
+	$result = $db->query("SELECT `keyname`,`value` FROM hlstats_Options WHERE opttype >= 1");
 	while ($rowdata = $db->fetch_row($result))
 	{
 		$options[$rowdata[0]] = $rowdata[1];

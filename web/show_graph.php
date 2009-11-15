@@ -35,7 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-
+	global $iconpath;
+	
 	foreach ($_SERVER as $key => $entry) {
 		if ($key !== 'HTTP_COOKIE') {
 			$search_pattern  = array('/<script>/', '/<\/script>/', '/[^A-Za-z0-9.\-\/=:;_?#&~]/');
@@ -379,17 +380,20 @@ For support and installation notes visit http://www.hlxcommunity.com
 		// PLAYER HISTORY GRAPH
 		$indent_x = array(35, 35);
 		$indent_y = array(15, 15);
+		
+		if (file_exists($iconpath . "/trendgraph.png")) {
+			$trendgraph_bg = $iconpath . "/trendgraph.png";
+		} else {
+			$trendgraph_bg = IMAGE_PATH . "/graph/trendgraph.png";
+		}
 
-		if ($g_options['trendgraphfile'])
-		{
-			$background_img = imagecreatefrompng(IMAGE_PATH . '/graph/' . $g_options['trendgraphfile']);
-			if ($background_img)
+		$background_img = imagecreatefrompng($trendgraph_bg);
+		if ($background_img)
 			{
 				imagecopy($image, $background_img, 0, 0, 0, 0, 400, 152);
 				imagedestroy($background_img);
 				$drawbg = false;
 			}
-		}
 
 		// background
 		if ($drawbg)
