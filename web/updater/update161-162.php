@@ -555,7 +555,7 @@
 		INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 			('sourcebans_address', '',  2),
 			('forum_address', '',  2),
-			('display_gamelist', '1', 2)
+			('display_gamelist', '1', 2),
 			('display_style_selector', '0', 2);
 	");		
 	
