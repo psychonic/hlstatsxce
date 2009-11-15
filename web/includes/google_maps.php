@@ -69,7 +69,6 @@ function printMap($type = 'main')
 			// this creates mapType
 			printMapType($g_options['google_map_type']);
 ?>
-			var mapZoom = 3;
 			var myOptions = {
 				center: mapLatLng,
 				mapTypeId: mapType,
@@ -287,106 +286,106 @@ function printMapCenter($country)
 	switch (strtoupper($country))
 	{
 		case 'EUROPE':
-			echo 'var mapLatLng = new google.maps.LatLng(48.8, 8.5);';
+			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 4;";
 			break;
 		case 'NORTH AMERICA':
-			echo 'var mapLatLng = new google.maps.LatLng(45.0, -97.0);';
+			echo "var mapLatLng = new google.maps.LatLng(45.0, -97.0);\nvar mapZoom = 3;";
 			break;
 		case 'SOUTH AMERICA':
-			echo 'var mapLatLng = new google.maps.LatLng(-14.8, -61.2);';
+			echo "var mapLatLng = new google.maps.LatLng(-14.8, -61.2);\nvar mapZoom = 3;";
 			break;
 		case 'NORTH AFRICA':
-			echo 'var mapLatLng = new google.maps.LatLng(25.4, 8.4);';
+			echo "var mapLatLng = new google.maps.LatLng(25.4, 8.4);\nvar mapZoom = 4;";
 			break;
 		case 'SOUTH AFRICA':
-			echo 'var mapLatLng = new google.maps.LatLng(-29.0, 23.7);';
+			echo "var mapLatLng = new google.maps.LatLng(-29.0, 23.7);\nvar mapZoom = 5;";
 			break;
 		case 'NORTH EUROPE':
-			echo 'var mapLatLng = new google.maps.LatLng(62.6, 15.4);';
+			echo "var mapLatLng = new google.maps.LatLng(62.6, 15.4);\nvar mapZoom = 4;";
 			break;
 		case 'EAST EUROPE':
-			echo 'var mapLatLng = new google.maps.LatLng(51.9, 31.8);';
+			echo "var mapLatLng = new google.maps.LatLng(51.9, 31.8);\nvar mapZoom = 4;";
 			break;
 		case 'GERMANY':
-			echo 'var mapLatLng = new google.maps.LatLng(51.1, 10.1);';
+			echo "var mapLatLng = new google.maps.LatLng(51.1, 10.1);\nvar mapZoom = 5;";
 			break;
 		case 'FRANCE':
-			echo 'var mapLatLng = new google.maps.LatLng(47.2, 2.4);';
+			echo "var mapLatLng = new google.maps.LatLng(47.2, 2.4);\nvar mapZoom = 5;";
 			break;
 		case 'SPAIN':
-			echo 'var mapLatLng = new google.maps.LatLng(40.3, -4.0);';
+			echo "var mapLatLng = new google.maps.LatLng(40.3, -4.0);\nvar mapZoom = 5;";
 			break;
 		case 'UNITED KINGDOM':
-			echo 'var mapLatLng = new google.maps.LatLng(54.0, -4.3);';
+			echo "var mapLatLng = new google.maps.LatLng(54.0, -4.3);\nvar mapZoom = 5;";
 			break;
 		case 'DENMARK':
-			echo 'var mapLatLng = new google.maps.LatLng(56.1, 9.2);';
+			echo "var mapLatLng = new google.maps.LatLng(56.1, 9.2);\nvar mapZoom = 6;";
 			break;
 		case 'SWEDEN':
-			echo 'var mapLatLng = new google.maps.LatLng(63.2, 16.3);';
+			echo "var mapLatLng = new google.maps.LatLng(63.2, 16.3);\nvar mapZoom = 4;";
 			break;
 		case 'NORWAY':
-			echo 'var mapLatLng = new google.maps.LatLng(65.6, 13.1);';
+			echo "var mapLatLng = new google.maps.LatLng(65.6, 13.1);\nvar mapZoom = 4;";
 			break;
 		case 'FINLAND':
-			echo 'var mapLatLng = new google.maps.LatLng(65.1, 26.6);';
+			echo "var mapLatLng = new google.maps.LatLng(65.1, 26.6);\nvar mapZoom = 4;";
 			break;
 		case 'NETHERLANDS':
-			echo 'var mapLatLng = new google.maps.LatLng(52.3, 5.4);';
+			echo "var mapLatLng = new google.maps.LatLng(52.3, 5.4);\nvar mapZoom = 7;";
 			break;
 		case 'BELGIUM':
-			echo 'var mapLatLng = new google.maps.LatLng(50.7, 4.5);';
+			echo "var mapLatLng = new google.maps.LatLng(50.7, 4.5);\nvar mapZoom = 7;";
 			break;
 		case 'SUISSE':
-			echo 'var mapLatLng = new google.maps.LatLng(46.8, 8.2);';
+			echo "var mapLatLng = new google.maps.LatLng(46.8, 8.2);\nvar mapZoom = 7;";
 			break;
 		case 'AUSTRIA':
-			echo 'var mapLatLng = new google.maps.LatLng(47.7, 14.1);';
+			echo "var mapLatLng = new google.maps.LatLng(47.7, 14.1);\nvar mapZoom = 7;";
 			break;
 		case 'POLAND':
-			echo 'var mapLatLng = new google.maps.LatLng(52.1, 19.3);';
+			echo "var mapLatLng = new google.maps.LatLng(52.1, 19.3);\nvar mapZoom = 6;";
 			break;
 		case 'ITALY':
-			echo 'var mapLatLng = new google.maps.LatLng(42.6, 12.7);';
+			echo "var mapLatLng = new google.maps.LatLng(42.6, 12.7);\nvar mapZoom = 5;";
 			break;
 		case 'TURKEY':
-			echo 'var mapLatLng = new google.maps.LatLng(39.0, 34.9);';
+			echo "var mapLatLng = new google.maps.LatLng(39.0, 34.9);\nvar mapZoom = 6;";
 			break;
 		case 'ROMANIA':
-			echo 'var mapLatLng = new google.maps.LatLng(45.94, 24.96);';
+			echo "var mapLatLng = new google.maps.LatLng(-45.94, -24.96);\nvar mapZoom = 6;";
 			break;
 		case 'BRAZIL':
-			echo 'var mapLatLng = new google.maps.LatLng(-12.0, -53.1);';
+			echo "var mapLatLng = new google.maps.LatLng(-12.0, -53.1);\nvar mapZoom = 4;";
 			break;
 		case 'ARGENTINA':
-			echo 'var mapLatLng = new google.maps.LatLng(-34.3, -65.7);';
+			echo "var mapLatLng = new google.maps.LatLng(-34.3, -65.7);\nvar mapZoom = 3;";
 			break;
 		case 'RUSSIA':
-			echo 'var mapLatLng = new google.maps.LatLng(65.7, 98.8);';
+			echo "var mapLatLng = new google.maps.LatLng(65.7, 98.8);\nvar mapZoom = 3;";
 			break;
 		case 'ASIA':
-			echo 'var mapLatLng = new google.maps.LatLng(20.4, 95.6);';
+			echo "var mapLatLng = new google.maps.LatLng(20.4, 95.6);\nvar mapZoom = 3;";
 			break;
 		case 'CHINA':
-			echo 'var mapLatLng = new google.maps.LatLng(36.2, 104.0);';
+			echo "var mapLatLng = new google.maps.LatLng(36.2, 104.0);\nvar mapZoom = 4;";
 			break;
 		case 'JAPAN':
-			echo 'var mapLatLng = new google.maps.LatLng(36.2, 136.8);';
+			echo "var mapLatLng = new google.maps.LatLng(36.2, 136.8);\nvar mapZoom = 5;";
 			break;
 		case 'SOUTH KOREA':
-			echo 'var mapLatLng = new google.maps.LatLng(36.6, 127.8);';
+			echo "var mapLatLng = new google.maps.LatLng(36.6, 127.8);\nvar mapZoom = 6;";
 			break;
 		case 'AUSTRALIA':
-			echo 'var mapLatLng = new google.maps.LatLng(-26.1, 134.8);';
+			echo "var mapLatLng = new google.maps.LatLng(-26.1, 134.8);\nvar mapZoom = 4;";
 			break;
 		case 'CANADA':
-			echo 'var mapLatLng = new google.maps.LatLng(60.0, -97.0);';
+			echo "var mapLatLng = new google.maps.LatLng(60.0, -97.0);\nvar mapZoom = 3;";
 			break;
 		case 'WORLD':
-			echo 'var mapLatLng = new google.maps.LatLng(25.0, 8.5);';
+			echo "var mapLatLng = new google.maps.LatLng(25.0, 8.5);\nvar mapZoom = 2;";
 			break;
 		default:
-			echo 'var mapLatLng = new google.maps.LatLng(48.8, 8.5);';
+			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 4;";
 			break;
 	}
 	echo "\n";
