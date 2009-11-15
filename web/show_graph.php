@@ -35,7 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-	global $iconpath;
+
+
 	
 	foreach ($_SERVER as $key => $entry) {
 		if ($key !== 'HTTP_COOKIE') {
@@ -107,6 +108,20 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ((isset($_GET['type'])) && (is_numeric($_GET['type'])))
 		$bar_type = valid_request($_GET['type'], 1);
 
+		
+	$selectedStyle = ($_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
+
+	
+	// Determine if we have custom nav images available
+    if ($selectedStyle) {
+        $style = preg_replace('/\.css$/','',$selectedStyle);
+    } else {
+        $style = preg_replace('/\.css$/','',$g_options['style']);
+    }
+	$iconpath = IMAGE_PATH . "/icons";
+	if (file_exists($iconpath . "/" . $style)) {
+			$iconpath = $iconpath . "/" . $style;
+	}		
 
 	/**
 	 * Convert colors Usage:  color::hex2rgb("FFFFFF")

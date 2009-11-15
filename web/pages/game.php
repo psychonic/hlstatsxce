@@ -321,9 +321,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 				toggler.setStyle('color', '#ff3300');
 				/* here we set the 'src' attribute properly, 
 					so that the images load once the accordion is opened */
-				element.getElements('img').each(function(el) {
+					
+				element.getElements('img').each(function(el) { 
+					if(el.get('delaysrc')!=null)
 					el.set('src', el.get('delaysrc'));
-				});
+				});					
 			},
 			onBackground: function(toggler, element){
 				toggler.setStyle('color', '#222');

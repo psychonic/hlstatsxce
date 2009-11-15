@@ -145,11 +145,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 	
 	// Determine if we should show SourceBans links/Forum links
-	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-sourcebans.gif")) {
-		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-sourcebans.gif\" alt=\"SourceBans\" /></a></li>";
+	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-sourcebans.png")) {
+		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-sourcebans.png\" alt=\"SourceBans\" /></a></li>";
 	}
-	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-forum.gif")) {	
-		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-forum.gif\" alt=\"Forum\" /></a></li>";
+	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-forum.png")) {	
+		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-forum.png\" alt=\"Forum\" /></a></li>";
 	}
 ?>
 <div class="block">
@@ -181,10 +181,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>
 		<div class="headertabs"> 
 			<ul>
-				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath; ?>/title-contents.gif" alt="Contents" /></a></li>
-				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo $iconpath; ?>/title-search.gif" alt="Search" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath; ?>/title-contents.png" alt="Contents" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo $iconpath; ?>/title-search.png" alt="Search" /></a></li>
 				<?php if ($extratabs) { print $extratabs; } ?>				
-				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo $iconpath; ?>/title-help.gif" alt="Help" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo $iconpath; ?>/title-help.png" alt="Help" /></a></li>
 				</ul>		
 
 	</div> </div>
