@@ -52,7 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<a href="http://www.hlxcommunity.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/footer-small.png" alt="HLstatsX Community Edition" border="0" /></a><br/>
 			an <a href="http://www.interwavestudios.com" target="_blank" class="footer_link">InterWave Studios</a> community project
 	</div>
-
+<br />
 <div class="fSmall" style="text-align:center;">
 <?php
 

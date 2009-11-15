@@ -426,7 +426,7 @@ a.footer_link:hover {
 
 .header_gameslist {
 	margin: 0 auto;
-	padding-right: 13%;
+	padding-right: 10%;
 } 
 
 #header_gameslist {
@@ -445,3 +445,6 @@ ul#header_gameslist li{
 	padding: 0 10px;
 }
 
+#style_selection {
+	padding-right:30%;
+}
