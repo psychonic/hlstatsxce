@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2-pre5"
+#define VERSION "1.6.2"
 #define CSS 1
 #define DODS 2
 #define L4D 3
