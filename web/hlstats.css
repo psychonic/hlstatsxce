@@ -3,14 +3,14 @@ input, textarea, select {font-family: Verdana, Arial, sans-serif;font-size: 11px
 input.textbox, input.checkbox {border-width: 1px;}
 input.submit {height: 22px;}
 input.smallsubmit {font-size: 9px;height: 20px;}
-tt { font-family: Verdana, Arial, Helvetica, sans-serif, fixed; font-size: 12px;}
+tt { font-family: Arial, Courier New, Courier, fixed; font-size: 12px;}
 
-BODY {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif; }
+BODY {font: 10pt Arial; }
 
-TD {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
-h2 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
-h1 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;} 
-h3 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;}
+TD {font: 11pt Arial; } 
+h2 {font: 11px Arial; } 
+h1 {font: 11px Arial; } 
+h3 {font: 11px Arial; }
 
 .helpwindow {
   position:fixed;
@@ -21,8 +21,8 @@ h3 {font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;}
   border:thin solid red;
   background-color:#AAAAAA;
   color:#FFFFFF;
-  font-family: Verdana, Arial, Helvetica, sans-serif, fixed;
-  font-size: 11px; 
+  font-family: Courier New, Courier, Arial, fixed;
+  font-size:10pt;
 }
 
 table#accordion
