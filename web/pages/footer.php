@@ -59,7 +59,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if($_SESSION['nojs'] == 1) {
 		echo 'You are currently viewing the basic version of this page, please enable JavaScript and reload the page to access full functionality.<br />';
 	}
-	echo 'Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a> - an <a href="http://www.interwavestudios.com" target="_blank">InterWave Studios</a> community project';
+	echo 'Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a>';
 	if ($g_options['showqueries'] == 1) {
 		echo '
 			<br />
