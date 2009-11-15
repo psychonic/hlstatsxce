@@ -517,53 +517,53 @@
 				('zr68s', 5, 0, '$game', '2_zr68s.png', 'Silver ZR68S'),
 				('zr68s', 10, 0, '$game', '3_zr68s.png', 'Gold ZR68S');
 			");
-			
-		$cs16ribbonfix = array(
-			'ak47' => '2_ak47.png',
-			'awp' => '2_awp.png',
-			'deagle' => '2_deagle.png',
-			'elite' => '2_elite.png',
-			'famas' => '2_famas.png',
-			'galil' => '2_galil.png',
-			'glock18' => '2_glock.png',
-			'knife' => '2_knife.png',
-			'latency' => '2_latency.png',
-			'm3' => '2_m3.png',
-			'm4a1' => '2_m4a1.png',
-			'p90' => '2_p90.png',
-			'scout' => '2_scout.png',
-			'usp' => '2_usp.png',
-			'killed_a_hostage' => '2_killed_a_hostage.png',
-			'rescued_a_hostage' => '2_rescued_a_hostage.png',
-			'planted_the_bomb' => '2_planted_the_bomb.png',
-			'grenade' => '2_hegrenade.png',
-			'defused_the_bomb' => '2_defused_the_bomb.png'
-			);
-		foreach ($cs16ribbonfix as $code => $img)
-		{
-			$db->query("
-				UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '$img' WHERE `awardCode` = '$code' AND `awardCount` = 5 AND `game` = 'cstrike';
-				");
-		}
-		
-		$db->query("
-			INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-				('sourcebans_address', '',  2),
-				('forum_address', '',  2),
-				('display_gamelist', '1', 2)
-				('display_style_selector', '0', 2);
-		");		
-		
-		$db->query("
-			INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) VALUES		
-				('display_gamelist', '1', 'Yes', 1),
-				('display_gamelist', '0', 'No', 0),
-				('display_style_selector', '1', 'Yes', 0),
-				('display_style_selector', '0', 'No', 1);
-		");	
-		
-		$db->query("
-			DELETE FROM `hlstats_Options` WHERE `keyname` = 'trendgraphfile'
-		");
 	}
+	
+	$cs16ribbonfix = array(
+		'ak47' => '2_ak47.png',
+		'awp' => '2_awp.png',
+		'deagle' => '2_deagle.png',
+		'elite' => '2_elite.png',
+		'famas' => '2_famas.png',
+		'galil' => '2_galil.png',
+		'glock18' => '2_glock.png',
+		'knife' => '2_knife.png',
+		'latency' => '2_latency.png',
+		'm3' => '2_m3.png',
+		'm4a1' => '2_m4a1.png',
+		'p90' => '2_p90.png',
+		'scout' => '2_scout.png',
+		'usp' => '2_usp.png',
+		'killed_a_hostage' => '2_killed_a_hostage.png',
+		'rescued_a_hostage' => '2_rescued_a_hostage.png',
+		'planted_the_bomb' => '2_planted_the_bomb.png',
+		'grenade' => '2_hegrenade.png',
+		'defused_the_bomb' => '2_defused_the_bomb.png'
+		);
+	foreach ($cs16ribbonfix as $code => $img)
+	{
+		$db->query("
+			UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '$img' WHERE `awardCode` = '$code' AND `awardCount` = 5 AND `game` = 'cstrike';
+			");
+	}
+	
+	$db->query("
+		DELETE FROM `hlstats_Options` WHERE `keyname` IN ('trendgraphfile','google_map_key')
+	");
+	
+	$db->query("
+		INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
+			('sourcebans_address', '',  2),
+			('forum_address', '',  2),
+			('display_gamelist', '1', 2)
+			('display_style_selector', '0', 2);
+	");		
+	
+	$db->query("
+		INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) VALUES		
+			('display_gamelist', '1', 'Yes', 1),
+			('display_gamelist', '0', 'No', 0),
+			('display_style_selector', '1', 'Yes', 0),
+			('display_style_selector', '0', 'No', 1);
+	");	
 ?>
