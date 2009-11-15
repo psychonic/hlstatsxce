@@ -550,13 +550,20 @@
 			INSERT IGNORE INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 				('sourcebans_address', '',  2),
 				('forum_address', '',  2),
-				('display_gamelist', '1', 0);
+				('display_gamelist', '1', 2)
+				('display_style_selector', '0', 2);
 		");		
 		
 		$db->query("
 			INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) VALUES		
 				('display_gamelist', '1', 'Yes', 1),
-				('display_gamelist', '0', 'No', 0);
+				('display_gamelist', '0', 'No', 0),
+				('display_style_selector', '1', 'Yes', 0),
+				('display_style_selector', '0', 'No', 1);
 		");	
+		
+		$db->query("
+			DELETE FROM `hlstats_Options` WHERE `keyname` = 'trendgraphfile'
+		");
 	}
 ?>

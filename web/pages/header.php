@@ -72,10 +72,11 @@ For support and installation notes visit http://www.hlxcommunity.com
     } else {
         $style = preg_replace('/\.css$/','',$g_options['style']);
     }
-	$iconpath = IMAGE_PATH . "/icons/";
-	if (file_exists($iconpath . $style)) {
-			$iconpath = $iconpath . $style . "/";
+	$iconpath = IMAGE_PATH . "/icons";
+	if (file_exists($iconpath . "/" . $style)) {
+			$iconpath = $iconpath . "/" . $style;
 	}
+	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -144,22 +145,35 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 	
 	// Determine if we should show SourceBans links/Forum links
-	if ($g_options['sourcebans_address'] && file_exists($iconpath . "title-sourcebans.gif")) {
-		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "title-sourcebans.gif\" alt=\"SourceBans\" /></a></li>";
+	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-sourcebans.gif")) {
+		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-sourcebans.gif\" alt=\"SourceBans\" /></a></li>";
 	}
-	if ($g_options['sourcebans_address'] && file_exists($iconpath . "title-forum.gif")) {	
-		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "title-forum.gif\" alt=\"Forum\" /></a></li>";
+	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-forum.gif")) {	
+		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-forum.gif\" alt=\"Forum\" /></a></li>";
 	}
 ?>
 <div class="block">
 	
 	<div class="headerblock">
 		<div class="title">
-			<a href="<?php echo $g_options['scripturl']; ?>"><img src="<?php echo $iconpath; ?>title.png" alt="HLstatsX" title="HLstatsX" /></a>
+			<a href="<?php echo $g_options['scripturl']; ?>"><img src="<?php echo $iconpath; ?>/title.png" alt="HLstatsX" title="HLstatsX" /></a>
 		</div>
 
 <?php
-		if ($g_options['display_gamelist'] == 1) {
+
+		// Grab count of active games -- if 1, we won't show the games list icons
+		$resultGames = $db->query("
+			SELECT
+				COUNT(code)
+			FROM
+				hlstats_Games
+			WHERE
+				hidden='0'
+		");
+		
+		list($num_games) = $db->fetch_row($resultGames);
+		
+		if ($g_options['display_gamelist'] == 1 && $num_games > 1) {
 ?>
 		<div class="header_gameslist"><?php @include(PAGE_PATH .'/gameslist.php'); ?></div>
 <?php	
@@ -167,10 +181,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>
 		<div class="headertabs"> 
 			<ul>
-				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath ?>title-contents.gif" alt="Contents" /></a></li>
-				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo $iconpath ?>title-search.gif" alt="Search" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath; ?>/title-contents.gif" alt="Contents" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo $iconpath; ?>/title-search.gif" alt="Search" /></a></li>
 				<?php if ($extratabs) { print $extratabs; } ?>				
-				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo $iconpath ?>title-help.gif" alt="Help" /></a></li>
+				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo $iconpath; ?>/title-help.gif" alt="Help" /></a></li>
 				</ul>		
 
 	</div> </div>
@@ -199,6 +213,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		}
 ?>			</li>
 		</ul>
+
+<?php 
+		if ($g_options['display_style_selector'] == 1) {
+?>
 		<div class="fNormal" style="float:right;"> 
 			<form name="style_selection" id="style_selection" action="" method="post"> Style: 
 				<select name="stylesheet" onchange="document.style_selection.submit()"> 
@@ -221,6 +239,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 				</select> 
 			</form> 
 		</div> 
+<?php
+		}
+?>
 	</div>
 	<div class="location_under" style="clear:both;width:100%;"></div>
 </div>
@@ -247,48 +268,48 @@ For support and installation notes visit http://www.hlxcommunity.com
 
     <span class="fHeading">&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" alt="" />&nbsp;Sections</span><p />
 		<ul class="navbar">
-			<li><a href="<?php echo $g_options['scripturl']  . "?game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-servers.png" alt="Servers" />Servers</a></li>
+			<li><a href="<?php echo $g_options['scripturl']  . "?game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-servers.png" alt="Servers" />Servers</a></li>
 
 <?php
 	if ($g_options['nav_globalchat']==1) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl']  . "?mode=chat&amp;game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-chat.png" alt="Chat" />Chat</a></li>
+			<li><a href="<?php echo $g_options['scripturl']  . "?mode=chat&amp;game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-chat.png" alt="Chat" />Chat</a></li>
 <?php
 	}
 ?>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=players&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-players.png" alt="Players" />Players</a></li>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=clans&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-clans.png" alt="Clans" />Clans</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=players&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-players.png" alt="Players" />Players</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=clans&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-clans.png" alt="Clans" />Clans</a></li>
 
 <?php
 	if ($g_options["countrydata"]==1) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-countryclans.png" alt="CountryClans" />Countries</a></li>
+			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-countryclans.png" alt="CountryClans" />Countries</a></li>
 <?php
 	}
 ?>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=awards&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-awards.png" alt="Awards" />Awards</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=awards&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-awards.png" alt="Awards" />Awards</a></li>
 <?php
 	// look for actions
 	$db->query("SELECT game FROM hlstats_Actions WHERE game='".$game."' LIMIT 1");
 	if ($db->num_rows()>0) {
 ?> 
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=actions&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-actions.png" alt="Actions" />Actions</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=actions&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-actions.png" alt="Actions" />Actions</a></li>
 <?php
 	}
 ?>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=weapons&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-weapons.png" alt="Weapons" />Weapons</a></li>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=maps&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-maps.png" alt="Maps" />Maps</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=weapons&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-weapons.png" alt="Weapons" />Weapons</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=maps&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-maps.png" alt="Maps" />Maps</a></li>
 <?php
 	$result = $db->query("SELECT game from hlstats_Roles WHERE game='$game' AND hidden = '0'");
 	$numitems = $db->num_rows($result);
 	if ($numitems > 0) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=roles&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-roles.png" alt="Roles" />Roles</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=roles&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-roles.png" alt="Roles" />Roles</a></li>
 <?php
 	}
 	if ($g_options['nav_cheaters'] == 1) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl'] . "?mode=bans&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>nav-bans.png" alt="Banned" />Bans</a></li>
+			<li><a href="<?php echo $g_options['scripturl'] . "?mode=bans&amp;game=$game"; ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-bans.png" alt="Banned" />Bans</a></li>
 <?php
 	} 
 ?>

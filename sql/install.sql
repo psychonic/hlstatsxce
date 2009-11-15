@@ -1028,7 +1028,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('P', 'l4d2', 'killed_survivor', 'Dead Wreckening', 'downed Survivors'),
 ('O', 'l4d2', 'killed_tank', 'Tankbuster', 'killed Tanks'),
 ('O', 'l4d2', 'killed_witch', 'Inquisitor', 'killed Witches'),
-('P', 'l4d2', 'tongue_grab', 'Drag & Drop', 'constricted Survivors'),
+('P', 'l4d2', 'tongue_grab', 'Drag &amp; Drop', 'constricted Survivors'),
 ('O', 'l4d2', 'healed_teammate', 'Field Medic', 'healed Survivors'),
 ('P', 'l4d2', 'pounce', 'Free to Fly', 'pounced Survivors'),
 ('O', 'l4d2', 'rescued_survivor', 'Ground Cover', 'rescued Survivors'),
@@ -3203,7 +3203,6 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('awardrankscols', '5',2),
 ('awardribbonscols', '5',2),
 ('sigbackground', 'random',2),
-('trendgraphfile', 'trendgraph1.png',2),
 ('playerinfo_tabs', '1',2),
 ('counter_hits', '0',2),
 ('counter_visits', '0',2),
@@ -3224,7 +3223,8 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('Proxy_Daemons', '', 2),
 ('sourcebans_address', '', 2),
 ('forum_address', '', 2),
-('display_gamelist', '1', 0);
+('display_gamelist', '1', 2),
+('display_style_selector', '0', 2);
 
 
 CREATE TABLE IF NOT EXISTS `hlstats_Options_Choices` (
@@ -3332,7 +3332,9 @@ INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) 
 ('showqueries', '0', 'No', 1),
 ('showqueries', '1', 'Yes', 0),
 ('display_gamelist', '1', 'Yes', 1),
-('display_gamelist', '0', 'No', 0);
+('display_gamelist', '0', 'No', 0),
+('display_style_selector', '1', 'Yes', 0),
+('display_style_selector', '0', 'No', 1);
 -- --------------------------------------------------------
 
 --
