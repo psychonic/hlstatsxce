@@ -543,7 +543,7 @@
 	foreach ($cs16ribbonfix as $code => $img)
 	{
 		$db->query("
-			UPDATE IGNORE 'hlstats_Ribbons' SET `image` = '$img' WHERE `awardCode` = '$code' AND `awardCount` = 5 AND `game` = 'cstrike';
+			UPDATE IGNORE `hlstats_Ribbons` SET `image` = '$img' WHERE `awardCode` = '$code' AND `awardCount` = 5 AND `game` = 'cstrike';
 			");
 	}
 	
