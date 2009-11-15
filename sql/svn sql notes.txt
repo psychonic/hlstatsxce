@@ -1,3 +1,8 @@
+VERSION 1.6.2 AND FUTURE:
+All SQL updates will be found in web/updater/.  Each change to that file should be a +1 to the DB version.  Individual SQL files will not be provided any more.
+
+
+VERSIONS UP TO 1.6.1:
 In the trunk, we will do our best to make a new file for each sql addition. These must then be run in order. Example: if you are at upgrade1 and there is an update3 after svn update, then you must run both 2 and 3.
 
 With the exception of updates between version 1.6.0 and 1.6.1, all of these will have a name similar to VERSIONupgradeSQLREV.sql. This structure will be enforced to ease some of the headaches of keeping up to date when running the trunk version. For the exception case noted, the sql script will have the release name with a "-SQLREV" appended (to avoid renaming and confusion).
