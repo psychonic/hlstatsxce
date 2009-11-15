@@ -58,14 +58,34 @@ For support and installation notes visit http://www.hlxcommunity.com
      
 	global $game,$mode;
 
-	$selectedStyle = ($_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
-	if ($_POST['stylesheet'])
+	// see if they have a defined style or a new style they'd like
+	$selectedStyle = isset($_COOKIE['style']) ? $_COOKIE['style'] : "";
+	$selectedStyle = isset($_POST['stylesheet']) ? $_POST['stylesheet'] : $selectedStyle; 
+
+	// if they do make sure it exists
+	if(!empty($selectedStyle))
 	{
-		$selectedStyle = htmlspecialchars(trim($_POST['stylesheet']), ENT_NOQUOTES);
-		setcookie('style', $selectedStyle, time()+60*60*24*30);
-		header('Location: '.$_SERVER['PHP_SELF'].($_SERVER['QUERY_STRING']?'?':''.$_SERVER['QUERY_STRING']));
+		// this assumes that styles is up a directory from page_path, this might be a bad assumption
+		$testfile=sprintf("%s/%s/%s", PAGE_PATH, '../styles', $selectedStyle);
+		if(!file_exists($testfile))
+		{
+			$selectedStyle="";
+		}
 	}
 	
+	// if they don't have one defined or the defined was is invalid use the default	
+	if(empty($selectedStyle))
+	{
+		$selectedStyle=$g_options['style'];
+	}	
+
+	// if they had one, or tried to have one, set it to whatever we resolved it to
+	if (isset($_POST['stylesheet']) || isset($_COOKIE['style']))
+	{
+		setcookie('style', $selectedStyle, time()+60*60*24*30);
+	}
+
+// this code here assumes that styles end with .css (the selector box for users and for admin does NOT check), someone may want to change this -octo
 	// Determine if we have custom nav images available
     if ($selectedStyle) {
         $style = preg_replace('/\.css$/','',$selectedStyle);
