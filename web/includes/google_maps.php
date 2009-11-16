@@ -352,7 +352,7 @@ function printMapCenter($country)
 			echo "var mapLatLng = new google.maps.LatLng(39.0, 34.9);\nvar mapZoom = 6;";
 			break;
 		case 'ROMANIA':
-			echo "var mapLatLng = new google.maps.LatLng(-45.94, -24.96);\nvar mapZoom = 6;";
+			echo "var mapLatLng = new google.maps.LatLng(45.94, 24.96);\nvar mapZoom = 6;";
 			break;
 		case 'BRAZIL':
 			echo "var mapLatLng = new google.maps.LatLng(-12.0, -53.1);\nvar mapZoom = 4;";

@@ -166,10 +166,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	// Determine if we should show SourceBans links/Forum links
 	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-sourcebans.png")) {
-		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-sourcebans.png\" alt=\"SourceBans\" /></a></li>";
+		$extratabs .= "<li><a href=\"". $g_options['sourcebans_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-sourcebans.png\" alt=\"SourceBans\" /></a></li>\n";
 	}
-	if ($g_options['sourcebans_address'] && file_exists($iconpath . "/title-forum.png")) {	
-		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-forum.png\" alt=\"Forum\" /></a></li>";
+	if ($g_options['forum_address'] && file_exists($iconpath . "/title-forum.png")) {
+		$extratabs .= "<li><a href=\"" . $g_options['forum_address'] . "\" target=\"_blank\"><img src=\"" . $iconpath . "/title-forum.png\" alt=\"Forum\" /></a></li>\n";
 	}
 ?>
 <div class="block">

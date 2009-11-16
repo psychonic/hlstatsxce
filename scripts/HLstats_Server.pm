@@ -1150,7 +1150,7 @@ sub messageAll
 {
 	my($self, $msg, $noshow, $force) = @_;
 	
-	if ($self->{broadcasting_events} == 1)
+	if ($self->{broadcasting_events} == 1 || $force == 1)
 	{
 		if ($self->{mod} eq "SOURCEMOD" || $self->{mod} eq "AMXX")
 		{
