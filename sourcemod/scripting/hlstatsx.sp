@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.2"
+#define VERSION "1.6.3-pre1"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -160,7 +160,7 @@ public OnPluginStart()
 		HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
 	}
 	
-	if (gamemod == INSMOD || gamemod == L4D || gamemod == HL2MP || gamemod == GES)
+	if (gamemod == INSMOD || gamemod == L4D || gamemod == GES)
 	{
 		g_bGameCanDoMotd = false;
 	}
