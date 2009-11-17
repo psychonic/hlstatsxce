@@ -135,7 +135,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		echo " - $t";
 	}
 ?>
-</title>
+	</title>
 </head>
 <body> 
 <?php
@@ -199,15 +199,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php	
 		}
 ?>
-		<div class="headertabs"> 
+		<div class="headertabs">
 			<ul>
 				<li><a href="<?php echo $g_options['scripturl'] ?>"><img src="<?php echo $iconpath; ?>/title-contents.png" alt="Contents" /></a></li>
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=search"><img src="<?php echo $iconpath; ?>/title-search.png" alt="Search" /></a></li>
 				<?php if ($extratabs) { print $extratabs; } ?>				
 				<li><a href="<?php echo $g_options['scripturl'] ?>?mode=help"><img src="<?php echo $iconpath; ?>/title-help.png" alt="Help" /></a></li>
-				</ul>		
+			</ul>
 
-	</div> </div>
+		</div>
+	</div>
 	<div class="location" style="clear:both;width:100%;">
 		<ul class="fNormal" style="float:left">
 <?php

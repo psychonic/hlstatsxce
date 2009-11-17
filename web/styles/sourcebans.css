@@ -120,7 +120,8 @@ img {
 
 .data-table-head  {
 	background-image:url(../styles/sourcebans/detail_head.png);
-	background-repeat: repeat-x;	
+	background-repeat: repeat-x;
+	background-color: #282828;
 	border:1px solid #AEAEAE;
 	color:#FFFFFF;
 	vertical-align: bottom; 
