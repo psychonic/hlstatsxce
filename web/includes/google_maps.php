@@ -375,6 +375,9 @@ function printMapCenter($country)
 		case 'SOUTH KOREA':
 			echo "var mapLatLng = new google.maps.LatLng(36.6, 127.8);\nvar mapZoom = 6;";
 			break;
+		case 'TAIWAN':
+			echo "var mapLatLng = new google.maps.LatLng(23.6, 121);\nvar mapZoom = 7;";
+			break;	
 		case 'AUSTRALIA':
 			echo "var mapLatLng = new google.maps.LatLng(-26.1, 134.8);\nvar mapZoom = 4;";
 			break;
