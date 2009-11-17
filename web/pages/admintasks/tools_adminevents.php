@@ -90,7 +90,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			eventDesc VARCHAR(255) NOT NULL,
 			serverName VARCHAR(255) NOT NULL,
 			map VARCHAR(64) NOT NULL
-		)
+		) DEFAULT CHARSET=utf8
 	");
 	
 	function insertEvents ($table, $select)
@@ -117,7 +117,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			CONCAT(<table>.type, ' Rcon'),
 			<table>.eventTime,
 			CONCAT('\"', command, '\"\nFrom: %A%".$g_options['scripturl']."?mode=search&q=', remoteIp, '&st=ip&game=%', remoteIp, '%/A%', IF(password<>'',CONCAT(', password: \"', password, '\"'),'')),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -133,7 +133,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				CONCAT('\"', playerName, '\": ', message),
 				message
 			),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>

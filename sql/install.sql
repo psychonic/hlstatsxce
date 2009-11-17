@@ -1016,7 +1016,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'l4d', 'tank_claw', 'Burger Tank', 'kills with Tank''s Claws'),
 ('W', 'l4d', 'tank_rock', 'Rock Star', 'kills with Tank''s Rock'),
 ('O', 'l4d', 'hunter_punter', 'Hunter Punter', 'hunter punts'),
-('O', 'l4d', 'protect_teammate', 'Protector', 'hunter punts'),
+('O', 'l4d', 'protect_teammate', 'Protector', 'teammate protections'),
 ('W', 'l4d', 'latency', 'Lowest Ping', 'ms average connection'),
 ('O', 'l4d2', 'headshot', 'Brain Salad', 'headshot kills'),
 ('O', 'l4d2', 'killed_exploding', 'Stomach Upset', 'killed Boomers'),
@@ -3159,7 +3159,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '11', 2),
+('dbversion', '12', 2),
 ('version', '1.6.2', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
@@ -3288,6 +3288,7 @@ INSERT INTO `hlstats_Options_Choices` (`keyname`, `value`, `text`, `isDefault`) 
 ('google_map_region', 'ASIA', 'Asia', 0),
 ('google_map_region', 'CHINA', 'China', 0),
 ('google_map_region', 'JAPAN', 'Japan', 0),
+('google_map_region', 'TAIWAN', 'Taiwan', 0),
 ('google_map_region', 'SOUTH KOREA', 'South Korea', 0),
 ('google_map_region', 'AUSTRALIA', 'Australia', 0),
 ('google_map_region', 'WORLD', 'World', 0),

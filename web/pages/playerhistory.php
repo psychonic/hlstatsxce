@@ -160,9 +160,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 				eventType VARCHAR(32) NOT NULL,
 				eventTime DATETIME NOT NULL,
 				eventDesc VARCHAR(255) NOT NULL,
-				serverName VARCHAR(255) NOT NULL default 'Unknown',
+				serverName VARCHAR(255) NOT NULL,
 				map VARCHAR(64) NOT NULL
-			)
+			) DEFAULT CHARSET=utf8
 	");
 	function insertEvents ($table, $select)
 	{
@@ -188,7 +188,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Team Bonus',
 			<table>.eventTime,
 			CONCAT('My team received a points bonus of ', bonus, ' for triggering \"', IFNULL(hlstats_Actions.description,'Unknown'), '\"'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -219,7 +219,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Connect',
 			<table>.eventTime,
 			CONCAT('I connected to the server'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -236,7 +236,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Disconnect',
 			<table>.eventTime,
 			'I left the game',
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -253,7 +253,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Entry',
 			<table>.eventTime,
 			'I entered the game',
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -270,7 +270,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Kill',
 			<table>.eventTime,
 			CONCAT('I killed %A%$surl?mode=playerinfo&player=', victimId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A%', ' with ', weapon),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -292,7 +292,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Kill',
 			<table>.eventTime,
 			CONCAT('I killed %A%$surl?mode=playerinfo&player=', victimId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A%', ' with a headshot from ', weapon),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -314,7 +314,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Death',
 			<table>.eventTime,
 			CONCAT('%A%$surl?mode=playerinfo&player=', killerId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A%', ' killed me with ', weapon),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -335,7 +335,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Team Kill',
 			<table>.eventTime,
 			CONCAT('I killed teammate %A%$surl?mode=playerinfo&player=', victimId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A%', ' with ', weapon),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -356,7 +356,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Friendly Fire',
 			<table>.eventTime,
 			CONCAT('My teammate %A%$surl?mode=playerinfo&player=', killerId, '%', IFNULL(hlstats_Players.lastName, 'Unknown'), '%/A%', ' killed me with ', weapon),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -377,7 +377,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Role',
 			<table>.eventTime,
 			CONCAT('I changed role to ', role),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -394,7 +394,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Name',
 			<table>.eventTime,
 			CONCAT('I changed my name from \"', oldName, '\" to \"', newName, '\"'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -411,7 +411,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Action',
 			<table>.eventTime,
 			CONCAT('I received a points bonus of ', bonus, ' for triggering \"', IFNULL(hlstats_Actions.description,'Unknown'), '\"'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -434,7 +434,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Action',
 			<table>.eventTime,
 			CONCAT('I received a points bonus of ', bonus, ' for triggering \"', IFNULL(hlstats_Actions.description,'Unknown'), '\" against %A%$surl?mode=playerinfo&player=', victimId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A%'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -459,7 +459,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Action',
 			<table>.eventTime,
 			CONCAT('%A%$surl?mode=playerinfo&player=', <table>.playerId, '%', IFNULL(hlstats_Players.lastName,'Unknown'), '%/A% triggered \"', IFNULL(hlstats_Actions.description,'Unknown'), '\" against me'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -486,7 +486,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Suicide',
 			<table>.eventTime,
 			CONCAT('I committed suicide with \"', weapon, '\"'),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>
@@ -503,7 +503,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Team',
 			<table>.eventTime,
 			IF(hlstats_Teams.name IS NULL, CONCAT('I joined team \"', team, '\"'), CONCAT('I joined team \"', team, '\" (', hlstats_Teams.name, ')')),
-			hlstats_Servers.name,
+			IFNULL(hlstats_Servers.name, 'Unknown'),
 			<table>.map
 		FROM
 			<table>

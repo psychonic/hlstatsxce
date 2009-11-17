@@ -109,32 +109,51 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
+	
+	$db->query("
+		CREATE TEMPORARY TABLE tmp_clan_kills
+			SELECT
+				IF(map='', '(Unaccounted)', map) AS map,
+				COUNT(*) AS kills,
+				SUM(headshot=1) AS headshots
+			FROM
+				hlstats_Events_Frags, hlstats_Players
+			WHERE
+				hlstats_Players.playerId = hlstats_Events_Frags.killerId
+				AND hlstats_Players.clan = $clan
+			GROUP BY
+				map;
+	");
+	
+	$db->query("
+		CREATE TEMPORARY TABLE tmp_clan_deaths
+			SELECT
+				IF(map='', '(Unaccounted)', map) AS map,
+				COUNT(*) AS deaths
+			FROM
+				hlstats_Events_Frags, hlstats_Players
+			WHERE
+				hlstats_Players.playerId = hlstats_Events_Frags.victimId
+				AND hlstats_Players.clan = $clan
+			GROUP BY
+				map;
+	");
 
 	$result = $db->query("
-		SELECT
-			IF(map='', '(Unaccounted)', map) AS map,
-			SUM(Killers.clan=$clan) AS kills,
-			SUM(Victims.clan=$clan) AS deaths,
-			IFNULL(SUM(Killers.clan=$clan) / SUM(Victims.clan=$clan), '-') AS kpd,
-			ROUND(CONCAT(SUM(Killers.clan=$clan)) / $realkills * 100, 2) AS kpercent,
-			SUM(Killers.clan=$clan AND headshot=1) as headshots,
-			IFNULL(SUM(Killers.clan=$clan AND headshot=1) / SUM(Killers.clan=$clan), '-') AS hpk,
-			ROUND(CONCAT(SUM(Killers.clan=$clan AND headshot=1)) / $realheadshots * 100, 2) AS hpercent
+		SELECT *, 
+			IFNULL(kills/deaths, '-') AS kpd,
+			IFNULL(headshots / kills, '-') AS hpk,
+			ROUND(kills / $realkills * 100, 2) AS kpercent,
+			ROUND(headshots / $realheadshots * 100, 2) AS hpercent
 		FROM
-			hlstats_Events_Frags
-		LEFT JOIN hlstats_Players AS Killers ON
-			Killers.playerId=hlstats_Events_Frags.killerId 
-		LEFT JOIN hlstats_Players AS Victims ON
-			Victims.playerId=hlstats_Events_Frags.victimId 
+			tmp_clan_kills, tmp_clan_deaths
 		WHERE
-			Victims.clan=$clan OR
-			Killers.clan=$clan
-		GROUP BY
-			map
+			tmp_clan_kills.map = tmp_clan_deaths.map
 		ORDER BY
 			$tblMaps->sort $tblMaps->sortorder,
 			$tblMaps->sort2 $tblMaps->sortorder
 	");
+	
 	$numitems = $db->num_rows($result);
 	if ($numitems > 0)
 	{
