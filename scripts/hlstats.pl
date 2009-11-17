@@ -1554,7 +1554,12 @@ sub readDatabaseConfig()
 	my $geotell = ((!defined($g_gi)) ? -1 : tell $g_gi{fh});
 	
 	if ($g_geoip_binary > 0 && $geotell == -1) {
-		$g_gi = Geo::IP::PurePerl->open("GeoLiteCity/GeoLiteCity.dat", "GEOIP_STANDARD");
+		my $geoipfile = "GeoLiteCity/GeoLiteCity.dat";
+		if (-r $geoipfile) {
+			$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+		} else {
+			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
+		}
 	} elsif ($g_geoip_binary == 0 && $geotell > -1) {
 		close($g_gi{fh});
 		$g_gi = undef;
