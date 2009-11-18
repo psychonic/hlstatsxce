@@ -211,7 +211,7 @@
 			('l4d2', 'knife', 'Knife', 1.5),
 			('l4d2', 'machete', 'Machete', 1.5),
 			('l4d2', 'tonfa', 'Tonfa', 1.5),
-			('l4d2', 'insect_swarm', 'insect_swarm', 1),
+			('l4d2', 'insect_swarm', 'Insect Swarm', 1),
 			('l4d2', 'melee', 'Melee', 1.5);
 		");
 
