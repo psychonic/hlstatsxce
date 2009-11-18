@@ -794,7 +794,7 @@ sub deleteLivestats
 sub getInfoString
 {
 	my ($self) = @_;
-	return sprintf("\"%s\" \<P:%d,U:%d,W:%d,T:%s\>", $self->{name}, $self->{playerid}, $self->{userid}, $self->{uniqueid}, $self->{team});
+	return sprintf("\"%s\" \<P:%d,U:%d,W:%s,T:%s\>", $self->{name}, $self->{playerid}, $self->{userid}, $self->{uniqueid}, $self->{team});
 }
 
 
