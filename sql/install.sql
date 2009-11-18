@@ -1688,7 +1688,9 @@ CREATE TABLE IF NOT EXISTS `hlstats_Events_Chat` (
   `playerId` int(10) unsigned NOT NULL default '0',
   `message_mode` tinyint(1) NOT NULL default '0',
   `message` varchar(128) NOT NULL default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `playerId` (`playerId`),
+  KEY `serverId` (`serverId`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
