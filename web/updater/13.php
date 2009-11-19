@@ -22,7 +22,6 @@
 
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
-				('W', '$game', 'upgradepack_incendiary', 'Buuuuurn', 'kills with Upgrade Pack Smash'),
 				('W', '$game', 'chainsaw', 'Slice and Dice', 'kills with the Chainsaw'),
 				('W', '$game', 'fire_cracker_blast', 'Snap Crackle Pop', 'kills with fire crackers'),
 				('W', '$game', 'grenade_launcher_projectile', 'Black Scottish Psyclops', 'kills with the Grenade Launcher')
@@ -41,7 +40,7 @@
 				('$game', 'chainsaw', 'Chainsaw', 1),
 				('$game', 'fire_cracker_blast', 'Fire Cracker', 1),
 				('$game', 'grenade_launcher_projectile', 'Grenade Launcher', 0.75),
-				('$game', 'upgradepack_incendiary', 'Upgrade Pack Smash', 1.5)
+				('$game', 'upgradepack_incendiary', 'Incendiary Pack Smash', 1.5)
 			");
 	}
 	
