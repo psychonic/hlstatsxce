@@ -20,14 +20,6 @@
 	$db->query("
 		UPDATE `hlstats_Players` SET `createdate` = UNIX_TIMESTAMP()
 		");
-	
-	$db->query("
-		UPDATE hlstats_Options SET `value` = '1.6.2' WHERE `keyname` = 'version'
-		");
-	
-	$db->query("
-		UPDATE hlstats_Options SET `value` = '10' WHERE `keyname` = 'dbversion'
-		");
 		
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
@@ -565,5 +557,13 @@
 			('display_gamelist', '0', 'No', 0),
 			('display_style_selector', '1', 'Yes', 0),
 			('display_style_selector', '0', 'No', 1);
-	");	
+	");
+	
+	$db->query("
+		UPDATE hlstats_Options SET `value` = '1.6.2' WHERE `keyname` = 'version'
+		");
+	
+	$db->query("
+		UPDATE hlstats_Options SET `value` = '10' WHERE `keyname` = 'dbversion'
+		");
 ?>
