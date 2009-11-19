@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.3-pre1"
+#define VERSION "1.6.3-pre2"
 #define CSS 1
 #define DODS 2
 #define L4D 3
@@ -568,11 +568,11 @@ color_player(color_type, player_index, String: client_message[192])
 				switch (gamemod)
 				{
 					case ZPS:
-						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
+						Format(colored_player_name, sizeof(colored_player_name), " \x05%s\x01 ", client_name);
 					case GES:
-						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
+						Format(colored_player_name, sizeof(colored_player_name), " \x05%s\x01 ", client_name);
 					default:
-						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
+						Format(colored_player_name, sizeof(colored_player_name), " \x04%s\x01 ", client_name);
 				}
 				ReplaceString(client_message, sizeof(client_message), search_client_name, colored_player_name);
 			}
