@@ -432,7 +432,7 @@ if ($player_id > 0) {
 	imagestring($image, 2,  15, 56, 'Statistics: ', $font_color);imagestring($image, 2,  85, 56, $g_options['siteurl'], $link_color);
 
 	$watermark = imagecreatefrompng(IMAGE_PATH.'/watermark.png');
-	imagecopymerge_alpha($image, $watermark, 334, 58, 0, 0, 60, 12, 55);
+	imagecopymerge_alpha($image, $watermark, 334, 58, 0, 0, 60, 12, 50);
 	
 	$mod_date = date('D, d M Y H:i:s \G\M\T', time());
 	Header('Last-Modified:'.$mod_date);

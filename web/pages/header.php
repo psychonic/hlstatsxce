@@ -59,7 +59,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	global $game,$mode;
 
 	// see if they have a defined style or a new style they'd like
-	$selectedStyle = isset($_COOKIE['style']) ? $_COOKIE['style'] : "";
+	$selectedStyle = (isset($_COOKIE['style']) && $_COOKIE['style']) ? $_COOKIE['style'] : "";
 	$selectedStyle = isset($_POST['stylesheet']) ? $_POST['stylesheet'] : $selectedStyle; 
 
 	// if they do make sure it exists
@@ -69,7 +69,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$testfile=sprintf("%s/%s/%s", PAGE_PATH, '../styles', $selectedStyle);
 		if(!file_exists($testfile))
 		{
-			$selectedStyle="";
+			$selectedStyle = "";
 		}
 	}
 	
