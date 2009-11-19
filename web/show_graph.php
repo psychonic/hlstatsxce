@@ -109,18 +109,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$bar_type = valid_request($_GET['type'], 1);
 
 		
-	$selectedStyle = ($_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
+	$selectedStyle = (isset($_COOKIE['style']) && $_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
 
 	
 	// Determine if we have custom nav images available
-    if ($selectedStyle) {
-        $style = preg_replace('/\.css$/','',$selectedStyle);
-    } else {
-        $style = preg_replace('/\.css$/','',$g_options['style']);
-    }
+	$selectedStyle = preg_replace('/\.css$/','',$selectedStyle);
+	
 	$iconpath = IMAGE_PATH . "/icons";
 	if (file_exists($iconpath . "/" . $style)) {
-			$iconpath = $iconpath . "/" . $style;
+		$iconpath = $iconpath . "/" . $style;
 	}		
 
 	/**
