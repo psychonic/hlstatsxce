@@ -181,7 +181,8 @@ $valid_modes = array(
 	'countryclansinfo',
 	'teamspeak',
 	'ventrilo',
-	'updater'
+	'updater',
+	'profile'
 );
    
 if (file_exists('./updater') && $mode != 'updater')
