@@ -36,24 +36,25 @@
 
 
 
-# set your correct HLstatsX perl path
-perldir=/usr/local/games/hlstatsx/perl
-cd ${perldir}
-
-# check if you have a structure for hlstats in your homedir
-# if you have it will try to read the conf from there, else use the default
-# located in /usr/local/games/hlstatsx/perl/hlstats.conf
-
-if [[ -d ~/hlstats && -r ~/hlstats/hlstats.conf ]];then
-	confdir=~/hlstats
-else
-	confdir=${perldir}
-fi
+# Set the path to the scripts folder (you should not need to modify this.)
+confdir=.
+# Name of configuration file to use (you should not need to modify this.)
+conffile=hlstats.conf
+# Filename of daemon to use (you should not need to modify this.)
+daemonfile=hlstats.pl
+# Set where you want to log to (you should not need to modify this.)
+LOG=${confdir}/logs/hlstats`date +_%Y%m%d_%H-%M-%S`
 
 # verify that you have write access to the directories
 if [ ! -w ${confdir} ]; then
 	echo "you need write access to ${confdir}"
 	exit 1
+fi
+
+# verify that we can see the daemon file
+if [ ! -f ${confdir}/${daemonfile} ]; then
+    echo "Can't see the daemon.  (${daemonfile})"
+    exit 1
 fi
 
 # verify that you have a logs directory
@@ -68,6 +69,12 @@ fi
 
 case "$1" in
    start)
+       # verify that we have a .conf file
+       if [ ! -f ${confdir}/${conffile} ]; then
+	      echo "You're missing your configuration file.  (${conffile})"
+	      exit 1
+       fi   
+   
        echo "Starting HLstatsX...";
        if [ -f ${confdir}/hlstats.pid ]; then
           kill -0 `cat ${confdir}/hlstats.pid` >/dev/null 2>&1
@@ -75,13 +82,13 @@ case "$1" in
               echo "HLstatsX already running!"
           else
               rm -rf ${confdir}/hlstats.pid
-              ./hlstats.pl --configfile=${confdir}/hlstats.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+              ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
               echo $! >${confdir}/hlstats.pid
               echo "PID file created"
               echo "Started successfully"
           fi
        else
-          ./hlstats.pl --configfile=${confdir}/hlstats.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+          ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
           echo $! >${confdir}/hlstats.pid
           echo "PID file created"
           echo "Started successfully"
@@ -102,7 +109,7 @@ case "$1" in
        kill -9 `cat ${confdir}/hlstats.pid` >/dev/null 2>&1
        if [ "$?" == "0" ]; then
            rm -rf ${confdir}/hlstats.pid
-           ./hlstats.pl --configfile=${confdir}/hlstats.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
            echo $! >${confdir}/hlstats.pid
            echo "PID file created"
            echo "Restarted successfully"
@@ -111,7 +118,7 @@ case "$1" in
            if [ -f ${confdir}/hlstats.pid ]; then
              rm -rf ${confdir}/hlstats.pid
            fi
-           ./hlstats.pl --configfile=${confdir}/hlstats.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
            echo $! >${confdir}/hlstats.pid
            echo "PID file created"
            echo "Started successfully"
