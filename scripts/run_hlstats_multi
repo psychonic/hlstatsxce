@@ -45,11 +45,22 @@ PORTS[3]=30030
 confdir=.
 # Name of the daemon to run
 daemonfile=hlstats.pl
+# Directory to put logs in (within confdir)
+logdir=logs
 
 # verify that we can see the daemon file
 if [ ! -f ${confdir}/${daemonfile} ]; then
     echo "Can't see the daemon.  (${daemonfile})"
     exit 1
+fi
+# Create a log directory if we do not have one.
+if [ ! -d ${confdir}/${logdir} ];then
+	mkdir ${confdir}/${logdir}
+fi
+
+if [ ! -w ${confdir}/${logdir} ];then
+	echo "you need write access to ${confdir}/${logdir}"
+	exit 1
 fi
 
 function start_process {
@@ -57,7 +68,9 @@ function start_process {
        PORT=$1
        echo "Starting HLstatsX CE PORT=$PORT...";
        PID=hlstats_$PORT.pid
-       LOG=logs/multi_$PORT`date +_%Y%m%d_%H-%M-%S`
+       LOG=${logdir}/multi_$PORT`date +_%Y%m%d_%H-%M-%S`
+
+
        if [ -f $PID ]; then
           kill -0 `cat $PID` >/dev/null 2>&1
           if [ "$?" == "0" ]; then
