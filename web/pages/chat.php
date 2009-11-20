@@ -188,7 +188,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$surl = $g_options['scripturl'];
 			$result = $db->query
 			("
-				SELECT
+				SELECT 
 					hlstats_Events_Chat.eventTime,
 					hlstats_Players.lastName,
 					IF(hlstats_Events_Chat.message_mode=2, CONCAT('(Team) ', hlstats_Events_Chat.message), hlstats_Events_Chat.message) AS message,
@@ -213,26 +213,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->sort2 $table->sortorder
 				LIMIT
 					$table->startitem,
-					$table->numperpage
-			");
-			$resultCount = $db->query
-			("
-				SELECT
-					hlstats_Events_Chat.eventTime
-				FROM
-					hlstats_Events_Chat
-				INNER JOIN
-					hlstats_Players
-				ON
-					hlstats_Players.playerId = hlstats_Events_Chat.playerId
-				INNER JOIN 
-					hlstats_Servers
-				ON
-					hlstats_Servers.serverId = hlstats_Events_Chat.serverId
-				WHERE
-					$whereclause
-			");
-			$numitems = $db->num_rows($resultCount);
+					$table->numperpage;
+			", true, true);
+			
+			$numitems = $db->calc_rows();
 			$table->draw($result, $numitems, 95);
 		?><br /><br />
 	<div class="subblock">

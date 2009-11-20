@@ -68,6 +68,7 @@ class DB_mysql
 	var $last_insert_id;
 	var $profile = 0;
 	var $querycount = 0;
+	var $last_calc_rows = 0;
 	
 	function DB_mysql($db_addr, $db_user, $db_pass, $db_name, $use_pconnect = false)
 	{
@@ -194,14 +195,33 @@ class DB_mysql
 		return false;
 	}
 	
-	function query($query, $showerror=true)
+	function calc_rows() 
+	{
+		return $this->last_calc_rows;
+	}
+	
+	function query($query, $showerror=true, $calcrows=false)
 	{
 		$this->last_query = $query;
 		$starttime = microtime(true);
+		if($calcrows == true) 
+		{
+			/* Add sql_calc_found_rows to this query */
+			$query = preg_replace('/select/i', 'select sql_calc_found_rows', $query, 1);
+		}
 		$this->last_result = @mysql_query($query, $this->link);
 		$endtime = microtime(true);
 		
 		$this->last_insert_id = @mysql_insert_id($this->link);
+		
+		if($calcrows == true) 
+		{
+			$calc_result = @mysql_query("select found_rows() as rowcount");
+			if($row = mysql_fetch_assoc($calc_result)) 
+			{
+				$this->last_calc_rows = $row['rowcount'];
+			}
+		}
 		
 		$this->querycount++;
 		
