@@ -41,7 +41,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		die('Do not access this file directly.');
 	}
 	
-
+global $game;
     // Get list of active games	
 	$resultGames = $db->query("
 		SELECT
@@ -61,19 +61,18 @@ For support and installation notes visit http://www.hlxcommunity.com
 		// Iterate over array of game names and codes
 		while ($gamedata = $db->fetch_row($resultGames))
 		{
-
-?>				
-		<li>
-			<a href="<?php echo $g_options['scripturl'] . "?game=$gamedata[0]"; ?>">
-					<img src="<?php	$image = getImage("/games/$gamedata[0]/game");
-				if ($image)
-					echo $image['url'];
-				else
-					echo IMAGE_PATH . '/game.gif';
-	               ?>"  style="margin-left: 2px; margin-right: 2px;" alt="Game" title="<?php echo $gamedata[1]; ?>"/>
-      </a>
-    </li>  
-<?php
-	}
+			$image = getImage("/games/$gamedata[0]/game");
+			if ($image) {
+				if ($game == $gamedata[0]) {
+					$img_id = '"gameslist-active-game"';
+				} else {
+					$img_id = '';
+				}
+				echo "\t\t\t<li>\n";
+				echo "\t\t\t\t<a href=\"" . $g_options['scripturl'] . "?game=$gamedata[0]\">" . 
+						"<img src=\"" .$image['url'] ."\" style=\"margin-left: 2px; margin-right: 2px;\" alt=\"" . strtoupper($gamedata[0]) ."\" title=\"" . $gamedata[1] ."\" $img_id /></a>";
+				echo "\n\t\t\t</li>\n";
+			}
+		}
 ?>
 </ul>

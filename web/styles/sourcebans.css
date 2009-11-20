@@ -249,7 +249,15 @@ img {
 
 }
 
+#header_gameslist img {
+	padding-bottom: 15px;
+}
 
+#header_gameslist #gameslist-active-game {
+	background-image: url(../style/sourcebans/underline.png);
+	background-position: bottom center;
+	background-repeat: no-repeat;
+}
 
 .block {
 	margin: 0 auto; 
