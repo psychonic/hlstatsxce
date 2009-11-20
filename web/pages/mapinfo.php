@@ -155,15 +155,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br /><br />
 <div class="block">
 <?php // figure out URL and absolute path of image
-	$imgurl = IMAGE_PATH . "/games/$game/maps/"
-		. "$map";
+	$mapimgpath = IMAGE_PATH . "/games/$game/maps";
+	if (!file_exists("$mapimgpath/$map.jpg")) {
+		if (!file_exists("$mapimgpath/default.png")) {
+			$mapimg = IMAGE_PATH . "/nomap.png";
+		} else {
+			$mapimg = "$mapimgpath/default.png";
+		}
+	} else {
+		$mapimg = "$mapimgpath/$map.jpg";
+	}
 	
-	$image = getImage("/games/$game/maps/$map");
-
 	$heatmap = getImage("/games/$game/heatmaps/$map-kill");
 	$heatmapthumb = getImage("/games/$game/heatmaps/$map-kill-thumb");
 
-	if ($image || $g_options['map_dlurl'] || $heatmap)
+	if ($mapimg || $g_options['map_dlurl'] || $heatmap)
 	{
 ?>
 	<div class="subblock">
@@ -172,16 +178,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 		</div>
 		<div style="float:right;">
 <?php
-			if ($image)
+			if ($mapimg)
 			{
-				echo '<img src="' . $image['url'] . "\" alt=\"$map\" />";
+				echo '<img src="' . $mapimg . "\" alt=\"$map\" />";
 			}
 
 			if ($g_options['map_dlurl'])
 			{
 				$map_dlurl = str_replace("%MAP%", $map, $g_options['map_dlurl']);
 				$map_dlurl = str_replace("%GAME%", $game, $map_dlurl);
-				echo "<p><a href=\"$map_dlurl\">Download this map...</a></p>";
+				$mapdlheader = @get_headers($map_dlurl);
+				if (preg_match("|200|", $mapdlheader[0])) {
+					echo "<p><a href=\"$map_dlurl\">Download this map...</a></p>";
+				}
 			}
 
 			if ($heatmap)
