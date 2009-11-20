@@ -35,35 +35,42 @@
 # For support and installation notes visit http://www.hlxcommunity.com
 
 
-
-# set your correct perl path
-cd /usr/local/games/hlstatsx/perl/
-
 # Define Ports for multiple instances here, be sure that the first Instance has index 0 instead index 1 !
 PORTS[0]=30000
 PORTS[1]=30010
 PORTS[2]=30020
 PORTS[3]=30030
 
+# Set the path to the scripts folder (you should not need to modify this.)
+confdir=.
+# Name of the daemon to run
+daemonfile=hlstats.pl
+
+# verify that we can see the daemon file
+if [ ! -f ${confdir}/${daemonfile} ]; then
+    echo "Can't see the daemon.  (${daemonfile})"
+    exit 1
+fi
+
 function start_process {
  # takes the used port from $1 variable
        PORT=$1
        echo "Starting HLstatsX CE PORT=$PORT...";
        PID=hlstats_$PORT.pid
-       LOG=log_$PORT`date +_%Y%m%d_%H-%M-%S`
+       LOG=logs/multi_$PORT`date +_%Y%m%d_%H-%M-%S`
        if [ -f $PID ]; then
           kill -0 `cat $PID` >/dev/null 2>&1
           if [ "$?" == "0" ]; then
               echo "HLstatsX CE PORT=$PORT already running!"
           else
               rm -rf $PID
-              ./hlstats.pl --port=$PORT >$LOG 2>&1 &
+              ./${daemonfile} --port=$PORT >$LOG 2>&1 &
               echo $! >$PID
               echo "$PID created"
               echo "PORT=$PORT Started successfully"
           fi
        else
-          ./hlstats.pl --port=$PORT >$LOG 2>&1 &
+          ./${daemonfile} --port=$PORT >$LOG 2>&1 &
           echo $! >$PID
           echo "$PID created"
           echo "PORT=$PORT Started successfully"

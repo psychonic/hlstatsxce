@@ -36,18 +36,19 @@
 
 
 
-# set your correct HLstatsX perl path
-perldir=/usr/local/games/hlstatsx/perl
-cd ${perldir}
+# Set the path to the scripts folder (you should not need to modify this.)
+confdir=.
+# Set the configuration file for the daemon (you should not need to modify this.)
+conffile=proxy.conf
+# Set the filename of the daemon to use (you should not need to modify this.)
+daemonfile=proxy-daemon.pl
+# Set where you want to log to (you should not need to modify this.)
+LOG=${confdir}/logs/proxy`date +_%Y%m%d_%H-%M-%S`
 
-# check if you have a structure for hlstats in your homedir
-# if you have it will try to read the conf from there, else use the default
-# located in /usr/local/games/hlstatsx/perl/proxy.conf
-
-if [[ -d ~/hlstats && -r ~/hlstats/proxy.conf ]];then
-	confdir=~/hlstats
-else
-	confdir=${perldir}
+# verify that we can see the daemon file
+if [ ! -f ${confdir}/${daemonfile} ]; then
+    echo "Can't see the daemon.  (${daemonfile})"
+    exit 1
 fi
 
 # verify that you have write access to the directories
@@ -68,6 +69,11 @@ fi
 
 case "$1" in
    start)
+		# verify that we have a .conf file
+	   if [ ! -f ${confdir}/${conffile} ]; then
+	      echo "You're missing your configuration file.  (${conffile})"
+	      exit 1
+	   fi
        echo "Starting HLstatsX...";
        if [ -f ${confdir}/proxy-daemon.pid ]; then
           kill -0 `cat ${confdir}/proxy-daemon.pid` >/dev/null 2>&1
@@ -75,13 +81,13 @@ case "$1" in
               echo "HLstatsX already running!"
           else
               rm -rf ${confdir}/proxy-daemon.pid
-              ./proxy-daemon.pl --configfile=${confdir}/proxy.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+              ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
               echo $! >${confdir}/proxy-daemon.pid
               echo "PID file created"
               echo "Started successfully"
           fi
        else
-          ./proxy-daemon.pl --configfile=${confdir}/proxy.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+          ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
           echo $! >${confdir}/proxy-daemon.pid
           echo "PID file created"
           echo "Started successfully"
@@ -102,7 +108,7 @@ case "$1" in
        kill -9 `cat ${confdir}/proxy-daemon.pid` >/dev/null 2>&1
        if [ "$?" == "0" ]; then
            rm -rf ${confdir}/proxy-daemon.pid
-           ./proxy-daemon.pl --configfile=${confdir}/proxy.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
            echo $! >${confdir}/proxy-daemon.pid
            echo "PID file created"
            echo "Restarted successfully"
@@ -111,7 +117,7 @@ case "$1" in
            if [ -f ${confdir}/proxy-daemon.pid ]; then
              rm -rf ${confdir}/proxy-daemon.pid
            fi
-           ./proxy-daemon.pl --configfile=${confdir}/proxy.conf >${confdir}/logs/log`date +_%Y%m%d_%H-%M-%S` 2>&1 &
+           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
            echo $! >${confdir}/proxy-daemon.pid
            echo "PID file created"
            echo "Started successfully"
