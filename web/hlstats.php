@@ -145,6 +145,14 @@ if (!$g_options['scripturl']) {
 ////
 
 $game = valid_request($_GET['game'], 0);
+
+if (!$game)
+{
+	$game = $_SESSION['game'];
+} else {
+	$_SESSION['game'] = $game;
+}
+
 $mode = $_GET['mode'];
 
 $valid_modes = array(
