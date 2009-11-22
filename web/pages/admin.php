@@ -41,15 +41,7 @@ if (!defined('IN_HLSTATS'))
 	die('Do not access this file directly.');
 }
 
-if ( !empty($game) )
-{
-	setcookie('current_game', $game, time() + 31536000, '', '', 0);
-}
-elseif ( isset($_COOKIE['current_game']) )
-{
-	$game = valid_request($_COOKIE['current_game']);
-}
-else
+if ( empty($game) )
 {
 	$resultGames = $db->query("
         SELECT
@@ -566,7 +558,7 @@ class EditList
 				global $gamecode;
 ?>
 			<td align="center" class="bg2 fSmall"><?php
-				echo "<a href='" . $g_options["scripturl"] . "?mode=admin&amp;admingame=$gamecode&amp;task=" . $this->DetailsLink . "&amp;key=" . $rowdata[$this->keycol] . "'><b>CONFIGURE</b></a>";
+				echo "<a href='" . $g_options["scripturl"] . "?mode=admin&amp;game=$gamecode&amp;task=" . $this->DetailsLink . "&amp;key=" . $rowdata[$this->keycol] . "'><b>CONFIGURE</b></a>";
 ?></td>
 <?php
 			}
@@ -983,7 +975,7 @@ if($auth->ok===false)
 pageHeader(array('Admin'), array('Admin' => ''));
 
 $selTask = valid_request($_GET['task'], 0);
-$selGame = valid_request($_GET['admingame'], 0);
+$selGame = valid_request($_GET['game'], 0);
 ?>
 
 <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -1122,9 +1114,9 @@ else
 					if ($selTask == $code)
 					{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width="9" height="6" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;admingame=<?php echo $gamecode; ?>" name="<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width="9" height="6" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;game=<?php echo $gamecode; ?>" name="<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br /><br />
 
-<form method="post" action="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;admingame=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>">
+<form method="post" action="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;game=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
@@ -1142,7 +1134,7 @@ else
 					elseif ($code != 'serversettings')
 					{
 	?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/rightarrow.gif" width="6" height="9" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;admingame=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br /><br /> <?php
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/rightarrow.gif" width="6" height="9" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;game=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br /><br /> <?php
 					}
 				}
 			}
@@ -1150,7 +1142,7 @@ else
 		else
 		{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/rightarrow.gif" width="6" height="9" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;admingame=<?php echo $gamecode; ?>#game_<?php echo $gamecode; ?>"><?php echo $gamename; ?></a></b> (<?php echo $gamecode; ?>)<br /><br /> <?php
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/rightarrow.gif" width="6" height="9" alt="" /><b>&nbsp;<a href="<?php echo $g_options['scripturl']; ?>?mode=admin&amp;game=<?php echo $gamecode; ?>#game_<?php echo $gamecode; ?>"><?php echo $gamename; ?></a></b> (<?php echo $gamecode; ?>)<br /><br /> <?php
 		}
 	}
 }
