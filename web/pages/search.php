@@ -37,22 +37,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 */
 
 	global $game;
-	$resultGames = $db->query
-	("
-			SELECT
-				hlstats_Games.code,
-				hlstats_Games.name
-			FROM
-				hlstats_Games
-			WHERE
-				hlstats_Games.hidden='0'
-			ORDER BY
-				hlstats_Games.name ASC 
-			LIMIT
-				0,
-				1
-	");
-	list($game) = $db->fetch_row($resultGames);
+	
 // Search
 	require(PAGE_PATH . '/search-class.php');
 	pageHeader
