@@ -1079,10 +1079,8 @@ else
 			}
 		}
 	}
-
-	// Game Settings
-
 ?>
+	
 &nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width="9" height="6" alt="" /><b>&nbsp;Game Settings</b><br /><br />
 <?php
 	$gamesresult = $db->query("
@@ -1166,7 +1164,29 @@ if (!$selTask || !$admintasks[$selTask])
 <?php
 		}
 	}
+
+	$fh = fopen("http://master.hlxcommunity.com/updatecheck/", 'r');
+	$currentversion = '';
+	while (!feof($fh)) {
+		$currentversion .= fread($fh, 8192);
+	}
+	fclose($fh);
+	$oncurrent = true;
+	if ($currentversion && $currentversion != $g_options['version']) {
+		$oncurrent = false;
+	}
 ?>
+	<li><strong>Version Check</strong><br />
+<?php
+	if ($oncurrent) {
+		echo 'Your version is <span style="font-weight:bold">'.$g_options['version'].'</span><br />';
+		echo 'You are up to date';
+	} else {
+		echo 'Your version is <span style="color:#C40000;font-weight:bold">'.$g_options['version'].'</span><br />';
+		echo 'Current version is <span style="color:#007F0E;font-size:125%;font-weight:bold">'.$currentversion.'</span>. Updating is recommended.<br />Please go to <a href="http://www.hlxcommunity.com" target="_blank">hlxcommunity.com</a> for releases and info.';
+	}
+?>
+	</li>
 </ul>
 <?php
 	echo '</td>';
