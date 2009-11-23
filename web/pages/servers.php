@@ -189,7 +189,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<tr class="data-table-head">
 				<td class="fSmall">&nbsp;24h View</td>
 			</tr>
-			<tr class="data-table-head">
+			<tr class="data-table-row">
 				<td style="text-align:center;">
 					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=1" alt="24h View" />
 				</td>
@@ -200,7 +200,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<tr class="data-table-head">
 				<td class="fSmall">&nbsp;Last Week</td>
 			</tr>
-			<tr class="data-table-head">
+			<tr class="data-table-row">
 				<td style="text-align:center;">
 					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=2" alt="Last Week" />
 				</td>
@@ -211,7 +211,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<tr class="data-table-head">
 				<td class="fSmall">&nbsp;Last Month</td>
 			</tr>
-			<tr class="data-table-head">
+			<tr class="data-table-row">
 				<td style="text-align:center;">
 					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=3" alt="Last Month" />
 				</td>
@@ -222,7 +222,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<tr class="data-table-head">
 				<td class="fSmall">&nbsp;Last Year</td>
 			</tr>
-			<tr class="data-table-head">
+			<tr class="data-table-row">
 				<td style="text-align:center;">
 					<img src="show_graph.php?type=0&amp;game=<?php echo $game; ?>&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>&amp;range=4" alt="Last Year" />
 				</td>

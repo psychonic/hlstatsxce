@@ -249,12 +249,22 @@ img {
 
 }
 
-#header_gameslist img {
-	padding-bottom: 15px;
+.header_gameslist {
+	padding-right: 10%;
+	padding-top: 22px;
+} 
+
+.header_gameslist img {
+	padding: 0 2px;
+	padding-bottom:20px;
 }
 
-#header_gameslist #gameslist-active-game {
-	background-image: url(../style/sourcebans/underline.png);
+ul.header_gameslist {
+	list-style: none;
+}
+
+.header_gameslist img#gameslist-active-game{
+	background-image: url(../styles/sourcebans/underline.png);
 	background-position: bottom center;
 	background-repeat: no-repeat;
 }
@@ -297,7 +307,7 @@ img {
 
 .title {
 	margin-left: 13%;
-	padding-top: 12px; 
+	padding-top: 12px;
 }
 
 .tableicon {
@@ -430,25 +440,4 @@ a.footer_link:hover {
 	width: 80%;
 	margin-left:10%;
 	background-repeat: repeat-x;
-}
-
-.header_gameslist {
-	margin: 0 auto;
-	padding-right: 10%;
-} 
-
-#header_gameslist {
-	float: right;
-	position:relative;
-}
-
-ul#header_gameslist{
-	margin: auto;
-	text-align: right;
-}
-
-ul#header_gameslist li{
-	list-style: none;
-	float: left;
-	padding: 0 10px;
 }

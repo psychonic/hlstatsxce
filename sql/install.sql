@@ -137,6 +137,9 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'death_sawblade', 0, 0, '', 'LOL SAW''D', '1', '', '', ''),
 ('tf', 'jarate', 1, 0, '', 'Jarated player', '0', '1', '0', '0'),
 ('tf', 'shield_blocked', 0, 0, '', 'Blocked with Shield', '0', '1', '0', '0'),
+('tf', 'mvp1', 5, 0, '', 'MVP #1', '1', '0', '0', '0'),
+('tf', 'mvp2', 3, 0, '', 'MVP #2', '1', '0', '0', '0'),
+('tf', 'mvp3', 2, 0, '', 'MVP #3', '1', '0', '0', '0'),
 ('css','Begin_Bomb_Defuse_Without_Kit',0,0,'CT','Start Defusing the Bomb Without a Defuse Kit','1','','',''),
 ('css','Begin_Bomb_Defuse_With_Kit',0,0,'CT','Start Defusing the Bomb With a Defuse Kit','1','','',''),
 ('css','Planted_The_Bomb',10,2,'TERRORIST','Plant the Bomb','1','','',''),
@@ -721,6 +724,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('P','tf','jarate', 'Urine'' For A Surprise', 'jarates'),
 ('V','tf','jarate','Yellow Bellied Spies','victims jarated'),
 ('W','tf','tf_pumpkin_bomb', 'Pumpkin Bomber', 'kills with a pumpkin bomb'),
+('O','tf', 'mvp1', 'Most Valuable Player', 'wins as Most Valuable Player'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -3161,7 +3165,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '17', 2),
+('dbversion', '18', 2),
 ('version', '1.6.2', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),

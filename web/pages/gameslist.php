@@ -64,7 +64,7 @@ global $game;
 			$image = getImage("/games/$gamedata[0]/game");
 			if ($image) {
 				if ($game == $gamedata[0]) {
-					$img_id = '"gameslist-active-game"';
+					$img_id = 'id="gameslist-active-game"';
 				} else {
 					$img_id = '';
 				}
@@ -75,4 +75,4 @@ global $game;
 			}
 		}
 ?>
-</ul>
+		</ul>

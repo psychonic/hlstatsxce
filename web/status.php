@@ -266,18 +266,17 @@ if ($server_data['addr'] != '')  {
 
 	if ($map_image == 1)
 	{
-		if (file_exists(IMAGE_PATH."/games/$game/maps/".$server_data['act_map'].'.jpg'))
-		{  
-			echo '<tr><td align="center" colspan="2">';
-			echo '<a target="_blank" href="'.$g_options['scripturl'].'/hlstats.php?mode=mapinfo&amp;map='.$server_data['act_map'].'&amp;game='.$game.'"><img src="'.IMAGE_PATH."/games/$game/maps/".$server_data['act_map'].'.jpg" style="width:'.$width.'px;border:0px" alt="'.$server_data['act_map'].'" title="'.$server_data['act_map'].'" /></a>'; 
-			echo '</td></tr>';
+		$mapimg = getImage("/games/{$game}/maps/{$server_data['act_map']}");
+		if (!file_exists($mapimg['path'])) {
+			$mapimg = getImage("/games/{$game}/maps/default");
+			if (!file_exists($mapimg['path'])) {
+				$mapimg = getImage("/nomap");
+			}
 		}
-		else
-		{
-			echo '<tr><td align="center" colspan="2">';
-			echo '<a target="_blank" href="'.$g_options['siteurl'].'"><img src="'.IMAGE_PATH.'/noimage.gif" style="width:'.$width.'px;border:0px" alt="'.$server_data['act_map'].'" title="'.$server_data['act_map'].'" /></a>'; 
-			echo '</td></tr>';
-		}
+		
+		echo '<tr><td align="center" colspan="2">';
+		echo '<a target="_blank" href="'.$g_options['scripturl'].'/hlstats.php?mode=mapinfo&amp;map='.$server_data['act_map'].'&amp;game='.$game.'"><img src="'.$mapimg['url'].'" style="width:'.$width.'px;border:0px" alt="'.$server_data['act_map'].'" title="'.$server_data['act_map'].'" /></a>'; 
+		echo '</td></tr>';
 	}
 
 	if ($show_summary == 1)
