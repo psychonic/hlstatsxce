@@ -2271,10 +2271,10 @@ sub doEvent_Chat
 					if ($g_ranktype eq "kills") {
 						my $kills = $player->{total_kills};
 						$cmd_str = "";
-						$g_servers{$s_addr}->messageAll(sprintf("%s is on rank %d of %d with %d kills!", $playerName, $ranknumber, $totalplayers, $kills));
+						$g_servers{$s_addr}->messageAll(sprintf("%s is on rank %d of %d with %d kills!", $playerName, $ranknumber, $totalplayers, $kills),0,1);
 					} else {
 						$cmd_str = "";
-						$g_servers{$s_addr}->messageAll(sprintf("%s is on rank %d of %d with %d points!", $playerName, $ranknumber, $totalplayers, $skill));
+						$g_servers{$s_addr}->messageAll(sprintf("%s is on rank %d of %d with %d points!", $playerName, $ranknumber, $totalplayers, $skill),0,1);
 					}
 				}
 			} else {
@@ -2328,7 +2328,7 @@ sub doEvent_Chat
 				} else {					
 					if ($g_servers{$s_addr}->{"public_commands"} == 1) {
 						$cmd_str = "";
-						$g_servers{$s_addr}->messageAll(sprintf("%s has %d:%d frags, %d headshots (%s%%),%s and a KD-Ratio of %s", $playerName, $kills, $deaths, $headshots, $hpk, $accstring, $kd));
+						$g_servers{$s_addr}->messageAll(sprintf("%s has %d:%d frags, %d headshots (%s%%),%s and a KD-Ratio of %s", $playerName, $kills, $deaths, $headshots, $hpk, $accstring, $kd),0,1);
 					} else {
 						$cmd_str = $g_servers{$s_addr}->{player_command}." ".$p_userid." ".$g_servers{$s_addr}->quoteparam(sprintf("%s has %d:%d frags, %d headshots (%s%%),%s and a KD-Ratio of %s", $playerName, $kills, $deaths, $headshots, $hpk, $accstring, $kd));
 					}
@@ -2413,7 +2413,7 @@ sub doEvent_Chat
 				} else {
 					if ($g_servers{$s_addr}->{"public_commands"} == 1) {
 						$cmd_str = "";
-						$g_servers{$s_addr}->messageAll($msg);
+						$g_servers{$s_addr}->messageAll($msg,0,1);
 					} else {
 						$cmd_str = sprintf("%s %s %s", $g_servers{$s_addr}->{player_command}, $p_userid, $g_servers{$s_addr}->quoteparam($msg));
 					}
