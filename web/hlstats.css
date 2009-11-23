@@ -44,7 +44,7 @@ table#accordion tr.toggler td
 	padding-right: 13%;
 } 
 
-#header_gameslist {
+.header_gameslist {
 float: right;
 	position: absolute;
 	top:0;
