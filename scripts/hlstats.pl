@@ -2236,8 +2236,8 @@ while ($loop = &getLine()) {
 			%ev_properties_hash = &getProperties($ev_properties);
 			
 			if (like($ev_verb, "killed") || like($ev_verb, "was incapped by")) {
-				my $killerinfo = 0;
-				my $victiminfo = 0;
+				my $killerinfo = undef;
+				my $victiminfo = undef;
 				
 				if (like($ev_verb, "killed")) {
 					$killerinfo = &getPlayerInfo($ev_player, 1);
@@ -2247,24 +2247,14 @@ while ($loop = &getLine()) {
 					# reverse killer/victim (x was incapped by y = y killed x)
 					$killerinfo = &getPlayerInfo($ev_obj_a, 1);
 					$victiminfo = &getPlayerInfo($ev_player, 1);
+					if ($victiminfo->{team} eq "Infected") {
+						$victiminfo = undef;
+					}
 					$ev_type = 800;
 				}
 								
 				$headshot = 0;
 	    		if ($ev_properties =~ m/headshot/) {
-					$headshot = 1;
-				}
-				if ($g_servers{$s_addr}->{play_game} eq "ff") {
-					if ($ev_obj_b eq "BOOM_HEADSHOT") {
-						$ev_obj_b = "weapon_sniperrifle";
-						$headshot = 1;
-					}
-					if ($ev_obj_b eq "grenade_napalmlet") {
-						$ev_obj_b = "grenade_napalm";
-					}
-				}
-				if ($g_servers{$s_addr}->{play_game} eq "tfc" && $ev_obj_b eq "headshot") {
-					$ev_obj_b = "sniperrifle";
 					$headshot = 1;
 				}
   				if ($killerinfo && $victiminfo) {

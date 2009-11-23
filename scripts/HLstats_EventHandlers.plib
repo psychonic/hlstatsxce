@@ -1002,6 +1002,16 @@ sub doEvent_Frag
 				if ($weapon eq "broom") {
 					$weapon = "crowbar";
 				}
+			} elsif ($g_servers{$s_addr}->{play_game} eq "ff") {
+				if ($weapon eq "BOOM_HEADSHOT") {
+					$weapon = "weapon_sniperrifle";
+					$headshot = 1;
+				} elsif ($weapon eq "grenade_napalmlet") {
+					$weapon = "grenade_napalm";
+				}
+			} elsif ($g_servers{$s_addr}->{play_game} eq "tfc" && $weapon eq "headshot") {
+				$weapon = "sniperrifle";
+				$headshot = 1;
 			} elsif ($g_servers{$s_addr}->{play_game} eq "fof") {
 				# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
 				$weapon =~ s/2$//;
