@@ -85,6 +85,8 @@ if ( !defined('IN_HLSTATS') )
 		{
 			echo '<tr class="bg1">';
 		}
+   
+		$image = getImage("/games/$game/gawards/".strtolower($r['awardType'].'_'.$r['code']));
 		if ($image)
 		{
 			$img = $image['url'];
@@ -94,25 +96,26 @@ if ( !defined('IN_HLSTATS') )
 			$img = IMAGE_PATH.'/award.png';
 		}
 		$weapon = "<img src=\"$img\" alt=\"".$r['code'].'" />';
-		if ($r['g_winner_id'] > 0) {
-			if ($g_options['countrydata'] == 1)	{
-				$imagestring = '<img src="'.getFlag($r['flag']).'" alt="'.$r['flag'].'" />&nbsp;&nbsp;';
+		if ($r['g_winner_id'] > 0)
+		{
+			if ($g_options['countrydata'] == 1) {
+				$imagestring = '<img src="'.getFlag($r['flag']).'" alt="'.$r['country'].'" />&nbsp;&nbsp;';
 			} else {
 				$imagestring = '';
 			}
 			$winnerstring = '<strong>'.htmlspecialchars($r['g_winner_name'], ENT_COMPAT).'</strong>';
 			$achvd = "{$imagestring} <a href=\"hlstats.php?mode=playerinfo&amp;player={$r['g_winner_id']}&amp;game={$game}\">{$winnerstring}</a>";
-			$wincount = $r['g_winner_count'];
+			$wincount = $r['g_winner_count'];			
 		} else {
 			$achvd = "<em>No Award Winner</em>";
 			$wincount= "0";
-		}
-			
+		}			
+   
 		echo "<td style=\"text-align:center;vertical-align:top;width:$colwidth%;\">
 			<strong>".$r['name'].'</strong><br /><br />'
 			."$weapon<br /><br />"
 			."$achvd<br />"
-			.'<span class="fSmall">'.$wincount. ' ' . htmlspecialchars($r['verb']).'</span>
+			.'<span class="fSmall">'. $wincount . ' ' . htmlspecialchars($r['verb']).'</span>
 			</td>';
 		$i++;
 	}
