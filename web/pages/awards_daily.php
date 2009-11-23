@@ -115,9 +115,7 @@ if ( !defined('IN_HLSTATS') )
 		{
 			echo '<tr class="bg1">';
 		}
-   
 
-	
 		$image = getImage("/games/$game/dawards/".strtolower($r['awardType'].'_'.$r['code']));
 		if ($image)
 		{
