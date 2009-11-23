@@ -29,6 +29,6 @@
 	}
 	
 	$db->query("
-		UPDATE hlstats_Options SET `value` = '17' WHERE `keyname` = 'dbversion';
+		UPDATE hlstats_Options SET `value` = '18' WHERE `keyname` = 'dbversion';
 		");
 ?>
