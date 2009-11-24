@@ -3165,7 +3165,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '18', 2),
+('dbversion', '19', 2),
 ('version', '1.6.2', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
@@ -4603,7 +4603,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Servers_VoiceComm` (
   `UDPPort` int(11) unsigned NOT NULL default '8767',
   `serverType` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`serverId`),
-  UNIQUE KEY `address` (`addr`,`queryPort`)
+  UNIQUE KEY `address` (`addr`,`UDPPort`,`queryPort`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
