@@ -10,7 +10,7 @@
 			DROP KEY `address`,
 			ADD UNIQUE KEY `address` (`addr`,`UDPPort`,`queryPort`)
 		");
-	}
+	
 	
 	$db->query("
 		UPDATE hlstats_Options SET `value` = '19' WHERE `keyname` = 'dbversion';
