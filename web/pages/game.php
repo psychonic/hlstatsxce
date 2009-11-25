@@ -529,9 +529,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 						if ($awarddata['flag'] != '') {
 							$alt = ucfirst(strtolower($awarddata['country']));
 						}
-						echo '<img src="'.getFlag($awarddata['flag'])."\" hspace=\"4\" alt=\"$alt\" title=\"$alt\" /><a href="' . $g_options['scripturl'] . '?mode=playerinfo&amp;player=' . $awarddata['d_winner_id'] . '"><b>" . htmlspecialchars($awarddata['d_winner_name'], ENT_COMPAT) . '</b></a> (' . $awarddata['d_winner_count'] . ' ' . htmlspecialchars($awarddata['verb']) . ')';
+						echo "<img src=\"" . getFlag($awarddata['flag']) . "\" hspace=\"4\" alt=\"$alt\" title=\"$alt\" /><a href=\"{$g_options['scripturl']}?mode=playerinfo&amp;player={$awarddata['d_winner_id']}\"><b>" . htmlspecialchars($awarddata['d_winner_name'], ENT_COMPAT) . "</b></a> ({$awarddata['d_winner_count']} " . htmlspecialchars($awarddata['verb']) . ")";
 					} else {
-						echo '<img src="' . IMAGE_PATH . '/player.gif" hspace="4" alt="Player" /><a href="' . $g_options['scripturl'] . '?mode=playerinfo&amp;player=' . $awarddata['d_winner_id'] . '"><b>' . htmlspecialchars($awarddata['d_winner_name'], ENT_COMPAT) . '</b></a> (' . $awarddata['d_winner_count'] . ' ' . htmlspecialchars($awarddata['verb']) . ')';
+						echo "<img src=\"" . IMAGE_PATH . "/player.gif\" hspace=\"4\" alt=\"Player\" /><a href=\"{$g_options['scripturl']}?mode=playerinfo&amp;player={$awarddata['d_winner_id']}\"><b>" . htmlspecialchars($awarddata['d_winner_name'], ENT_COMPAT) . "</b></a> ({$awarddata['d_winner_count']} ". htmlspecialchars($awarddata['verb']) . ")";
 					}
 				}
 				else

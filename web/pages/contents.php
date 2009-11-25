@@ -270,7 +270,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 		if ($lastevent)
 		{
-			echo "\t\t\t\t<li>Last Kill <strong> " . date('g:i:s A, D. d Y', strtotime($lastevent)) . "</strong></li>";
+			echo "\t\t\t\t<li>Last Kill <strong> " . date('g:i:s A, D. M. d, Y', strtotime($lastevent)) . "</strong></li>";
 		}
 ?>
 				<li>All statistics are generated in real-time. Event history data expires after <strong><?php echo $g_options['DeleteDays']; ?></strong> days.</li>
