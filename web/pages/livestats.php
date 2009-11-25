@@ -249,11 +249,11 @@ function printserverstats($server_id)
 					{
 						$thisplayer['name'] = substr($thisplayer['name'], 0, 50);
 					}
-					echo '<a style="color:'.$thisteam['playerlist_color'].'" href="'.$g_options['scripturl'].'?mode='.$mode.'&amp;player='.$thisplayer['player_id'].'">';
 					if ($g_options['countrydata'] == 1)
 					{
 						echo '<img src="'.getFlag($thisplayer['cli_flag']).'" alt="'.ucfirst(strtolower($thisplayer['cli_country'])).'" title="'.ucfirst(strtolower($thisplayer['cli_country'])).'" />&nbsp;';
 					}
+					echo '<a style="color:'.$thisteam['playerlist_color'].'" href="'.$g_options['scripturl'].'?mode='.$mode.'&amp;player='.$thisplayer['player_id'].'">';
 					echo htmlspecialchars($thisplayer['name'], ENT_COMPAT).'</a>';
 				}
 				else
