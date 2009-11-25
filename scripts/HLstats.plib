@@ -152,7 +152,7 @@ sub doConnect
 	$db_conn = DBI->connect(
 		"DBI:mysql:$db_name:$db_host",
 		$db_user, $db_pass, { mysql_enable_utf8 => 1 }
-	) 
+	);
 	while(!$db_conn) {
 		&printEvent("MYSQL", "\nCan't connect to MySQL database '$db_name' on '$db_host'\n" .
 			"Server error: $DBI::errstr\n");
