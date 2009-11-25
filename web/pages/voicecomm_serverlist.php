@@ -76,13 +76,11 @@
         <tr class="bg1">
 			<td class="fHeading">
 				<img src="<?php echo IMAGE_PATH; ?>/teamspeak/teamspeak.gif" alt="tsicon" />
-				&nbsp;<a href="<?php echo $g_options['scripturl'] . "?mode=teamspeak&amp;game=$game&amp;tsId=".$ts_server['serverId']; ?>">
-				<?php echo trim($ts_server['name']); ?>
-				</a></td>
+				&nbsp;<a href="<?php echo $g_options['scripturl'] . "?mode=teamspeak&amp;game=$game&amp;tsId=".$ts_server['serverId']; ?>"><?php echo trim($ts_server['name']); ?></a>
+			</td>
 			<td>
-				<a href="teamspeak://<?php echo $ts_server['addr'].':'.$ts_server['UDPPort'] ?>/?channel=?password=<?php echo $ts_server['password']; ?>">
-				<?php echo $ts_server['addr'].':'.$ts_server['UDPPort']; ?>
-				</a></td>
+				<a href="teamspeak://<?php echo $ts_server['addr'].':'.$ts_server['UDPPort'] ?>/?channel=?password=<?php echo $ts_server['password']; ?>"><?php echo $ts_server['addr'].':'.$ts_server['UDPPort']; ?></a>
+			</td>
 			<td>
 				<?php echo $ts_server['password']; ?>
 				</td>

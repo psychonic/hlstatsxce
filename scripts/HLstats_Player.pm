@@ -64,12 +64,12 @@ sub new
 	$self->{day_skill_change}  = 0;
 	$self->{last_address_check} = 0;
 
-	$self->{city}              = undef;
-	$self->{state}             = undef;
-	$self->{country}           = undef;
-	$self->{flag}              = undef;
-	$self->{lat}               = undef;
-	$self->{lng}               = undef;
+	$self->{city}              = "";
+	$self->{state}             = "";
+	$self->{country}           = "";
+	$self->{flag}              = "";
+	$self->{lat}               = "";
+	$self->{lng}               = "";
 	
 	$self->{playerid}          = 0;
 	$self->{clan}              = 0;
@@ -566,12 +566,13 @@ sub flushDB
 						eventTime,
 						game
 					) VALUES (
-						$playerid,
-						'$date',
-						'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "'
+						?,
+						?,
+						?
 					)
 			";
-			&::execNonQuery($query);
+			my @vals = ($playerid, $date, $::g_servers{$srv_addr}->{game});
+			&::execCached("player_flushdb_history_1", $query, @vals);
 			$self->{day_skill_change} = 0;
 			$self->{last_history_day} = sprintf("%02d", $mday);
 		}
@@ -593,49 +594,54 @@ sub flushDB
 			UPDATE
 				hlstats_Players
 			SET
-				connection_time = connection_time + $add_connect_time,
-				lastName='" . &::quoteSQL($name) . "',
+				connection_time = connection_time + ?,
+				lastName=?,
 				clan=0,
-				kills=kills + $kills,
-				deaths=deaths + $deaths,
-				suicides=suicides + $suicides,
+				kills=kills + ?,
+				deaths=deaths + ?,
+				suicides=suicides + ?,
 				skill=0,
-				headshots=headshots + $headshots,
-				shots=shots + $shots,
-				hits=hits + $hits,
-				last_event=".$::ev_unixtime.",
+				headshots=headshots + ?,
+				shots=shots + ?,
+				hits=hits + ?,
+				last_event=?,
 				hideranking=1
 			WHERE
-				playerId=$playerid
+				playerId=?
 		";
-		&::execNonQuery($query);
+		my @vals = ($add_connect_time, $name, $kills, $deaths, $suicides, $headshots, 
+			$shots, $hits, $::ev_unixtime, $playerid);
+		&::execCached("player_flushdb_player_1", $query, @vals);
 	} else {
 		# Update player details
 		my $query = "
 			UPDATE
 				hlstats_Players
 			SET
-				connection_time = connection_time + $add_connect_time,
-				lastName='" . &::quoteSQL($name) . "',
-				lastAddress='$address',
-				clan='$clan',
-				kills=kills + $kills,
-				deaths=deaths + $deaths,
-				suicides=suicides + $suicides,
-				skill=$skill,
-				headshots=headshots + $headshots,
-				shots=shots + $shots,
-				hits=hits + $hits,
-				last_event=".$::ev_unixtime.",
-				last_skill_change=$last_skill_change,
-				death_streak=$death_streak,
-				kill_streak=$kill_streak,
+				connection_time = connection_time + ?,
+				lastName=?,
+				lastAddress=?,
+				clan=?,
+				kills=kills + ?,
+				deaths=deaths + ?,
+				suicides=suicides + ?,
+				skill=?,
+				headshots=headshots + ?,
+				shots=shots + ?,
+				hits=hits + ?,
+				last_event=?,
+				last_skill_change=?,
+				death_streak=?,
+				kill_streak=?,
 				hideranking=IF(hideranking=3,0,hideranking),
 				activity = 100
 			WHERE
-				playerId=$playerid
+				playerId=?
 		";
-		&::execNonQuery($query);
+		my @vals = ($add_connect_time, $name, $address, $clan, $kills, $deaths, $suicides, $skill, 
+			$headshots, $shots, $hits, $::ev_unixtime, $last_skill_change, $death_streak,
+			$kill_streak, $playerid);
+		&::execCached("player_flushdb_player_2", $query, @vals);
 
 		if ($::g_stdin == 0 || $::g_timestamp > 0) {
 			# Update player details
@@ -643,21 +649,24 @@ sub flushDB
 				UPDATE
 					hlstats_Players_History
 				SET
-					connection_time = connection_time + $add_connect_time,
-					kills=kills + $kills,
-					deaths=deaths + $deaths,
-					suicides=suicides + $suicides,
-					skill=$skill,
-					headshots=headshots + $headshots,
-					shots=shots + $shots,
-					hits=hits + $hits,
-					skill_change=skill_change + $add_history_skill
+					connection_time = connection_time + ?,
+					kills=kills + ?,
+					deaths=deaths + ?,
+					suicides=suicides + ?,
+					skill=?,
+					headshots=headshots + ?,
+					shots=shots + ?,
+					hits=hits + ?,
+					skill_change=skill_change + ?
 				WHERE
-					playerId=$playerid
-					AND eventTime='$date'
-					AND game='".&::quoteSQL($::g_servers{$srv_addr}->{game})."'
+					playerId=?
+					AND eventTime=?
+					AND game=?
 			";
-			&::execNonQuery($query);
+			my @vals = ($add_connect_time, $kills, $deaths, $suicides, $skill, $headshots,
+				$shots, $hits, $add_history_skill, $playerid, $date, 
+				$::g_servers{$srv_addr}->{game});
+			&::execCached("player_flushdb_history_2", $query, @vals);
 		}
 	}
 	
@@ -668,30 +677,35 @@ sub flushDB
 			UPDATE
 				hlstats_PlayerNames
 			SET
-  			    connection_time = connection_time + $add_connect_time,
-				kills=kills + $kills,
-				deaths=deaths + $deaths,
-				suicides=suicides + $suicides,
-   			    headshots=headshots + $headshots,
-    			shots=shots + $shots,
-   			    hits=hits + $hits"
+  			    connection_time = connection_time + ?,
+				kills=kills + ?,
+				deaths=deaths + ?,
+				suicides=suicides + ?,
+   			    headshots=headshots + ?,
+    			shots=shots + ?,
+   			    hits=hits + ?"
 		;
+		my @vals = ($add_connect_time, $kills, $deaths, $suicides, $headshots, $shots, $hits);
 		
 		unless ($leaveLastUse)
 		{
 			# except on ChangeName we update the last use on a player's old name
 			
 			$query .= ",
-				lastuse=FROM_UNIXTIME(" . $::ev_unixtime . ")"
+				lastuse=FROM_UNIXTIME(?)"
 			;
+			push(@vals, $::ev_unixtime);
 		}
 		
 		$query .= "
 			WHERE
-				playerId= $playerid
-				AND name='" . &::quoteSQL($self->{name}) . "'
+				playerId=?
+				AND name=?
 		";
-		&::execNonQuery($query);
+		push(@vals, $playerid);
+		push(@vals, $self->{name});
+		
+		&::execCached("player_flushdb_playernames", $query, @vals);
 	}
 	
 	# reset player stat properties
@@ -713,32 +727,36 @@ sub flushDB
 			REPLACE INTO
 				hlstats_Livestats
 			SET
-				player_id=$playerid,
-				server_id=$serverid,
-				cli_address='$address',
-				cli_city='".&::quoteSQL($self->{city})."',
-				cli_country='".&::quoteSQL($self->{country})."',
-				cli_flag='".&::quoteSQL($self->{flag})."',
-				cli_state='".&::quoteSQL($self->{state})."',
-				cli_lat='$self->{lat}',
-				cli_lng='$self->{lng}',
-				steam_id='" . &::quoteSQL($steamid) . "',
-				name='" . &::quoteSQL($name) . "',
-				team='".&::quoteSQL($team)."',
-				kills=$map_kills,
-				deaths=$map_deaths,
-				suicides=$map_suicides,
-				headshots=$map_headshots,
-				shots=$map_shots,
-				hits=$map_hits,
-				is_dead=$is_dead,
-				has_bomb=$has_bomb,
-				ping=$ping,
-				connected=$connected,
-				skill_change=$skill_change,
-				skill=$skill
+				player_id=?,
+				server_id=?,
+				cli_address=?,
+				cli_city=?,
+				cli_country=?,
+				cli_flag=?,
+				cli_state=?,
+				cli_lat=?,
+				cli_lng=?,
+				steam_id=?,
+				name=?,
+				team=?,
+				kills=?,
+				deaths=?,
+				suicides=?,
+				headshots=?,
+				shots=?,
+				hits=?,
+				is_dead=?,
+				has_bomb=?,
+				ping=?,
+				connected=?,
+				skill_change=?,
+				skill=?
 		";
-		&::execNonQuery($query);
+		my @vals = ($playerid, $serverid, $address, $self->{city}, $self->{country},
+			$self->{flag}, $self->{state}, $self->{lat}, $self->{lng}, $steamid, $name, 
+			$team, $map_kills, $map_deaths, $map_suicides, $map_headshots, $map_shots, 
+			$map_hits, $is_dead, $has_bomb, $ping, $connected, $skill_change, $skill);
+		&::execCached("player_flushdb_livestats", $query, @vals);
 	}
 
     if ($::g_stdin == 0)  {
