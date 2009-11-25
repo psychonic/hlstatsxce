@@ -195,7 +195,12 @@ $valid_modes = array(
    
 if (file_exists('./updater') && $mode != 'updater')
 {
-	die('Please finish update @ <a href="'.$g_options['scripturl'].'?mode=updater">'.$g_options['scripturl'].'?mode=updater</a> and/or remove the updater directory.');
+	pageHeader(array('Update Notice'), array('Update Notice' => ''));
+	echo "<div class=\"warning\">\n" . 
+	"<span class=\"warning-heading\">Warning:</span><br />\n" .
+	"<span class=\"warning-text\">The updater folder was detected in your web directory.  Please finish the database update at <a href=\"{$g_options['scripturl']}?mode=updater\">{$g_options['scripturl']}?mode=updater</a> <strong>and/or remove the updater directory</strong>.</span>\n</div>";
+	pageFooter();
+	die();
 }
    
 if ( !in_array($mode, $valid_modes) )

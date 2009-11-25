@@ -16,14 +16,15 @@
 	(
 		array ($gamename, 'Updater')
 	);
-	
+	echo "<div class=\"warning\">\n" .
+	"<span id=\"warning-header\">Attention:</span><br />\n" .
 	// Check version since updater wasn't implemented until version 1.6.2
 	$versioncomp = version_compare($g_options['version'], '1.6.1');
 	
 	if ($versioncomp === -1)
 	{
 		// not yet at 1.6.1
-		echo "You cannot upgrade from this version (".$g_options['version']."). You can only upgrade from 1.6.1.";
+		echo "You cannot upgrade from this version (".$g_options['version']."). You can only upgrade from 1.6.1.\n";
 	}
 	else if ($versioncomp === 0)
 	{
@@ -33,12 +34,12 @@
 	else
 	{
 		// at 1.6.2 or higher, can update normally
-		echo "On db version ".$g_options['dbversion']."<br />";
+		echo "Currently on database version ".$g_options['dbversion']."<br />\n";
 		$i = $g_options['dbversion']+1;
 		
 		while (file_exists ("./updater/$i.php"))
 		{
-			echo "Running db update $i<br />";
+			echo "Running database update $i<br />\n";
 			include ("./updater/$i.php");
 			
 			$i++;
@@ -46,13 +47,13 @@
 		
 		if ($i == $g_options['dbversion']+1)
 		{
-			echo "Your db is already up to date (".$g_options['dbversion'].")";
+			echo "Your database is already up to date (".$g_options['dbversion'].")\n";
 		}
 		else
 		{
-			echo "Successfully updated to db version ".($i-1);
+			echo "Successfully updated to database version ".($i-1)."\n";
 		}
 	}
 	
-	echo "<br /><br />You <strong>must delete</strong> the \"updater\" folder from your web site before your site will be operational.";
+	echo "<br /><br /><span class=\"warning-header\">You <strong>must delete</strong> the \"updater\" folder from your web site before your site will be operational.</span>\n</div>\n";
 ?>

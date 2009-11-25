@@ -242,7 +242,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			echo '<b>' . $rowdata['name'] . '</b>';
 ?></td>
             <td class="game-table-cell"><?php
-			echo "$addr <a href=\"steam://connect/$addr\">(Join)</a>";
+			echo "$addr (<a href=\"steam://connect/$addr\">Join</a>)";
 ?></td>
             <td class="game-table-cell" style="text-align:center;"><?php
 			echo $rowdata['act_map'];
@@ -536,7 +536,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				}
 				else
 				{
-					echo '&nbsp;&nbsp;(Nobody)';
+					echo '&nbsp;&nbsp; <em>No Award Winner</em>';
 				}
 ?></td>
 </tr>

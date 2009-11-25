@@ -39,13 +39,10 @@ table#accordion tr.toggler td
     text-align: center; 
 }
 
-.header_gameslist {
-	margin: 0 auto;
-	padding-right: 13%;
-} 
 
 .header_gameslist {
-float: right;
+	margin: 0 auto;
+	float: right;
 	position: absolute;
 	top:0;
 	right:0;
@@ -71,3 +68,15 @@ ul#header_gameslist li{
 }
 
 
+.warning {
+	border: thin solid red;
+	padding: 1em;
+}
+
+.warning .warning-heading {
+	font-size: 2em;
+}
+
+.warning .warning-text [
+	font-size: 1em;
+}
