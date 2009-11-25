@@ -83,16 +83,16 @@
 			</td>
 			<td>
 				<?php echo $ts_server['password']; ?>
-				</td>
+			</td>
 			<td style="text-align:right;">
 				<?php echo $ts_channels; ?>
-				</td>
+			</td>
 			<td style="text-align:right;">
 				<?php echo $ts_slots; ?>
-				</td>
+			</td>
 			<td>
 				<?php echo $ts_server['descr']; ?>
-				</td>
+			</td>
 		</tr>
 <?php
 			}
@@ -118,25 +118,24 @@
 			<tr class="bg1">
 				<td class="fHeading">
 					<img src="<?php echo IMAGE_PATH; ?>/ventrilo/ventrilo.png" alt="venticon" />
-					&nbsp;<a href="<?php echo $g_options['scripturl'] . "?mode=ventrilo&amp;game=$game&amp;veId=".$vent_server['serverId']; ?>">
-					<?php echo $vent_server['name']; ?>
-					</a></td>
+					&nbsp;<a href="<?php echo $g_options['scripturl'] . "?mode=ventrilo&amp;game=$game&amp;veId=".$vent_server['serverId']; ?>"><?php echo $vent_server['name']; ?></a>
+				</td>
 				<td>
 					<a href="ventrilo://<?php echo $vent_server['addr'].':'.$vent_server['queryPort'] ?>/servername=<?php echo $ve_info->m_name; ?>">
 					<?php echo $vent_server['addr'].':'.$vent_server['queryPort']; ?>
 					</a></td>
 				<td>
 					<?php echo $vent_server['password']; ?>
-					</td>
+				</td>
 				<td style="text-align:right;">
 					<?php echo $ve_channels; ?>
-					</td>
+				</td>
 				<td style="text-align:right;">
 					<?php echo $ve_slots; ?>
-					</td>
+				</td>
 				<td>
 					<?php echo $vent_server['descr']; ?>
-					</td>
+				</td>
 			</tr>
 <?php
 			}
