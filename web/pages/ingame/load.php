@@ -83,7 +83,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	</table>
 	<table class="data-table" >
         <tr class="data-table-head">
-			<td style="text=align:center;padding:0px;">
+			<td style="text-align:center;padding:0px;">
 				<img src="show_graph.php?type=0&amp;width=870&amp;height=200&amp;server_id=<?php echo $server_id ?>&amp;bgcolor=<?php echo $g_options['graphbg_load']; ?>&amp;color=<?php echo $g_options['graphtxt_load']; ?>" style="border:0px;">
 			</td>
 		</tr>
