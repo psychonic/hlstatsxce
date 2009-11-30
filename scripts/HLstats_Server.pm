@@ -38,6 +38,9 @@ use POSIX;
 use IO::Socket;
 use Socket;
 use Encode;
+use Switch;
+
+do "$::opt_libdir/HLstats_GameConstants.plib";
 
 sub new
 {
@@ -66,7 +69,7 @@ sub new
     $self->{contact}        = "";
     $self->{hlstats_url}    = "";
     $self->{publicaddress}  = $publicaddress;
-	$self->{play_game}      = $realgame;
+	$self->{play_game}      = -1;
 	
 	$self->{last_event}     = 0;
 	$self->{last_check}     = 0;
@@ -181,6 +184,8 @@ sub new
 	
 	$self->{next_timeout} = 0;
 	
+	&set_play_game($realgame);
+	
 	if ($self->{rcon})
 	{
 		$self->init_rcon();
@@ -190,6 +195,55 @@ sub new
 	$self->update_server_loc();
 
 	return $self;
+}
+
+sub set_play_game
+{
+	my ($self, $realgame) = @_;
+	
+	switch ($realgame)
+	{
+		case "css"
+			{ $self->{play_game} = CSS(); }
+		case "hl2mp"
+			{ $self->{play_game} = HL2MP(); }
+		case "tf"
+			{ $self->{play_game} = TF(); }
+		case "dods"
+			{ $self->{play_game} = DODS(); }
+		case "insmod"
+			{ $self->{play_game} = INSMOD(); }
+		case "ff"
+			{ $self->{play_game} = FF(); }
+		case "hidden"
+			{ $self->{play_game} = HIDDEN(); }
+		case "zps"
+			{ $self->{play_game} = ZPS(); }
+		case "aoc"
+			{ $self->{play_game} = AOC(); }
+		case "cstrike"
+			{ $self->{play_game} = CSTRIKE(); }
+		case "tfc"
+			{ $self->{play_game} = TFC(); }
+		case "dod"
+			{ $self->{play_game} = DOD(); }
+		case "ns"
+			{ $self->{play_game} = NS(); }
+		case "l4d"
+			{ $self->{play_game} = L4D(); }
+		case "fof"
+			{ $self->{play_game} = FOF(); }
+		case "ges"
+			{ $self->{play_game} = GES(); }
+		case "bg2"
+			{ $self->{play_game} = BG2(); }
+		case "sgtls"
+			{ $self->{play_game} = SGTLS(); }
+		case "dystopia"
+			{ $self->{play_game} = DYSTOPIA(); }
+		case "nts"
+			{ $self->{play_game} = NTS(); }
+	}
 }
 
 sub is_admin
@@ -238,25 +292,39 @@ sub get_game_mod_opts
 		}
 		
 		# Turn on color and add game-specific color modifiers for when using hlx:ce sourcemod plugin
-		if (($self->{mod} eq "SOURCEMOD" && ($self->{play_game} eq "css" || $self->{play_game} eq "tf" || $self->{play_game} eq "aoc" || $self->{play_game} eq "zps" || $self->{play_game} eq "ff" || $self->{play_game} eq "ges")) || ($self->{mod} eq "AMXX" && $self->{play_game} eq "cstrike")) {
+		if (($self->{mod} eq "SOURCEMOD" &&
+				(
+				$self->{play_game} == CSS()
+				|| $self->{play_game} == TF()
+				|| $self->{play_game} == L4D()
+				|| $self->{play_game} == HL2MP()
+				|| $self->{play_game} == AOC()
+				|| $self->{play_game} == ZPS()
+				|| $self->{play_game} == FF()
+				|| $self->{play_game} == GES()
+				)
+			)
+			|| ($self->{mod} eq "AMXX"
+				&& $self->{play_game} == CSTRIKE())
+		) {
 	
 			$self->{format_color} = " 1";
-			if ($self->{play_game} eq "zps" || $self->{play_game} eq "ges") {
+			if ($self->{play_game} == ZPS() || $self->{play_game} == GES()) {
 				$self->{format_action} = "\x05";
-			} elsif ($self->{play_game} eq "ff") {
+			} elsif ($self->{play_game} == FF()) {
 				$self->{format_action} = "^4";
 			} else {
 				$self->{format_action} = "\x04";
 			}
 			
-			if ($self->{play_game} eq "ff") {
+			if ($self->{play_game} == FF()) {
 				$self->{format_actionend} = "^0";
 			} else {
 				$self->{format_actionend} = "\x01";
 			}
 		}
 		# Insurgency can only do one solid color afaik. The rest is handled in the plugin
-		if ($self->{mod} eq "SOURCEMOD" && $self->{play_game} eq "insmod") {
+		if ($self->{mod} eq "SOURCEMOD" && $self->{play_game} == INSMOD()) {
 			$self->{format_color} = " 1";
 		}
 	}
@@ -354,7 +422,7 @@ sub init_rcon
 	}
    	if ($self->{rcon_obj}) {
 		&::printEvent ("SERVER", "Connecting to rcon on $server_ip:$server_port ... ok");
-		&::printEvent("SERVER", "Server running game: ".$self->{play_game}, 1);
+		#&::printEvent("SERVER", "Server running game: ".$self->{play_game}, 1);
 		&::printEvent("SERVER", "Server running map: ".$self->get_map(), 1);
 		if ($::g_mode eq "LAN") {
 			$self->get_lan_players();
@@ -571,7 +639,7 @@ sub get_map
 					$update++;
 				}
 			}
-			if (($difficulty > 0) && ($self->{play_game} eq "l4d")){
+			if (($difficulty > 0) && ($self->{play_game} == L4D())) {
 				$self->{difficulty} = $difficulty;
 			}
 			if (($self->{update_hostname} > 0) && ($self->{name} ne $servhostname) && ($servhostname ne "")) {
@@ -1164,7 +1232,7 @@ sub messageAll
 				}
 			}
 
-			if ($self->{play_game} ne "ff")
+			if ($self->{play_game} != FF())
 			{
 				$msg = $self->{format_action}.$msg;
 			}
@@ -1246,7 +1314,7 @@ sub updatePlayerCount
 	
 	my $trackable = 0;
 
-	if ($self->{play_game} eq "l4d") {
+	if ($self->{play_game} == L4D()) {
 		my $num = 0;
 		while (my($pl, $player) = each(%{$self->{srv_players}})) {
 			if ($player->{trackable} == 1) {

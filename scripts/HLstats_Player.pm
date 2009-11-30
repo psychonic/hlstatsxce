@@ -40,6 +40,8 @@ package HLstats_Player;
 
 use Encode;
 
+do "$::opt_libdir/HLstats_GameConstants.plib";
+
 sub new
 {
 	my $class_name = shift;
@@ -328,7 +330,7 @@ sub setUniqueId
 		# table.
 		my $hideins = "";
 		my $hideval = "";
-		if ($::g_servers{$srv_addr}->{play_game} eq "l4d" && $self->{userid} < 0) {
+		if ($::g_servers{$srv_addr}->{play_game} == L4D() && $self->{userid} < 0) {
 			$hideins = ", hideranking";
 			$hideval = ", 1";
 		}

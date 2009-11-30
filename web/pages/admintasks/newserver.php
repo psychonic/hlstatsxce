@@ -94,6 +94,19 @@ The "Public Address" should be the address you want shown to users. If left blan
 
 <tr valign="top" class="table_border">
 	<td>
+		<script type="text/javascript">
+		function checkMod() {
+			if (!document.newserverform.server_address.value.match(/^\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b$/)) {
+				alert('Server address must be a valid IP address');
+				return false;
+			}
+			if (document.newserverform.game_mod.value == 'PLEASESELECT') {
+				alert('You must make a selection for Admin Mod');
+				return false;
+			}
+			document.newserverform.submit();
+		}
+		</script>
 		<table width="100%" border=0 cellspacing=1 cellpadding=4>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Server Address</td>
@@ -116,11 +129,12 @@ The "Public Address" should be the address you want shown to users. If left blan
 				<td class='fSmall'><input type="text" name="public_address" maxlength="255" size="15" value="<?php echo clean_data($_POST['public_address']); ?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
-				<td class='fSmall'>Game Mod</td>
+				<td class='fSmall'>Admin Mod</td>
 				<td class='fSmall'>
 					<select name="game_mod">
+					<option value="PLEASESELECT">PLEASE SELECT</option>
 					<?php
-					$db->query("SELECT * FROM `hlstats_Mods_Supported`");
+					$db->query("SELECT code, name FROM `hlstats_Mods_Supported`");
 					while ( $row = $db->fetch_array() )
 					{
 						echo '<option value="' . $row['code'] . '">' . $row['name'] . '</option>';
@@ -134,6 +148,6 @@ The "Public Address" should be the address you want shown to users. If left blan
 </tr>
 	<table width="75%" border=0 cellspacing=0 cellpadding=0>
 	<tr>
-		<td align="center"><input type="submit" value="  Add Server  " class="submit"></td>
+		<td align="center"><input type="submit" value="  Add Server  " class="submit" onclick="checkMod();return false;"></td>
 	</tr>
 	</table>

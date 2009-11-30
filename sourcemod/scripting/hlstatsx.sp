@@ -32,20 +32,24 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.3-pre2"
-#define CSS 1
-#define DODS 2
-#define L4D 3
-#define TF 4
-#define HL2MP 5
-#define INSMOD 6
-#define FF 7
-#define ZPS 8
-#define AOC 9
-#define FOF 10
-#define GES 11
+#define VERSION "1.6.3-pre3"
 
-new gamemod = 0;
+enum GameType {
+	Game_Unknown = -1,
+	Game_CSS,
+	Game_DODS,
+	Game_L4D,
+	Game_TF,
+	Game_HL2MP,
+	Game_INSMOD,
+	Game_FF,
+	Game_ZPS,
+	Game_AOC,
+	Game_FOF,
+	Game_GES
+};
+
+new GameType:gamemod;
 
 new Handle: hlx_block_chat_commands;
 new Handle: hlx_message_prefix;
@@ -84,7 +88,7 @@ new const String:ts_models[][] = {
 new const String: modnamelist[][] = {
 	"Counter-Strike: Source",
 	"Day of Defeat: Source",
-	"Left 4 Dead",
+	"Left 4 Dead (1 or 2)",
 	"Team Fortress 2",
 	"Half-Life 2 Deathman",
 	"Insurgency",
@@ -98,6 +102,7 @@ new const String: modnamelist[][] = {
 new String: message_prefix[32];
 new bool:g_bPlyrCanDoMotd[MAXPLAYERS+1];
 new bool:g_bGameCanDoMotd = true;
+new bool:g_bTrackColors4Chat;
 
 public Plugin:myinfo = {
 	name = "HLstatsX CE Ingame Plugin",
@@ -129,21 +134,8 @@ public OnPluginStart()
 	RegServerCmd("hlx_sm_player_action", hlx_sm_player_action);
 	RegServerCmd("hlx_sm_team_action",   hlx_sm_team_action);
 	RegServerCmd("hlx_sm_world_action",  hlx_sm_world_action);
-	
-	RegServerCmd("gameme_psay",          hlx_sm_psay);
-	RegServerCmd("gameme_psay2",         hlx_sm_psay2);
-	RegServerCmd("gameme_csay",          hlx_sm_csay);
-	RegServerCmd("gameme_msay",          hlx_sm_msay);
-	RegServerCmd("gameme_tsay",          hlx_sm_tsay);
-	RegServerCmd("gameme_hint",          hlx_sm_hint);
-	RegServerCmd("gameme_browse",        hlx_sm_browse);
-	RegServerCmd("gameme_swap",          hlx_sm_swap);
-	RegServerCmd("gameme_redirect",      hlx_sm_redirect);
-	RegServerCmd("gameme_player_action", hlx_sm_player_action);
-	RegServerCmd("gameme_team_action",   hlx_sm_team_action);
-	RegServerCmd("gameme_world_action",  hlx_sm_world_action);
 
-	if (gamemod == INSMOD)
+	if (gamemod == Game_INSMOD)
 	{
 		RegConsoleCmd("say",                 hlx_block_commands);
 		RegConsoleCmd("say2",                hlx_block_commands);
@@ -155,14 +147,21 @@ public OnPluginStart()
 		RegConsoleCmd("say_team",            hlx_block_commands);
 	}
 	
-	if ((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC))
+	switch (gamemod)
 	{
-		HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
+		case Game_CSS, Game_L4D, Game_TF, Game_AOC:
+		{
+			g_bTrackColors4Chat = true;
+			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
+		}
 	}
 	
-	if (gamemod == INSMOD || gamemod == L4D || gamemod == GES)
+	switch (gamemod)
 	{
-		g_bGameCanDoMotd = false;
+		case Game_L4D, Game_INSMOD, Game_GES:
+		{
+			g_bGameCanDoMotd = false;
+		}
 	}
 	
 	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
@@ -170,8 +169,9 @@ public OnPluginStart()
 	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
 	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_PLUGIN);
 	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message", FCVAR_PLUGIN);
-	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
+	
+	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
 	
 	RegServerCmd("log", ProtectLoggingChange);
@@ -182,7 +182,7 @@ public OnPluginStart()
 	PlayerColorArray = CreateArray();
 	message_recipients = CreateStack();
 	
-	GetTeams(gamemod == INSMOD);
+	GetTeams(gamemod == Game_INSMOD);
 }
 
 #if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
@@ -222,9 +222,9 @@ public HLXSettingsMenu(client, CookieMenuAction:action, any:info, String:buffer[
 
 public OnMapStart()
 {
-	GetTeams(gamemod == INSMOD);
+	GetTeams(gamemod == Game_INSMOD);
 
-	if (gamemod == CSS || gamemod == TF || gamemod == AOC)
+	if (g_bTrackColors4Chat)
 	{
 		find_player_team_slot(2);
 		find_player_team_slot(3);
@@ -234,101 +234,101 @@ public OnMapStart()
 
 get_server_mod()
 {
-	if (gamemod == 0)
+	if (gamemod > Game_Unknown)
 	{
 		new String: game_description[64];
 		GetGameDescription(game_description, 64, true);
 	
 		if (StrContains(game_description, "Counter-Strike", false) != -1)
 		{
-			gamemod = CSS;
+			gamemod = Game_CSS;
 		}
 		else if (StrContains(game_description, "Day of Defeat", false) != -1)
 		{
-			gamemod = DODS;
+			gamemod = Game_DODS;
 		}
 		else if (StrContains(game_description, "Half-Life 2 Deathmatch", false) != -1)
 		{
-			gamemod = HL2MP;
+			gamemod = Game_HL2MP;
 		}
 		else if (StrContains(game_description, "Team Fortress", false) != -1)
 		{
-			gamemod = TF;
+			gamemod = Game_TF;
 		}
-		else if (StrContains(game_description, "L4D", false) != -1)
+		else if (StrContains(game_description, "L4D", false) != -1 || StrContains(game_description, "Left 4 D", false) != -1)
 		{
-			gamemod = L4D;
+			gamemod = Game_L4D;
 		}
 		else if (StrContains(game_description, "Insurgency", false) != -1)
 		{
-			gamemod = INSMOD;
+			gamemod = Game_INSMOD;
 
 		//psychonic - added detection for more supported games
 		}
 		else if (StrContains(game_description, "Fortress Forever", false) != -1)
 		{
-			gamemod = FF;
+			gamemod = Game_FF;
 		}
 		else if (StrContains(game_description, "ZPS", false) != -1)
 		{
-			gamemod = ZPS;
+			gamemod = Game_ZPS;
 		}
 		else if (StrContains(game_description, "Age of Chivalry", false) != -1)
 		{
-			gamemod = AOC;
+			gamemod = Game_AOC;
 		}
 		
 		// game mod could not detected, try further
-		if (gamemod == 0)
+		if (gamemod > Game_Unknown)
 		{
 			new String: game_folder[64];
 			GetGameFolderName(game_folder, 64);
 
 			if (StrContains(game_folder, "cstrike", false) != -1)
 			{
-				gamemod = CSS;
+				gamemod = Game_CSS;
 			}
 			else if (StrContains(game_folder, "dod", false) != -1)
 			{
-				gamemod = DODS;
+				gamemod = Game_DODS;
 			}
 			else if (StrContains(game_folder, "hl2mp", false) != -1)
 			{
-				gamemod = HL2MP;
+				gamemod = Game_HL2MP;
 			}
 			else if (StrContains(game_folder, "fistful_of_frags", false) != -1)
 			{
-				gamemod = FOF;
+				gamemod = Game_FOF;
 			}
 			else if (StrContains(game_folder, "tf", false) != -1)
 			{
-				gamemod = TF;
+				gamemod = Game_TF;
 			}
 			else if (StrContains(game_folder, "left4dead", false) != -1)
 			{
-				gamemod = L4D;
+				gamemod = Game_L4D;
 			}
 			else if (StrContains(game_folder, "insurgency", false) != -1)
 			{
-				gamemod = INSMOD;
+				gamemod = Game_INSMOD;
 
 			//psychonic - added detection for more supported games
 			}
 			else if (StrContains(game_folder, "FortressForever", false) != -1)
 			{
-				gamemod = FF;
+				gamemod = Game_FF;
 			}
 			else if (StrContains(game_folder, "zps", false) != -1)
 			{
-				gamemod = ZPS;
+				gamemod = Game_ZPS;
 			}
 			else if (StrContains(game_folder, "ageofchivalry", false) != -1)
 			{
-				gamemod = AOC;
+				gamemod = Game_AOC;
 			}
 			else if (StrContains(game_folder, "gesource", false) != -1)
 			{
-				gamemod = GES;
+				gamemod = Game_GES;
 			}
 			else
 			{
@@ -337,9 +337,9 @@ get_server_mod()
 			}
 		}
 
-		if (gamemod > 0)
+		if (gamemod > Game_Unknown)
 		{
-			LogToGame("HLX:CE Mod Detection: %s", modnamelist[gamemod-1]);
+			LogToGame("HLX:CE Mod Detection: %s", modnamelist[_:gamemod]);
 			LogToGame("HLX:CE If this is incorrect, please file a bug at hlxcommunity.com");
 		}
 	}
@@ -475,18 +475,15 @@ public Action:MessagePrefixClear(args)
 
 find_player_team_slot(team_index) 
 {
-	if ((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC))
+	if (team_index > -1)
 	{
-		if (team_index > -1)
+		ColorSlotArray[team_index] = -1;
+		for(new i = 1; i <= MaxClients; i++)
 		{
-			ColorSlotArray[team_index] = -1;
-			for(new i = 1; i <= MaxClients; i++)
+			if (IsClientInGame(i) && IsClientConnected(i) && GetClientTeam(i) == team_index)
 			{
-				if (IsClientInGame(i) && IsClientConnected(i) && GetClientTeam(i) == team_index)
-				{
-					ColorSlotArray[team_index] = i;
-					break;
-				}
+				ColorSlotArray[team_index] = i;
+				break;
 			}
 		}
 	}
@@ -495,24 +492,21 @@ find_player_team_slot(team_index)
 
 stock validate_team_colors() 
 {
-	if ((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC))
+	for (new i = 0; i < sizeof(ColorSlotArray); i++)
 	{
-		for (new i = 0; i < sizeof(ColorSlotArray); i++)
+		new color_client = ColorSlotArray[i];
+		if (color_client > 0)
 		{
-			new color_client = ColorSlotArray[i];
-			if (color_client > 0)
+			if (IsClientInGame(color_client) && IsClientConnected(color_client) && GetClientTeam(color_client) != color_client)
 			{
-				if (IsClientInGame(color_client) && IsClientConnected(color_client) && GetClientTeam(color_client) != color_client)
-				{
-					find_player_team_slot(i);
-				}
+				find_player_team_slot(i);
 			}
-			else
+		}
+		else
+		{
+			if (i == 2 || i == 3)
 			{
-				if (i == 2 || i == 3)
-				{
-					find_player_team_slot(i);
-				}
+				find_player_team_slot(i);
 			}
 		}
 	}
@@ -520,8 +514,7 @@ stock validate_team_colors()
 
 public OnClientDisconnect(client)
 {
-	if (client > 0 && IsClientInGame(client) && IsClientConnected(client) && 
-		(gamemod == CSS || gamemod == TF || gamemod == AOC))
+	if (g_bTrackColors4Chat && client > 0 && IsClientInGame(client) && IsClientConnected(client))
 	{
 		new team_index = GetClientTeam(client);
 		if (client == ColorSlotArray[team_index])
@@ -529,13 +522,14 @@ public OnClientDisconnect(client)
 			ColorSlotArray[team_index] = -1;
 		}
 	}
+	
 	g_bPlyrCanDoMotd[client] = false;
 }
 
 color_player(color_type, player_index, String: client_message[192]) 
 {
 	new color_player_index = -1;
-	if ((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC) || (gamemod == ZPS) || (gamemod == GES))
+	if (g_bTrackColors4Chat || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
 	{
 		decl String: client_name[192];
 		GetClientName(player_index, client_name, sizeof(client_name));
@@ -548,10 +542,10 @@ color_player(color_type, player_index, String: client_message[192])
 				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
-					case ZPS:
-						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
-					case GES:
+					case Game_HL2MP, Game_GES:
 						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
+					case Game_ZPS:
+						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
 					default:
 						Format(colored_player_name, sizeof(colored_player_name), "\x03%s\x01 ", client_name);
 				}
@@ -567,9 +561,9 @@ color_player(color_type, player_index, String: client_message[192])
 				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
-					case ZPS:
+					case Game_ZPS:
 						Format(colored_player_name, sizeof(colored_player_name), " \x05%s\x01 ", client_name);
-					case GES:
+					case Game_GES:
 						Format(colored_player_name, sizeof(colored_player_name), " \x05%s\x01 ", client_name);
 					default:
 						Format(colored_player_name, sizeof(colored_player_name), " \x04%s\x01 ", client_name);
@@ -578,7 +572,7 @@ color_player(color_type, player_index, String: client_message[192])
 			}
 		}
 	}
-	else if (gamemod == FF)
+	else if (gamemod == Game_FF)
 	{
 		decl String: client_name[192];
 		GetClientName(player_index, client_name, sizeof(client_name));
@@ -601,7 +595,7 @@ color_player(color_type, player_index, String: client_message[192])
 color_all_players(String: message[192]) 
 {
 	new color_index = -1;
-	if (((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC) || (gamemod == ZPS) || (gamemod == FF) || (gamemod == GES)) && (PlayerColorArray != INVALID_HANDLE))
+	if ((g_bTrackColors4Chat || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
 	{
 		if (strcmp(message, "") != 0)
 		{
@@ -664,7 +658,7 @@ color_team_entities(String: message[192])
 {
 	switch(gamemod)
 	{
-		case CSS:
+		case Game_CSS:
 		{
 			if (strcmp(message, "") != 0)
 			{
@@ -684,7 +678,27 @@ color_team_entities(String: message[192])
 				}
 			}
 		}
-		case TF:
+		case Game_L4D:
+		{
+			if (strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Survivors ", "\x03Survivors\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Infected ", "\x03Infected\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+			}
+		}
+		case Game_TF:
 		{
 			if (strcmp(message, "") != 0)
 			{
@@ -704,7 +718,7 @@ color_team_entities(String: message[192])
 				}
 			}
 		}
-		case FF:
+		case Game_FF:
 		{
 			if (strcmp(message, "") != 0)
 			{
@@ -726,7 +740,7 @@ color_team_entities(String: message[192])
 				}
 			}
 		}
-		case AOC:
+		case Game_AOC:
 		{
 			if (strcmp(message, "") != 0)
 			{
@@ -820,169 +834,157 @@ public Action:hlx_sm_psay(args)
 	new String: client_message[192];
 	GetCmdArg((ignore_param + 2), client_message, sizeof(client_message));
 	
-	if (IsStackEmpty(message_recipients) == false)
+	if (IsStackEmpty(message_recipients))
 	{
-		new color_index = -1;
-		decl String: display_message[192];
+		return Plugin_Handled;
+	}
+	
+	new color_index = -1;
+	decl String: display_message[192];
 
-		switch (gamemod)
+	switch (gamemod)
+	{
+		case Game_CSS, Game_TF, Game_HL2MP, Game_AOC, Game_ZPS, Game_GES:
 		{
-			case CSS, TF, AOC, ZPS, GES:
+			if (is_colored > 0)
 			{
-				if (is_colored > 0)
+				if (is_colored == 1)
 				{
-					if (is_colored == 1)
+					new player_color_index = color_all_players(client_message);
+					if (player_color_index > -1)
 					{
-						new player_color_index = color_all_players(client_message);
-						if (player_color_index > -1)
+						color_index = player_color_index;
+					}
+					else
+					{
+						if (g_bTrackColors4Chat)
 						{
-							color_index = player_color_index;
+							validate_team_colors();
+						}
+						color_index = color_team_entities(client_message);
+					}
+				}
+			}
+			if (strcmp(message_prefix, "") == 0)
+			{
+				Format(display_message, sizeof(display_message), "\x01%s", client_message);
+			}
+			else
+			{
+				Format(display_message, sizeof(display_message), "%c%s\x01 %s", ((gamemod == Game_ZPS || gamemod == Game_GES)?5:4), message_prefix, client_message);
+			}
+			
+			new bool: setupColorForRecipients = false;
+			if (color_index == -1)
+			{
+				setupColorForRecipients = true;
+			}
+			
+			if (g_bTrackColors4Chat && is_colored != 2)
+			{
+				while (IsStackEmpty(message_recipients) == false)
+				{
+					new recipient_client = -1;
+					PopStackCell(message_recipients, recipient_client);
+
+					new player_index = GetClientOfUserId(recipient_client);
+					if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+					{
+						if (setupColorForRecipients == true)
+						{
+							color_index = player_index;
+						}
+						new Handle:hBf;
+						hBf = StartMessageOne("SayText2", player_index);
+						if (hBf != INVALID_HANDLE)
+						{
+							BfWriteByte(hBf, color_index); 
+							BfWriteByte(hBf, 0); 
+							BfWriteString(hBf, display_message);
+							EndMessage();
+						}
+					}
+				}
+			}
+			else
+			{
+				PrintToChatRecipients(display_message);
+			}
+		}
+		case Game_FF:
+		{
+			// thanks to hlstriker for help with this
+			
+			decl String: client_message_backup[192];
+			strcopy(client_message_backup, sizeof(client_message_backup), client_message);
+		
+			if (is_colored == 1)
+			{
+				color_index = color_all_players(client_message);
+				if (color_index ==  -1)
+				{
+					color_team_entities(client_message);
+				}
+			}
+			
+			if (strcmp(message_prefix, "") == 0)
+			{
+				Format(display_message, sizeof(display_message), "\x02%s%s\x0D\x0A", ((is_colored == 2)?"^4":""), client_message);
+			}
+			else
+			{
+				Format(display_message, sizeof(display_message), "\x02^4%s:%s %s\x0D\x0A", message_prefix, ((is_colored == 2)?"":"^"), client_message);
+			}
+			
+			PrintToChatRecipientsFF(display_message);
+		}
+		case Game_FOF:
+		{
+			new prefix = 0;
+			if (strcmp(message_prefix, "") != 0)
+			{
+				prefix = 1;
+				Format(display_message, 192, "%s: %s", message_prefix, client_message);
+			}
+			
+			while (IsStackEmpty(message_recipients) == false)
+			{
+				new recipient_client = -1;
+				PopStackCell(message_recipients, recipient_client);
+
+				new player_index = GetClientOfUserId(recipient_client);
+				if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+				{
+					new Handle:hBf;
+					hBf = StartMessageOne("SayText", player_index);
+					if (hBf != INVALID_HANDLE)
+					{
+						BfWriteByte(hBf, player_index);						
+						if (prefix == 0)
+						{
+							BfWriteString(hBf, client_message);
 						}
 						else
 						{
-							validate_team_colors();
-							color_index = color_team_entities(client_message);
-						}
-					}
-				}
-				if (strcmp(message_prefix, "") == 0)
-				{
-					Format(display_message, sizeof(display_message), "\x01%s", client_message);
-				}
-				else
-				{
-					Format(display_message, sizeof(display_message), "%c%s\x01 %s", ((gamemod == ZPS || gamemod == GES)?5:4), message_prefix, client_message);
-				}
-				
-				new bool: setupColorForRecipients = false;
-				if (color_index == -1)
-				{
-					setupColorForRecipients = true;
-				}
-				
-				if (((gamemod == CSS) || (gamemod == TF) || (gamemod == AOC)) && !(is_colored == 2))
-				{
-					while (IsStackEmpty(message_recipients) == false)
-					{
-						new recipient_client = -1;
-						PopStackCell(message_recipients, recipient_client);
-
-						new player_index = GetClientOfUserId(recipient_client);
-						if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
-						{
-							if (setupColorForRecipients == true)
-							{
-								color_index = player_index;
-							}
-							new Handle:hBf;
-							hBf = StartMessageOne("SayText2", player_index);
-							if (hBf != INVALID_HANDLE)
-							{
-								BfWriteByte(hBf, color_index); 
-								BfWriteByte(hBf, 0); 
-								BfWriteString(hBf, display_message);
-								EndMessage();
-							}
-						}
-					}
-				}
-				else
-				{
-					PrintToChatRecipients(display_message);
-				}
-			}
-			case FF:
-			{
-				// thanks to hlstriker for help with this
-				
-				decl String: client_message_backup[192];
-				strcopy(client_message_backup, sizeof(client_message_backup), client_message);
-			
-				if (is_colored == 1)
-				{
-					color_index = color_all_players(client_message);
-					if (color_index ==  -1)
-					{
-						color_team_entities(client_message);
-					}
-				}
-				
-				if (strcmp(message_prefix, "") == 0)
-				{
-					Format(display_message, sizeof(display_message), "\x02%s%s\x0D\x0A", ((is_colored == 2)?"^4":""), client_message);
-				}
-				else
-				{
-					Format(display_message, sizeof(display_message), "\x02^4%s:%s %s\x0D\x0A", message_prefix, ((is_colored == 2)?"":"^"), client_message);
-				}
-				
-				while (IsStackEmpty(message_recipients) == false)
-				{
-					new recipient_client = -1;
-					PopStackCell(message_recipients, recipient_client);
-
-					new player_index = GetClientOfUserId(recipient_client);
-					if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
-					{	
-						new Handle:hBf;
-						hBf = StartMessageOne("SayText", player_index);
-						if (hBf != INVALID_HANDLE)
-						{
 							BfWriteString(hBf, display_message);
-							BfWriteByte(hBf, 1);
-							EndMessage();
 						}
+						BfWriteByte(hBf, 10);
+						BfWriteByte(hBf, 0);
+						BfWriteByte(hBf, 1);
+						EndMessage();
 					}
 				}
 			}
-			case FOF:
+		}
+		default:
+		{
+			if (strcmp(message_prefix, "") != 0)
 			{
-				new prefix = 0;
-				if (strcmp(message_prefix, "") != 0)
-				{
-					prefix = 1;
-					Format(display_message, 192, "%s: %s", message_prefix, client_message);
-				}
-				
-				while (IsStackEmpty(message_recipients) == false)
-				{
-					new recipient_client = -1;
-					PopStackCell(message_recipients, recipient_client);
-
-					new player_index = GetClientOfUserId(recipient_client);
-					if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
-					{
-						new Handle:hBf;
-						hBf = StartMessageOne("SayText", player_index);
-						if (hBf != INVALID_HANDLE)
-						{
-							BfWriteByte(hBf, player_index);						
-							if (prefix == 0)
-							{
-								BfWriteString(hBf, client_message);
-							}
-							else
-							{
-								BfWriteString(hBf, display_message);
-							}
-							BfWriteByte(hBf, 10);
-							BfWriteByte(hBf, 0);
-							BfWriteByte(hBf, 1);
-							EndMessage();
-						}
-					}
-				}
+				Format(display_message, sizeof(display_message), "%s %s", message_prefix, client_message);
+				PrintToChatRecipients(display_message);
+				return Plugin_Handled;
 			}
-			default:
-			{
-				if (strcmp(message_prefix, "") != 0)
-				{
-					Format(display_message, sizeof(display_message), "%s %s", message_prefix, client_message);
-					PrintToChatRecipients(display_message);
-					return Plugin_Handled;
-				}
-				PrintToChatRecipients(client_message);
-			}
+			PrintToChatRecipients(client_message);
 		}
 	}
 	return Plugin_Handled;
@@ -1017,36 +1019,14 @@ public Action:hlx_sm_psay2(args)
 	new String: client_message[192];
 	GetCmdArg((ignore_param + 2), client_message, sizeof(client_message));
 
-	if (IsStackEmpty(message_recipients) == false) {
-		decl String:display_message[192];
-		if ((gamemod == CSS) || (gamemod == DODS) || (gamemod == TF) || (gamemod == AOC) || (gamemod == ZPS) || (gamemod == GES))
-		{
-			if ((gamemod == ZPS) || (gamemod == GES))
-			{
-				if (strcmp(message_prefix, "") == 0)
-				{
-					Format(display_message, sizeof(display_message), "\x05%s", client_message);
-				}
-				else
-				{
-					Format(display_message, sizeof(display_message), "\x05%s %s", message_prefix, client_message);
-				}
-			}
-			else
-			{
-				if (strcmp(message_prefix, "") == 0)
-				{
-					Format(display_message, sizeof(display_message), "\x04%s", client_message);
-				}
-				else
-				{
-					Format(display_message, sizeof(display_message), "\x04%s %s", message_prefix, client_message);
-				}
-			}
-
-			PrintToChatRecipients(display_message);
-		}
-		else if (gamemod == INSMOD)
+	if (IsStackEmpty(message_recipients)) {
+		return Plugin_Handled;
+	}
+	
+	decl String:display_message[192];
+	switch(gamemod)
+	{
+		case Game_INSMOD:
 		{
 			new prefix = 0;
 			if (strcmp(message_prefix, "") != 0)
@@ -1085,16 +1065,43 @@ public Action:hlx_sm_psay2(args)
 				}
 			}
 		}
-		else
+		case Game_FF:
 		{
-			if (strcmp(message_prefix, "") != 0)
+			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(display_message, sizeof(display_message), "%s %s", message_prefix, client_message);
-				PrintToChatRecipients(display_message);
-				return Plugin_Handled;
+				Format(display_message, sizeof(display_message), "\x02^4%s\x0D\x0A", client_message);
 			}
-			PrintToChatRecipients(client_message);
-		}	
+			else
+			{
+				Format(display_message, sizeof(display_message), "\x02^4%s: %s\x0D\x0A", message_prefix, client_message);
+			}
+			
+			PrintToChatRecipientsFF(display_message);
+		}
+		case Game_ZPS, Game_GES:
+		{
+			if (strcmp(message_prefix, "") == 0)
+			{
+				Format(display_message, sizeof(display_message), "\x05%s", client_message);
+			}
+			else
+			{
+				Format(display_message, sizeof(display_message), "\x05%s %s", message_prefix, client_message);
+			}
+			PrintToChatRecipients(display_message);
+		}
+		default:
+		{
+			if (strcmp(message_prefix, "") == 0)
+			{
+				Format(display_message, sizeof(display_message), "\x04%s", client_message);
+			}
+			else
+			{
+				Format(display_message, sizeof(display_message), "\x04%s %s", message_prefix, client_message);
+			}
+			PrintToChatRecipients(display_message);
+		}
 	}
 	return Plugin_Handled;
 }
@@ -1113,7 +1120,14 @@ public Action:hlx_sm_csay(args)
 
 	if (strcmp(display_message, "") != 0)
 	{
-		PrintCenterTextAll(display_message);
+		if (gamemod == Game_L4D)
+		{
+			PrintToChatAll("\x03%s", display_message);
+		}
+		else
+		{
+			PrintCenterTextAll("%s", display_message);
+		}
 	}
 		
 	return Plugin_Handled;
@@ -1128,7 +1142,7 @@ public Action:hlx_sm_msay(args)
 		return Plugin_Handled;
 	}
 
-	if (gamemod == HL2MP)
+	if (gamemod == Game_HL2MP)
 	{
 		return Plugin_Handled;
 	}
@@ -1234,7 +1248,7 @@ public Action:hlx_sm_hint(args)
 			new player_index = GetClientOfUserId(recipient_client);
 			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientInGame(player_index))
 			{
-				PrintHintText(player_index, client_message);
+				PrintHintText(player_index, "%s", client_message);
 			}
 		}
 	}
@@ -1298,6 +1312,12 @@ public Action:hlx_sm_swap(args)
 		return Plugin_Handled;
 	}
 
+	if (gamemod != Game_CSS)
+	{
+		PrintToServer("hlx_sm_swap is not supported by this game.");
+		return Plugin_Handled;
+	}
+	
 	decl String:client_id[32];
 	GetCmdArg(1, client_id, sizeof(client_id));
 
@@ -1478,7 +1498,7 @@ public Action:hlx_block_commands(client, args)
 
 		new String: command_type[32] = "say";
 
-		if (gamemod == INSMOD)
+		if (gamemod == Game_INSMOD)
 		{
 			decl String: say_type[1];
 			strcopy(say_type, 2, user_command[start_index]);
@@ -1509,7 +1529,7 @@ public Action:hlx_block_commands(client, args)
 							DisplayMenu(HLstatsXMenuMain, client, MENU_TIME_FOREVER);
 						}
 
-						if (gamemod == INSMOD)
+						if (gamemod == Game_INSMOD)
 						{
 							LogPlayerEvent(client, command_type, user_command[start_index]);
 						}
@@ -1519,14 +1539,6 @@ public Action:hlx_block_commands(client, args)
 						}
 					}
 					return Plugin_Stop;
-				}
-				else
-				{
-
-					if (gamemod == INSMOD)
-					{
-						LogPlayerEvent(client, command_type, user_command[start_index]);
-					}
 				}
 			}
 			else
@@ -1538,11 +1550,7 @@ public Action:hlx_block_commands(client, args)
 				{
 					DisplayMenu(HLstatsXMenuMain, client, MENU_TIME_FOREVER);
 				}
-
-				if (gamemod == INSMOD)
-				{
-					LogPlayerEvent(client, command_type, user_command[start_index]);
-				}
+				
 				return Plugin_Continue;
 			}
 		}
@@ -1577,53 +1585,50 @@ public Action: HLstatsX_Event_PlyTeamChange(Handle:event, const String:name[], b
 
 swap_player(player_index)
 {
-    if (gamemod == CSS)
-    {
-        if (IsClientInGame(player_index) && IsClientConnected(player_index))
-        {
-            switch (GetClientTeam(player_index))
-            {
-                case CS_TEAM_CT:
-                {
-                    if (IsPlayerAlive(player_index))
-                    {
-                        CS_SwitchTeam(player_index, CS_TEAM_T);
-                        CS_RespawnPlayer(player_index);
-                        new new_model = GetRandomInt(0, 3);
-                        SetEntityModel(player_index, ts_models[new_model]);
-                    }
-                    else
-                    {
-                        CS_SwitchTeam(player_index, CS_TEAM_T);
-                    }
-                }
-                case CS_TEAM_T:
-                {
-                    if (IsPlayerAlive(player_index))
-                    {
-                        CS_SwitchTeam(player_index, CS_TEAM_CT);
-                        CS_RespawnPlayer(player_index);
-                        new new_model = GetRandomInt(0, 3);
-                        SetEntityModel(player_index, ct_models[new_model]);
-                        new weapon_entity = GetPlayerWeaponSlot(player_index, 4);
-                        if (weapon_entity > 0)
-                        {
-                            decl String: class_name[32];
-                            GetEdictClassname(weapon_entity, class_name, sizeof(class_name));
-                            if (strcmp(class_name, "weapon_c4") == 0)
-                            {
-                                RemovePlayerItem(player_index, weapon_entity);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        CS_SwitchTeam(player_index, CS_TEAM_CT);
-                    }
-                }
-            }
-        }
-    }
+	if (IsClientInGame(player_index) && IsClientConnected(player_index))
+	{
+		switch (GetClientTeam(player_index))
+		{
+			case CS_TEAM_CT:
+			{
+				if (IsPlayerAlive(player_index))
+				{
+					CS_SwitchTeam(player_index, CS_TEAM_T);
+					CS_RespawnPlayer(player_index);
+					new new_model = GetRandomInt(0, 3);
+					SetEntityModel(player_index, ts_models[new_model]);
+				}
+				else
+				{
+					CS_SwitchTeam(player_index, CS_TEAM_T);
+				}
+			}
+			case CS_TEAM_T:
+			{
+				if (IsPlayerAlive(player_index))
+				{
+					CS_SwitchTeam(player_index, CS_TEAM_CT);
+					CS_RespawnPlayer(player_index);
+					new new_model = GetRandomInt(0, 3);
+					SetEntityModel(player_index, ct_models[new_model]);
+					new weapon_entity = GetPlayerWeaponSlot(player_index, 4);
+					if (weapon_entity > 0)
+					{
+						decl String: class_name[32];
+						GetEdictClassname(weapon_entity, class_name, sizeof(class_name));
+						if (strcmp(class_name, "weapon_c4") == 0)
+						{
+							RemovePlayerItem(player_index, weapon_entity);
+						}
+					}
+				}
+				else
+				{
+					CS_SwitchTeam(player_index, CS_TEAM_CT);
+				}
+			}
+		}
+	}
 }
 
 
@@ -1835,6 +1840,28 @@ stock PrintToChatRecipients(const String:message[])
 		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client) && IsClientConnected(client))
 		{
 			PrintToChat(client, "%s", message);
+		}
+	}
+}
+
+stock PrintToChatRecipientsFF(const String:message[])
+{
+	while (IsStackEmpty(message_recipients) == false)
+	{
+		new recipient_client = -1;
+		PopStackCell(message_recipients, recipient_client);
+
+		new client = GetClientOfUserId(recipient_client);
+		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client) && IsClientConnected(client))
+		{	
+			new Handle:hBf;
+			hBf = StartMessageOne("SayText", client);
+			if (hBf != INVALID_HANDLE)
+			{
+				BfWriteString(hBf, message);
+				BfWriteByte(hBf, 1);
+				EndMessage();
+			}
 		}
 	}
 }

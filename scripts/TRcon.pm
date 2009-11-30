@@ -47,6 +47,8 @@ use Switch;
 use bytes;
 use Scalar::Util;
 
+do "$::opt_libdir/HLstats_GameConstants.plib";
+
 my $VERSION = "1.00";
 my $TIMEOUT = 1.0;
 
@@ -411,7 +413,7 @@ sub getServerData
       $max_players = $1;
     }
   }
-  if ($game eq "l4d") {
+  if ($game == L4D()) {
 	  $difficulty = $self->getDifficulty();
   }
   return ($servhostname, $map, $max_players, $difficulty);
@@ -421,7 +423,7 @@ sub getServerData
 sub getVisiblePlayers
 {
   my ($self) = @_;
-  my $status = $self->execute("sv_visiblemaxplayers", 1);
+  my $status = $self->execute("sv_visiblemaxplayers");
   
   my @lines = split(/[\r\n]+/, $status);
   
@@ -448,7 +450,7 @@ sub getDifficulty
 	# - Difficulty of the current game (Easy, Normal, Hard, Impossible)
 	
   my ($self) = @_;
-  my $zdifficulty = $self->execute("z_difficulty", 1);
+  my $zdifficulty = $self->execute("z_difficulty");
   my $difficulty = 0;
 	
   my @lines = split(/[\r\n]+/, $zdifficulty);
