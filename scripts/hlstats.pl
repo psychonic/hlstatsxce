@@ -76,6 +76,7 @@ require "$opt_libdir/BASTARDrcon.pm";
 require "$opt_libdir/HLstats_Server.pm";
 require "$opt_libdir/HLstats_Player.pm";
 require "$opt_libdir/HLstats_Game.pm";
+do "$opt_libdir/HLstats_GameConstants.plib";
 do "$opt_libdir/HLstats.plib";
 do "$opt_libdir/HLstats_EventHandlers.plib";
 
@@ -985,7 +986,7 @@ sub getPlayerInfo
 		if (($uniqueid eq "Console") && ($team eq "Console")) {
 		  return 0;
 		}
-		if ($g_servers{$s_addr}->{play_game} eq "l4d") {
+		if ($g_servers{$s_addr}->{play_game} == L4D()) {
 		#for l4d, create meta player object for each role
 			if ($uniqueid eq "") {
 				#infected & witch have blank steamid
@@ -1908,7 +1909,6 @@ while ($loop = &getLine()) {
 		$s_output =~ s/\[No.C-D\]//g;	# remove [No C-D] tag
 		$s_output =~ s/\[OLD.C-D\]//g;	# remove [OLD C-D] tag
 		$s_output =~ s/\[NOCL\]//g;	# remove [NOCL] tag
-		$s_output =~ s/\([12]\)//g;	# strip (1) and (2) from player names
 
 		# Get the server info, if we know the server, otherwise ignore the data
 		if (!defined($g_servers{$s_addr})) {
@@ -2334,7 +2334,7 @@ while ($loop = &getLine()) {
 					}
 
 					$ev_type = 11;
-					if ($g_servers{$s_addr}->{play_game} eq "tfc" && !$victiminfo)
+					if ($g_servers{$s_addr}->{play_game} == TFC() && !$victiminfo)
 					{
 						switch ($ev_obj_a)
 						{
@@ -3021,100 +3021,102 @@ while ($loop = &getLine()) {
 						$ev_l4dZcoordV
 					);
 			}
-		} elsif ($s_output =~ /^weapon { steam_id: 'STEAM_\d+:(.+?)', weapon_id: (\d+), class: \d+, team: \d+, shots: \((\d+),(\d+)\), hits: \((\d+),(\d+)\), damage: \((\d+),(\d+)\), headshots: \((\d+),(\d+)\), kills: \(\d+,\d+\) }$/ && $g_mode eq "Normal") {
+		} elsif ($g_servers{$s_addr}->{play_game} == DYSTOPIA()) {
+			if ($s_output =~ /^weapon { steam_id: 'STEAM_\d+:(.+?)', weapon_id: (\d+), class: \d+, team: \d+, shots: \((\d+),(\d+)\), hits: \((\d+),(\d+)\), damage: \((\d+),(\d+)\), headshots: \((\d+),(\d+)\), kills: \(\d+,\d+\) }$/ && $g_mode eq "Normal") {
 			
-			# Prototype: weapon { steam_id: 'STEAMID', weapon_id: X, class: X, team: X, shots: (X,X), hits: (X,X), damage: (X,X), headshots: (X,X), kills: (X,X) }
-			# Matches:
-			# 501. Statsme weaponstats (Dystopia)
-	
-			my $steamid = $1;
-			my $weapon = $2;
-			my $shots = $3 + $4;
-			my $hits = $5 + $6;
-			my $damage = $7 + $8;
-			my $headshots = $9 + $10;
-			my $kills = $11 + $12;
-			
-			$ev_type = 501;
-			
-			my $weapcode = "";
-			
-			switch ($weapon)
-			{
-				case "1" { $weapcode = "Light Katana"; }
-				case "2" { $weapcode = "Medium Katana"; }
-				case "3" { $weapcode = "Fatman Fist"; }
-				case "4" { $weapcode = "Machine Pistol"; }
-				case "5" { $weapcode = "Shotgun"; }
-				case "6" { $weapcode = "Laser Rifle"; }
-				case "7" { $weapcode = "BoltGun"; }
-				case "8" { $weapcode = "SmartLock Pistols"; }
-				case "9" { $weapcode = "Assault Rifle"; }
-				case "10" { $weapcode = "Grenade Launcher"; }
-				case "11" { $weapcode = "MK-808 Rifle"; }
-				case "12" { $weapcode = "Tesla Rifle"; }
-				case "13" { $weapcode = "Rocket Launcher"; }
-				case "14" { $weapcode = "Minigun"; }
-				case "15" { $weapcode = "Ion Cannon"; }
-				case "16" { $weapcode = "Basilisk"; }
-				case "17" { $weapcode = "Frag Grenade"; }
-				case "18" { $weapcode = "EMP Grenade"; }
-				case "19" { $weapcode = "Spider Grenade"; }
-				case "22" { $weapcode = "Cortex Bomb"; }
-			}
-			
-			$ev_type = 501;
-			
-			foreach $player (values(%g_players)) {
-				if ($player->{uniqueid} eq $steamid) {
-					$ev_status = &doEvent_Statsme(
-						$player->{"userid"},
-						$steamid,
-						$weapcode,
-						$shots,
-						$hits,
-						$headshots,
-						$damage,
-						$kills,
-						0
-					);
-					last;
+				# Prototype: weapon { steam_id: 'STEAMID', weapon_id: X, class: X, team: X, shots: (X,X), hits: (X,X), damage: (X,X), headshots: (X,X), kills: (X,X) }
+				# Matches:
+				# 501. Statsme weaponstats (Dystopia)
+		
+				my $steamid = $1;
+				my $weapon = $2;
+				my $shots = $3 + $4;
+				my $hits = $5 + $6;
+				my $damage = $7 + $8;
+				my $headshots = $9 + $10;
+				my $kills = $11 + $12;
+				
+				$ev_type = 501;
+				
+				my $weapcode = "";
+				
+				switch ($weapon)
+				{
+					case "1" { $weapcode = "Light Katana"; }
+					case "2" { $weapcode = "Medium Katana"; }
+					case "3" { $weapcode = "Fatman Fist"; }
+					case "4" { $weapcode = "Machine Pistol"; }
+					case "5" { $weapcode = "Shotgun"; }
+					case "6" { $weapcode = "Laser Rifle"; }
+					case "7" { $weapcode = "BoltGun"; }
+					case "8" { $weapcode = "SmartLock Pistols"; }
+					case "9" { $weapcode = "Assault Rifle"; }
+					case "10" { $weapcode = "Grenade Launcher"; }
+					case "11" { $weapcode = "MK-808 Rifle"; }
+					case "12" { $weapcode = "Tesla Rifle"; }
+					case "13" { $weapcode = "Rocket Launcher"; }
+					case "14" { $weapcode = "Minigun"; }
+					case "15" { $weapcode = "Ion Cannon"; }
+					case "16" { $weapcode = "Basilisk"; }
+					case "17" { $weapcode = "Frag Grenade"; }
+					case "18" { $weapcode = "EMP Grenade"; }
+					case "19" { $weapcode = "Spider Grenade"; }
+					case "22" { $weapcode = "Cortex Bomb"; }
 				}
-			}
-		} elsif ($s_output =~ /^(?:join|change)_class { steam_id: 'STEAM_\d+:(.+?)', .* (?:new_|)class: (\d+), .* }$/ && $g_mode eq "Normal") {
-			# Prototype: join_class { steam_id: 'STEAMID', team: X, class: Y, time: ZZZZZZZZZ }
-			# Matches:
-			#  6. Role Selection (Dystopia)
-			
-			my $steamid = $1;
-			my $role = $2;
-			$ev_type = 6;
-			
-			foreach $player (values(%g_players)) {
-				if ($player->{uniqueid} eq $steamid) {
-					$ev_status = &doEvent_RoleSelection(
-						$player->{"userid"},
-						$steamid,
-						$role
-					);
-					last;
+				
+				$ev_type = 501;
+				
+				foreach $player (values(%g_players)) {
+					if ($player->{uniqueid} eq $steamid) {
+						$ev_status = &doEvent_Statsme(
+							$player->{"userid"},
+							$steamid,
+							$weapcode,
+							$shots,
+							$hits,
+							$headshots,
+							$damage,
+							$kills,
+							0
+						);
+						last;
+					}
 				}
-			}
-		} elsif ($s_output =~ /^objective { steam_id: 'STEAM_\d+:(.+?)', class: \d+, team: \d+, objective: '(.+?)', time: \d+ }$/ && $g_mode eq "Normal") {
-			# Prototype: objective { steam_id: 'STEAMID', class: X, team: X, objective: 'TEXT', time: X }
-			# Matches:
-			# 11. Player Action (Dystopia Objectives)
-			
-			my $steamid = $1;
-			my $action = $2;
-			foreach $player (values(%g_players)) {
-				if ($player->{uniqueid} eq $steamid) {
-					$ev_status = &doEvent_PlayerAction(
-						$player->{"userid"},
-						$steamid,
-						$action
-					);
-					last;
+			} elsif ($s_output =~ /^(?:join|change)_class { steam_id: 'STEAM_\d+:(.+?)', .* (?:new_|)class: (\d+), .* }$/ && $g_mode eq "Normal") {
+				# Prototype: join_class { steam_id: 'STEAMID', team: X, class: Y, time: ZZZZZZZZZ }
+				# Matches:
+				#  6. Role Selection (Dystopia)
+				
+				my $steamid = $1;
+				my $role = $2;
+				$ev_type = 6;
+				
+				foreach $player (values(%g_players)) {
+					if ($player->{uniqueid} eq $steamid) {
+						$ev_status = &doEvent_RoleSelection(
+							$player->{"userid"},
+							$steamid,
+							$role
+						);
+						last;
+					}
+				}
+			} elsif ($s_output =~ /^objective { steam_id: 'STEAM_\d+:(.+?)', class: \d+, team: \d+, objective: '(.+?)', time: \d+ }$/ && $g_mode eq "Normal") {
+				# Prototype: objective { steam_id: 'STEAMID', class: X, team: X, objective: 'TEXT', time: X }
+				# Matches:
+				# 11. Player Action (Dystopia Objectives)
+				
+				my $steamid = $1;
+				my $action = $2;
+				foreach $player (values(%g_players)) {
+					if ($player->{uniqueid} eq $steamid) {
+						$ev_status = &doEvent_PlayerAction(
+							$player->{"userid"},
+							$steamid,
+							$action
+						);
+						last;
+					}
 				}
 			}
 		}
@@ -3146,10 +3148,8 @@ EOT
 			} else {
 				&printEvent($ev_type, "BAD DATA: $s_output");
 			}
-		} elsif (($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was kicked and banned "for ([0-9]+).00 minutes" by "Console"$/) ||
-				($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was kicked and banned "(permanently)" by "Console"$/) ||
-				($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was banned "for ([0-9]+).00 minutes" by "Console"$/) ||
-				($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was banned "(permanently)" by "Console"$/)) {
+		} elsif (($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was (?:kicked and )?banned "for ([0-9]+).00 minutes" by "Console"$/) ||
+				($s_output =~ /^Banid: "(.+?(?:<.+?>)*)" was (?:kicked and )?banned "(permanently)" by "Console"$/)) {
 			
 			# Prototype: "player" verb[properties]
     		# Banid: huaaa<1804><STEAM_0:1:10769><>" was kicked and banned "permanently" by "Console"
