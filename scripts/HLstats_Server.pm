@@ -184,7 +184,7 @@ sub new
 	
 	$self->{next_timeout} = 0;
 	
-	&set_play_game($realgame);
+	$self->set_play_game($realgame);
 	
 	if ($self->{rcon})
 	{
@@ -204,45 +204,45 @@ sub set_play_game
 	switch ($realgame)
 	{
 		case "css"
-			{ $self->{play_game} = CSS(); }
+			{ $self->{play_game} =  CSS(); }
 		case "hl2mp"
-			{ $self->{play_game} = HL2MP(); }
+			{ $self->{play_game} =  HL2MP(); }
 		case "tf"
-			{ $self->{play_game} = TF(); }
+			{ $self->{play_game} =  TF(); }
 		case "dods"
-			{ $self->{play_game} = DODS(); }
+			{ $self->{play_game} =  DODS(); }
 		case "insmod"
-			{ $self->{play_game} = INSMOD(); }
+			{ $self->{play_game} =  INSMOD(); }
 		case "ff"
-			{ $self->{play_game} = FF(); }
+			{ $self->{play_game} =  FF(); }
 		case "hidden"
-			{ $self->{play_game} = HIDDEN(); }
+			{ $self->{play_game} =  HIDDEN(); }
 		case "zps"
-			{ $self->{play_game} = ZPS(); }
+			{ $self->{play_game} =  ZPS(); }
 		case "aoc"
-			{ $self->{play_game} = AOC(); }
+			{ $self->{play_game} =  AOC(); }
 		case "cstrike"
-			{ $self->{play_game} = CSTRIKE(); }
+			{ $self->{play_game} =  CSTRIKE(); }
 		case "tfc"
-			{ $self->{play_game} = TFC(); }
+			{ $self->{play_game} =  TFC(); }
 		case "dod"
-			{ $self->{play_game} = DOD(); }
+			{ $self->{play_game} =  DOD(); }
 		case "ns"
-			{ $self->{play_game} = NS(); }
+			{ $self->{play_game} =  NS(); }
 		case "l4d"
-			{ $self->{play_game} = L4D(); }
+			{ $self->{play_game} =  L4D(); }
 		case "fof"
-			{ $self->{play_game} = FOF(); }
+			{ $self->{play_game} =  FOF(); }
 		case "ges"
-			{ $self->{play_game} = GES(); }
+			{ $self->{play_game} =  GES(); }
 		case "bg2"
-			{ $self->{play_game} = BG2(); }
+			{ $self->{play_game} =  BG2(); }
 		case "sgtls"
-			{ $self->{play_game} = SGTLS(); }
+			{ $self->{play_game} =  SGTLS(); }
 		case "dystopia"
-			{ $self->{play_game} = DYSTOPIA(); }
+			{ $self->{play_game} =  DYSTOPIA(); }
 		case "nts"
-			{ $self->{play_game} = NTS(); }
+			{ $self->{play_game} =  NTS(); }
 	}
 }
 

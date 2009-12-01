@@ -5304,7 +5304,6 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('nts', 'mx_silenced', 'MX Silenced', 1.00),
 ('nts', 'pz', 'PZ252', 1.00),
 ('nts', 'grenade_detapack', 'DetPac', 1.00),
-('nts', 'smac', 'SMAC', 1.00),
 ('nts', 'srm', 'SRM', 1.00),
 ('nts', 'srm_s', 'SRM-S', 1.00),
 ('nts', 'srs', 'SRS', 1.00),
