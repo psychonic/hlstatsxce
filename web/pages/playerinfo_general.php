@@ -122,7 +122,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 						<?php
 							if ($playerdata['country'])
 							{
-								echo 'Location: ' . htmlspecialchars($playerdata['city'], ENT_COMPAT) . ', <a href="'.$g_options['scripturl'].'?mode=countryclansinfo&amp;flag='.$playerdata['flag']."&amp;game=$game\">" . $playerdata['country'] . '</a>';
+								echo 'Location: ';
+								if ($playerdata['city']) {
+									echo htmlspecialchars($playerdata['city'], ENT_COMPAT) . ', ';
+								}
+								echo '<a href="'.$g_options['scripturl'].'?mode=countryclansinfo&amp;flag='.$playerdata['flag']."&amp;game=$game\">" . $playerdata['country'] . '</a>';
 							}
 							else
 							{
@@ -172,7 +176,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								echo '<b>' . htmlspecialchars($playerdata['fullName'], ENT_COMPAT) . '</b>';
 							}
 							else
-								echo '(Unknown)';
+								echo "(<a href=\"" . $g_options['scripturl'] . '?mode=help#set"><em>Not Specified</em></a>)';
 						?>
 					</td>
 				</tr>
@@ -185,7 +189,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								echo $email;
 							}
 							else
-								echo '(Unknown)';
+								echo "(<a href=\"" . $g_options['scripturl'] . '?mode=help#set"><em>Not Specified</em></a>)';
 						?>
 					</td>
 				</tr>
@@ -193,12 +197,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 					<td>Home Page:</td>
 					<td>
 						<?php
-							if ($url = getLink($playerdata['homepage']))
+							if ($playerdata['homepage'])
 							{
-								echo $url;
+								echo getLink($playerdata['homepage']);
 							}
 							else
-								echo '(Not specified)';
+								echo "(<a href=\"" . $g_options['scripturl'] . '?mode=help#set"><em>Not Specified</em></a>)';
 						?>
 					</td>
 				</tr>
@@ -323,7 +327,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 				</tr>
 				<tr class="bg1">
 					<td>Favorite Weapon:*</td>
-					<td style="text-align:center;">
 						<?php
 							$result = $db->query("
 								SELECT
@@ -354,14 +357,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 								$fav_weapon = 'Unknown';
 							$image = getImage("/games/$game/weapons/$fav_weapon");
 						// Check if image exists
+							$weaponlink = "<a href=\"hlstats.php?mode=weaponinfo&amp;weapon=$fav_weapon&amp;game=$game\">";
 							if ($image)
 							{
-								$cellbody = "<a href=\"hlstats.php?mode=weaponinfo&amp;weapon=$fav_weapon&amp;game=$game\"><img src=\"" . $image['url'] . "\" alt=\"$weap_name\" title=\"$weap_name\" /></a>";
+								$cellbody = "\t\t\t\t\t<td style=\"text-align: center\">$weaponlink<img src=\"" . $image['url'] . "\" alt=\"$weap_name\" title=\"$weap_name\" />";
 							}
 							else
 							{
-								$cellbody = "<b> $weap_name</b>";
+								$cellbody = "\t\t\t\t\t<td><b> $weaponlink$weap_name</b>";
 							}
+							$cellbody .= "</a>";
 							echo $cellbody;
 						?>
 					</td>
