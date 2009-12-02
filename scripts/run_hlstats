@@ -34,16 +34,23 @@
 # 
 # For support and installation notes visit http://www.hlxcommunity.com
 
-
+# If you wish to run this script as a daemon script (in /etc/init.d, etc.)
+# you must configure the "confdir" variable below.
+# The other variables are optional and really should not be modified.
 
 # Set the path to the scripts folder (you should not need to modify this.)
 confdir=.
+
 # Name of configuration file to use (you should not need to modify this.)
 conffile=hlstats.conf
 # Filename of daemon to use (you should not need to modify this.)
 daemonfile=hlstats.pl
 # Set where you want to log to (you should not need to modify this.)
-LOG=${confdir}/logs/hlstats`date +_%Y%m%d_%H-%M-%S`
+logdir=logs
+# Set the format for the log file
+logfile=hlstats`date +_%Y%m%d_%H-%M-%S`
+# Set where to store PID files
+piddir=${confdir}
 
 # verify that you have write access to the directories
 if [ ! -w ${confdir} ]; then
@@ -58,76 +65,87 @@ if [ ! -f ${confdir}/${daemonfile} ]; then
 fi
 
 # verify that you have a logs directory
-if [ ! -d ${confdir}/logs ];then
-	mkdir ${confdir}/logs
+if [ ! -d ${confdir}/${logdir} ]; then
+	mkdir ${confdir}/${logdir}
 fi
 
-if [ ! -w ${confdir}/logs ];then
-	echo "you need write access to ${confdir}/logs"
+if [ ! -w ${confdir}/${logdir} ]; then
+	echo "you need write access to ${confdir}/${logdir}"
 	exit 1
 fi
 
+# Grab the current directory so we can put the user back there!
+origdir=`pwd`
+
+# Move into the configured directory
+cd ${confdir}
+
 case "$1" in
-   start)
-       # verify that we have a .conf file
-       if [ ! -f ${confdir}/${conffile} ]; then
-	      echo "You're missing your configuration file.  (${conffile})"
-	      exit 1
-       fi   
+	start)
+		# verify that we have a .conf file
+		if [ ! -f ${conffile} ]; then
+			echo "You're missing your configuration file.  (${conffile})"
+			exit 1
+		fi   
    
-       echo "Starting HLstatsX...";
-       if [ -f ${confdir}/hlstats.pid ]; then
-          kill -0 `cat ${confdir}/hlstats.pid` >/dev/null 2>&1
-          if [ "$?" == "0" ]; then
-              echo "HLstatsX already running!"
-          else
-              rm -rf ${confdir}/hlstats.pid
-              ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
-              echo $! >${confdir}/hlstats.pid
-              echo "PID file created"
-              echo "Started successfully"
-          fi
-       else
-          ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
-          echo $! >${confdir}/hlstats.pid
-          echo "PID file created"
-          echo "Started successfully"
-       fi
-     ;;
-   stop)
-       echo "Stopping HLstatsX..."
-       kill -9 `cat ${confdir}/hlstats.pid` >/dev/null 2>&1
-       if [ "$?" == "0" ]; then
-          rm -rf ${confdir}/hlstats.pid
-          echo "Stopped successfully"
-       else
-          echo "No HLstatsX running!"
-       fi
-     ;;
-   restart)
-       echo "Restarting HLstatsX..."
-       kill -9 `cat ${confdir}/hlstats.pid` >/dev/null 2>&1
-       if [ "$?" == "0" ]; then
-           rm -rf ${confdir}/hlstats.pid
-           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
-           echo $! >${confdir}/hlstats.pid
-           echo "PID file created"
-           echo "Restarted successfully"
-       else    
-           echo "HLstatsX"
-           if [ -f ${confdir}/hlstats.pid ]; then
-             rm -rf ${confdir}/hlstats.pid
-           fi
-           ./${daemonfile} --configfile=${confdir}/${conffile} > $LOG 2>&1 &
-           echo $! >${confdir}/hlstats.pid
-           echo "PID file created"
-           echo "Started successfully"
-       fi
-     ;;
+		echo "Starting HLstatsX...";
+		if [ -f ${piddir}/hlstats.pid ]; then
+			kill -0 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+			if [ "$?" == "0" ]; then
+				echo "HLstatsX already running!"
+			else
+				rm -rf ${piddir}/hlstats.pid
+				./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+				echo $! >${piddir}/hlstats.pid
+				echo "PID file created"
+				echo "Started successfully"
+			fi
+		else
+			./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+			echo $! >${piddir}/hlstats.pid
+			echo "PID file created"
+			echo "Started successfully"
+		fi
+	;;
+	
+	stop)
+		echo "Stopping HLstatsX..."
+		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+		if [ "$?" == "0" ]; then
+			rm -rf ${piddir}/hlstats.pid
+			echo "Stopped successfully"
+		else
+			echo "No HLstatsX running!"
+		fi
+	;;
+	
+	restart)
+		echo "Restarting HLstatsX..."
+		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+       
+		if [ "$?" == "0" ]; then
+			rm -rf ${piddir}/hlstats.pid
+			./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+			echo $! >${piddir}/hlstats.pid
+			echo "PID file created"
+			echo "Restarted successfully"
+		else    
+			echo "HLstatsX"
+			if [ -f ${piddir}/hlstats.pid ]; then
+				rm -rf ${piddir}/hlstats.pid
+			fi
+			./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+			echo $! >${piddir}/hlstats.pid
+			echo "PID file created"
+			echo "Started successfully"
+		fi
+	;;
+	
    *)
-       echo "Usage: ./run_hlstats [ start | stop | restart ]"
-     ;;
+		echo "Usage: ./run_hlstats [ start | stop | restart ]"
+	;;
 esac
 
-#
+# Return to the original directory
+cd ${origdir}
 exit 0
