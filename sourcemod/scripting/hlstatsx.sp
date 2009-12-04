@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.3-pre3"
+#define VERSION "1.6.3"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -529,7 +529,7 @@ public OnClientDisconnect(client)
 color_player(color_type, player_index, String: client_message[192]) 
 {
 	new color_player_index = -1;
-	if (g_bTrackColors4Chat || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
+	if (g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
 	{
 		decl String: client_name[192];
 		GetClientName(player_index, client_name, sizeof(client_name));
@@ -542,7 +542,7 @@ color_player(color_type, player_index, String: client_message[192])
 				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
-					case Game_HL2MP, Game_GES:
+					case Game_DODS, Game_HL2MP, Game_GES:
 						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
 					case Game_ZPS:
 						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
@@ -595,7 +595,7 @@ color_player(color_type, player_index, String: client_message[192])
 color_all_players(String: message[192]) 
 {
 	new color_index = -1;
-	if ((g_bTrackColors4Chat || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
+	if ((g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
 	{
 		if (strcmp(message, "") != 0)
 		{
@@ -844,7 +844,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_TF, Game_HL2MP, Game_AOC, Game_ZPS, Game_GES:
+		case Game_CSS, Game_TF, Game_DODS, Game_HL2MP, Game_AOC, Game_ZPS, Game_GES:
 		{
 			if (is_colored > 0)
 			{
@@ -1023,7 +1023,24 @@ public Action:hlx_sm_psay2(args)
 		return Plugin_Handled;
 	}
 	
-	decl String:display_message[192];
+	// Strip color control codes
+	decl String:buffer_message[192];
+	new j = 0;
+	for (new i = 0; i < sizeof(client_message); i++)
+	{
+		new char = client_message[i];
+		if (char < 5 && char > 0)
+		{
+			continue;
+		}
+		buffer_message[j] = client_message[i];
+		if (char == 0)
+		{
+			break;
+		}
+		j++;
+	}
+	
 	switch(gamemod)
 	{
 		case Game_INSMOD:
@@ -1032,7 +1049,7 @@ public Action:hlx_sm_psay2(args)
 			if (strcmp(message_prefix, "") != 0)
 			{
 				prefix = 1;
-				Format(display_message, sizeof(display_message), "%s: %s", message_prefix, client_message);
+				Format(client_message, sizeof(client_message), "%s: %s", message_prefix, buffer_message);
 			}
 			
 			while (IsStackEmpty(message_recipients) == false)
@@ -1054,11 +1071,11 @@ public Action:hlx_sm_psay2(args)
 						
 						if (prefix == 0)
 						{
-							BfWriteString(hBf, client_message);
+							BfWriteString(hBf, buffer_message);
 						}
 						else
 						{
-							BfWriteString(hBf, display_message);
+							BfWriteString(hBf, client_message);
 						}
 						EndMessage();
 					}
@@ -1069,38 +1086,38 @@ public Action:hlx_sm_psay2(args)
 		{
 			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(display_message, sizeof(display_message), "\x02^4%s\x0D\x0A", client_message);
+				Format(client_message, sizeof(client_message), "\x02^4%s\x0D\x0A", buffer_message);
 			}
 			else
 			{
-				Format(display_message, sizeof(display_message), "\x02^4%s: %s\x0D\x0A", message_prefix, client_message);
+				Format(client_message, sizeof(client_message), "\x02^4%s: %s\x0D\x0A", message_prefix, buffer_message);
 			}
 			
-			PrintToChatRecipientsFF(display_message);
+			PrintToChatRecipientsFF(client_message);
 		}
 		case Game_ZPS, Game_GES:
 		{
 			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(display_message, sizeof(display_message), "\x05%s", client_message);
+				Format(client_message, sizeof(client_message), "\x05%s", buffer_message);
 			}
 			else
 			{
-				Format(display_message, sizeof(display_message), "\x05%s %s", message_prefix, client_message);
+				Format(client_message, sizeof(client_message), "\x05%s %s", message_prefix, buffer_message);
 			}
-			PrintToChatRecipients(display_message);
+			PrintToChatRecipients(client_message);
 		}
 		default:
 		{
 			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(display_message, sizeof(display_message), "\x04%s", client_message);
+				Format(client_message, sizeof(client_message), "\x04%s", buffer_message);
 			}
 			else
 			{
-				Format(display_message, sizeof(display_message), "\x04%s %s", message_prefix, client_message);
+				Format(client_message, sizeof(client_message), "\x04%s %s", message_prefix, buffer_message);
 			}
-			PrintToChatRecipients(display_message);
+			PrintToChatRecipients(client_message);
 		}
 	}
 	return Plugin_Handled;
