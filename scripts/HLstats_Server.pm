@@ -297,6 +297,7 @@ sub get_game_mod_opts
 				$self->{play_game} == CSS()
 				|| $self->{play_game} == TF()
 				|| $self->{play_game} == L4D()
+				|| $self->{play_game} == DODS()
 				|| $self->{play_game} == HL2MP()
 				|| $self->{play_game} == AOC()
 				|| $self->{play_game} == ZPS()

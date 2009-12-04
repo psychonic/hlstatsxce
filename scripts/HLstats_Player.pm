@@ -865,10 +865,10 @@ sub geoLookup
 			($country_code, $country_code3, $country_name, $region, $city, $postal_code, $lat, $lng, $metro_code, $area_code) = $::g_gi->get_city_record($ip_address);
 			if ($lng) {
 				$found++;
-				$self->{city} = encode("utf8",$city);
-				$self->{state} = encode("utf8",$region);
-				$self->{country} = encode("utf8",$country_name);
-				$self->{flag} = encode("utf8",$country_code);
+				$self->{city} = ((defined($city))?encode("utf8",$city):"");
+				$self->{state} = ((defined($region))?encode("utf8",$region):"");
+				$self->{country} = ((defined($country_name))?encode("utf8",$country_name):"");
+				$self->{flag} = ((defined($country_code))?encode("utf8",$country_code):"");
 				$self->{lat} = (($lat eq "")?undef:$lat);
 				$self->{lng} = (($lng eq "")?undef:$lng);
 			}
@@ -886,10 +886,10 @@ sub geoLookup
 				if ($result->rows > 0) {
 					$found++;
 					($city, $state, $country, $flag, $lat, $lng) = $result->fetchrow_array;
-					$self->{city} = $city;
-					$self->{state} = $state;
-					$self->{country} = $country;
-					$self->{flag} = $flag;
+					$self->{city} = ((defined($city))?$city:"");
+					$self->{state} = ((defined($state))?$state:"");
+					$self->{country} = ((defined($country))?$country:"");
+					$self->{flag} = ((defined($flag))?$flag:"");
 					$self->{lat} = (($lat eq "")?undef:$lat);
 					$self->{lng} = (($lng eq "")?undef:$lng);
 				}
