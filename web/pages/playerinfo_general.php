@@ -883,7 +883,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$res = $db->query
 	("
 		SELECT
-			hlstats_Ribbons.awardCode AS ribbonName,
+			hlstats_Ribbons.awardCode AS ribbonCode,
+			hlstats_Ribbons.ribbonName AS ribbonName,
 			IF(ISNULL(hlstats_Players_Ribbons.playerId), 'noaward.png', hlstats_Ribbons.image) AS image,
 			hlstats_Ribbons.special,
 			hlstats_Ribbons.image AS imagefile,
@@ -929,11 +930,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$awards_done = array ();
 	while ($result = $db->fetch_array($res))
 	{
+		$ribbonCode=$result['ribbonCode'];
 		$ribbonName=$result['ribbonName'];
-		if(!isset($awards_done[$ribbonName]))
+		if(!isset($awards_done[$ribbonCode]))
 		{
 			$ribbonList .= '<img src="'.IMAGE_PATH."/games/$game/ribbons/".$result['image'].'" style="border:0px;" alt="'.$result['ribbonName'].'" title="'.$result["ribbonName"].'" /> ';
-			$awards_done[$ribbonName]=$ribbonName;
+			$awards_done[$ribbonCode]=$ribbonCode;
 		}
 	}
 	$awards = array ();

@@ -133,6 +133,27 @@ if (!$g_options['scripturl'])
 	$player_id = 0;  
 	if ((isset($_GET['player_id'])) && (is_numeric($_GET['player_id'])))
 		$player_id = valid_request($_GET['player_id'], 1);
+	} elseif (isset($_GET['steam_id']) && isset($_GET['game'])) {
+		$steam_id = valid_request($_GET['steam_id'], 0);
+		$steam_id = preg_replace('/^STEAM_\d+?\:/i','',$steam_id);
+		$game = valid_request($_GET['game'], 0);
+
+		// Obtain player_id from the steam_id and game code
+		$db->query("
+			SELECT
+				playerId
+			FROM
+				hlstats_PlayerUniqueIds
+			WHERE
+				uniqueId = '$steam_id' AND
+				game = '$game'
+		");
+		
+		if ($db->num_rows() != 1)
+		error("No such player '$player'.");
+		list($player_id) = $db->fetch_row();
+	}
+	
 	$show_flags = $g_options['countrydata'];
 	if ((isset($_GET['show_flags'])) && (is_numeric($_GET['show_flags'])))
 		$show_flags = valid_request($_GET['show_flags'], 1);
