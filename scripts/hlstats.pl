@@ -1393,8 +1393,8 @@ a MySQL database.
       --db-username=USERNAME      database username
       --dns-resolveip             resolve player IP addresses to hostnames
                                     (requires working DNS)
-   -c,--configfile                Specific configfile to use, settings in this file can't
-                                    be overided with commandline settings.
+   -c,--configfile                Specific configfile to use, settings in this file can now
+                                    be overidden with commandline settings.
       --nodns-resolveip           disables above
       --dns-timeout=SEC           timeout DNS queries after SEC seconds  [$g_dns_timeout]
   -i, --ip=IP                     set IP address to listen on for UDP log data
@@ -1621,41 +1621,47 @@ if ($opt_configfile && -r $opt_configfile) {
 
 # Read Command Line Arguments
 
+%copts = ();
+
 GetOptions(
-	"help|h"			=> \$opt_help,
-	"version|v"			=> \$opt_version,
-	"debug|d+"			=> \$g_debug,
-	"nodebug|n+"		=> \$g_nodebug,
-	"mode|m=s"			=> \$g_mode,
-	"configfile|c=s"	=> \$configfile,
-	"db-host=s"			=> \$db_host,
-	"db-name=s"			=> \$db_name,
-	"db-password=s"		=> \$db_pass,
-	"db-username=s"		=> \$db_user,
-	"dns-resolveip!"	=> \$g_dns_resolveip,
-	"dns-timeout=i"		=> \$g_dns_timeout,
-	"ip|i=s"			=> \$s_ip,
-	"port|p=i"			=> \$s_port,
-	"rcon!"				=> \$g_rcon,
-	"r"					=> \$g_rcon,
-	"stdin!"			=> \$g_stdin,
-	"s"					=> \$g_stdin,
-	"server-ip=s"		=> \$g_server_ip,
-	"server-port=i"		=> \$g_server_port,
-	"timestamp!"		=> \$g_timestamp,
-	"t"					=> \$g_timestamp
+	"help|h"			=> \$copts{opt_help},
+	"version|v"			=> \$copts{opt_version},
+	"debug|d+"			=> \$copts{g_debug},
+	"nodebug|n+"		=> \$copts{g_nodebug},
+	"mode|m=s"			=> \$copts{g_mode},
+	"configfile|c=s"	=> \$copts{configfile},
+	"db-host=s"			=> \$copts{db_host},
+	"db-name=s"			=> \$copts{db_name},
+	"db-password=s"		=> \$copts{db_pass},
+	"db-username=s"		=> \$copts{db_user},
+	"dns-resolveip!"	=> \$copts{g_dns_resolveip},
+	"dns-timeout=i"		=> \$copts{g_dns_timeout},
+	"ip|i=s"			=> \$copts{s_ip},
+	"port|p=i"			=> \$copts{s_port},
+	"rcon!"				=> \$copts{g_rcon},
+	"r"					=> \$copts{g_rcon},
+	"stdin!"			=> \$copts{g_stdin},
+	"s"					=> \$copts{g_stdin},
+	"server-ip=s"		=> \$copts{g_server_ip},
+	"server-port=i"		=> \$copts{g_server_port},
+	"timestamp!"		=> \$copts{g_timestamp},
+	"t"					=> \$copts{g_timestamp}
 ) or die($usage);
 
-if ($opt_help) {
-	print $usage;
-	exit(0);
-}
 
 if ($configfile && -r $configfile) {
 	$conf = '';
     $conf = ConfigReaderSimple->new($configfile);
     $conf->parse();
 	&doConf($conf, %directives);
+}
+
+# these are set above, we then reload them to override values in the actual config
+setOptionsConf(%copts);
+
+if ($opt_help) {
+	print $usage;
+	exit(0);
 }
 
 if ($opt_version) {

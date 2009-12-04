@@ -382,6 +382,27 @@ sub doConf
 
 }
 
+#
+# void setOptionsConf (hash optionsconf)
+#
+# Walk through configuration directives, setting values of global variables.
+#
+
+sub setOptionsConf
+{
+	my (%optionsconf) = @_;
+	
+	while (($thekey, $theval) = each(%optionsconf))
+	{
+		if($theval)
+		{
+			print "setting $thekey to $theval\n";
+  			$$thekey = $theval;
+		}
+	}
+
+}
+
 
 #
 # string abbreviate (string thestring[, int maxlength)
