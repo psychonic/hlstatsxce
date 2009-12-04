@@ -396,7 +396,6 @@ sub setOptionsConf
 	{
 		if($theval)
 		{
-			print "setting $thekey to $theval\n";
   			$$thekey = $theval;
 		}
 	}
