@@ -5371,7 +5371,6 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('l4d2', 'cola_bottles', 'Cola Bottles Smash', 1.5),
 ('l4d2', 'env_explosion', 'Explosion', 1.5),
 ('l4d2', 'env_fire', 'Fire', 1.5),
-('l4d2', 'fire_cracker_blast', 'Fire Cracker Blast', 1.5),
 ('l4d2', 'fireworkcrate', 'Fireworks Crate Smash', 1.5),
 ('l4d2', 'gnome', 'Gnome Smash', 1.5),
 ('l4d2', 'rifle_sg552', 'Sig Sauer SG-552 Commando', 1),
