@@ -17,7 +17,7 @@
 		array ($gamename, 'Updater')
 	);
 	echo "<div class=\"warning\">\n" .
-	"<span id=\"warning-header\">Attention:</span><br />\n" .
+	"<span id=\"warning-header\">Attention:</span><br />\n";
 	// Check version since updater wasn't implemented until version 1.6.2
 	$versioncomp = version_compare($g_options['version'], '1.6.1');
 	
