@@ -131,7 +131,7 @@ if (!$g_options['scripturl'])
 	$g_options['scripturl'] = str_replace('/status.php', '', $g_options['scripturl']);
 
 	$player_id = 0;  
-	if ((isset($_GET['player_id'])) && (is_numeric($_GET['player_id'])))
+	if (isset($_GET['player_id']))
 		$player_id = valid_request($_GET['player_id'], 1);
 	} elseif (isset($_GET['steam_id']) && isset($_GET['game'])) {
 		$steam_id = valid_request($_GET['steam_id'], 0);
