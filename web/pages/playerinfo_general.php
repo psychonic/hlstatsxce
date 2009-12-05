@@ -213,7 +213,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 							$db->query
 							("
 								SELECT
-									DATE_FORMAT(eventTime, '%a. %D %b. %T')
+									DATE_FORMAT(eventTime, '%a. %b. %D, %Y @ %T')
 								FROM
 									hlstats_Events_Connects
 								LEFT JOIN

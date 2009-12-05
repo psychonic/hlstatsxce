@@ -18,6 +18,7 @@ December 03, 2009
 + Added check to make sure user enteres an IP address, not a hostname, for address the daemon uses (psychonic)
 + Added ability to use steam_id AND game for signatures instead of player_id (#877) (Packhead)
 + Added stripping of color control codes from message in hlx_sm_psay2 command in hlstatsx.sp (psychonic)
++ Added colored Left4Dead Roles (#890) (Packhead)
 - Removed "smash-only" l4d2 awards from installations and future upgrades, will not be removed from existing sites (psychonic, Packhead)
 - Removed "run_hlstats_autorestart" as it is redundant now. (Packhead)
 - Removed non-existant "SMAC" weapon from NTS in install.sql (psychonic)
