@@ -1168,7 +1168,7 @@ if (!$selTask || !$admintasks[$selTask])
 	$fh = fopen("http://master.hlxcommunity.com/updatecheck/", 'r');
 	$currentversion = '';
 	while (!feof($fh)) {
-		$currentversion .= fread($fh, 8192);
+		$currentversion .= trim(fread($fh, 8192));
 	}
 	fclose($fh);
 	$oncurrent = true;
