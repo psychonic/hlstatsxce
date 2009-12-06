@@ -1172,7 +1172,7 @@ if (!$selTask || !$admintasks[$selTask])
 	}
 	fclose($fh);
 	$oncurrent = true;
-	if ($currentversion && $currentversion != $g_options['version']) {
+	if ($currentversion && ($currentversion != $g_options['version'])) {
 		$oncurrent = false;
 	}
 ?>
