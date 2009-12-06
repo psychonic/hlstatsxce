@@ -9,7 +9,7 @@
 		ALTER TABLE hlstats_Servers_VoiceComm
 			DROP KEY `address`,
 			ADD UNIQUE KEY `address` (`addr`,`UDPPort`,`queryPort`)
-		");
+		", false);
 	
 	
 	$db->query("
