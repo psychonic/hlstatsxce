@@ -116,8 +116,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$selectedStyle = preg_replace('/\.css$/','',$selectedStyle);
 	
 	$iconpath = IMAGE_PATH . "/icons";
-	if (file_exists($iconpath . "/" . $style)) {
-		$iconpath = $iconpath . "/" . $style;
+	if (file_exists($iconpath . "/" . $selectedStyle)) {
+		$iconpath = $iconpath . "/" . $selectedStyle;
 	}		
 
 	/**
