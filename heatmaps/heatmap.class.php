@@ -529,6 +529,21 @@ class Heatmap {
 					$tmp[$args['game']] = $mapinfo[$args['game']];
 					show::Event("ARGS", "--game=" . $args['game'], 2);
 				}
+			} else {
+				$visible = '';
+				$query = "SELECT code FROM hlstats_Games WHERE hidden='0'";
+				$result = DB::doQuery($query);
+				if (DB::numRows($result)) {
+					while ($row = DB::getAssoc($result)) {
+						foreach ($row as $key => $val) {
+							if (isset($mapinfo[$val])) {
+								$visible .= "$val, ";	
+								$tmp[$val] = $mapinfo[$val];
+							}
+						}
+					}
+				}
+				show::Event("GAMES", substr($visible, 0, -2), 2);
 			}
 			
 			if (isset($tmp)) { 
