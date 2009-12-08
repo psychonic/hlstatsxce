@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set("memory_limit", "32M");
+ini_set("max_execution_time", "0");
 
 define('DB_HOST',	'localhost');
 define('DB_USER',	'');
