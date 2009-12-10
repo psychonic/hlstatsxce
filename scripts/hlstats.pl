@@ -1560,6 +1560,7 @@ sub readDatabaseConfig()
 			$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
 		} else {
 			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
+			$g_gi = undef;
 		}
 	} elsif ($g_geoip_binary == 0 && $geotell > -1) {
 		close($g_gi{fh});
