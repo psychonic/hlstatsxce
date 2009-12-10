@@ -862,6 +862,9 @@ sub geoLookup
 		my $area_code = undef;
 		
 		if ($::g_geoip_binary > 0) {
+			if(!defined($::g_gi)) {
+				return;
+			}
 			($country_code, $country_code3, $country_name, $region, $city, $postal_code, $lat, $lng, $metro_code, $area_code) = $::g_gi->get_city_record($ip_address);
 			if ($lng) {
 				$found++;

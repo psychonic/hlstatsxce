@@ -1160,6 +1160,9 @@ sub update_server_loc
 	my $servlat=0;
 	my $servlng=0;
 	if ($::g_geoip_binary > 0) {
+		if(!defined($::g_gi)) {
+			return;
+		}
 		my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude,
 $metro_code, $area_code) = $::g_gi->get_city_record($server_ip);
 		if ($longitude) {
