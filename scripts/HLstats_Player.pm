@@ -127,6 +127,7 @@ sub new
 	$self->{deaths_in_a_row}   = 0;
 	$self->{kill_streak}	   = 0;
 	$self->{death_streak}	   = 0;
+	$self->{trackable}         = 0;
 	
 	
 	# Set Property Values

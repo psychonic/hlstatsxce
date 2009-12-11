@@ -979,7 +979,7 @@ sub doEvent_Frag
 	
 	my $headshotFromAction = 0;
 
-	if (($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) && $g_servers{$s_addr}->{play_game} == L4D()) {
+	if (($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) && $g_servers{$s_addr}->{play_game} != L4D()) {
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 	} elsif (checkBonusRound()) {
 		$desc = "(IGNORED) BonusRound: ";
