@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.3"
+#define VERSION "1.6.4-pre1"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -1007,11 +1007,7 @@ public Action:hlx_sm_psay2(args)
 	GetCmdArg(2, colored_param, sizeof(colored_param));
 	
 	new ignore_param = 0;
-	if (strcmp(colored_param, "1") == 0)
-	{
-		ignore_param = 1;
-	}
-	else if (strcmp(colored_param, "0") == 0)
+	if (strcmp(colored_param, "2") == 0 || strcmp(colored_param, "1") == 0 || strcmp(colored_param, "0") == 0)
 	{
 		ignore_param = 1;
 	}

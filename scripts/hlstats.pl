@@ -561,7 +561,7 @@ sub getPlayerId
 	";
 	my $result = &doQuery($query);
 
-	if ($result->rows) {
+	if ($result->rows > 0) {
 		my ($playerId) = $result->fetchrow_array;
 		$result->finish;
 		return $playerId;
@@ -1146,7 +1146,7 @@ sub getPlayerInfo
 			}  
 		} else {
 			if ($userid != 0 && ($g_mode ne "LAN" || $forced_uniqueid)) {
-				if ((!$haveplayer) && ($create_player > 0)) {
+				if ($create_player > 0) {
 					# Add the player to our hash of player objects
 					$g_servers{$s_addr}->{"srv_players"}->{"$userid/$uniqueid"} = new HLstats_Player(
 						server => $s_addr,
@@ -1159,7 +1159,8 @@ sub getPlayerInfo
 						team => $team,
 						role => $role,
 						is_bot => $bot,
-						display_events => $g_servers{$s_addr}->{default_display_events}
+						display_events => $g_servers{$s_addr}->{default_display_events},
+						address => $ipAddr
 					);
 					
 					if ($g_preconnect->{"$s_addr/$userid/$name"}) {
@@ -2159,6 +2160,7 @@ while ($loop = &getLine()) {
 		#if ($test_for_date)
 		
 		# EXPLOIT FIX
+		
 		if ($s_output =~ s/^(?:.*?)?L (\d\d)\/(\d\d)\/(\d{4}) - (\d\d):(\d\d):(\d\d):\s*//) {
 			$ev_month = $1;
 			$ev_day   = $2;
@@ -2176,6 +2178,10 @@ while ($loop = &getLine()) {
 		} else {
 			&printEvent(998, "MALFORMED DATA: " . $s_output);
 			next;
+		}
+		
+		if ($g_debug >= 4) {
+			print $s_addr.": \"".$s_output."\"\n";
 		}
 		
 		if (($g_stdin == 0) && ($g_servers{$s_addr}->{last_event} > 0) && ( ($ev_unixtime - $g_servers{$s_addr}->{last_event}) > 299) ) {
@@ -2544,7 +2550,7 @@ while ($loop = &getLine()) {
 				if ($g_mode eq "LAN") {
 					$playerinfo = &getPlayerInfo($ev_player, 1, $ipAddr);
 				} else {
-					$playerinfo = &getPlayerInfo($ev_player, 1);
+					$playerinfo = &getPlayerInfo($ev_player, 1, 0, $ipAddr);
 				}
 				
 				$ev_type = 1;

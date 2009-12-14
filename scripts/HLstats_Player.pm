@@ -70,8 +70,8 @@ sub new
 	$self->{state}             = "";
 	$self->{country}           = "";
 	$self->{flag}              = "";
-	$self->{lat}               = "";
-	$self->{lng}               = "";
+	$self->{lat}               = undef;
+	$self->{lng}               = undef;
 	
 	$self->{playerid}          = 0;
 	$self->{clan}              = 0;
@@ -302,31 +302,26 @@ sub setUniqueId
 	
 	my $playerid = &::getPlayerId($uniqueid);
 	
-	if ($playerid)
+	if ($playerid > 0)
 	{
-		my $lat = undef;
-		my $lng = undef;
-		
-    	# An existing player. Get their skill rating.
+		# An existing player. Get their skill rating.
 		my $query = "
 			SELECT
-				skill, kills, city, state, country, flag, lat, lng, displayEvents, kill_streak, death_streak
+				skill, kills, displayEvents, kill_streak, death_streak
 			FROM
 				hlstats_Players
 			WHERE
 				playerId='$playerid'
 		";
 		my $result = &::doQuery($query);
-		($self->{skill}, $self->{total_kills}, $self->{city}, $self->{state}, $self->{country}, $self->{flag}, $lat, $lng, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
+		($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
 		$result->finish;
-     	$self->{playerid} = $playerid;
-		$self->{lat} = (($lat eq "")?undef:$lat);
-		$self->{lng} = (($lng eq "")?undef:$lng);
-        $self->{session_start_pos} = $self->getRank();
+		$self->{playerid} = $playerid;
+		$self->{session_start_pos} = $self->getRank();
 	}
 	else
 	{
-     	my $srv_addr  = $self->{server};
+		my $srv_addr  = $self->{server};
 		# This is a new player. Create a new record for them in the Players
 		# table.
 		my $hideins = "";

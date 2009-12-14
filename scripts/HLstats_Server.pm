@@ -1157,8 +1157,8 @@ sub update_server_loc
 	my $found = 0;
 	my $servcity = "";
 	my $servcountry = "";
-	my $servlat=0;
-	my $servlng=0;
+	my $servlat=undef;
+	my $servlng=undef;
 	if ($::g_geoip_binary > 0) {
 		if(!defined($::g_gi)) {
 			return;
@@ -1167,8 +1167,8 @@ sub update_server_loc
 $metro_code, $area_code) = $::g_gi->get_city_record($server_ip);
 		if ($longitude) {
 			$found++;
-			$servcity = encode("utf8",$city);
-			$servcountry = encode("utf8",$country_name);
+			$servcity = ((defined($city))?encode("utf8",$city):"");
+			$servcountry = ((defined($country_name))?encode("utf8",$country_name):"");
 			$servlat = $latitude;
 			$servlng = $longitude;
 		}
@@ -1207,8 +1207,8 @@ $metro_code, $area_code) = $::g_gi->get_city_record($server_ip);
 			UPDATE
 				`hlstats_Servers`
 			SET
-				city = '".&::quoteSQL($servcity)."',
-				country='".&::quoteSQL($servcountry)."',
+				city = '".(defined($servcity)?&::quoteSQL($servcity):"")."',
+				country='".(defined($servcountry)?&::quoteSQL($servcountry):"")."',
 				lat=".((defined($servlat))?$servlat:"NULL").",
 				lng=".((defined($servlng))?$servlng:"NULL")."
 			WHERE
