@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.4-pre1"
+#define VERSION "1.6.4-pre2"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -62,7 +62,7 @@ new const String: blocked_commands[][] = { "rank", "skill", "points", "place", "
                                      "kill", "player_kills", "cmd", "cmds", "command", "hlx_display 0", 
                                      "hlx_display 1", "hlx_teams 0", "hlx_teams 1", "hlx_hideranking", 
                                      "hlx_chat 0", "hlx_chat 1", "hlx_menu", "servers 1", "servers 2", 
-                                     "servers 3", "hlx", "hlstatsx" };
+                                     "servers 3", "hlx", "hlstatsx", "help" };
 
 new Handle:HLstatsXMenuMain;
 new Handle:HLstatsXMenuAuto;

@@ -33,7 +33,7 @@
 #include <cellarray>
 #include <fakemeta>
 
-#define VERSION "1.6.3 (HL1)"
+#define VERSION "1.6.4-PRE1 (HL1)"
 
 new g_hlx_block_commands
 new g_hlx_message_prefix
@@ -44,7 +44,7 @@ new blocked_commands[][] = { "rank", "skill", "points", "place", "session", "ses
                              "kill", "player_kills", "cmd", "cmds", "command", "hlx_display 0", 
                              "hlx_display 1", "hlx_teams 0", "hlx_teams 1", "hlx_hideranking", 
                              "hlx_chat 0", "hlx_chat 1", "hlx_menu", "servers 1", "servers 2", 
-                             "servers 3", "hlx", "hlstatsx" }
+                             "servers 3", "hlx", "hlstatsx", "help" }
 
 
 new g_msgSayText
