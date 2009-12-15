@@ -725,6 +725,8 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('V','tf','jarate','Yellow Bellied Spies','victims jarated'),
 ('W','tf','tf_pumpkin_bomb', 'Pumpkin Bomber', 'kills with a pumpkin bomb'),
 ('O','tf', 'mvp1', 'Most Valuable Player', 'wins as Most Valuable Player'),
+('W','tf','taunt_scout', 'Not even winded', 'scout taunt kills'),
+('W','tf','sandman', 'Batter Up!', 'kills with the Sandman'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
