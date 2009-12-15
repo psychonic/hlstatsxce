@@ -340,7 +340,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								ON
 									hlstats_Weapons.code = hlstats_Events_Frags.weapon
 								WHERE
-									hlstats_Events_Frags.killerId=$player
+									hlstats_Events_Frags.killerId=$player AND hlstats_Weapons.game='$game'
 								GROUP BY
 									hlstats_Events_Frags.weapon
 								ORDER BY
