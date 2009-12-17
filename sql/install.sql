@@ -2477,7 +2477,7 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('tf', 'Admins', ''),
 ('tf', 'AutoBanRetry', '0'),
 ('tf', 'AutoTeamBalance', '0'),
-('tf', 'BonusRoundIgnore', '0'),
+('tf', 'BonusRoundIgnore', '1'),
 ('tf', 'BonusRoundTime', '0'),
 ('tf', 'BroadCastEvents', '1'),
 ('tf', 'BroadCastPlayerActions', '1'),
