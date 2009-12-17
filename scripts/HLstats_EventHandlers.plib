@@ -2730,6 +2730,7 @@ sub doEvent_ChangeMap
 				removePlayer($s_addr, $player->{userid}, $player->{uniqueid});
 			}
 		}
+		$g_servers{$s_addr}->setHlxCvars();
 		return "Loading map \"$newmap\"";
 	}
 	elsif ($type eq "started")
@@ -2758,7 +2759,6 @@ sub doEvent_ChangeMap
 		$g_servers{$s_addr}->{map} = $newmap;
 		&printNotice("Current map for server \"$s_addr\" is now \"" . $newmap . "\"");
 		
-		$g_servers{$s_addr}->setHlxCvars();
 		return "Started map \"$newmap\"";
 	}
 	else
