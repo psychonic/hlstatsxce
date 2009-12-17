@@ -392,6 +392,28 @@ sub get_menu_text
 	return $cmd_text;
 }
 
+sub endKillStreak
+{
+	my ($player) = @_;
+	
+	my $killtotal = $player->{kills_per_life};
+	if ($killtotal > $player->{kill_streak}) {
+		$player->{kill_streak} = $killtotal;
+	}	
+	if ($killtotal > 12) {
+		$killtotal = 12;
+	}
+	# octo: I don't think suicides should count as deaths in a row
+	if ($killtotal > 1) {
+		&doEvent_PlayerAction(
+			$player->{userid},
+			$player->{uniqueid},
+			"kill_streak_" . $killtotal
+		);
+	}
+	$player->{kills_per_life} = 0;
+}
+
 #
 # 001. Connect
 #
@@ -589,24 +611,8 @@ sub doEvent_Disconnect
 				"Disconnects", 0,
 				$player->{playerid}
 			);
-			my $killtotal = $player->{kills_per_life};
-			if($killtotal > $player->{kill_streak})
-			{
-				$player->set("kill_streak",$killtotal);
-			}
 			
-			if($killtotal > 12) {
-				$killtotal = 12;
-			}
-			# octo: I don't think suicides should count as deaths in a row
-			if ($killtotal > 1) {
-				&doEvent_PlayerAction(
-					$pUserId,
-					$player->{"uniqueid"},
-					"kill_streak_" . $killtotal
-				);
-			}
-			$player->{kills_per_life} = 0;
+			&endKillStreak($player);
 			
 			if (($g_global_chat > 0)) {
 				my $p_name    = $player->{name};
@@ -718,23 +724,8 @@ sub doEvent_Suicide
 		{
 			$desc = "(IGNORED) BOT: ";
 		} else {
-			my $killtotal = $player->{"kills_per_life"};
-			if($killtotal>$player->{"kill_streak"})
-			{
-				$player->set("kill_streak",$killtotal);
-			}	
-			if($killtotal>12) {
-				$killtotal=12;
-			}
-			# octo: I don't think suicides should count as deaths in a row
-			if ($killtotal > 1) {
-				&doEvent_PlayerAction(
-					$player->{"userid"},
-					$player->{"uniqueid"},
-					"kill_streak_" . $killtotal
-				);
-			}
-			$player->{kills_per_life}=0;
+			
+			&endKillStreak($player);
 			
 			if ($g_servers{$s_addr}->{play_game} == TF() && defined($properties{customkill})) {
 				if ($properties{customkill} eq "train") {
@@ -1043,28 +1034,15 @@ sub doEvent_Frag
 					#kill streak code by octo
 					
 					$killer->{"kills_per_life"}+=1;
-					my $killtotal = $victim->{"kills_per_life"};
-					if($killtotal>$victim->{"kill_streak"}) {
-						$victim->{"kill_streak"}=$killtotal;
-					}
-					if($killtotal>12) {
-						$killtotal=12;
-					}
 					$victim->{"deaths_in_a_row"}+=1;	
-					if($victim->{"deaths_in_a_row"}>$victim->{"death_streak"}) {
-						$victim->set("death_streak",$victim->{"deaths_in_a_row"});
+					if ($victim->{"deaths_in_a_row"} > $victim->{"death_streak"}) {
+						$victim->set("death_streak", $victim->{"deaths_in_a_row"});
 					}
 
 					# we don't need to update the kills death_streak since it was done when he is a victim	
-					$killer->{"deaths_in_a_row"}=0;
-					if ($killtotal > 1) {
-						&doEvent_PlayerAction(
-							$victim->{"userid"},
-							$victim->{"uniqueid"},
-							"kill_streak_" . $killtotal
-						);
-					}
-					$victim->{"kills_per_life"}=0;
+					$killer->{"deaths_in_a_row"} = 0;
+					
+					&endKillStreak($victim);
 
 					&recordEvent(
 						"Frags", 0,
@@ -1882,43 +1860,60 @@ sub doEvent_WorldAction
 	if ($action eq "Round_End" || $action eq "Round_Win" || $action eq "Mini_Round_Win") {
 		if ($action eq "Round_End") {
 			$g_servers{$s_addr}->analyze_teams();
-		} else {
-			if(($g_servers{$s_addr}->{lastdisabledbonus}+5)<$ev_remotetime && $g_servers{$s_addr}->{bonusroundignore} > 0) {
-				$g_servers{$s_addr}->set("bonusroundtime_ts", $ev_remotetime);
-				$g_servers{$s_addr}->set("lastdisabledbonus", $ev_remotetime);
-				$g_servers{$s_addr}->set("bonusroundtime_state", 1);
-				if ($act_players >= $min_players) {
-					$g_servers{$s_addr}->messageAll("Round Over - All actions/frags are ignored by HLstatsX until the next round starts",0,1);
-				}
+		}
+		
+		if (($g_servers{$s_addr}->{lastdisabledbonus}+5) < $ev_remotetime && $g_servers{$s_addr}->{bonusroundignore} > 0) {
+			$g_servers{$s_addr}->set("bonusroundtime_ts", $ev_remotetime);
+			$g_servers{$s_addr}->set("lastdisabledbonus", $ev_remotetime);
+			$g_servers{$s_addr}->set("bonusroundtime_state", 1);
+			if ($act_players >= $min_players) {
+				$g_servers{$s_addr}->messageAll("Round Over - All actions/frags are ignored by HLstatsX until the next round starts",0,1);
 			}
 		}
-		while (my($pl, $b_player) = each(%g_players) ) {
-			my $killtotal = $b_player->{"kills_per_life"};
-			if($killtotal > $b_player->{"kill_streak"}) {
-				$b_player->set("kill_streak",$killtotal);
-			}	
-			if($killtotal>12) {
-				$killtotal=12;
+
+		while (my($pl, $player) = each(%g_players) ) {
+			if ($player->{connect_time} == 0) {
+				$player->set("connect_time", time());
 			}
-			# octo: I don't think suicides should count as deaths in a row
-			if ($killtotal > 1) {
-				&doEvent_PlayerAction(
-					$b_player->{"userid"},
-					$b_player->{"uniqueid"},
-					"kill_streak_" . $killtotal
+		
+			&endKillStreak($player);
+			
+			if ($player->{auto_type} eq "end") {
+				&doEvent_Chat("say",
+					$player->{"userid"},
+					$player->{"uniqueid"},
+					$player->{auto_command}
 				);
 			}
-			$b_player->{"kills_per_life"}=0;
+			$player->updateDB();
 		}
 	} 
 
 	
 	if ($action eq "Round_Start" || $action eq "Mini_Round_Start") {
 		$g_servers{$s_addr}->set("bonusroundtime_state", 0);
-	}
-	if ($action eq "Round_Start") {
-		$g_servers{$s_addr}->set("round_status", 0);
-		$g_servers{$s_addr}->set("ba_player_switch", 0);
+		if ($action eq "Round_Start") {
+			$g_servers{$s_addr}->set("round_status", 0);
+			$g_servers{$s_addr}->set("ba_player_switch", 0);
+		}
+		
+		while (my($pl, $player) = each(%g_players) )
+		{
+			if ($player->{connect_time} == 0) {
+				$player->set("connect_time", time());
+			}  
+			if ($action eq "Round_Start") {
+				$player->set("is_dead", "0", 1);
+				if ($player->{auto_type} eq "start") {
+					&doEvent_Chat("say",
+						$player->{"userid"},
+						$player->{"uniqueid"},
+						$player->{auto_command}
+					);
+				}
+			}
+			$player->updateDB();
+		}
 	}
 	if ($action eq "Game_Commencing") {
 		$g_servers{$s_addr}->set("round_status", 0);
@@ -1928,30 +1923,6 @@ sub doEvent_WorldAction
 		$g_servers{$s_addr}->set("map_ts_wins", 0);
 	}
 	$g_servers{$s_addr}->updateDB();
-	while (my($pl, $player) = each(%g_players) )
-	{
-		if ($player->{connect_time} == 0) {
-			$player->set("connect_time", time());
-		}  
-		if ($action eq "Round_Start") {
-			$player->set("is_dead", "0", 1);
-			if (($action eq "Round_Start") && ($player->{auto_type} eq "start")) {
-				&doEvent_Chat("say",
-					$player->{"userid"},
-					$player->{"uniqueid"},
-					$player->{auto_command}
-				);
-			}
-		}
-		if (($action eq "Round_End") && ($player->{auto_type} eq "end")) {
-			&doEvent_Chat("say",
-				$player->{"userid"},
-				$player->{"uniqueid"},
-				$player->{auto_command}
-			);
-		}
-		$player->updateDB();
-	}
 	return $desc . "World triggered \"$action\" ($act_players/$min_players)";
 }
 
