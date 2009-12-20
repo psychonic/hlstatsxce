@@ -428,6 +428,10 @@ class EditList
 				$i = 0;
 				foreach ($this->columns as $col)
 				{
+					if ($col->type == 'readonly')
+					{
+						continue;
+					}
 
 					$value = mystripslashes($_POST[$row . "_" . $col->name]);
 					if ( $col->name != 'rcon_password' && $col->type != 'password' && $col->name != 'pattern')
@@ -655,7 +659,7 @@ class EditList
 							{
 								$col_where = "WHERE $col_where";
 							}
-							$col_result = $db->query("SELECT $col_key, $col_col FROM $col_table $col_where ORDER BY $col_key");
+							$col_result = $db->query("SELECT $col_key, $col_col FROM $col_table $col_where ORDER BY $col_col");
 							$coldata = array();
 							while (list($a, $b) = $db->fetch_row($col_result))
 							{
@@ -727,7 +731,10 @@ class EditList
 						$selected = '';
 					}
 
-					echo '<center><input type="checkbox" name="' . $keyval . "_$col->name\" value=\"$selectedval\"$selected /input /></center>";
+					echo '<center><input type="checkbox" name="' . $keyval . "_$col->name\" value=\"$selectedval\"$selected /></center>";
+					break;
+				case 'readonly':
+					echo html_entity_decode($rowdata[$col->name]);
 					break;
 
 				case 'hidden':
@@ -735,6 +742,10 @@ class EditList
 					break;
 
 				default:
+					if ($col->type == 'password')
+					{
+						$onclick = " onclick=\"if (this.value == '(encrypted)') this.value='';\"";
+					}
 					if ($col->datasource != '' && !isset($rowdata[$col->name]))
 					{
 						$value = $col->datasource;
@@ -750,7 +761,7 @@ class EditList
 						$onClick = "onmouseover=\"javascript:showHelp('" . strtolower($rowdata[$this->helpKey]) . "')\" onmouseout=\"javascript:hideHelp()\"";
 					}
 
-					echo "<input $onClick type=\"text\" name=\"" . $keyval . "_$col->name\" size=$col->width " . "value=\"" . html_entity_decode($value) . "\" class=\"textbox\"" . " maxlength=\"$col->maxlength\" />";
+					echo "<input $onClick type=\"text\" name=\"" . $keyval . "_$col->name\" size=$col->width " . "value=\"" . html_entity_decode($value) . "\" class=\"textbox\"" . " maxlength=\"$col->maxlength\"$onclick />";
 			}
 
 			if ($col->type != 'hidden')

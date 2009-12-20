@@ -69,7 +69,7 @@ Usernames and passwords can be set up for access to this HLstats Admin area. For
 	$result = $db->query("
 		SELECT
 			username,
-			'(encrypted)' AS password,
+			IF(password='','','(encrypted)') AS password,
 			acclevel
 		FROM
 			hlstats_Users
