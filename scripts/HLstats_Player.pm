@@ -64,7 +64,6 @@ sub new
 	$self->{last_update}       = 0;
 	$self->{last_update_skill} = 0;
 	$self->{day_skill_change}  = 0;
-	$self->{last_address_check} = 0;
 
 	$self->{city}              = "";
 	$self->{state}             = "";
@@ -148,7 +147,7 @@ sub new
 	$self->{plain_uniqueid} = $params{plain_uniqueid};
 	$self->setUniqueId($params{uniqueid});
 	$self->setName($params{name});
-	
+	$self->getAddress();
 	$self->flushDB();
 
 
@@ -559,7 +558,6 @@ sub flushDB
 		$add_connect_time = 0;
 	} 
 	
-    $self->getAddress();
 	my $address = $self->{address};
 	
 	unless ($playerid)
@@ -843,9 +841,12 @@ sub getAddress
 {
 	my ($self) = @_;
 
-	if (($self->{is_bot} == 0 && $self->{address} eq "" && $self->{userid} > 0) && $::g_stdin == 0 && (time() - $self->{last_address_check}) > 120)
+	if ($self->{address} ne "")
 	{
-		$self->{last_address_check} = time();
+		$self->geoLookup();
+	}
+	elsif ($::g_stdin == 0 && $self->{is_bot} == 0 && $self->{userid} > 0)
+	{
 		$s_addr = $self->{server};
 		
 		&::printNotice("rcon_getaddress");
