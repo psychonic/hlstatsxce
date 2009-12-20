@@ -1187,6 +1187,7 @@ if (!$selTask || !$admintasks[$selTask])
 		$oncurrent = false;
 	}
 ?>
+	<li style="font-weight:bold"><a href="http://www.hlxcommunity.com/donate" target="_blank">Donate to HLstatsX Community Edition</a></li>
 	<li><strong>Version Check</strong><br />
 <?php
 	if ($oncurrent) {
