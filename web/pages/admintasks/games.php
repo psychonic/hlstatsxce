@@ -40,25 +40,6 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 	
-	$result = $db->query("
-		SELECT
-			code,
-			name
-		FROM
-			hlstats_Games_Supported
-		ORDER BY
-			name ASC
-	");
-	$numitems = $db->num_rows($result);
-	$i = 0;
-    while ($rowdata = $db->fetch_row($result))
-    {
-		$i++;
-		$realGameSelect .= "$rowdata[0]/$rowdata[1]";
-		if ($i != $numitems)
-			$realGameSelect .= ";";
-    }
-    
     function delete_game($game)
     {
     	global $db;
@@ -176,10 +157,10 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	}
 	
 	$edlist = new EditList("code", "hlstats_Games", "game", false, false, "", 'delete_game');
-	$edlist->columns[] = new EditListColumn("code", "Game Code", 10, true, "text", "", 16);
+	$edlist->columns[] = new EditListColumn("code", "Game Code", 10, true, "readonly", "", 16);
 	$edlist->columns[] = new EditListColumn("name", "Display Name", 30, true, "text", "", 128);
-	$edlist->columns[] = new EditListColumn("realgame", "Game", 50, true, "select", $realGameSelect, 128);
-	$edlist->columns[] = new EditListColumn("hidden", "Visibility", 0, true, "select", "0/Show;1/Hide");
+	$edlist->columns[] = new EditListColumn("realgame", "Game", 50, true, "select", "hlstats_Games_Supported.name/code/", 128);
+	$edlist->columns[] = new EditListColumn("hidden", "<center>Hide Game</center>", 0, false, "checkbox");
 	
 	
 	if ($_POST)
