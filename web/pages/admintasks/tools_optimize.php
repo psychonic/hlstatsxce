@@ -40,34 +40,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 ?>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width=9 height=6 class="imageformat"><b>&nbsp;<?php echo $task->title; ?></b><p>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width="9" height="6" class="imageformat"><b>&nbsp;<?php echo $task->title; ?></b><p>
 
-<?php
-  if (isset($_GET['upgrade']))
-	{
-		$result = $db->query("SHOW TABLES");
-		
-		echo "Upgrading all tables to MyISAM format:<ul>\n";
-		while (list($table) = $db->fetch_row($result))
-		{
-			echo "<li>$table ... ";
-			$db->query("ALTER TABLE $table TYPE=MYISAM");
-			echo "OK\n";
-		}
-		echo "</ul>\n";
-		
-		echo "Done.<p>";
-?>
-Back to <a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=tools_optimize">Optimize Database</a><p>
-<?php
-	}
-	else
-	{
-?>
 
 <span style="padding-left:35px;">Optimizing tables...</span></td>
 </tr>
-</table><p>
+</table><br /><br />
 
 <?php
 		flush();
@@ -114,14 +92,14 @@ Back to <a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=tools_op
 		
 		$tableOptimize->draw($result, mysql_num_rows($result), 80);
 ?>
-<p>
+<br /><br />
 
-<table width="90%" align="center" border=0 cellspacing=0 cellpadding=2>
+<table style="width:90%;text-align:center;border:0" cellspacing="0" cellpadding="2">
 
 <tr>
 	<td class="fNormal">Analyzing tables...</td>
 </tr>
-</table><p>
+</table><br /><br />
 	
 <?php
 		$tableAnalyze = new Table(
@@ -157,15 +135,4 @@ Back to <a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=tools_op
 		$result = $db->query("ANALYZE TABLE $dbtables");
 		
 		$tableAnalyze->draw($result, mysql_num_rows($result), 80);
-?>
-<p>
-<table width="90%" align="center" border=0 cellspacing=0 cellpadding=2>
-
-<tr>
-	<td class="fNormal"><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=tools_optimize&upgrade=yes&<?php echo strip_tags(SID)?>">Click here</a> if you get "table handler does not support check/repair" above.</td>
-</tr>
-
-</table>
-<?php
-	}
 ?>
