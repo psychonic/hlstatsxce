@@ -301,7 +301,7 @@ sub setUniqueId
 	my ($self, $uniqueid) = @_;
 	
 	my $playerid = &::getPlayerId($uniqueid);
-	
+
 	if ($playerid > 0)
 	{
 		# An existing player. Get their skill rating.
@@ -314,46 +314,20 @@ sub setUniqueId
 				playerId='$playerid'
 		";
 		my $result = &::doQuery($query);
-		($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
+		if ($result->rows > 0) {
+			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
+			$self->{session_start_pos} = $self->getRank();
+		} else {
+			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
+			$self->insertPlayer($playerid);
+		}
 		$result->finish;
-		$self->{playerid} = $playerid;
-		$self->{session_start_pos} = $self->getRank();
 	}
 	else
 	{
-		my $srv_addr  = $self->{server};
 		# This is a new player. Create a new record for them in the Players
 		# table.
-		my $hideins = "";
-		my $hideval = "";
-		if ($::g_servers{$srv_addr}->{play_game} == L4D() && $self->{userid} < 0) {
-			$hideins = ", hideranking";
-			$hideval = ", 1";
-		}
-		my $query = "
-			INSERT INTO
-				hlstats_Players
-				(
-					lastName,
-					clan,
-					game,
-					displayEvents,
-					createdate
-					$hideins
-				)
-			VALUES
-			(
-				'" . &::quoteSQL($self->{name}) . "',
-				" . $self->{clan} . ",
-				'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "',
-				" . $self->{display_events} . ",
-				UNIX_TIMESTAMP()
-				$hideval
-			)
-		";
-		&::execNonQuery($query);
-		
-		($playerid) = $::db_conn->{'mysql_insertid'};
+		$playerid = $self->insertPlayer();
 		
 		if ($playerid)
 		{
@@ -369,7 +343,7 @@ sub setUniqueId
 				(
 					$playerid,
 					'" . &::quoteSQL($uniqueid) . "',
-					'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "'
+					'" . &::quoteSQL($::g_servers{$self->{server}}->{game}) . "'
 				)
 			";
 			&::execNonQuery($query);
@@ -390,6 +364,57 @@ sub setUniqueId
 	return 1;
 }
 
+
+#
+# Inserts new player
+#
+
+sub insertPlayer
+{
+	my ($self, $playerid) = @_;
+	
+	my $hideins = "";
+	my $hideval = "";
+	my $playeridins = "";
+	my $playeridval = "";
+	my $srv_addr = $self->{server};
+	
+	if ($::g_servers{$srv_addr}->{play_game} == L4D() && $self->{userid} < 0) {
+		$hideins = ", hideranking";
+		$hideval = ", 1";
+	}
+	if ($playerid) {
+		$playeridins = ", playerId";
+		$playeridval = ", $playerid";
+	}
+	
+	my $query = "
+		INSERT INTO
+			hlstats_Players
+			(
+				lastName,
+				clan,
+				game,
+				displayEvents,
+				createdate
+				$hideins
+				$playeridins
+			)
+		VALUES
+		(
+			'" . &::quoteSQL($self->{name}) . "',
+			" . $self->{clan} . ",
+			'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "',
+			" . $self->{display_events} . ",
+			UNIX_TIMESTAMP()
+			$hideval
+			$playeridval
+		)
+	";
+	&::execNonQuery($query);
+	
+	return $::db_conn->{'mysql_insertid'};
+}
 
 
 #
