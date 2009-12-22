@@ -229,7 +229,7 @@ sub error
 sub getPlayers
 {
   my ($self) = @_;
-  my $status = $self->execute("status", 1);
+  my $status = $self->execute("status");
   
   my @lines = split(/[\r\n]+/, $status);
 
@@ -312,7 +312,7 @@ sub getPlayers
 sub getServerData
 {
   my ($self) = @_;
-  my $status = $self->execute("status", 1);
+  my $status = $self->execute("status");
 
   my @lines = split(/[\r\n]+/, $status);
 
@@ -341,7 +341,7 @@ sub getServerData
 sub getVisiblePlayers
 {
   my ($self) = @_;
-  my $status = $self->execute("sv_visiblemaxplayers", 1);
+  my $status = $self->execute("sv_visiblemaxplayers");
   
   my @lines = split(/[\r\n]+/, $status);
   
