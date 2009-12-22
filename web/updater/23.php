@@ -15,6 +15,10 @@
 	foreach($tf2games as $game)
 	{
 		$db->query("
+			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+			('$game', 'escort_score', 1, 0, '', 'Cart Escort', '1', '0', '0', '0');
+		");
+		$db->query("
 			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 				('$game','demoshield', 'Chargin'' Targe', 2.0);
 		");		
@@ -22,10 +26,12 @@
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
 				('W','$game','demoshield', 'Got something for ya!', 'kills with the Chargin'' Targe'),
 				('O','$game','builtobject_obj_dispenser', 'Dispenser Here!', 'Dispensers built'),
+				('O','$game','escort_score', 'Forward glorious cart!', 'Cart Escorts'),
+				('O','$game','killed_charged_medic', 'Juice Loosener', 'Charged Medics killed'),
 				('O','$game','steal_sandvich', 'Mmm, Ham', 'stolen Sandviches'),
 				('O','$game','teleport', 'One to beam up!', 'players Teleported'),
 				('W','$game','deflect_arrow', 'Deflected Arrow', 'kills with a deflected arrow'),
-				('W','$game','tf_projectile_arrow_fire', 'Fire Flight', 'kills with a Fire Arrow');
+				('W','$game','tf_projectile_arrow_fire', 'Fire Flight', 'kills with the Flaming Huntsman');
 		");
         for ($h = 1; $h<4; $h++) {
             switch ($h) {
@@ -50,7 +56,9 @@
 					('builtobject_obj_sentrygun', '$game', '{$h}_builtobject_obj_sentrygun.png', '$level Built Sentry Gun', '$awardCount'),
 					('defended_medic', '$game', '{$h}_defended_medic.png', '$level Defended Medic', '$awardCount'),
 					('demoshield', '$game', '{$h}_demoshield.png', '$level Chargin'' Targe', '$awardCount'),
+					('escort_score', '$game', '{$h}_escort_score.png', '$level Cart Escort', '$awardCount'),
 					('jarate', '$game', '{$h}_jarate.png', '$level Jarate', '$awardCount'),
+					('killed_charged_medic', '$game', '{$h}_killed_charged_medic.png', '$level Charged Medic Kills', '$awardCount'),
 					('latency', '$game', '{$h}_latency.png', '$level Latency', '$awardCount'),
 					('pickaxe', '$game', '{$h}_pickaxe.png', '$level Equalizer', '$awardCount'),
 					('rocketlauncher_directhit', '$game', '{$h}_rocketlauncher_directhit.png', '$level Direct Hit', '$awardCount'),
@@ -65,8 +73,8 @@
                     ('taunt_soldier', '$game', '{$h}_taunt_soldier.png', '$level Soldier Taunt', '$awardCount'),
 					('taunt_spy', '$game', '{$h}_taunt_spy.png', '$level Spy Taunt', '$awardCount'),
 					('teleport', '$game', '{$h}_teleport.png', '$level Teleport', '$awardCount'),
-					('tf_projectile_arrow', '$game', '{$h}_tf_projectile_arrow.png', '$level Arrow', '$awardCount'),
-					('tf_projectile_arrow_fire', '$game', '{$h}_tf_projectile_arrow_fire.png', '$level Fire Arrow', '$awardCount');
+					('tf_projectile_arrow', '$game', '{$h}_tf_projectile_arrow.png', '$level Huntsman', '$awardCount'),
+					('tf_projectile_arrow_fire', '$game', '{$h}_tf_projectile_arrow_fire.png', '$level Flaming Huntsman', '$awardCount');
             ");        
         }
 		

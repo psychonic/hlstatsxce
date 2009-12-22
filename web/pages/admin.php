@@ -1175,29 +1175,11 @@ if (!$selTask || !$admintasks[$selTask])
 <?php
 		}
 	}
-
-	$fh = fopen("http://master.hlxcommunity.com/updatecheck/", 'r');
-	$currentversion = '';
-	while (!feof($fh)) {
-		$currentversion .= trim(fread($fh, 8192));
-	}
-	fclose($fh);
-	$oncurrent = true;
-	if ($currentversion && ($currentversion != $g_options['version'])) {
-		$oncurrent = false;
-	}
 ?>
 	<li style="font-weight:bold"><a href="http://www.hlxcommunity.com/donate" target="_blank">Donate to HLstatsX Community Edition</a></li>
 	<li><strong>Version Check</strong><br />
-<?php
-	if ($oncurrent) {
-		echo 'Your version is <span style="font-weight:bold">'.$g_options['version'].'</span><br />';
-		echo 'You are up to date';
-	} else {
-		echo 'Your version is <span style="color:#C40000;font-weight:bold">'.$g_options['version'].'</span><br />';
-		echo 'Current version is <span style="color:#007F0E;font-size:125%;font-weight:bold">'.$currentversion.'</span>. Updating is recommended.<br />Please go to <a href="http://www.hlxcommunity.com" target="_blank">hlxcommunity.com</a> for releases and info.';
-	}
-?>
+	Your version is <span style="font-weight:bold"><?php echo $g_options['version']; ?></span><br />
+	<span id="updatecheck">Checking for update...&nbsp;<img src="css/spinner.gif"></span><br />
 	</li>
 </ul>
 <?php
@@ -1207,6 +1189,29 @@ if (!$selTask || !$admintasks[$selTask])
 </tr>
 
 </table>
+<script type="text/javascript">
+String.prototype.rtrim = function() { return this.replace(/\s+$/,""); }
+var xmlhttp;
+if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); }
+else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); }
+xmlhttp.onreadystatechange=function() {
+	if(xmlhttp.readyState==4) {
+		if (xmlhttp.status==200) {
+			if (xmlhttp.responseText.rtrim() == '<?php echo $g_options['version']; ?>') {
+				document.getElementById('updatecheck').innerText = 'You are up to date';
+			} else {
+				document.getElementById('updatecheck').innerHTML = 'Current version is <span style="color:#007F0E;font-size:125%;font-weight:bold">'+xmlhttp.responseText+'</span>. Updating is recommended.<br />'
+				+'Please go to <a href="http://www.hlxcommunity.com" target="_blank">hlxcommunity.com</a> for releases and info.';
+			}
+		} else {
+			document.getElementById('updatecheck').innerHTML = 'Error checking for update:<br />'
+			+xmlhttp.statusText+'<br />';
+		}
+	}
+}
+xmlhttp.open("GET","http://master.hlxcommunity.com/updatecheck/",true);
+xmlhttp.send(null);
+</script>
 
 <?php
 echo $footerscript;

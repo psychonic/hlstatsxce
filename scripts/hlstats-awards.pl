@@ -840,7 +840,8 @@ while( my($game) = $result->fetchrow_array ) {
 					AND hlstats_Players.hideranking=0
 				WHERE
 					hlstats_Players_Awards.game='".&quoteSQL($game)."' AND
-					hlstats_Awards.code='".$code."'
+					hlstats_Awards.code='".$code."' AND
+					hlstats_Awards.awardType<>'V'
 				GROUP BY
 					hlstats_Players_Awards.playerId    	
 				HAVING
