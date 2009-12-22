@@ -741,8 +741,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','builtobject_obj_dispenser', 'Dispenser Here!', 'Dispensers built'),
 ('O','tf','steal_sandvich', 'Mmm, Ham', 'stolen Sandviches'),
 ('O','tf','teleport', 'One to beam up!', 'players Teleported'),
-('W','tf','deflect_arrow', 'Deflected Arrow', 'kills with a deflected arrow'),
-('W','$game','tf_projectile_arrow_fire', 'Fire Flight', 'kills with a Fire Arrow'
+('W','tf','tf_projectile_arrow_fire', 'Fire Flight', 'kills with a Fire Arrow'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -4050,7 +4049,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('deflect_arrow',1,0,'tf','1_deflect_arrow.png','Bronze Deflected Arrow'),
 ('deflect_arrow',5,0,'tf','2_deflect_arrow.png','Silver Deflected Arrow'),
 ('deflect_arrow',10,0,'tf','3_deflect_arrow.png','Gold Deflected Arrow'),
-'ambassador', 1, 0, 'tf', '1_ambassador.png', 'Bronze Ambassador'),
+('ambassador', 1, 0, 'tf', '1_ambassador.png', 'Bronze Ambassador'),
 ('ambassador', 10, 0, 'tf', '3_ambassador.png', 'Gold Ambassador'),
 ('ambassador', 5, 0, 'tf', '2_ambassador.png', 'Silver Ambassador'),
 ('buff_deployed', 1, 0, 'tf', '1_buff_deployed.png', 'Bronze Buff Deploy'),
