@@ -63,6 +63,7 @@
 					('pickaxe', '$game', '{$h}_pickaxe.png', '$level Equalizer', '$awardCount'),
 					('rocketlauncher_directhit', '$game', '{$h}_rocketlauncher_directhit.png', '$level Direct Hit', '$awardCount'),
 					('sandman', '$game', '{$h}_sandman.png', '$level Sandman', '$awardCount'),
+					('shield_blocked', '$game', '{$h}_shield_blocked.png', '$level Broken Razorbacks', '$awardCount'),					
 					('steal_sandvich', '$game', '{$h}_steal_sandvich.png', '$level Steal Sandvich', '$awardCount'),
                     ('sticky_resistance', '$game', '{$h}_sticky_resistance.png', '$level Scottish Resistance', '$awardCount'),
 					('stun', '$game', '{$h}_stun.png', '$level Stun', '$awardCount'),
