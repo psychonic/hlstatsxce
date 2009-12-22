@@ -1,5 +1,5 @@
 HLstatsX Community Edition 1.6.4
-December 21, 2009
+December 22, 2009
  
 + Added new TF2 weapon and action codes for "War" update (Packhead, psychonic)
 + Added missing TF2 awards for Scout (#897) (trawa, Packhead)
@@ -14,6 +14,7 @@ December 21, 2009
 ? Daemon code tidied up slightly more along with more slight optimizations (including #823) (psychonic)
 ! Fixed a case where an administrator could accidentally lock themselves out of the admin area if not careful (ie. setting password to "(encrypted" or similar) (psychonic)
 ! Fixed an issue with hlxce_version and hlxce_webpage not being set at server start under certain conditions (psychonic)
+! Fixed the admin center timing out when our update check server is down (#965) (psychonic, Packhead)
 ! Fixed TRcon not binding to BindIp for rcon socket (psychonic)
 ! Fixed "help" not being blocked by ingame plugin (#914) (Packhead)
 ! Fixed incorrect Favorite Weapon calculation (#908) (Steph D, Packhead)
