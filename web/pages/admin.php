@@ -1176,7 +1176,7 @@ if (!$selTask || !$admintasks[$selTask])
 		}
 	}
 
-	$current_release = trim(file_get_contents('http://www.hlxcommunity.com/updatecheck/'));
+	$current_release = trim(file_get_contents('http://master.hlxcommunity.com/updatecheck/'));
 	$oncurrent = true;
 	if ($current_release && ($current_release != $g_options['version'])) {
 		$oncurrent = false;
