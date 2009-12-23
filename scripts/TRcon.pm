@@ -129,8 +129,6 @@ sub sendrecv
                                       		Proto=>"tcp",
                                             PeerAddr=>$server_object->{address}, 
                                             PeerPort=>$server_object->{port}, 
-                                    		LocalAddr=>$::s_ip,
-											LocalPort=>$::s_rconport,
                             	);
     if (!$self->{"rcon_socket"}) {
       &::printEvent("TRCON", "Cannot setup TCP socket on ".$server_object->{address}.":".$server_object->{port}.": $!");
