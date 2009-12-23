@@ -1,9 +1,10 @@
-HLstatsX Community Edition 1.6.4
-December 22, 2009
+HLstatsX Community Edition 1.6.5
+December 23, 2009
  
++ Added a huge number of new TF2 images for awards, ribbons, and weapons (FernFerret)
 + Added new TF2 weapon and action codes for "War" update (Packhead, psychonic)
 + Added missing TF2 awards for Scout (#897) (trawa, Packhead)
-+ Added various missing TF2 awards and ribbons (#968) (Packhead)
++ Added various missing TF2 weapons, awards, and ribbons (#968) (Packhead)
 + Added ability to move servers between "Games" that share the same "realgame" (psychonic)
 + Added HLX:CE logo on hitbox flash file (BusteR)
 + Added HLX:CE donate link to admin area :3 (psychonic)
@@ -12,10 +13,11 @@ December 22, 2009
 ? Hide option for each game type now uses a checkbox instead of a drop-down box (psychonic)
 ? Game code on Games page in admin area is now read-only to prevent user-caused issues with changing it (psychonic)
 ? Daemon code tidied up slightly more along with more slight optimizations (including #823) (psychonic)
+? Changed behavior for heatmap generation to only generate with valid data. (BoNzO)
+? Added an ini_set for max_execution_time for heatmap generation to prevent timeouts. (BoNzO)
 ! Fixed a case where an administrator could accidentally lock themselves out of the admin area if not careful (ie. setting password to "(encrypted" or similar) (psychonic)
 ! Fixed an issue with hlxce_version and hlxce_webpage not being set at server start under certain conditions (psychonic)
 ! Fixed the admin center timing out when our update check server is down (#965) (psychonic, Packhead)
-! Fixed TRcon not binding to BindIp for rcon socket (psychonic)
 ! Fixed "help" not being blocked by ingame plugin (#914) (Packhead)
 ! Fixed incorrect Favorite Weapon calculation (#908) (Steph D, Packhead)
 ! Fixed "to-all" messages just showing a "2" using hlx_sm_psay2 (psychonic)
@@ -26,12 +28,6 @@ December 22, 2009
 ! Fixed update check telling admin to upgrade when showing installation as being up-to-date. (Packhead)
 ! Daemon now correctly uses player ip address from connect log line when able instead of doing "rcon status" to retrieve it (psychonic)
  
-Heatmap changes (BoNzO)
-+ Added an ini_set for max_execution_time for heatmap generation to prevent timeouts.
-+ Added check on db settings and the existance of required table in db.
-+ Added check for gd, pnp, jpg, ttf support in your php.
-+ Added check on write permissions for heatmap filedirs for generated images.
-? Changed behavior for heatmap generation to only generate with valid data.
 
 HLstatsX Community Edition 1.6.3
 December 03, 2009
