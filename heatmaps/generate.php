@@ -6,13 +6,8 @@ ini_set("memory_limit", "32M");
 require_once 'config.inc.php';
 require_once 'heatmap.class.php';
 
-Req::checkDB();
-Req::checkGdSupport();
-Req::checkDirsWritable();
-
 $heat = new Heatmap;
 $heat->init();
-
 
 foreach (Env::get('mapinfo') as $game => $gameconf) {
         foreach ($gameconf as $map => $data) {
