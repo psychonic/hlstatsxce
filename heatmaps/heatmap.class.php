@@ -580,6 +580,7 @@ class DB {
 	public static function connect () {
 		mysql_connect(DB_HOST, DB_USER, DB_PASS);
 		mysql_select_db(DB_NAME);
+		show::Event("DB", "Connected to " . DB_NAME . " as " . DB_USER . "@" . DB_HOST, 1);
 	}
 
 	public static function doQuery ($query) {
@@ -587,7 +588,7 @@ class DB {
 	}
 
 	public static function getAssoc ($result) {
-		return mysql_fetch_assoc($result);
+		return  mysql_fetch_assoc($result);
 	}
 
 	public static function numRows ($result) {
@@ -603,82 +604,4 @@ class show {
 	}
 }
 
-class req {
-	public static function checkGdSupport () {
-		// Check if the function gd_info exists (great way to know if gd is istalled)
-		if (function_exists("gd_info")) {
-			Show::Event("REQ", "GD support found on your server", 3);
-			$gd = gd_info();
-	 
-			// Show status of all values that might be supported(unsupported)
-			foreach ($gd as $key => $value) {
-				switch ($key) {
-					case "FreeType Support":
-						$string = $value ? "Yes" : "No";
-						Show::Event("REQ", " $key: $string", 3);
-						break;
-					case "FreeType Linkage":
-						$string = $value ? "Yes" : "No";
-						Show::Event("REQ", " $key: $string", 3);
-						break;
-					case "JPG Support":
-						$string = $value ? "Yes" : "No";
-						Show::Event("REQ", " $key: $string", 3);
-						break;
-					case "PNG Support":
-						$string = $value ? "Yes" : "No";
-						Show::Event("REQ", " $key: $string", 3);
-						break;
-					default:
-				}
-			}
-		} else {
-			Show::Event("REQ", "No GD support on your server", 0);
-			exit;
-		}
-	}
-
-	public static function checkDB () {
-		if (@mysql_connect(DB_HOST, DB_USER, DB_PASS)) {
-			if (@mysql_select_db(DB_NAME)) {
-				$sql = "SHOW TABLES FROM " . DB_NAME . " WHERE Tables_in_" . DB_NAME . " = 'hlstats_Heatmap_Config'";
-				$result = mysql_query($sql);
-				if (@mysql_num_rows($result)) {
-					Show::Event("REQ", "DB Settings: OK", 3);
-				} else {
-					Show::Event("REQ", "DB table 'hlstats_Heatmap_Config' doesn't seems to exists in your db", 0);
-					exit;
-				}
-			} else {
-				Show::Event("REQ", "Verify DB settings, can't select db '" . DB_NAME . "'", 0);
-				exit;
-			}
-		} else {
-			Show::Event("REQ", "Verify DB settings, can't connect as '" . DB_USER . "'@'" . DB_HOST . "'", 0);
-			exit;
-		}
-	}
-
-	public static function checkDirsWritable () {
-		DB::Connect();	
-		Heatmap::mapinfo();
-		$mapinfo = Env::get('mapinfo');
-		//$path = HLXCE_WEB . "/hlstatsimg/games/" . $mapinfo[$code][$map]['code'] . "/heatmaps";
-		if (file_exists(HLXCE_WEB)) {
-			Show::Event("REQ", "HLXCE_WEB is writable.", 3);
-			foreach ($mapinfo as $game => $val) {
-				$path = HLXCE_WEB . "/hlstatsimg/games/" . $game . "/heatmaps";
-				if (!is_writable($path)) {
-					Show::Event("REQ", "Path: $path is not writable", 0);
-					exit;
-				} else {
-					Show::Event("REQ", "Path: $path is writable", 3);
-				}
-			}
-		} else {
-			Show::Event("REQ", "HLXCE_WEB is NOT writable.", 1);
-			exit;
-		}
-	}
-}
 ?>
