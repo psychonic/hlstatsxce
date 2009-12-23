@@ -27,7 +27,8 @@ December 23, 2009
 ! Fixed a typo in show_graph.php that caused the graphs not to generate when the style was changed. (#928) (Warbucks)
 ! Fixed update check telling admin to upgrade when showing installation as being up-to-date. (Packhead)
 ! Daemon now correctly uses player ip address from connect log line when able instead of doing "rcon status" to retrieve it (psychonic)
- 
+
+
 
 HLstatsX Community Edition 1.6.3
 December 03, 2009
