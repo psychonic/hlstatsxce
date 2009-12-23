@@ -1340,7 +1340,6 @@ $db_lowpriority = 1;
 
 $s_ip = "";
 $s_port = "27500";
-$s_rconport = "";
 
 $g_mailto = "";
 $g_mailpath = "/bin/mail";
@@ -1401,7 +1400,6 @@ a MySQL database.
       --dns-timeout=SEC           timeout DNS queries after SEC seconds  [$g_dns_timeout]
   -i, --ip=IP                     set IP address to listen on for UDP log data
   -p, --port=PORT                 set port to listen on for UDP log data  [$s_port]
-  -rp --rconport=PORT			  set source port for rcon connections	[$s_rconport]
   -r, --rcon                      enables rcon command exec support (the default)
       --norcon                    disables rcon command exec support
   -s, --stdin                     read log data from standard input, instead of
@@ -1585,7 +1583,6 @@ if ($opt_configfile && -r $opt_configfile) {
 		"DBLowPriority",		"db_lowpriority",
 		"BindIP",					"s_ip",
 		"Port",						"s_port",
-		"RconSourcePort",			"s_rconport",
 		"DebugLevel",			"g_debug"
 	);
 
@@ -1643,7 +1640,6 @@ GetOptions(
 	"dns-timeout=i"		=> \$copts{g_dns_timeout},
 	"ip|i=s"			=> \$copts{s_ip},
 	"port|p=i"			=> \$copts{s_port},
-	"rconport|rp=i"		=> \$copts{s_rconport},
 	"rcon!"				=> \$copts{g_rcon},
 	"r"					=> \$copts{g_rcon},
 	"stdin!"			=> \$copts{g_stdin},
@@ -1661,8 +1657,6 @@ if ($configfile && -r $configfile) {
     $conf->parse();
 	&doConf($conf, %directives);
 }
-
-$s_rconport = $s_port if (!$s_rconport);
 
 # these are set above, we then reload them to override values in the actual config
 setOptionsConf(%copts);
