@@ -740,7 +740,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','defended_medic', 'Get behind me doctor!', 'Medics defended'),
 ('W','tf','demoshield', 'Got something for ya!', 'kills with the Chargin'' Targe'),
 ('O','tf','builtobject_obj_dispenser', 'Dispenser Here!', 'Dispensers built'),
-('O','tf','steal_sandvich', 'Mmm, Ham', 'stolen Sandviches'),
+('P','tf','steal_sandvich', 'Mmm, Ham', 'stolen Sandviches'),
 ('O','tf','teleport', 'One to beam up!', 'players Teleported'),
 ('W','tf','tf_projectile_arrow_fire', 'Fire Flight', 'kills with the Flaming Huntsman'),
 ('O','tf','killed_charged_medic', 'Juice Loosener', 'Charged Medics killed'),
@@ -3184,8 +3184,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '23', 2),
-('version', '1.6.4', 1),
+('dbversion', '25', 2),
+('version', '1.6.5', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
 ('Rcon', '1',0),
