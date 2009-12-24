@@ -40,7 +40,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	{
 		die('Do not access this file directly.');
 	}
-	require ('livestats.php');
+	require (PAGE_PATH . '/livestats.php');
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
 	if ($db->num_rows() < 1) {
 		error("No such game '$game'.");
