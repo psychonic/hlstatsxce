@@ -1556,7 +1556,7 @@ sub readDatabaseConfig()
 	my $geotell = ((!defined($g_gi)) ? -1 : tell $g_gi{fh});
 	
 	if ($g_geoip_binary > 0 && $geotell == -1) {
-		my $geoipfile = "GeoLiteCity/GeoLiteCity.dat";
+		my $geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
 		if (-r $geoipfile) {
 			$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
 		} else {
