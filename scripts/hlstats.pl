@@ -222,7 +222,7 @@ sub send_global_chat
 	my ($message) = @_;
 	while( my($server) = each(%g_servers))
 	{	
-		if ($server ne $s_addr)
+		if ($server ne $s_addr && $g_servers{$server}->{"srv_players"})
 		{
 			my @userlist;
 			my %players_temp=%{$g_servers{$server}->{"srv_players"}};
