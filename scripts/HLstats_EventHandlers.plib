@@ -49,7 +49,7 @@ sub get_fav_weapon  {
 			hlstats_Events_Frags,hlstats_Servers
 		WHERE
 			hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Frags.killerId='".$player->{playerid}."'
+			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Frags.killerId=".$player->{playerid}."
 		GROUP BY
 			hlstats_Events_Frags.weapon
 		ORDER BY
@@ -66,7 +66,7 @@ sub get_fav_weapon  {
 			hlstats_Events_Statsme, hlstats_Servers
 		WHERE
 			hlstats_Servers.serverId=hlstats_Events_Statsme.serverId
-			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Statsme.PlayerId='".$player->{playerid}."'
+			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Statsme.PlayerId=".$player->{playerid}."
 			AND hlstats_Events_Statsme.weapon='".&quoteSQL($fav_weapon)."'
 		LIMIT 0,1	
 	");

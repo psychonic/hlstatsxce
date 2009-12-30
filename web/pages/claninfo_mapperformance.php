@@ -98,7 +98,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			
 		),
 		'map',
-		'kpd',
+		'kills',
 		'kills',
 		true,
 		9999,
