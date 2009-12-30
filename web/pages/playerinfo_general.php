@@ -332,7 +332,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 								SELECT
 									hlstats_Events_Frags.weapon,
 									hlstats_Weapons.name,
-									COUNT(hlstats_Events_Frags.weapon) AS cnt
+									COUNT(hlstats_Events_Frags.weapon) AS kills,
+									SUM(hlstats_Events_Frags.headshot=1) as headshots
 								FROM
 									hlstats_Events_Frags
 								LEFT JOIN
@@ -344,7 +345,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								GROUP BY
 									hlstats_Events_Frags.weapon
 								ORDER BY
-									cnt DESC
+									kills desc, headshots desc
 								LIMIT
 									1
 							");
@@ -364,7 +365,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 							}
 							else
 							{
-								$cellbody = "\t\t\t\t\t<td><b> $weaponlink$weap_name</b>";
+								$cellbody = "\t\t\t\t\t<td><strong> $weaponlink$weap_name</strong>";
 							}
 							$cellbody .= "</a>";
 							echo $cellbody;

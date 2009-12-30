@@ -173,7 +173,7 @@ printSectionTitle('Clan Information');
             </tr>
 
 			<tr class="bg1">
-				<td>Favourite Server:*</td>
+				<td>Favorite Server:*</td>
 				<td colspan="2"><?php
 					$db->query("
 						SELECT
@@ -206,7 +206,7 @@ printSectionTitle('Clan Information');
 		    </tr>
 
             <tr class="bg2">
-		    	<td>Favourite Map:*</td>
+		    	<td>Favorite Map:*</td>
     			<td colspan="2"><?php
 					$db->query("
 						SELECT
@@ -236,44 +236,49 @@ printSectionTitle('Clan Information');
             <tr class="bg1">
                 <td>Favorite Weapon:*</td>
                 <td colspan="2"><?php
-					$db->query("
+					$result = $db->query("
 						SELECT
 							hlstats_Events_Frags.weapon,
-							COUNT(hlstats_Events_Frags.weapon) AS player_kills
+							hlstats_Weapons.name,
+							COUNT(hlstats_Events_Frags.weapon) AS kills,
+							SUM(hlstats_Events_Frags.headshot=1) as headshots
 						FROM
 							hlstats_Events_Frags
-						LEFT JOIN
+						INNER JOIN
 							hlstats_Weapons
 						ON
 							hlstats_Weapons.code = hlstats_Events_Frags.weapon
 						INNER JOIN 
                             hlstats_Players
 						ON
-							(hlstats_Events_Frags.killerId=hlstats_Players.playerId)   
+							hlstats_Events_Frags.killerId=hlstats_Players.playerId
 						WHERE
 							clan=$clan
+						AND
+						    hlstats_Weapons.game='$game'
 						GROUP BY
 							hlstats_Events_Frags.weapon
 						ORDER BY
-							player_kills DESC, weapon
+							kills desc, headshots desc
+						LIMIT 1
                     ");
                      
-                    list($fav_weapon) = $db->fetch_row();
-                    
-                    if ($fav_weapon == '')
-					{
-						$fav_weapon = 'Unknown';
+					while ($rowdata = $db->fetch_row($result))
+					{ 
+						$fav_weapon = $rowdata[0];
+						$weap_name = htmlspecialchars($rowdata[1]);
 					}
-
-                    $colval = strtolower(preg_replace('/[ \r\n\t]*/', '', $fav_weapon));
-                    $image = getImage("/games/$game/weapons/$colval");
+					if ($fav_weapon == '')
+						$fav_weapon = 'Unknown';
+					$image = getImage("/games/$game/weapons/$fav_weapon");
                     // check if image exists
-					
+					$weaponlink = "<a href=\"hlstats.php?mode=weaponinfo&amp;weapon=$fav_weapon&amp;game=$game\">";
+						$cellbody = "$weaponlink<img src=\"" . $image['url'] . "\" alt=\"$weap_name\" title=\"$weap_name\" />";
                     if ($image) {
-						$cellbody = '<img src="' . $image['url'] . '" alt="' . strToUpper($colval) . '" />';
                     } else {
-						$cellbody = '<strong>'.strToUpper($colval).'</strong>';
+						$cellbody = "$weaponlink<strong> $weaponlink$weap_name</strong>";
                     }
+					$cellbody .= "</a>";
                     echo $cellbody;
                ?></td>
             </tr>

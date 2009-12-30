@@ -131,6 +131,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Players.playerId=hlstats_Events_Frags.killerId
 		WHERE
 			clan=$clan
+		AND
+			hlstats_Weapons.game='$game'
 		GROUP BY
 			hlstats_Events_Frags.weapon
 		ORDER BY
