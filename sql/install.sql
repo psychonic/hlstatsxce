@@ -120,7 +120,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '', '', ''),
 ('tf', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '', '', ''),
 ('tf', 'sandvich', 0, 0, '', 'Ate a Sandvich', '1', '', '', ''),
-('tf', 'crit_kill', -1, 0, '', 'Critical Kill', '1', '', '', ''),
+('tf', 'crit_kill', 0, 0, '', 'Critical Kill', '1', '', '', ''),
 ('tf', 'force_suicide', 0, 0, '', 'Force Suicide', '1', '', '', ''),
 ('tf', 'hit_by_train', 0, 0, '', 'LOL TRAIN''D', '1', '', '', ''),
 ('tf', 'first_blood', 1, 0, '', 'First Blood', '1', '', '', ''),
