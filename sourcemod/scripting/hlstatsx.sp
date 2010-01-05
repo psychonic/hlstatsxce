@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.5"
+#define VERSION "1.6.6-pre1"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -149,7 +149,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_AOC:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -529,7 +529,7 @@ public OnClientDisconnect(client)
 color_player(color_type, player_index, String: client_message[192]) 
 {
 	new color_player_index = -1;
-	if (g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
+	if (g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
 	{
 		decl String: client_name[192];
 		GetClientName(player_index, client_name, sizeof(client_name));
@@ -542,7 +542,7 @@ color_player(color_type, player_index, String: client_message[192])
 				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
-					case Game_DODS, Game_HL2MP, Game_GES:
+					case Game_DODS, Game_GES:
 						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
 					case Game_ZPS:
 						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
@@ -595,7 +595,7 @@ color_player(color_type, player_index, String: client_message[192])
 color_all_players(String: message[192]) 
 {
 	new color_index = -1;
-	if ((g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_HL2MP) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
+	if ((g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
 	{
 		if (strcmp(message, "") != 0)
 		{
