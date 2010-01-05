@@ -744,6 +744,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','teleport', 'One to beam up!', 'players Teleported'),
 ('W','tf','tf_projectile_arrow_fire', 'Fire Flight', 'kills with the Flaming Huntsman'),
 ('O','tf','killed_charged_medic', 'Juice Loosener', 'Charged Medics killed'),
+('W','tf','ball', 'Fly Ball', 'kills with the Baseball'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -3184,7 +3185,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '25', 2),
+('dbversion', '26', 2),
 ('version', '1.6.5', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
@@ -4924,6 +4925,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf','taunt_demoman', 'Demoman Taunt', 5.0),				
 ('tf','taunt_soldier', 'Soldier Taunt', 5.0),
 ('tf','demoshield', 'Chargin'' Targe', 2.0),
+('tf','ball', 'Baseball', 2.5),
 ('css','knife','Bundeswehr Advanced Combat Knife',2.00),
 ('css','usp','H&K USP .45 Tactical',1.40),
 ('css','glock','Glock 18 Select Fire',1.40),
