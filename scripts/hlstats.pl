@@ -1048,6 +1048,10 @@ sub getPlayerInfo
 				$name = "BOT-".$name;
 			}
 		}
+
+		if ($ipAddr eq "none") {
+			$ipAddr = "";
+		}
 		
 		if ($forced_uniqueid) {
 			$uniqueid = $forced_uniqueid;
