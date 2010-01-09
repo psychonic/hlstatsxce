@@ -47,5 +47,5 @@ echo Downloading a new copy of GeoLiteCity, if needed.
 wget -N -q $URL$FILE
 echo Uncompressing database
 gzip -dc < $FILE > $(basename $FILE .gz)
-
+chmod 777 *.dat
 echo Done
