@@ -445,7 +445,11 @@ sub doEvent_Connect
 					my $steamid = $player->{uniqueid};
 					my $p_steamid = $player->{plain_uniqueid};
 					if ($g_servers{$s_addr}->is_admin($steamid) == 0) {
-						$g_servers{$s_addr}->dorcon("kickid $p_steamid Not a Top".$min_players_rank."-Player");
+						if ($g_servers{$s_addr}->{game_engine} == 1) {
+							$g_servers{$s_addr}->dorcon("kick# $playerId Not a Top ".$min_players_rank."-Player");
+						} else {
+							$g_servers{$s_addr}->dorcon("kickid $p_steamid Not a Top ".$min_players_rank."-Player");
+						}
 					}
 				}
 			}  
