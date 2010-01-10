@@ -147,8 +147,8 @@ sub new
 	$self->{plain_uniqueid} = $params{plain_uniqueid};
 	$self->setUniqueId($params{uniqueid});
 	$self->setName($params{name});
-	$self->getAddress();
 	$self->flushDB();
+	$self->getAddress();
 
 
 
@@ -641,7 +641,6 @@ sub flushDB
 			SET
 				connection_time = connection_time + ?,
 				lastName=?,
-				lastAddress=?,
 				clan=?,
 				kills=kills + ?,
 				deaths=deaths + ?,
@@ -659,7 +658,7 @@ sub flushDB
 			WHERE
 				playerId=?
 		";
-		my @vals = ($add_connect_time, $name, $address, $clan, $kills, $deaths, $suicides, $skill, 
+		my @vals = ($add_connect_time, $name, $clan, $kills, $deaths, $suicides, $skill, 
 			$headshots, $shots, $hits, $::ev_unixtime, $last_skill_change, $death_streak,
 			$kill_streak, $playerid);
 		&::execCached("player_flushdb_player_2", $query, @vals);
@@ -851,13 +850,26 @@ sub getAddress
 		
 		&::printNotice("rcon_getaddress");
 		my $result = $::g_servers{$s_addr}->rcon_getaddress($self->{uniqueid});
-		if ($result) {
+		if ($result->{Address} ne "") {
 			$self->{address}  = $result->{Address};
 			$self->{cli_port} = $result->{ClientPort};
 			$self->{ping}     = $result->{Ping};
-		
+
 			&::printEvent("RCON", "Got Address $self->{address} for Player $self->{name}", 1);
 			&::printNotice("rcon_getaddress successfully");
+		
+			# Update player IP address in database
+			my $query = "
+				UPDATE
+					hlstats_Players
+				SET
+					lastAddress=?
+				WHERE
+					playerId=?
+			";
+			my @vals = ($self->{address}, $self->{playerid});
+			&::execCached("player_update_lastaddress", $query, @vals);
+			&::printEvent("DEBUG", "Updated IP for ".$self->{playerid}." to ".$self->{address});
 		}
 		$self->geoLookup();
 	}
