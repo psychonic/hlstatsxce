@@ -70,6 +70,8 @@ $|=1;
 Getopt::Long::Configure ("bundling");
 
 
+binmode STDIN, ":utf8";
+binmode STDOUT, ":utf8";
 
 ##
 ## MAIN
@@ -876,7 +878,7 @@ $useGeoIPBinary = 0;
 if ($result->rows > 0)
 {
 	$useGeoIPBinary = 1;
-	$gi = Geo::IP::PurePerl->open("GeoLiteCity/GeoLiteCity.dat", GEOIP_STANDARD);
+	$gi = Geo::IP::PurePerl->open("$opt_libdir/GeoLiteCity/GeoLiteCity.dat", GEOIP_STANDARD);
 }
 
 sub ip2number {

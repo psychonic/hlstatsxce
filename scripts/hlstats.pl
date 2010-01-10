@@ -1722,7 +1722,7 @@ $ev_unixtime  = time();
 
 # Startup
 
-&printEvent("HLSTATSX", "HLstatsX $g_version starting...", 1);
+&printEvent("HLSTATSX", "HLstatsX:CE $g_version starting...", 1);
 
 # Create the UDP & TCP socket
 
