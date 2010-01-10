@@ -55,7 +55,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->free_result();
 	if (isset($_GET['minkills']))
 	{
-		$minkills = valid_request(intval($_GET['minkills']), 1);
+		$minkills = valid_request($_GET['minkills'], 1);
 	}
 	else
 	{

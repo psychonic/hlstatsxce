@@ -44,7 +44,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$showserver=0;
 	if (isset($_GET['server_id']))
 	{
-		$showserver = valid_request(strval($_GET['server_id']), 0);
+		$showserver = valid_request(strval($_GET['server_id']), true);
 	}
 	if ($showserver == 0)
 	{
@@ -52,7 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 	else
 	{
-		$whereclause = "hlstats_Servers.game='$game' AND hlstats_Events_Chat.serverId=".$db->escape($showserver);
+		$whereclause = "hlstats_Servers.game='$game' AND hlstats_Events_Chat.serverId=$showserver");
 	}
 	$db->query
 	("
@@ -86,7 +86,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				FROM
 					hlstats_Servers
 				WHERE
-					hlstats_Servers.serverId = '".$db->escape($showserver)."'
+					hlstats_Servers.serverId = ".$db->escape($showserver)."
 			")
 		);
 		$servername = $result['name'];

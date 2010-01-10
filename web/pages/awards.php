@@ -48,9 +48,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	list($gamename) = $db->fetch_row();
 	$db->free_result();
-	if ( $_GET['type'] == 'ajax' )
+	
+	$type = valid_request($_GET['type']);
+	$tab = valid_request($_GET['tab']);
+	
+	if ($type == 'ajax' )
 	{
-		$tabs = explode('|', preg_replace('[^a-z]', '', $_GET['tab']));
+		$tabs = explode('|', preg_replace('[^a-z]', '', $tab));
 		
 		foreach ( $tabs as $tab )
 		{
@@ -79,9 +83,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br />
 <div id="main_content"></div>
 <?php
-if ($_GET['tab'])
+if ($tab)
 {
-	$defaulttab = $_GET['tab'];
+	$defaulttab = $tab;
 }
 else
 {
