@@ -41,7 +41,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		die('Do not access this file directly.');
 	}
 // Player Awards History 
-	$player = valid_request(intval($_GET['player']), 1)
+	$player = valid_request($_GET['player'], 1)
 		or error("No player ID specified.");
 	$db->query
 	("
@@ -104,17 +104,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$lnktext = '&link='.urlencode("mode=playerawards&player=".$player."&amp;awardId=%k");
 	if (isset($_GET['awardId']))
 	{
-		$awardId = valid_request($_GET['awardId'], 0); 
+		$awardId = valid_request($_GET['awardId'], true) or error("No clan ID specified."); 
 	}
-	if (!is_numeric($awardId))
-	{
-		unset($awardId);
-	}
-	else
-	{
-		$cnttext = 'Kills on Day';
-		$lnktext = '';
-	}
+
+	$cnttext = 'Kills on Day';
+	$lnktext = '';
+
 	$table = new Table
 	(
 		array

@@ -198,7 +198,7 @@ $result = $db->query("
 	FROM 
 		hlstats_Servers
 	WHERE 
-		serverId='$server_id'");
+		serverId=$server_id");
 $server_data = $db->fetch_array($result);
 
 if ($small_fonts == 1)
@@ -372,7 +372,7 @@ if ($server_data['addr'] != '')  {
 			ON
 				code = team
 			AND
-				hlstats_Teams.game = '$game'
+				hlstats_Teams.game = '{$db->escape($game)}'
 			ORDER BY 
 				playerlist_index
 			LIMIT 0 , 30
@@ -384,7 +384,6 @@ if ($server_data['addr'] != '')  {
 
 		while ($thisteam = $db->fetch_array($statsdata))
 		{
-			$teamname = $db->escape($thisteam['team']);
 			$teamdata[$teamno] = $thisteam;
 			$pldata = $db->query("
 				SELECT
@@ -404,7 +403,7 @@ if ($server_data['addr'] != '')  {
 					hlstats_Livestats 
 				WHERE 
 					server_id = $server_id 
-					AND team = '$teamname'
+					AND team = '{$db->escape($thisteam['team'])}'
 				ORDER BY 
 					kills DESC
 			");
@@ -542,7 +541,7 @@ if ($server_data['addr'] != '')  {
 			FROM 
 				hlstats_Players 
 			WHERE 
-				game='$game' 
+				game='{$db->escape($game)}'
 				AND hideranking=0
 			ORDER BY
 				skill DESC, 

@@ -44,7 +44,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	// Ribbon Statistics
 
-	$ribbon =  valid_request($_GET['ribbon'], 0)
+	$ribbon =  valid_request($_GET['ribbon'], true)
 		or error('No ribbon ID specified.');
 
 

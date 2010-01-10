@@ -102,7 +102,7 @@ function valid_request($str, $numeric = false)
 	else
 	{
 		if ( is_numeric($str) )
-			return htmlspecialchars($str, ENT_QUOTES);
+			return intval($str);
 		else
 			return -1;
 	}

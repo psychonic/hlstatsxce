@@ -16,12 +16,12 @@ else
         error('Database class does not exist.  Please check your config.php file for DB_TYPE');
 }
 
-$search = $_POST['value'];
-$game = $_GET['game'];
+$game = valid_request($_GET['game']);
+$search = valid_request($_POST['value']);
  
 if (is_string($search) && strlen($search) >= 3 && strlen($search) < 64) {
 	// Building the query
-	$sql = "SELECT hlstats_PlayerNames.name FROM hlstats_PlayerNames INNER JOIN hlstats_Players ON hlstats_PlayerNames.playerId = hlstats_Players.playerId WHERE game = '$game' AND name LIKE '$search%'";
+	$sql = "SELECT hlstats_PlayerNames.name FROM hlstats_PlayerNames INNER JOIN hlstats_Players ON hlstats_PlayerNames.playerId = hlstats_Players.playerId WHERE game = '{$db->escape($game)}' AND name LIKE '{$db->escape($search)}%'";
 	$result = $db->query($sql);
 	while($row=$db->fetch_row($result)) {
 		print "<li class=\"playersearch\">" . $row[0] . "</li>\n";

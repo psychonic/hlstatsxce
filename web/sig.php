@@ -145,8 +145,8 @@ if (!$g_options['scripturl'])
 			FROM
 				hlstats_PlayerUniqueIds
 			WHERE
-				uniqueId = '$steam_id' AND
-				game = '$game'
+				uniqueId = '{$db->escape($steam_id)}' AND
+				game = '{$db->escape($game)}'
 		");
 		
 		if ($db->num_rows() != 1)
