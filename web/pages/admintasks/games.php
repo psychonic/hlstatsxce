@@ -193,7 +193,7 @@ After creating a game, you will be able to configure servers, awards, etc. for t
 			code ASC
 	");
 	
-	$edlist->draw($result);
+	$edlist->draw($result, false);
 ?>
 
 <table style="width:75%;border:0;" cellspacing="0" cellpadding="0">
