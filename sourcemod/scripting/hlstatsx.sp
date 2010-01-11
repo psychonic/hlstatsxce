@@ -298,114 +298,107 @@ stock MyRemoveServerTag(const String:tag[])
 
 get_server_mod()
 {
+	new String: game_description[64];
+	GetGameDescription(game_description, sizeof(game_description), true);
+	
+	if (StrContains(game_description, "Counter-Strike", false) != -1)
+	{
+		gamemod = Game_CSS;
+	}
+	else if (StrContains(game_description, "Day of Defeat", false) != -1)
+	{
+		gamemod = Game_DODS;
+	}
+	else if (StrContains(game_description, "Half-Life 2 Deathmatch", false) != -1)
+	{
+		gamemod = Game_HL2MP;
+	}
+	else if (StrContains(game_description, "Team Fortress", false) != -1)
+	{
+		gamemod = Game_TF;
+	}
+	else if (StrContains(game_description, "L4D", false) != -1 || StrContains(game_description, "Left 4 D", false) != -1)
+	{
+		gamemod = Game_L4D;
+	}
+	else if (StrContains(game_description, "Insurgency", false) != -1)
+	{
+		gamemod = Game_INSMOD;
+		//psychonic - added detection for more supported games
+	}
+	else if (StrContains(game_description, "Fortress Forever", false) != -1)
+	{
+		gamemod = Game_FF;
+	}
+	else if (StrContains(game_description, "ZPS", false) != -1)
+	{
+		gamemod = Game_ZPS;
+	}
+	else if (StrContains(game_description, "Age of Chivalry", false) != -1)
+	{
+		gamemod = Game_AOC;
+	}
+	
+	// game mod could not detected, try further
 	if (gamemod == Game_Unknown)
 	{
-		new String: game_description[64];
-		GetGameDescription(game_description, sizeof(game_description), true);
-	
-		if (StrContains(game_description, "Counter-Strike", false) != -1)
+		new String: game_folder[64];
+		GetGameFolderName(game_folder, sizeof(game_folder));
+		if (StrContains(game_folder, "cstrike", false) != -1)
 		{
 			gamemod = Game_CSS;
 		}
-		else if (StrContains(game_description, "Day of Defeat", false) != -1)
+		else if (StrContains(game_folder, "dod", false) != -1)
 		{
 			gamemod = Game_DODS;
 		}
-		else if (StrContains(game_description, "Half-Life 2 Deathmatch", false) != -1)
+		else if (StrContains(game_folder, "hl2mp", false) != -1 || StrContains(game_folder, "hl2ctf", false) != -1)
 		{
 			gamemod = Game_HL2MP;
 		}
-		else if (StrContains(game_description, "Team Fortress", false) != -1)
+		else if (StrContains(game_folder, "fistful_of_frags", false) != -1)
+		{
+			gamemod = Game_FOF;
+		}
+		else if (StrContains(game_folder, "tf", false) != -1)
 		{
 			gamemod = Game_TF;
 		}
-		else if (StrContains(game_description, "L4D", false) != -1 || StrContains(game_description, "Left 4 D", false) != -1)
+		else if (StrContains(game_folder, "left4dead", false) != -1)
 		{
 			gamemod = Game_L4D;
 		}
-		else if (StrContains(game_description, "Insurgency", false) != -1)
+		else if (StrContains(game_folder, "insurgency", false) != -1)
 		{
 			gamemod = Game_INSMOD;
-
-		//psychonic - added detection for more supported games
+			//psychonic - added detection for more supported games
 		}
-		else if (StrContains(game_description, "Fortress Forever", false) != -1)
+		else if (StrContains(game_folder, "FortressForever", false) != -1)
 		{
 			gamemod = Game_FF;
 		}
-		else if (StrContains(game_description, "ZPS", false) != -1)
+		else if (StrContains(game_folder, "zps", false) != -1)
 		{
 			gamemod = Game_ZPS;
 		}
-		else if (StrContains(game_description, "Age of Chivalry", false) != -1)
+		else if (StrContains(game_folder, "ageofchivalry", false) != -1)
 		{
 			gamemod = Game_AOC;
 		}
-		
-		// game mod could not detected, try further
-		if (gamemod == Game_Unknown)
+		else if (StrContains(game_folder, "gesource", false) != -1)
 		{
-			new String: game_folder[64];
-			GetGameFolderName(game_folder, sizeof(game_folder));
-
-			if (StrContains(game_folder, "cstrike", false) != -1)
-			{
-				gamemod = Game_CSS;
-			}
-			else if (StrContains(game_folder, "dod", false) != -1)
-			{
-				gamemod = Game_DODS;
-			}
-			else if (StrContains(game_folder, "hl2mp", false) != -1 || StrContains(game_folder, "hl2ctf", false) != -1)
-			{
-				gamemod = Game_HL2MP;
-			}
-			else if (StrContains(game_folder, "fistful_of_frags", false) != -1)
-			{
-				gamemod = Game_FOF;
-			}
-			else if (StrContains(game_folder, "tf", false) != -1)
-			{
-				gamemod = Game_TF;
-			}
-			else if (StrContains(game_folder, "left4dead", false) != -1)
-			{
-				gamemod = Game_L4D;
-			}
-			else if (StrContains(game_folder, "insurgency", false) != -1)
-			{
-				gamemod = Game_INSMOD;
-
-			//psychonic - added detection for more supported games
-			}
-			else if (StrContains(game_folder, "FortressForever", false) != -1)
-			{
-				gamemod = Game_FF;
-			}
-			else if (StrContains(game_folder, "zps", false) != -1)
-			{
-				gamemod = Game_ZPS;
-			}
-			else if (StrContains(game_folder, "ageofchivalry", false) != -1)
-			{
-				gamemod = Game_AOC;
-			}
-			else if (StrContains(game_folder, "gesource", false) != -1)
-			{
-				gamemod = Game_GES;
-			}
-			else
-			{
-				LogToGame("HLX:CE Mod Not In Detected List, Using Defaults (%s, %s)", game_description, game_folder);
-				LogToGame("HLX:CE If this is incorrect, please file a bug at hlxcommunity.com");
-			}
+			gamemod = Game_GES;
 		}
-
-		if (gamemod > Game_Unknown)
+		else
 		{
-			LogToGame("HLX:CE Mod Detection: %s", modnamelist[_:gamemod]);
+			LogToGame("HLX:CE Mod Not In Detected List, Using Defaults (%s, %s)", game_description, game_folder);
 			LogToGame("HLX:CE If this is incorrect, please file a bug at hlxcommunity.com");
 		}
+	}
+	if (gamemod > Game_Unknown)
+	{
+		LogToGame("HLX:CE Mod Detection: %s", modnamelist[_:gamemod]);
+		LogToGame("HLX:CE If this is incorrect, please file a bug at hlxcommunity.com");
 	}
 }
 
