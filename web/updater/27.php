@@ -33,10 +33,10 @@
 			$serverstring = implode (',', $l4d2servers);
 			$db->query("UPDATE `hlstats_Events_ChangeRole` SET `role` = 'SMOKER' WHERE `role` = 'GAS'");
 			$db->query("UPDATE `hlstats_Events_ChangeRole` SET `role` = 'BOOMER' WHERE `role` = 'EXPLODING'");
-			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'SMOKER' WHERE `role` = 'GAS'");
-			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'BOOMER' WHERE `role` = 'EXPLODING'");
-			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'SMOKER' WHERE `role` = 'GAS'");
-			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'BOOMER' WHERE `role` = 'EXPLODING'");
+			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'SMOKER' WHERE `killerRole` = 'GAS'");
+			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'BOOMER' WHERE `killerRole` = 'EXPLODING'");
+			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'SMOKER' WHERE `victimRole` = 'GAS'");
+			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'BOOMER' WHERE `victimRrole` = 'EXPLODING'");
 		}
 	}
 
