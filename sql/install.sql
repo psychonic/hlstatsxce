@@ -3185,8 +3185,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '26', 2),
-('version', '1.6.5', 1),
+('dbversion', '28', 2),
+('version', '1.6.6', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
 ('Rcon', '1',0),
