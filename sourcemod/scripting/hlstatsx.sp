@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.6-pre1"
+#define VERSION "1.6.6-pre2"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -54,6 +54,8 @@ new GameType:gamemod;
 new Handle: hlx_block_chat_commands;
 new Handle: hlx_message_prefix;
 new Handle: hlx_protect_address;
+new Handle: hlx_server_tag;
+new Handle: sv_tags;
 new Handle: message_recipients;
 new const String: blocked_commands[][] = { "rank", "skill", "points", "place", "session", "session_data", 
                                      "kpd", "kdratio", "kdeath", "next", "load", "status", "servers", 
@@ -103,6 +105,10 @@ new String: message_prefix[32];
 new bool:g_bPlyrCanDoMotd[MAXPLAYERS+1];
 new bool:g_bGameCanDoMotd = true;
 new bool:g_bTrackColors4Chat;
+new bool:g_bServerTagAdded;
+new g_iSDKVersion = SOURCE_SDK_UNKNOWN;
+new Handle:g_cvarTeamPlay = INVALID_HANDLE;
+new g_bTeamPlay;
 
 public Plugin:myinfo = {
 	name = "HLstatsX CE Ingame Plugin",
@@ -164,15 +170,30 @@ public OnPluginStart()
 		}
 	}
 	
+	if (gamemod == Game_HL2MP)
+	{
+		g_cvarTeamPlay = FindConVar("mp_teamplay");
+		if (g_cvarTeamPlay != INVALID_HANDLE)
+		{
+			g_bTeamPlay = GetConVarBool(g_cvarTeamPlay);
+			HookConVarChange(g_cvarTeamPlay, OnTeamPlayChange);
+		}
+	}
+	
 	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
 	CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
 	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
 	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_PLUGIN);
 	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message", FCVAR_PLUGIN);
 	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
+	hlx_server_tag = CreateConVar("hlx_server_tag", "1", "If enabled, adds \"HLstatsX:CE\" to server tags on supported games. 1 = Enabled (default), 0 = Disabled",
+		FCVAR_PLUGIN, true, 0.0, true, 1.0);
+		
+	sv_tags = FindConVar("sv_tags");
 	
 	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
+	HookConVarChange(hlx_server_tag, OnServerTagChange);
 	
 	RegServerCmd("log", ProtectLoggingChange);
 	RegServerCmd("logaddress_del", ProtectForwardingChange);
@@ -183,6 +204,9 @@ public OnPluginStart()
 	message_recipients = CreateStack();
 	
 	GetTeams(gamemod == Game_INSMOD);
+	
+	g_iSDKVersion = GuessSDKVersion();
+	DoServerTag();
 }
 
 #if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
@@ -231,13 +255,53 @@ public OnMapStart()
 	}
 }
 
+DoServerTag(bool:enable=true)
+{
+	if (sv_tags != INVALID_HANDLE && g_iSDKVersion < SOURCE_SDK_LEFT4DEAD)
+	{
+		if (enable && !g_bServerTagAdded)
+		{
+			MyAddServerTag("HLstatsX:CE");
+			g_bServerTagAdded = true;
+		}
+		else if (!enable && g_bServerTagAdded)
+		{
+			MyRemoveServerTag("HLstatsX:CE");
+			g_bServerTagAdded = false;
+		}
+	}
+}
+
+stock MyAddServerTag(const String:tag[])
+{
+	decl String:currtags[128];
+	if (sv_tags != INVALID_HANDLE)
+	{
+		GetConVarString(sv_tags, currtags, sizeof(currtags));
+		decl String:newtags[128];
+		Format(newtags, sizeof(newtags), "%s%s%s", currtags, (currtags[0]!=0)?",":"", tag);
+		SetConVarString(sv_tags, newtags);
+	}	
+}
+
+stock MyRemoveServerTag(const String:tag[])
+{
+	decl String:newtags[128];
+	if (sv_tags != INVALID_HANDLE)
+	{
+		GetConVarString(sv_tags, newtags, sizeof(newtags));
+		ReplaceString(newtags, sizeof(newtags), "HLstatsX:CE", "");
+		ReplaceString(newtags, sizeof(newtags), ",,", "");
+		SetConVarString(sv_tags, newtags);
+	}
+}
 
 get_server_mod()
 {
 	if (gamemod > Game_Unknown)
 	{
 		new String: game_description[64];
-		GetGameDescription(game_description, 64, true);
+		GetGameDescription(game_description, sizeof(game_description), true);
 	
 		if (StrContains(game_description, "Counter-Strike", false) != -1)
 		{
@@ -279,10 +343,10 @@ get_server_mod()
 		}
 		
 		// game mod could not detected, try further
-		if (gamemod > Game_Unknown)
+		if (gamemod == Game_Unknown)
 		{
 			new String: game_folder[64];
-			GetGameFolderName(game_folder, 64);
+			GetGameFolderName(game_folder, sizeof(game_folder));
 
 			if (StrContains(game_folder, "cstrike", false) != -1)
 			{
@@ -292,7 +356,7 @@ get_server_mod()
 			{
 				gamemod = Game_DODS;
 			}
-			else if (StrContains(game_folder, "hl2mp", false) != -1)
+			else if (StrContains(game_folder, "hl2mp", false) != -1 || StrContains(game_folder, "hl2ctf", false) != -1)
 			{
 				gamemod = Game_HL2MP;
 			}
@@ -363,6 +427,12 @@ public motdQuery(QueryCookie:cookie, client, ConVarQueryResult:result, const Str
 }
 
 
+public OnServerTagChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	DoServerTag(GetConVarBool(hlx_server_tag));
+}
+
+
 public OnProtectAddressChange(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
 	if (strcmp(newVal, "") != 0)
@@ -374,6 +444,10 @@ public OnProtectAddressChange(Handle:cvar, const String:oldVal[], const String:n
 	}
 }
 
+public OnTeamPlayChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	g_bTeamPlay = GetConVarBool(g_cvarTeamPlay);
+}
 
 public Action:ProtectLoggingChange(args)
 {
@@ -544,6 +618,8 @@ color_player(color_type, player_index, String: client_message[192])
 				{
 					case Game_DODS, Game_GES:
 						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
+					case Game_HL2MP:
+						Format(colored_player_name, sizeof(colored_player_name), "%c%s\x01 ", g_bTeamPlay?3:4, client_name);
 					case Game_ZPS:
 						Format(colored_player_name, sizeof(colored_player_name), "\x05%s\x01 ", client_name);
 					default:

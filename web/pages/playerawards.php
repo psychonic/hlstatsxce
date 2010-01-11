@@ -243,7 +243,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					FROM
 						hlstats_Players
 					WHERE
-						hlstats_Players.playerId = '$player'
+						hlstats_Players.playerId = $player
 				");
 				list($lastName) = $db->fetch_row();
 			?>
