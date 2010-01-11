@@ -924,7 +924,7 @@ else
 if ($gi) {
 	sub ip2number {
 		my ($ipstr) = @_;
-		my @ip = split(/\./, trim($ipstr));
+		my @ip = split(/\./, $ipstr);
 		my $number = ($ip[0]*16777216) + ($ip[1]*65536) + ($ip[2]*256) + $ip[3];
 
 		return $number;
@@ -938,8 +938,9 @@ if ($gi) {
 	$cnt = 0;
 	$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
 			
-	while (my($pid,$address, $name) = $result->fetchrow_array) {
-		next if ($address !~ /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+	while (my($pid, $address, $name) = $result->fetchrow_array) {
+		$address = trim($address);
+		next if ($address !~ /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/);
 		print "Attempting to find location for: ".$name." (".$address.")\n";
 		my $number = ip2number($address);
 		my $update = 0;
