@@ -310,8 +310,7 @@ if ($server_data['addr'] != '')  {
 		echo $server_data['act_map']; 
 		echo '</td></tr>';
 	}
-
-	$stamp = time()-$server_data['map_started'];
+	$stamp = $server_data['map_started']==0?0:time() - $server_data['map_started'];
 	$hours = sprintf("%02d", floor($stamp / 3600));
 	$min   = sprintf("%02d", floor(($stamp % 3600) / 60));
 	$sec   = sprintf("%02d", floor($stamp % 60)); 

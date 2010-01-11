@@ -154,7 +154,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		echo $rowdata['act_map'];
                     ?></td>
 			<td class="game-table-cell" style="text-align:center;"><?php
-		$stamp = time()-$rowdata['map_started'];
+		$stamp = $rowdata['map_started']==0?0:time() - $rowdata['map_started'];
 		$hours = sprintf("%02d", floor($stamp / 3600));
 		$min   = sprintf("%02d", floor(($stamp % 3600) / 60));
 		$sec   = sprintf("%02d", floor($stamp % 60)); 
