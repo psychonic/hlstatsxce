@@ -864,6 +864,9 @@ while( my($game) = $result->fetchrow_array ) {
 }
 print "\n++ Ribbons generated successfully.\n";
 
+$useGeoIPBinary = 0;
+
+# Sanity checks to see if we can do geolocation updates
 $result = &doQuery("
 	SELECT
 		value
@@ -874,84 +877,123 @@ $result = &doQuery("
 		AND value > '0'
 	LIMIT 1
 ");
-$useGeoIPBinary = 0;
+
 if ($result->rows > 0)
 {
 	$useGeoIPBinary = 1;
-	$gi = Geo::IP::PurePerl->open("$opt_libdir/GeoLiteCity/GeoLiteCity.dat", GEOIP_STANDARD);
+	$geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
+}
+else
+{
+	$useGeoIPBinary = 0;
 }
 
-sub ip2number {
-	my ($ipstr) = @_;
-	my @ip = split(/\./, trim($ipstr));
-	my $number = ($ip[0]*16777216) + ($ip[1]*65536) + ($ip[2]*256) + $ip[3];
+$gi = undef;
+$dogeo = 0;
 
-	return $number;
-}
-
-sub trim {
-	my $string = shift;
-	$string =~ s/^\s+|\s+$//g;
-	return $string;
-}
-$cnt = 0;
-$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
-		
-while (my($pid,$address, $name) = $result->fetchrow_array) {
-	print "Attempting to find location for: ".$name." (".$address.")\n";
-	my $number = ip2number($address);
-	my $update = 0;
-	my $foundflag = "";
-	my $foundcountry = "";
-	my $foundcity = "";
-	my $foundstate = "";
-	my $foundlat = 0;
-	my $foundlng = 0;
-	if ($useGeoIPBinary > 0) {
-		print "2 ".$pid." ".$address."\n";
-		my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude,
-$metro_code, $area_code) = $gi->get_city_record($address);
-		if ($longitude) {
-			$foundflag = encode("utf8",$country_code);
-			$foundcountry = encode("utf8",$country_name);
-			$foundcity = encode("utf8",$city);
-			$foundstate = encode("utf8",$region);
-			$foundlat = $latitude;
-			$foundlng = $longitude;
-			$update++;
-		}
+if ($useGeoIPBinary == 0)
+{
+	my $result = &doQuery("SELECT locId FROM geoLiteCity_Blocks LIMIT 1;");
+	if ($result->rows > 0)
+	{
+		$dogeo = 1;
 	}
 	else
 	{
-		$result2 = &doQuery("SELECT locId FROM geoLiteCity_Blocks WHERE startIpNum<=".$number." AND endIpNum>=".$number." LIMIT 1;");
-		if ($result2->rows > 0) {
-			my ($locid) = $result2->fetchrow_array;
-			$data = &doQuery("SELECT city, region AS state, name AS country, country AS flag, latitude AS lat, longitude AS lng FROM geoLiteCity_Location a  inner join hlstats_Countries b ON a.country=b.flag WHERE locId=".$locid." LIMIT 1;");
-			if ($data->rows > 0) {
-				($foundcity, $foundstate, $foundcountry, $foundflag, $foundlat, $foundlng) = $data->fetchrow_array;
+		&printEvent("ERROR", "GeoIP method set to database but geoLiteCity tables are empty.", 1);
+	}
+}
+elsif ($useGeoIPBinary == 1 && -r $geoipfile) {
+	$gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+	if ($gi) 
+	{
+		$dogeo = 1;
+	}
+	else
+	{
+		&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile errored while opening.", 1);
+		close($gi{fh});
+	}
+}
+else
+{
+	&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
+}
+
+	
+if ($gi) {
+	sub ip2number {
+		my ($ipstr) = @_;
+		my @ip = split(/\./, trim($ipstr));
+		my $number = ($ip[0]*16777216) + ($ip[1]*65536) + ($ip[2]*256) + $ip[3];
+
+		return $number;
+	}
+
+	sub trim {
+		my $string = shift;
+		$string =~ s/^\s+|\s+$//g;
+		return $string;
+	}
+	$cnt = 0;
+	$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
+			
+	while (my($pid,$address, $name) = $result->fetchrow_array) {
+		next if ($address !~ /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+		print "Attempting to find location for: ".$name." (".$address.")\n";
+		my $number = ip2number($address);
+		my $update = 0;
+		my $foundflag = "";
+		my $foundcountry = "";
+		my $foundcity = "";
+		my $foundstate = "";
+		my $foundlat = 0;
+		my $foundlng = 0;
+		if ($useGeoIPBinary > 0) {
+			print "2 ".$pid." ".$address."\n";
+			my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude, $metro_code, $area_code) = $gi->get_city_record($address);
+			if ($longitude) {
+				$foundflag = encode("utf8",$country_code);
+				$foundcountry = encode("utf8",$country_name);
+				$foundcity = encode("utf8",$city);
+				$foundstate = encode("utf8",$region);
+				$foundlat = $latitude;
+				$foundlng = $longitude;
 				$update++;
 			}
 		}
+		else
+		{
+			$result2 = &doQuery("SELECT locId FROM geoLiteCity_Blocks WHERE startIpNum<=".$number." AND endIpNum>=".$number." LIMIT 1;");
+			if ($result2->rows > 0) {
+				my ($locid) = $result2->fetchrow_array;
+				$data = &doQuery("SELECT city, region AS state, name AS country, country AS flag, latitude AS lat, longitude AS lng FROM geoLiteCity_Location a  inner join hlstats_Countries b ON a.country=b.flag WHERE locId=".$locid." LIMIT 1;");
+				if ($data->rows > 0) {
+					($foundcity, $foundstate, $foundcountry, $foundflag, $foundlat, $foundlng) = $data->fetchrow_array;
+					$update++;
+				}
+			}
+		}
+		if ($update > 0)
+		{
+			&execNonQuery("
+				UPDATE
+					hlstats_Players
+				SET
+					flag='".&quoteSQL($foundflag)."',
+					country='".&quoteSQL($foundcountry)."',
+					lat='".(($foundlat ne "")?$foundlat:undef)."',
+					lng='".(($foundlng ne "")?$foundlng:undef)."',
+					city='".&quoteSQL($foundcity)."',
+					state='".&quoteSQL($foundstate)."'
+				WHERE
+					playerId=".$pid
+			);
+			$cnt++;
+		}
 	}
-	if ($update > 0)
-	{
-		&execNonQuery("
-			UPDATE
-				hlstats_Players
-			SET
-				flag='".&quoteSQL($foundflag)."',
-				country='".&quoteSQL($foundcountry)."',
-				lat='".(($foundlat ne "")?$foundlat:undef)."',
-				lng='".(($foundlng ne "")?$foundlng:undef)."',
-				city='".&quoteSQL($foundcity)."',
-				state='".&quoteSQL($foundstate)."'
-			WHERE
-				playerId=".$pid
-		);
-		$cnt++;
-	}
+	print "\n++ Missing locations found for ".$cnt." players.\n";
 }
-print "\n++ Missing locations found for ".$cnt." players.\n";
 
 $result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
 my $g_deletedays;
