@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.6"
+#define VERSION "1.6.6.1"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -49,7 +49,7 @@ enum GameType {
 	Game_GES
 };
 
-new GameType:gamemod;
+new GameType:gamemod = Game_Unknown;
 
 new Handle: hlx_block_chat_commands;
 new Handle: hlx_message_prefix;
@@ -92,7 +92,7 @@ new const String: modnamelist[][] = {
 	"Day of Defeat: Source",
 	"Left 4 Dead (1 or 2)",
 	"Team Fortress 2",
-	"Half-Life 2 Deathman",
+	"Half-Life 2 Deathmatch",
 	"Insurgency",
 	"Fortress Forever",
 	"Zombie Panic: Source",
