@@ -36,7 +36,7 @@
 			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'SMOKER' WHERE `killerRole` = 'GAS'");
 			$db->query("UPDATE `hlstats_Events_Frags` SET `killerRole` = 'BOOMER' WHERE `killerRole` = 'EXPLODING'");
 			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'SMOKER' WHERE `victimRole` = 'GAS'");
-			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'BOOMER' WHERE `victimRrole` = 'EXPLODING'");
+			$db->query("UPDATE `hlstats_Events_Frags` SET `victimRole` = 'BOOMER' WHERE `victimRole` = 'EXPLODING'");
 		}
 	}
 
