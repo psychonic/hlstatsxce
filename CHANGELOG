@@ -1,3 +1,24 @@
+HLstatsX Community Edition 1.6.6
+January 10, 2010
++ Added TF2 Ball weapon code (#992) (Packhead)
++ Added team color player names on ingame messages in HL2DM when doing team deathmatch and HL2CTF (psychonic)
++ Added optional (default on) adding of "HLstatsX:CE" to server tags on non-L4D/2 games that support sv_tags (psychonic)
+? Changed the header to use the alt text to be more consistent with project (Packhead)
+? Changed the default point value to 0 for crit kill action in TF2 (#993) (Packhead)
+! Fixed a recently discovered exploit as well as other possible avenues for exploitation (psychonic)
+! Fixed game page not loading on a very small number of installs (octo-dhd)
+! Fixed opt_libdir being ignored in hlstats.pl and hlstats-awards.pl when loading GeoLite binary file (psychonic)
+! Fixed "Can't use an undefined value as a HASH reference" error on some installs, mostly L4D and/or having global chat enabled (psychonic)
+! Fixed favorite weapon calculation in claninfo page (#985) (Packhead)
+! Fixed weapon list for clan including data from other games (Packhead)
+! Removed quotes from playerId in HLstats_EventHandlers.plib to fix potential slowdown in MySQL (psychonic, Packhead)
+! Fixed a case where L4D/L4D2 bots that connect to the server list their IP address as "none". (Packhead)
+! Fixed the kick method for goldsource games (#1022) (Packhead)
+! Fixed a case where lastAddress could be set to "" for players (#1010) (Packhead, psychonic)
+! Fixed utf8 characters getting mangled in hlstats-awards.pl. (psychonic)
+! Fixed boomer and smoker role codes being incorrect on l4d2 (issue #1013) (psychonic)
+! Fixed not checking for existance of geoip data before doing geo lookups in hlstats-awards.pl (#1002) (Packhead)
+
 HLstatsX Community Edition 1.6.5
 December 23, 2009
  
