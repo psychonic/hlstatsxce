@@ -298,7 +298,7 @@ stock MyRemoveServerTag(const String:tag[])
 
 get_server_mod()
 {
-	if (gamemod > Game_Unknown)
+	if (gamemod == Game_Unknown)
 	{
 		new String: game_description[64];
 		GetGameDescription(game_description, sizeof(game_description), true);
