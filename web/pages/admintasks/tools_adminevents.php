@@ -141,7 +141,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Servers.serverId = <table>.serverId
 	");
 	
-	if (isset($_GET['type']))
+	if (isset($_GET['type']) && $_GET['type'] != '')
 	{
 		$where = "WHERE eventType='".$db->escape($_GET['type'])."'";
 	}
