@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.6.1"
+#define VERSION "1.6.7-pre1"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -723,7 +723,7 @@ color_all_players(String: message[192])
 
 
 
-color_team_entities(String: message[192])
+color_team_entities(String:message[192])
 {
 	switch(gamemod)
 	{
@@ -829,6 +829,26 @@ color_team_entities(String: message[192])
 				}
 			}
 		}
+		case Game_HL2MP:
+		{
+			if (g_bTeamPlay && strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "The Combine ", "\x03The Combine\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Rebel Forces ", "\x03Rebel Forces\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+			}
+		}
 	}
 
 	return -1;
@@ -913,7 +933,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_TF, Game_DODS, Game_HL2MP, Game_AOC, Game_ZPS, Game_GES:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_GES:
 		{
 			if (is_colored > 0)
 			{
