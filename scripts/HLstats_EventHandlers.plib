@@ -1835,7 +1835,7 @@ sub doEvent_WorldAction
 	if ($act_players < $min_players) {
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 		if ($action eq "Round_Start") {
-			$g_servers{$s_addr}->messageAll(sprintf("HLstatsX disabled! Need at least %s active players (%s/%s)", $min_players, $act_players, $min_players),0,1);
+			$g_servers{$s_addr}->messageAll(sprintf("HLstatsX:CE disabled! Need at least %s active players (%s/%s)", $min_players, $act_players, $min_players),0,1);
 		}
 	} else {
 		my $map = $g_servers{$s_addr}->get_map();
@@ -1871,7 +1871,7 @@ sub doEvent_WorldAction
 			$g_servers{$s_addr}->set("lastdisabledbonus", $ev_remotetime);
 			$g_servers{$s_addr}->set("bonusroundtime_state", 1);
 			if ($act_players >= $min_players) {
-				$g_servers{$s_addr}->messageAll("Round Over - All actions/frags are ignored by HLstatsX until the next round starts",0,1);
+				$g_servers{$s_addr}->messageAll("Round Over - All actions/frags are ignored by HLstatsX:CE until the next round starts",0,1);
 			}
 		}
 

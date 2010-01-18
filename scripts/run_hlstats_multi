@@ -78,13 +78,13 @@ cd ${confdir}
 function start_process {
 	# takes the used port from $1 variable
 	PORT=$1
-	echo "Starting HLstatsX CE PORT=${PORT}...";
+	echo "Starting HLstatsX:CE PORT=${PORT}...";
 	PID=${piddir}/hlstats_${PORT}.pid
 	LOG=${logdir}/multi_${PORT}`date +_%Y%m%d_%H-%M-%S`
 	if [ -f ${PID} ]; then
 		kill -0 `cat ${PID}` >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
-			echo "HLstatsX CE PORT=${PORT} already running!"
+			echo "HLstatsX:CE PORT=${PORT} already running!"
 		else
 			rm -rf ${PID}
 			./${daemonfile} --port=${PORT} >${LOG} 2>&1 &
@@ -103,14 +103,14 @@ function start_process {
 function stop_process {
  # takes the used port from $1 variable
 	PORT=$1
-	echo "Stopping HLstatsX CE PORT=${PORT}...";
+	echo "Stopping HLstatsX:CE PORT=${PORT}...";
 	PID=${piddir}/hlstats_${PORT}.pid
 	kill -9 `cat ${PID}` >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		rm -rf ${PID}
 		echo "PORT=${PORT} Stopped successfully"
 	else
-		echo "No HLstatsX PORT=${PORT} running!"
+		echo "No HLstatsX:CE PORT=${PORT} running!"
 	fi
 }
 

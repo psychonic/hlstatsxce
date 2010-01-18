@@ -604,9 +604,9 @@ sub dostats
 				$hpk = sprintf("%.2f", (100/$self->{total_kills})*$self->{total_headshots});
 			}  
 			if ($rcmd ne "") {
-				$self->dorcon("$rcmd ".$self->quoteparam("HLstatsX: Tracking ".&::number_format($self->{players})." players with ".&::number_format($self->{total_kills})." kills and ".&::number_format($self->{total_headshots})." headshots ($hpk%)"));
+				$self->dorcon("$rcmd ".$self->quoteparam("HLstatsX:CE - Tracking ".&::number_format($self->{players})." players with ".&::number_format($self->{total_kills})." kills and ".&::number_format($self->{total_headshots})." headshots ($hpk%)"));
 			} else {
-				$self->messageAll("HLstatsX: Tracking ".&::number_format($self->{players})." players with ".&::number_format($self->{total_kills})." kills and ".&::number_format($self->{total_headshots})." headshots ($hpk%)");
+				$self->messageAll("HLstatsX:CE - Tracking ".&::number_format($self->{players})." players with ".&::number_format($self->{total_kills})." kills and ".&::number_format($self->{total_headshots})." headshots ($hpk%)");
 			}  
 		}  
 	}  
@@ -766,9 +766,9 @@ sub switch_player
 	if ($self->{player_command_hint} eq "") {
 		$rcmd = $self->{player_command};
 	}
-	$self->dorcon(sprintf("%s %s %s", $rcmd, $self->format_userid($playerid), $self->quoteparam("HLstatsX: You were switched to balance teams")));
+	$self->dorcon(sprintf("%s %s %s", $rcmd, $self->format_userid($playerid), $self->quoteparam("HLstatsX:CE - You were switched to balance teams")));
 	if ($self->{player_admin_command} ne "") {
-		$self->dorcon(sprintf("%s %s",$self->{player_admin_command}, $self->quoteparam("HLstatsX: $name was switched to balance teams")));
+		$self->dorcon(sprintf("%s %s",$self->{player_admin_command}, $self->quoteparam("HLstatsX:CE - $name was switched to balance teams")));
 	}
 }
 
@@ -846,7 +846,7 @@ sub analyze_teams
 			}  
 		}
     
-		$self->messageAll("HLstatsX: ATB - Checking Teams", 0, 1);
+		$self->messageAll("HLstatsX:CE - ATB - Checking Teams", 0, 1);
 
 		if ($self->{ba_map_rounds} >= 2)    # need all players for numerical balacing, at least 2 for getting all players
 		{
