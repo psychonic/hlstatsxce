@@ -1413,7 +1413,7 @@ a MySQL database.
       --nostdin                   disables above
       --server-ip                 specify data source IP address for --stdin
       --server-port               specify data source port for --stdin  [$g_server_port]
-  -t, --timestamp                 tells HLstatsX to use the timestamp in the log
+  -t, --timestamp                 tells HLstatsX:CE to use the timestamp in the log
                                     data, instead of the current time on the
                                     database server, when recording events
       --notimestamp               disables above
@@ -1780,7 +1780,7 @@ if ($g_global_chat == 1) {
 
 %g_servers = ();
 
-&printEvent("HLSTATSX", "HLstatsX is now running ($g_mode mode, debug level $g_debug)", 1);
+&printEvent("HLSTATSX", "HLstatsX:CE is now running ($g_mode mode, debug level $g_debug)", 1);
 
 $start_time    = time();
 if ($g_stdin) {

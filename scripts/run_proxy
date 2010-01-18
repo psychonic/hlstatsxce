@@ -88,11 +88,11 @@ case "$1" in
 			echo "You're missing your configuration file.  (${conffile})"
 			exit 1
 		fi
-		echo "Starting HLstatsX...";
+		echo "Starting HLstatsX:CE...";
 		if [ -f ${piddir}/proxy-daemon.pid ]; then
 			kill -0 `cat ${piddir}/proxy-daemon.pid` >/dev/null 2>&1
 			if [ "$?" == "0" ]; then
-				echo "HLstatsX already running!"
+				echo "HLstatsX:CE already running!"
 			else
 				rm -rf ${piddir}/proxy-daemon.pid
 				./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
@@ -109,18 +109,18 @@ case "$1" in
     ;;
 	
 	stop)
-		echo "Stopping HLstatsX..."
+		echo "Stopping HLstatsX:CE..."
 		kill -9 `cat ${piddir}/proxy-daemon.pid` >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/proxy-daemon.pid
 			echo "Stopped successfully"
 		else
-			echo "No HLstatsX running!"
+			echo "No HLstatsX:CE running!"
 		fi
 	;;
 
 	restart)
-		echo "Restarting HLstatsX..."
+		echo "Restarting HLstatsX:CE..."
 		kill -9 `cat ${piddir}/proxy-daemon.pid` >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/proxy-daemon.pid
@@ -129,7 +129,7 @@ case "$1" in
 			echo "PID file created"
 			echo "Restarted successfully"
 		else    
-			echo "HLstatsX"
+			echo "HLstatsX:CE"
 			if [ -f ${piddir}/proxy-daemon.pid ]; then
 				rm -rf ${piddir}/proxy-daemon.pid
 			fi
