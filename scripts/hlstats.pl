@@ -1151,6 +1151,10 @@ sub getPlayerInfo
 		} else {
 			if ($userid != 0 && ($g_mode ne "LAN" || $forced_uniqueid)) {
 				if ($create_player > 0) {
+					my $preIpAddr = "";
+					if ($g_preconnect->{"$s_addr/$userid/$name"}) {
+						$preIpAddr = $g_preconnect->{"$s_addr/$userid/$name"}->{"ipaddress"};
+					}
 					# Add the player to our hash of player objects
 					$g_servers{$s_addr}->{"srv_players"}->{"$userid/$uniqueid"} = new HLstats_Player(
 						server => $s_addr,
@@ -1164,12 +1168,12 @@ sub getPlayerInfo
 						role => $role,
 						is_bot => $bot,
 						display_events => $g_servers{$s_addr}->{default_display_events},
-						address => $ipAddr
+						address => (($preIpAddr ne "") ? $preIpAddr : $ipAddr)
 					);
 					
-					if ($g_preconnect->{"$s_addr/$userid/$name"}) {
+					if ($preIpAddr eq "") {
 						&printEvent("SERVER", "LATE CONNECT [$name/$userid] - steam userid validated");
-						&doEvent_Connect($userid, $uniqueid, $g_preconnect->{"$s_addr/$userid/$name"}->{"ipaddress"});
+						&doEvent_Connect($userid, $uniqueid, $preIpAddr);
 						delete($g_preconnect->{"$s_addr/$userid/$name"});
 					}
 					# Increment number of players on server
