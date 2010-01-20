@@ -497,10 +497,6 @@ sub doEvent_Connect
 						$g_servers{$s_addr}->messageAll($msg, $player->{playerid}, 1);
 					}
 				}
-				if ($player->{address} ne $ipAddr) {
-					$player->{address} = $ipAddr;
-					$player->geoLookup();
-				}
 			}
 			elsif ($g_mode eq "LAN")
 			{
