@@ -839,10 +839,11 @@ sub getInfoString
 sub getAddress
 {
 	my ($self) = @_;
+	my $haveAddress = 0;
 
 	if ($self->{address} ne "")
 	{
-		$self->geoLookup();
+		$haveAddress = 1;
 	}
 	elsif ($::g_stdin == 0 && $self->{is_bot} == 0 && $self->{userid} > 0)
 	{
@@ -851,26 +852,31 @@ sub getAddress
 		&::printNotice("rcon_getaddress");
 		my $result = $::g_servers{$s_addr}->rcon_getaddress($self->{uniqueid});
 		if ($result->{Address} ne "") {
+			$haveAddress = 1;
 			$self->{address}  = $result->{Address};
 			$self->{cli_port} = $result->{ClientPort};
 			$self->{ping}     = $result->{Ping};
 
 			&::printEvent("RCON", "Got Address $self->{address} for Player $self->{name}", 1);
 			&::printNotice("rcon_getaddress successfully");
-		
-			# Update player IP address in database
-			my $query = "
-				UPDATE
-					hlstats_Players
-				SET
-					lastAddress=?
-				WHERE
-					playerId=?
-			";
-			my @vals = ($self->{address}, $self->{playerid});
-			&::execCached("player_update_lastaddress", $query, @vals);
-			&::printEvent("DEBUG", "Updated IP for ".$self->{playerid}." to ".$self->{address});
 		}
+	}
+	
+	if ($haveAddress > 0)
+	{
+		# Update player IP address in database
+		my $query = "
+			UPDATE
+				hlstats_Players
+			SET
+				lastAddress=?
+			WHERE
+				playerId=?
+		";
+		my @vals = ($self->{address}, $self->{playerid});
+		&::execCached("player_update_lastaddress", $query, @vals);
+		&::printEvent("DEBUG", "Updated IP for ".$self->{playerid}." to ".$self->{address});
+		
 		$self->geoLookup();
 	}
 	return 1;
@@ -945,8 +951,8 @@ sub geoLookup
 					lat=".((defined($self->{lat}))?$self->{lat}:"NULL").",
 					lng=".((defined($self->{lng}))?$self->{lng}:"NULL")."
 				WHERE
-					playerId = $self->{playerid}
-			");
+					playerId = ".$self->{playerid}
+			);
 		}
 	}
 }
