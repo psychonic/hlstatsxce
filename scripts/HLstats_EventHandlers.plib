@@ -1380,7 +1380,22 @@ sub doEvent_PlayerPlayerAction
 			}
 			
 			my $map = $g_servers{$s_addr}->get_map();
-			if ((defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{ppaction}) || (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{ppaction})) {
+			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{ppaction}) {
+				&doEvent_PlayerPlayerAction(
+						$playerId,
+						$playerUniqueId,
+						$victimId,
+						$victimUniqueId,
+						$map."_$action",
+						$x,
+						$y,
+						$z,
+						$vx,
+						$vy,
+						$vz
+					);
+			}
+			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{ppaction}) {
 				my $actionname = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{descr};
 				my $actionid = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{id};
 				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player};
@@ -1424,7 +1439,7 @@ sub doEvent_PlayerPlayerAction
 						count=count+1 
 					WHERE
 						game='" . &quoteSQL($g_servers{$s_addr}->{game}) . "'
-						AND code IN ('".&quoteSQL($map."_$action")."', '".&quoteSQL($action)."')
+						AND code = '".&quoteSQL($action)."'
 				";
 				&execNonQuery($query);
 				if ($reward_player != 0) {
@@ -1670,7 +1685,17 @@ sub doEvent_PlayerAction
 			}
 
 			my $map = $g_servers{$s_addr}->get_map();
-			if ((defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{paction}) || (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{paction})) {
+			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{paction}) {
+				&doEvent_PlayerAction(
+						$playerId,
+						$playerUniqueId,
+						$map."_$action",
+						$x,
+						$y,
+						$z
+					);
+			}
+			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{paction}) {
 				my $actionname = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{descr};
 				my $actionid = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{id};
 				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player};
@@ -1693,7 +1718,7 @@ sub doEvent_PlayerAction
 						count=count+1 
 					WHERE
 						game='" . &quoteSQL($g_servers{$s_addr}->{game}) . "'
-						AND code IN ('".&quoteSQL($map."_$action")."', '".&quoteSQL($action)."')
+						AND code = '".&quoteSQL($action)."'
 				";
 				&execNonQuery($query);
 				$player->increment("skill", $reward_player);

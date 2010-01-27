@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.7-pre1"
+#define VERSION "1.6.7-pre2"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -404,7 +404,7 @@ get_server_mod()
 
 public OnClientPostAdminCheck(client)
 {
-	if (g_bGameCanDoMotd && IsClientInGame(client) && IsClientConnected(client))
+	if (g_bGameCanDoMotd && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 	{
 		QueryClientConVar(client, "cl_disablehtmlmotd", motdQuery);
 	}
