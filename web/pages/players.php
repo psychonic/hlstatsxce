@@ -77,9 +77,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<?php printSectionTitle('Player Rankings');	?>
 	<div class="subblock">
 		<div style="float:left;">
-			<script type="text/javascript" src="<? echo INCLUDE_PATH; ?>/js/Observer.js"></script>
-			<script type="text/javascript" src="<? echo INCLUDE_PATH; ?>/js/Autocompleter.js"></script>
-			<script type="text/javascript" src="<? echo INCLUDE_PATH; ?>/js/Autocompleter.Request.js"></script>
+			<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/Observer.js"></script>
+			<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/Autocompleter.js"></script>
+			<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/Autocompleter.Request.js"></script>
 			<script type="text/javascript">
 				document.addEvent('domready', function() {
 					new Autocompleter.Request.HTML('playersearch', 'autocomplete.php?game=<?php echo $game; ?>', {
