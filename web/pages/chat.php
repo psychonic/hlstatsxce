@@ -72,8 +72,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		array ($gamename=>"%s?game=$game", 'Server Chat Statistics'=>'')
 	);
 	flush();
-	
-	$servername = 'Global';
+	$servername = "(All Servers)";
 	
 	if ($showserver != 0)
 	{
@@ -89,12 +88,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Servers.serverId = ".$db->escape($showserver)."
 			")
 		);
-		$servername = $result['name'];
+		$servername = "(" . $result['name'] . ")";
 	}
 ?>
 
 <div class="block">
-	<?php printSectionTitle("$servername Server Chat Log (Last ".$g_options['DeleteDays'].' Days)'); ?>
+	<?php printSectionTitle("$gamename $servername Server Chat Log (Last ".$g_options['DeleteDays'].' Days)'); ?>
 	<div class="subblock">
 		<div style="float:left;">
 			<span>
@@ -134,7 +133,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 							echo '<option value="'.$rowdata['serverId'].'">'.$rowdata['name'].'</option>';
 					}
 					echo '</select>';
+					$filter=isset($_REQUEST['filter'])?$_REQUEST['filter']:"";
 				?>
+				Filter: <input type="text" name="filter" value="<?php echo htmlentities($filter); ?>" /> 
 				<input type="submit" value="View" class="smallsubmit" />
 			</form>
 			</span>
@@ -185,6 +186,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 				"sort",
 				"sortorder"
 			);
+			if(!empty($filter))
+			{
+				$whereclause.="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
+			}
 			$surl = $g_options['scripturl'];
 			$result = $db->query
 			("

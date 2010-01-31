@@ -141,6 +141,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 	);
 	$surl = $g_options['scripturl'];
 	
+	$whereclause="hlstats_Events_Chat.playerId = $player ";
+	$filter=isset($_REQUEST['filter'])?$_REQUEST['filter']:"";
+	if(!empty($filter))
+	{
+				$whereclause.="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
+	}
+	
 	$result = $db->query
 	("
 		SELECT
@@ -155,7 +162,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		ON
 			hlstats_Events_Chat.serverId = hlstats_Servers.serverId
 		WHERE
-			hlstats_Events_Chat.playerId = $player
+			$whereclause	
 		ORDER BY
 			$table->sort $table->sortorder,
 			$table->sort2 $table->sortorder
@@ -175,7 +182,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		ON
 			hlstats_Events_Chat.serverId = hlstats_Servers.serverId
 		WHERE
-			hlstats_Events_Chat.playerId = $player
+			$whereclause
 	");
 			
 	list($numitems) = $db->fetch_row($resultCount);
@@ -184,6 +191,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 <div class="block">
 <?php
 	printSectionTitle('Player Chat History (Last '.$g_options['DeleteDays'].' Days)');
+?>
+	<div class="subblock">
+		<div style="float:left;">
+			<span>
+			<form method="get" action="<?php echo $g_options['scripturl']; ?>" style="margin:0px;padding:0px;">
+				<input type="hidden" name="mode" value="chathistory" />
+				<input type="hidden" name="player" value="<?php echo $player; ?>" />
+				<strong>&#8226;</strong>
+				Filter: <input type="text" name="filter" value="<?php echo htmlentities($filter); ?>" /> 
+				<input type="submit" value="View" class="smallsubmit" />
+			</form>
+			</span>
+		</div>
+	</div>
+<?
 	if ($numitems > 0)
 	{
 		$table->draw($result, $numitems, 95);
