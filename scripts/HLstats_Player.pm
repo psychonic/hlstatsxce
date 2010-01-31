@@ -234,17 +234,19 @@ sub increment
 }
 
 
-sub check_history 
+sub check_history
 {
-	my ($self, $playerId, $is_bot) = @_;
+	my ($self) = @_;
 
     #my ($sec,$min,$hour,$mday,$mon,$year) = localtime(time());
     my ($sec,$min,$hour,$mday,$mon,$year) = localtime($::ev_unixtime);
     my $date = sprintf("%04d-%02d-%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 	my $srv_addr  = $self->{server};
+	my $is_bot = 0;
+	my $playerId = $self->{playerid};
 	
-	if (!$is_bot) {
-		$is_bot = 0;
+	if ($self->{is_bot} || $self->{userid} < 0) {
+		$is_bot = 1;
 	}  
 	if (($playerId > 0) && ($::g_stdin == 0 || $::g_timestamp > 0))
 	{
@@ -252,11 +254,11 @@ sub check_history
 			$self->{last_history_day} = sprintf("%02d", $mday);
 			my $query = "
 				SELECT
-					playerId, skill_change
+					skill_change
 				FROM
 					hlstats_Players_History
 				WHERE
-					playerId='" . $playerId . "'
+					playerId=" . $playerId . "
 					AND eventTime='".$date."'
 					AND game='".&::quoteSQL($::g_servers{$srv_addr}->{game})."'
 			";
@@ -280,10 +282,9 @@ sub check_history
 						)
 				";
 				&::execNonQuery($query);
-				$self->{day_skill_change}     = 0;
+				$self->{day_skill_change} = 0;
 			} else {
-				my ($playerid, $skill_change) = $result->fetchrow_array;
-				$self->{day_skill_change}     = $skill_change;
+				($self->{day_skill_change}) = $result->fetchrow_array;
 			}
 			$result->finish;
 		}  
@@ -298,10 +299,12 @@ sub check_history
 sub setUniqueId
 {
 	my ($self, $uniqueid) = @_;
+	my $tempPlayerId = 0;
 	
-	my $playerid = &::getPlayerId($uniqueid);
+	$tempPlayerId = &::getPlayerId($uniqueid);
+	$self->{playerid} = $tempPlayerId;
 
-	if ($playerid > 0)
+	if ($tempPlayerId > 0)
 	{
 		# An existing player. Get their skill rating.
 		my $query = "
@@ -310,15 +313,16 @@ sub setUniqueId
 			FROM
 				hlstats_Players
 			WHERE
-				playerId='$playerid'
+				playerId=$tempPlayerId
 		";
 		my $result = &::doQuery($query);
 		if ($result->rows > 0) {
 			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
+			&::printEvent("DEBUG", "Doing Rank in setUniqueId");
 			$self->{session_start_pos} = $self->getRank();
 		} else {
 			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
-			$self->insertPlayer($playerid);
+			$self->insertPlayer($tempPlayerId);
 		}
 		$result->finish;
 	}
@@ -326,9 +330,10 @@ sub setUniqueId
 	{
 		# This is a new player. Create a new record for them in the Players
 		# table.
-		$playerid = $self->insertPlayer();
+		$tempPlayerId = $self->insertPlayer();
+		$self->{playerid} = $tempPlayerId;
 		
-		if ($playerid)
+		if ($tempPlayerId > 0)
 		{
 			$query = "
 				INSERT INTO
@@ -340,7 +345,7 @@ sub setUniqueId
 					)
 				VALUES
 				(
-					$playerid,
+					$tempPlayerId,
 					'" . &::quoteSQL($uniqueid) . "',
 					'" . &::quoteSQL($::g_servers{$self->{server}}->{game}) . "'
 				)
@@ -354,10 +359,9 @@ sub setUniqueId
 	}
 	
 	$self->{uniqueid} = $uniqueid;
-	$self->{playerid} = $playerid;
 
-	if ($playerid > 0) {
-		$self->check_history($playerid);
+	if ($tempPlayerId) {
+		$self->check_history();
 	}
 	
 	return 1;
