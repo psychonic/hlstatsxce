@@ -136,7 +136,7 @@ else
 
 $g_options = getOptions();
 
-if (!$g_options['scripturl']) {
+if (isset($g_options['scripturl']) && !$g_options['scripturl']) {
 	$g_options['scripturl'] = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
 }
 
@@ -144,16 +144,16 @@ if (!$g_options['scripturl']) {
 //// Main
 ////
 
-$game = valid_request($_GET['game'], 0);
+$game = valid_request(isset($_GET['game'])?$_GET['game']:'', 0);
 
 if (!$game)
 {
-	$game = $_SESSION['game'];
+	$game = isset($_SESSION['game'])?$_SESSION['game']:'';
 } else {
 	$_SESSION['game'] = $game;
 }
 
-$mode = $_GET['mode'];
+$mode = isset($_GET['mode'])?$_GET['mode']:'';
 
 $valid_modes = array(
 	'players',
