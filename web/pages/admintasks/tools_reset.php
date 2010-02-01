@@ -579,12 +579,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 	else
 	{
-		$result = $db->query("SELECT code, name FROM `hlstats_Games` WHERE `hidden`='0' ORDER BY name, code;");
+		$result = $db->query("SELECT code, name, hidden FROM `hlstats_Games` ORDER BY hidden, name, code;");
 		unset($games);
 		$games[] = '<option value="" selected="selected" />All games';
-		while (list($code, $name) = $db->fetch_row($result))
+		while (list($code, $name, $hidden) = $db->fetch_row($result))
 		{
-			$games[] = "<option value=\"$code\" />$name - $code\n";
+			$disabled_flag = "";
+			if ($hidden == 1) {
+				$disabled_flag = "* ";
+			}
+			$games[] = "<option value=\"$code\" />$disabled_flag$name - $code\n";
 		}
 		
 ?>
@@ -925,7 +929,8 @@ function name_history_checked()
 	<td class="fNormal" align="middle">
 <select name="game">
 <?php foreach ($games as $g) echo $g; ?>
-</select>
+</select><br />
+<em>* indicates game is currently disabled</em>
 <table width="350" align="middle" border="0"><tr class="bg1"><td class="fNormal" align="left">
 <ul style="list-style-type:none;">
 	<li style="font-weight:bold;"><input type="checkbox" name="clear_all_delete" onclick="clear_all_delete_checked()" /> Reset/Clear All and Delete Players and Clans</li><br />
