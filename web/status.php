@@ -101,10 +101,10 @@ else
 
 $g_options = getOptions();
 
-if (!$g_options['scripturl'])
-	$g_options['scripturl'] = str_replace("\\","/",$_SERVER['PHP_SELF']);
+if (!isset($g_options['scripturl']))
+	$g_options['scripturl'] = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
 
-$g_options['scripturl'] = str_replace('/status.php', '', $g_options['scripturl']);
+$g_options['scriptbase'] = str_replace('/status.php', '', $g_options['scripturl']);
 
 ////
 //// Main Config
@@ -246,7 +246,7 @@ if ($server_data['addr'] != '')  {
 	if ($server_name == 1)
 	{
 		echo '<tr><td align="center" colspan="2" class="'.$fsize.'">';
-		echo '<a target="_blank" href="'.$g_options['scripturl'].'" title="View statistics"><b>'.$server_data['name'].'</b></a>';
+		echo '<a target="_blank" href="'.$g_options['scriptbase'].'" title="View statistics"><b>'.$server_data['name'].'</b></a>';
 		echo '</td></tr>';
 	}
 
@@ -275,7 +275,7 @@ if ($server_data['addr'] != '')  {
 		}
 		
 		echo '<tr><td align="center" colspan="2">';
-		echo '<a target="_blank" href="'.$g_options['scripturl'].'/hlstats.php?mode=mapinfo&amp;map='.$server_data['act_map'].'&amp;game='.$game.'"><img src="'.$mapimg['url'].'" style="width:'.$width.'px;border:0px" alt="'.$server_data['act_map'].'" title="'.$server_data['act_map'].'" /></a>'; 
+		echo '<a target="_blank" href="'.$g_options['scriptbase'].'/hlstats.php?mode=mapinfo&amp;map='.$server_data['act_map'].'&amp;game='.$game.'"><img src="'.$mapimg['url'].'" style="width:'.$width.'px;border:0px" alt="'.$server_data['act_map'].'" title="'.$server_data['act_map'].'" /></a>'; 
 		echo '</td></tr>';
 	}
 
@@ -434,7 +434,7 @@ if ($server_data['addr'] != '')  {
 					{
 						$thisplayer['name'] = substr($thisplayer['name'], 0, 50);
 					}
-					echo '<a target="_blank" style="color:'.$thisteam['playerlist_color'].';" href="'.$g_options['scripturl'].'/hlstats.php?mode=playerinfo&amp;player='.$thisplayer['player_id'].'" title="Player Details">';
+					echo '<a target="_blank" style="color:'.$thisteam['playerlist_color'].';" href="'.$g_options['scriptbase'].'/hlstats.php?mode=playerinfo&amp;player='.$thisplayer['player_id'].'" title="Player Details">';
 					if ($show_flags == 1)
 					{
 					echo '<img src="'.getFlag($thisplayer['cli_flag']).'" alt="'.ucfirst(strtolower($thisplayer['cli_country'])).'" title="'.ucfirst(strtolower($thisplayer['cli_country'])).'">&nbsp;';
@@ -507,7 +507,8 @@ if ($server_data['addr'] != '')  {
 			}
 		$curteam++;
 		}
-
+// these variables are not set - so removing it
+/*
 		if ((count($teama_players) > 0) || (count($teamb_players) > 0))
 		{
 			if ($show_map_wins == 1) {
@@ -516,7 +517,7 @@ if ($server_data['addr'] != '')  {
 				echo '</td></tr>';
 			}
 		}
-
+*/
 		if (count($teamdata) == 0)
 		{
 			echo '<tr><td colspan="2" align="left" style="background:#EFEFEF;color:black" class="'.$fsize.'">';
@@ -561,7 +562,7 @@ if ($server_data['addr'] != '')  {
 			$display_name = $player['lastName'];
 			if (strlen($player['lastName']) > $cut_pos)
 				$display_name = substr($player['lastName'], 0, $cut_pos);
-			echo '<a target="_blank" href="'.$g_options["scripturl"].'/hlstats.php?mode=playerinfo&amp;player='.$player['playerId'].'" title="Player Details">';
+			echo '<a target="_blank" href="'.$g_options["scriptbase"].'/hlstats.php?mode=playerinfo&amp;player='.$player['playerId'].'" title="Player Details">';
 			if ($show_flags == 1)
 			{
 				if ($player['country'] == '')
