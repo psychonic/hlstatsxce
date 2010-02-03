@@ -126,9 +126,8 @@ function f_num($number) {
 	}
 }
 
-if (!$g_options['scripturl'])
-	$g_options['scripturl'] = $PHP_SELF;
-	$g_options['scripturl'] = str_replace('/status.php', '', $g_options['scripturl']);
+	if (!isset($g_options['scripturl']))
+		$g_options['scripturl'] = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : getenv('PHP_SELF');
 
 	$player_id = 0;  
 	if (isset($_GET['player_id'])) {
@@ -238,7 +237,7 @@ if ($player_id > 0) {
 
 	$pl_name = $playerdata['lastName'];
     
-	if(function_exists(imagettftext)) {
+	if(function_exists('imagettftext')) {
 		if (strlen($pl_name) > 30) {
 			$pl_name = substr($pl_name, 0, 27) . '...';
 		}
@@ -367,9 +366,9 @@ if ($player_id > 0) {
 	$font_color		= imagecolorallocate($image, $color['red'], $color['green'], $color['blue']);
 	$caption_color	= imagecolorallocate($image, $caption_color['red'], $caption_color['green'], $caption_color['blue']);
 	$link_color		= imagecolorallocate($image, $link_color['red'], $link_color['green'], $link_color['blue']);
-	$font_colorb		= imagecolorallocate($image, $colorb['red'], $colorb['green'], $colorb['blue']);
-	$caption_colorb	= imagecolorallocate($image, $caption_colorb['red'], $caption_colorb['green'], $caption_colorb['blue']);
-	$link_colorb		= imagecolorallocate($image, $link_colorb['red'], $link_colorb['green'], $link_colorb['blue']);
+	//$font_colorb		= imagecolorallocate($image, $colorb['red'], $colorb['green'], $colorb['blue']);
+	//$caption_colorb	= imagecolorallocate($image, $caption_colorb['red'], $caption_colorb['green'], $caption_colorb['blue']);
+	//$link_colorb		= imagecolorallocate($image, $link_colorb['red'], $link_colorb['green'], $link_colorb['blue']);
 
 
 	$background_img = imagecreatefrompng($hlx_sig);
@@ -418,7 +417,7 @@ if ($player_id > 0) {
 		$trend_image_name = IMAGE_PATH.'/t2.gif';
 	$trend = imagecreatefromgif($trend_image_name);
     
-	if(function_exists(imagettftext))
+	if(function_exists('imagettftext'))
 	{
 		$font = IMAGE_PATH.'/sig/font/DejaVuSans.ttf';
 		imagettftext($image, 10, 0, 30, 15, $caption_color, $font, $pl_name);

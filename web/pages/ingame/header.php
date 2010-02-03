@@ -45,7 +45,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 * This file can contain PHP code.
 	 */
 Header ('Cache-Control: no-cache');
-$lastpage = $_SERVER['HTTP_REFERER'];
+$lastpage = isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 

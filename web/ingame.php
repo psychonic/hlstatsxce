@@ -97,7 +97,7 @@ else
 
 $g_options = getOptions();
 
-if (!$g_options['scripturl'])
+if (!isset($g_options['scripturl']))
 	$g_options['scripturl'] = str_replace('\\','/',$_SERVER['PHP_SELF']);
 
 
@@ -110,7 +110,7 @@ if ( isset($_GET["game"]) )
 	$game = valid_request($_GET["game"], 0);
 }
 
-$mode = $_GET["mode"];
+$mode = isset($_GET["mode"])?$_GET["MODE"]:"";
 
 $valid_modes = array(
     "pro",
