@@ -1171,7 +1171,7 @@ sub getPlayerInfo
 						address => (($preIpAddr ne "") ? $preIpAddr : $ipAddr)
 					);
 					
-					if ($preIpAddr eq "") {
+					if ($preIpAddr ne "") {
 						&printEvent("SERVER", "LATE CONNECT [$name/$userid] - steam userid validated");
 						&doEvent_Connect($userid, $uniqueid, $preIpAddr);
 						delete($g_preconnect->{"$s_addr/$userid/$name"});
