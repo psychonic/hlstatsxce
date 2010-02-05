@@ -124,8 +124,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 					");
 					echo '<select name="server_id"><option value="0">All Servers</option>';
 					$dates = array ();
+					$serverids = array();
 					while ($rowdata = $db->fetch_array())
 					{
+						$serverids[] = $rowdata['serverId'];
 						$dates[] = $rowdata; 
 						if ($showserver == $rowdata['serverId'])
 							echo '<option value="'.$rowdata['serverId'].'" selected>'.$rowdata['name'].'</option>';
@@ -156,7 +158,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					(
 						'lastName',
 						'Player',
-						'width=17&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k')
+						'width=17&sort=no&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k')
 					),
 					new TableColumn
 					(
@@ -168,13 +170,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 					(
 						'serverName',
 						'Server',
-						'width=26'
+						'width=26&sort=no'
 					),
 					new TableColumn
 					(
 						'map',
 						'Map',
-						'width=10'
+						'width=10&sort=no'
 					)
 				),
 				'playerId',
@@ -214,14 +216,32 @@ For support and installation notes visit http://www.hlxcommunity.com
 				WHERE
 					$whereclause
 				ORDER BY
-					$table->sort $table->sortorder,
-					$table->sort2 $table->sortorder
+					hlstats_Events_Chat.eventTime $table->sortorder
 				LIMIT
 					$table->startitem,
 					$table->numperpage;
-			", true, true);
-			
-			$numitems = $db->calc_rows();
+			", true, false);
+			if($showserver == 0) {
+				$countclause = "in (".implode($serverids,',').")";
+			} else {
+				$countclause = "= $showserver";
+			}
+			$db->query
+			("
+				SELECT
+		 			count(*)
+				FROM
+					hlstats_Events_Chat
+				WHERE
+					hlstats_Events_Chat.serverId $countclause
+			");
+			if ($db->num_rows() < 1) $numitems = 0;
+			else 
+			{
+				list($numitems) = $db->fetch_row();
+			}
+			$db->free_result();	
+
 			$table->draw($result, $numitems, 95);
 		?><br /><br />
 	<div class="subblock">
