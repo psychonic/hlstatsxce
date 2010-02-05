@@ -147,8 +147,8 @@ sub new
 	$self->{plain_uniqueid} = $params{plain_uniqueid};
 	$self->setUniqueId($params{uniqueid});
 	$self->setName($params{name});
-	$self->flushDB();
 	$self->getAddress();
+	$self->flushDB();
 
 
 
