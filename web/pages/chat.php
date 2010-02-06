@@ -188,9 +188,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 				"sort",
 				"sortorder"
 			);
+			$whereclause2='';
 			if(!empty($filter))
 			{
-				$whereclause.="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
+				$whereclause2="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
 			}
 			$surl = $g_options['scripturl'];
 			$result = $db->query
@@ -214,7 +215,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				ON
 					hlstats_Servers.serverId = hlstats_Events_Chat.serverId
 				WHERE
-					$whereclause
+					$whereclause $whereclause2
 				ORDER BY
 					hlstats_Events_Chat.eventTime $table->sortorder
 				LIMIT
@@ -233,7 +234,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				FROM
 					hlstats_Events_Chat
 				WHERE
-					hlstats_Events_Chat.serverId $countclause
+					hlstats_Events_Chat.serverId $countclause $whereclause2
 			");
 			if ($db->num_rows() < 1) $numitems = 0;
 			else 
