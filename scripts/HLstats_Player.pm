@@ -146,6 +146,9 @@ sub new
 	$self->updateTrackable();
 	$self->{plain_uniqueid} = $params{plain_uniqueid};
 	$self->setUniqueId($params{uniqueid});
+	if ($::g_stdin == 0) {
+		$self->insertPlayerLivestats();
+	}
 	$self->setName($params{name});
 	$self->getAddress();
 	$self->flushDB();
@@ -302,10 +305,10 @@ sub setUniqueId
 	my $tempPlayerId = 0;
 	
 	$tempPlayerId = &::getPlayerId($uniqueid);
-	$self->{playerid} = $tempPlayerId;
 
 	if ($tempPlayerId > 0)
 	{
+		$self->{playerid} = $tempPlayerId;
 		# An existing player. Get their skill rating.
 		my $query = "
 			SELECT
@@ -330,32 +333,24 @@ sub setUniqueId
 	{
 		# This is a new player. Create a new record for them in the Players
 		# table.
-		$tempPlayerId = $self->insertPlayer();
-		$self->{playerid} = $tempPlayerId;
+		$self->insertPlayer();
 		
-		if ($tempPlayerId > 0)
-		{
-			$query = "
-				INSERT INTO
-					hlstats_PlayerUniqueIds
-					(
-						playerId,
-						uniqueId,
-						game
-					)
-				VALUES
+		$query = "
+			INSERT INTO
+				hlstats_PlayerUniqueIds
 				(
-					$tempPlayerId,
-					'" . &::quoteSQL($uniqueid) . "',
-					'" . &::quoteSQL($::g_servers{$self->{server}}->{game}) . "'
+					playerId,
+					uniqueId,
+					game
 				)
-			";
-			&::execNonQuery($query);
-		}
-		else
-		{
-			error("Unable to create player:\n$query");
-		}
+			VALUES
+			(
+				$tempPlayerId,
+				'" . &::quoteSQL($uniqueid) . "',
+				'" . &::quoteSQL($::g_servers{$self->{server}}->{game}) . "'
+			)
+		";
+		&::execNonQuery($query);
 	}
 	
 	$self->{uniqueid} = $uniqueid;
@@ -376,19 +371,41 @@ sub insertPlayer
 {
 	my ($self, $playerid) = @_;
 	
-	my $hideins = "";
-	my $hideval = "";
+	my $hideval = 0;
 	my $playeridins = "";
 	my $playeridval = "";
 	my $srv_addr = $self->{server};
 	
 	if ($::g_servers{$srv_addr}->{play_game} == L4D() && $self->{userid} < 0) {
-		$hideins = ", hideranking";
-		$hideval = ", 1";
+		$hideval = 1;
 	}
 	if ($playerid) {
-		$playeridins = ", playerId";
-		$playeridval = ", $playerid";
+		my $query = "
+			INSERT INTO
+				hlstats_Players
+				(
+					lastName,
+					clan,
+					game,
+					displayEvents,
+					createdate,
+					hideranking,
+					playerId
+				)
+			VALUES
+			(
+				?,
+				?,
+				?,
+				?,
+				UNIX_TIMESTAMP(),
+				?,
+				?
+			)
+		";
+		my @vals = ($self->{name}, $self->{clan}, $::g_servers{$srv_addr}->{game}, $self->{display_events}, $hideval, $playerid);
+		&::execCached("player_insert_playerid", $query, @vals);
+		return $playerid;
 	}
 	
 	my $query = "
@@ -399,24 +416,53 @@ sub insertPlayer
 				clan,
 				game,
 				displayEvents,
-				createdate
-				$hideins
-				$playeridins
+				createdate,
+				hideranking
 			)
 		VALUES
 		(
-			'" . &::quoteSQL($self->{name}) . "',
-			" . $self->{clan} . ",
-			'" . &::quoteSQL($::g_servers{$srv_addr}->{game}) . "',
-			" . $self->{display_events} . ",
-			UNIX_TIMESTAMP()
-			$hideval
-			$playeridval
+			?,
+			?,
+			?,
+			?,
+			UNIX_TIMESTAMP(),
+			?
 		)
 	";
-	&::execNonQuery($query);
+	my @vals = ($self->{name}, $self->{clan}, $::g_servers{$srv_addr}->{game}, $self->{display_events}, $hideval);
+	&::execCached("player_insert", $query, @vals);
 	
-	return $::db_conn->{'mysql_insertid'};
+	$self->{playerid} = $::db_conn->{'mysql_insertid'};
+}
+
+#
+# Insert initial live stats
+#
+sub insertPlayerLivestats
+{
+	my ($self) = @_;
+	my $query = "
+		INSERT INTO
+			hlstats_Livestats
+			(
+				player_id,
+				server_id,
+				cli_address,
+				steam_id,
+				name,
+				team,
+				ping,
+				connected,
+				skill
+			)
+		VALUES
+		(
+			?,?,?,?,?,?,?,?,?
+		)
+	";
+	my @vals = ($self->{playerid}, $self->{server_id}, $self->{address}, $self->{plain_uniqueid},
+		$self->{name}, $self->{team}, $self->{ping}, $self->{connect_time}, $self->{skill});
+	&::execCached("player_livestats_insert", $query, @vals);
 }
 
 
@@ -745,21 +791,13 @@ sub flushDB
 		$skill_change = 0;
 	}
 	
-	if ($::g_stdin == 0 && $self->{userid} > 0) {
+	if ($::g_stdin == 0) {
 		# Update live stats
 		my $query = "
-			REPLACE INTO
+			UPDATE
 				hlstats_Livestats
 			SET
-				player_id=?,
-				server_id=?,
 				cli_address=?,
-				cli_city=?,
-				cli_country=?,
-				cli_flag=?,
-				cli_state=?,
-				cli_lat=?,
-				cli_lng=?,
 				steam_id=?,
 				name=?,
 				team=?,
@@ -775,11 +813,12 @@ sub flushDB
 				connected=?,
 				skill_change=?,
 				skill=?
+			WHERE
+				player_id=?
 		";
-		my @vals = ($playerid, $serverid, $address, $self->{city}, $self->{country},
-			$self->{flag}, $self->{state}, $self->{lat}, $self->{lng}, $steamid, $name, 
+		my @vals = ($address, $steamid, $name, 
 			$team, $map_kills, $map_deaths, $map_suicides, $map_headshots, $map_shots, 
-			$map_hits, $is_dead, $has_bomb, $ping, $connected, $skill_change, $skill);
+			$map_hits, $is_dead, $has_bomb, $ping, $connected, $skill_change, $skill, $playerid);
 		&::execCached("player_flushdb_livestats", $query, @vals);
 	}
 
@@ -956,6 +995,19 @@ sub geoLookup
 					lng=".((defined($self->{lng}))?$self->{lng}:"NULL")."
 				WHERE
 					playerId = ".$self->{playerid}
+			);
+			&::execNonQuery("
+				UPDATE
+					hlstats_Livestats
+				SET
+					cli_city='".&::quoteSQL($self->{city})."',
+					cli_country='".&::quoteSQL($self->{country})."',
+					cli_flag='".&::quoteSQL($self->{flag})."',
+					cli_state='".&::quoteSQL($self->{state})."',
+					cli_lat=".((defined($self->{lat}))?$self->{lat}:"NULL").",
+					cli_lng=".((defined($self->{lng}))?$self->{lng}:"NULL")."
+				WHERE
+					player_id =".$self->{playerid}
 			);
 		}
 	}
