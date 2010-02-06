@@ -1710,7 +1710,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Events_Chat` (
   `message` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`),
-  KEY `serverId` (`serverId`)
+  KEY `serverId` (`serverId`),
+  FULLTEXT KEY `message` (`message`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
