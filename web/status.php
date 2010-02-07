@@ -113,6 +113,7 @@ $g_options['scriptbase'] = str_replace('/status.php', '', $g_options['scripturl'
 $game = 'css';  
 if ((isset($_GET['game'])) && (is_string($_GET['game'])))
 	$game = valid_request($_GET['game'], 0);
+$game_escaped = $db->escape($game);
 $server_id = '1';
 if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
 	$server_id = valid_request($_GET['server_id'], 1);
@@ -371,7 +372,7 @@ if ($server_data['addr'] != '')  {
 			ON
 				code = team
 			AND
-				hlstats_Teams.game = '{$db->escape($game)}'
+				hlstats_Teams.game = '{$game_escaped}'
 			ORDER BY 
 				playerlist_index
 			LIMIT 0 , 30
@@ -384,6 +385,7 @@ if ($server_data['addr'] != '')  {
 		while ($thisteam = $db->fetch_array($statsdata))
 		{
 			$teamdata[$teamno] = $thisteam;
+			$thisteam_escaped = $db->escape($thisteam['team']);
 			$pldata = $db->query("
 				SELECT
 					player_id, 
@@ -402,7 +404,7 @@ if ($server_data['addr'] != '')  {
 					hlstats_Livestats 
 				WHERE 
 					server_id = $server_id 
-					AND team = '{$db->escape($thisteam['team'])}'
+					AND team = '{$thisteam_escaped}'
 				ORDER BY 
 					kills DESC
 			");
@@ -541,7 +543,7 @@ if ($server_data['addr'] != '')  {
 			FROM 
 				hlstats_Players 
 			WHERE 
-				game='{$db->escape($game)}'
+				game='{$game_escaped}'
 				AND hideranking=0
 			ORDER BY
 				skill DESC, 
