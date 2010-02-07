@@ -110,7 +110,7 @@ if ( isset($_GET["game"]) )
 	$game = valid_request($_GET["game"], 0);
 }
 
-$mode = isset($_GET["mode"])?$_GET["MODE"]:"";
+$mode = isset($_GET["mode"])?$_GET["mode"]:"";
 
 $valid_modes = array(
     "pro",
