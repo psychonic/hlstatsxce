@@ -109,7 +109,7 @@ The "Public Address" should be the address you want shown to users. If left blan
 		</script>
 		<table width="100%" border=0 cellspacing=1 cellpadding=4>
 			<tr valign="bottom" class="head">
-				<td class='fSmall'>Server Address</td>
+				<td class='fSmall'>Server IP Address</td>
 				<td class='fSmall'><input type="text" name="server_address" maxlength="15" size="15" value="<?php echo clean_data($_POST['server_address']); ?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
@@ -122,11 +122,11 @@ The "Public Address" should be the address you want shown to users. If left blan
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Rcon Password</td>
-				<td class='fSmall'><input type="text" name="server_rcon" maxlength="48" size="15" value="<?php echo clean_data($_POST['server_rcon']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="server_rcon" maxlength="128" size="15" value="<?php echo clean_data($_POST['server_rcon']); ?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Public Address</td>
-				<td class='fSmall'><input type="text" name="public_address" maxlength="255" size="15" value="<?php echo clean_data($_POST['public_address']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="public_address" maxlength="128" size="15" value="<?php echo clean_data($_POST['public_address']); ?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Admin Mod</td>
