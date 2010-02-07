@@ -66,15 +66,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$minkills = 1;
 	$minmembers = 3;
   
-	$players = 1;  
+	$players = 10;  
 	if ((isset($_GET['players'])) && (is_numeric($_GET['players'])))
 		$players = valid_request($_GET['players'], 1);
   
-	$clans = 1;  
+	$clans = 3;  
 	if ((isset($_GET['clans'])) && (is_numeric($_GET['clans'])))
 		$clans = valid_request($_GET['clans'], 1);
   
-	$servers = 1;  
+	$servers = 9001;  
 	if ((isset($_GET['servers'])) && (is_numeric($_GET['servers'])))
 		$servers = valid_request($_GET['servers'], 1);
 
@@ -136,7 +136,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				AND kills >= $minkills
 			ORDER BY
 				$table_players->sort $table_players->sortorder
-			LIMIT 0,10
+			LIMIT 0,$players
 		");
 		$table_players->draw($result_players, 10, 100);
 	}
@@ -198,7 +198,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				nummembers >= $minmembers
 			ORDER BY
 				$table_clans->sort $table_clans->sortorder
-			LIMIT 0,3
+			LIMIT 0,$clans
 		");
 		$table_clans->draw($result_clans, 3, 100);
 	}
@@ -239,6 +239,7 @@ For support and installation notes visit http://www.hlxcommunity.com
                 game='$game'
             ORDER BY
                 serverId
+			LIMIT 0, $servers
         ";
 	$db->query($query);
 	$this_server = array();
