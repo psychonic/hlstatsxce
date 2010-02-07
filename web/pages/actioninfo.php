@@ -46,6 +46,9 @@ if ( !defined('IN_HLSTATS') )
 	
 	$action =  valid_request($_GET['action'], 0)
 		or error('No action ID specified.');
+
+	$action_escaped=$db->escape($action);
+	$game_escaped=$db->escape($game);
 	
 	$db->query("
 		SELECT
@@ -53,8 +56,8 @@ if ( !defined('IN_HLSTATS') )
 		FROM
 			hlstats_Actions
 		WHERE
-			code='{$db->escape($action)}'
-			AND game='{$db->escape($game)}'
+			code='{$action_escaped}'
+			AND game='{$game_escaped}'
 	");
 	
 	if ($db->num_rows() != 1)
@@ -70,7 +73,7 @@ if ( !defined('IN_HLSTATS') )
 		$act_name = $actiondata['description'];
 	}
 	
-	$db->query("SELECT name FROM hlstats_Games WHERE code='{$db->escape($game)}'");
+	$db->query("SELECT name FROM hlstats_Games WHERE code='{$game_escaped}'");
 	if ($db->num_rows() != 1)
 		error('Invalid or no game specified.');
 	else
@@ -124,8 +127,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerActions.playerId AND
 				hlstats_Events_PlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -144,8 +147,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerActions.playerId AND
 				hlstats_Events_PlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -163,8 +166,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerPlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerPlayerActions.playerId AND
 				hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -183,8 +186,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerPlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerPlayerActions.playerId AND
 				hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -205,8 +208,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_TeamBonuses, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_TeamBonuses.playerId AND
 				hlstats_Events_TeamBonuses.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -225,8 +228,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_TeamBonuses, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_TeamBonuses.playerId AND
 				hlstats_Events_TeamBonuses.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -288,8 +291,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerPlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerPlayerActions.victimId AND
 				hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'
@@ -308,8 +311,8 @@ if ( !defined('IN_HLSTATS') )
 			FROM
 				hlstats_Events_PlayerPlayerActions, hlstats_Players, hlstats_Actions
 			WHERE
-				hlstats_Actions.code = '{$db->escape($action)}' AND
-				hlstats_Players.game = '{$db->escape($game)}' AND
+				hlstats_Actions.code = '{$action_escaped}' AND
+				hlstats_Players.game = '{$game_escaped}' AND
 				hlstats_Players.playerId = hlstats_Events_PlayerPlayerActions.victimId AND
 				hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id AND
 				hlstats_Players.hideranking = '0'

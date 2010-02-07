@@ -100,6 +100,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if (isset($_GET['game']))
 		$game = valid_request($_GET['game'], 0);
 
+	$game_escaped=$db->escape($game);
+
 	$bar_type = 0; // 0 == serverinfo last 100 entries
 	// 1 == ?!
 	// 2 == player trend history
@@ -351,13 +353,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 		// entries
         $data_array = array();
-        $result = $db->query("SELECT timestamp, players, kills, headshots, act_slots, max_slots FROM hlstats_Trend WHERE game='{$db->escape($game)}' ORDER BY timestamp DESC LIMIT 0, 350");
+        $result = $db->query("SELECT timestamp, players, kills, headshots, act_slots, max_slots FROM hlstats_Trend WHERE game='{$game_escaped}' ORDER BY timestamp DESC LIMIT 0, 350");
 		while ($rowdata = $db->fetch_array($result))
 		{
 			$data_array[] = array('timestamp' => $rowdata['timestamp'], 'players' => $rowdata['players'], 'kills' => $rowdata['kills'], 'headshots' => $rowdata['headshots'], 'act_slots' => $rowdata['act_slots'], 'max_slots' => $rowdata['max_slots']);
 		}
 
-		$players_data = $db->query("SELECT count(playerId) as player_count FROM hlstats_Players WHERE game='{$db->escape($game)}'");
+		$players_data = $db->query("SELECT count(playerId) as player_count FROM hlstats_Players WHERE game='{$game_escaped}'");
 		$rowdata = $db->fetch_array($players_data);
 		$total_players = $rowdata['player_count'];
 
@@ -374,11 +376,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 		if ($width >= 800)
 		{
-			$result = $db->query("SELECT players FROM hlstats_Trend WHERE game='{$db->escape($game)}' AND timestamp<=" . (time() - 3600) . " ORDER by timestamp DESC LIMIT 0,1");
+			$result = $db->query("SELECT players FROM hlstats_Trend WHERE game='{$game_escaped}' AND timestamp<=" . (time() - 3600) . " ORDER by timestamp DESC LIMIT 0,1");
 			$rowdata = $db->fetch_array($result);
 			$players_last_hour = $total_players - $rowdata['players'];
 
-			$result = $db->query("SELECT players FROM hlstats_Trend WHERE game='{$db->escape($game)}' AND timestamp<=" . (time() - 86400) . " ORDER by timestamp DESC LIMIT 0,1");
+			$result = $db->query("SELECT players FROM hlstats_Trend WHERE game='{$game_escaped}' AND timestamp<=" . (time() - 86400) . " ORDER by timestamp DESC LIMIT 0,1");
 			$rowdata = $db->fetch_array($result);
 			$players_last_day = $total_players - $rowdata['players'];
 

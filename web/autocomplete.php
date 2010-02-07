@@ -18,10 +18,13 @@ else
 
 $game = valid_request($_GET['game']);
 $search = valid_request($_POST['value']);
+
+$game_escaped = $db->escape($game);
+$search_escaped = $db->escape($search);
  
 if (is_string($search) && strlen($search) >= 3 && strlen($search) < 64) {
 	// Building the query
-	$sql = "SELECT hlstats_PlayerNames.name FROM hlstats_PlayerNames INNER JOIN hlstats_Players ON hlstats_PlayerNames.playerId = hlstats_Players.playerId WHERE game = '{$db->escape($game)}' AND name LIKE '{$db->escape($search)}%'";
+	$sql = "SELECT hlstats_PlayerNames.name FROM hlstats_PlayerNames INNER JOIN hlstats_Players ON hlstats_PlayerNames.playerId = hlstats_Players.playerId WHERE game = '{$game_escaped}' AND name LIKE '{$search_escaped}%'";
 	$result = $db->query($sql);
 	while($row=$db->fetch_row($result)) {
 		print "<li class=\"playersearch\">" . $row[0] . "</li>\n";

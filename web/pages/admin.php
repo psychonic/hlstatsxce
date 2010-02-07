@@ -417,7 +417,7 @@ class EditList
 					DELETE FROM
 						$this->table
 					WHERE
-						$this->keycol='{$db->escape($row)}'
+						$this->keycol='" . $db->escape($row) . "'
 				");
 			}
 			else

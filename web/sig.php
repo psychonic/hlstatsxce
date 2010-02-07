@@ -137,6 +137,8 @@ function f_num($number) {
 		$steam_id = preg_replace('/^STEAM_\d+?\:/i','',$steam_id);
 		$game = valid_request($_GET['game'], 0);
 
+		$steam_id_escaped=$db->escape($steam_id);
+		$game_escape=$db->escape($game);
 		// Obtain player_id from the steam_id and game code
 		$db->query("
 			SELECT
@@ -144,8 +146,8 @@ function f_num($number) {
 			FROM
 				hlstats_PlayerUniqueIds
 			WHERE
-				uniqueId = '{$db->escape($steam_id)}' AND
-				game = '{$db->escape($game)}'
+				uniqueId = '{$steam_id_escaped}' AND
+				game = '{$game_escaped}'
 		");
 		
 		if ($db->num_rows() != 1)
