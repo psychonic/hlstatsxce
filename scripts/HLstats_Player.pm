@@ -146,7 +146,7 @@ sub new
 	$self->updateTrackable();
 	$self->{plain_uniqueid} = $params{plain_uniqueid};
 	$self->setUniqueId($params{uniqueid});
-	if ($::g_stdin == 0) {
+	if ($::g_stdin == 0 && $self->{userid} > 0) {
 		$self->insertPlayerLivestats();
 	}
 	$self->setName($params{name});
@@ -791,7 +791,7 @@ sub flushDB
 		$skill_change = 0;
 	}
 	
-	if ($::g_stdin == 0) {
+	if ($::g_stdin == 0 && $self->{userid} > 0) {
 		# Update live stats
 		my $query = "
 			UPDATE
