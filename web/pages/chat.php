@@ -222,7 +222,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->startitem,
 					$table->numperpage;
 			", true, false);
-			if($showserver == 0) {
+			if($showserver != 0) {
 				$countclause = "in (".implode($serverids,',').")";
 			} else {
 				$countclause = "= $showserver";
