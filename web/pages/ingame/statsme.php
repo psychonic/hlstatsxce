@@ -52,7 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
-		
+		$uniqueid = preg_replace('/^STEAM_\d+?\:/i','',$uniqueid);
 		$db->query("
 			SELECT
 				playerId
