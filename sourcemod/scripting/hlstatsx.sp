@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.7-pre2"
+#define VERSION "1.6.7-pre3"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -348,7 +348,7 @@ get_server_mod()
 		{
 			gamemod = Game_CSS;
 		}
-		else if (StrContains(game_folder, "dod", false) != -1)
+		else if (strncmp(gamemod, "dod", 3, false) == 0)
 		{
 			gamemod = Game_DODS;
 		}
@@ -360,7 +360,7 @@ get_server_mod()
 		{
 			gamemod = Game_FOF;
 		}
-		else if (StrContains(game_folder, "tf", false) != -1)
+		else if (StrContains(strncmp(gamemod, "tf", 2, false) == 0)
 		{
 			gamemod = Game_TF;
 		}
