@@ -1,9 +1,9 @@
-#define LOGHELPER_VERSION 2
+#define LOGHELPER_VERSION 3
 
 #include <sourcemod>
 #include <sdktools>
 
-new String: g_team_list[16][64];
+new String:g_team_list[16][64];
 
 // Call this on map start to cache team names in g_team_list
 
@@ -47,7 +47,7 @@ stock LogPlayerEvent(client, const String:verb[], const String:event[], bool:dis
 {
 	if (IsValidPlayer(client))
 	{
-		decl String: player_authid[32];
+		decl String:player_authid[32];
 		if (!GetClientAuthString(client, player_authid, sizeof(player_authid)))
 		{
 			strcopy(player_authid, sizeof(player_authid), "UNKNOWN");
@@ -55,7 +55,7 @@ stock LogPlayerEvent(client, const String:verb[], const String:event[], bool:dis
 
 		if (display_location)
 		{
-			new Float: player_origin[3];
+			decl Float:player_origin[3];
 			GetClientAbsOrigin(client, player_origin);
 			LogToGame("\"%N<%d><%s><%s>\" %s \"%s\"%s (position \"%d %d %d\")", client, GetClientUserId(client), player_authid, g_team_list[GetClientTeam(client)], verb, event, properties, RoundFloat(player_origin[0]), RoundFloat(player_origin[1]), RoundFloat(player_origin[2])); 
 		}
@@ -70,12 +70,12 @@ stock LogPlyrPlyrEvent(client, victim, const String:verb[], const String:event[]
 {
 	if (IsValidPlayer(client) && IsValidPlayer(victim))
 	{
-		decl String: player_authid[32];
+		decl String:player_authid[32];
 		if (!GetClientAuthString(client, player_authid, sizeof(player_authid)))
 		{
 			strcopy(player_authid, sizeof(player_authid), "UNKNOWN");
 		}
-		decl String: victim_authid[32];
+		decl String:victim_authid[32];
 		if (!GetClientAuthString(victim, victim_authid, sizeof(victim_authid)))
 		{
 			strcopy(victim_authid, sizeof(victim_authid), "UNKNOWN");
@@ -83,10 +83,10 @@ stock LogPlyrPlyrEvent(client, victim, const String:verb[], const String:event[]
 		
 		if (display_location)
 		{
-			new Float: player_origin[3];
+			decl Float:player_origin[3];
 			GetClientAbsOrigin(client, player_origin);
 			
-			new Float: victim_origin[3];
+			decl Float:victim_origin[3];
 			GetClientAbsOrigin(victim, victim_origin);
 			
 			LogToGame("\"%N<%d><%s><%s>\" %s \"%s\" against \"%N<%d><%s><%s>\"%s (position \"%d %d %d\") (victim_position \"%d %d %d\")", client, GetClientUserId(client), player_authid, g_team_list[GetClientTeam(client)], verb, event, victim, GetClientUserId(victim), victim_authid, g_team_list[GetClientTeam(victim)], properties, RoundFloat(player_origin[0]), RoundFloat(player_origin[1]), RoundFloat(player_origin[2]), RoundFloat(victim_origin[0]), RoundFloat(victim_origin[1]), RoundFloat(victim_origin[2])); 
@@ -102,12 +102,12 @@ stock LogKill(attacker, victim, const String:weapon[], bool:display_location = f
 {
 	if (IsValidPlayer(attacker) && IsValidPlayer(victim))
 	{
-		decl String: attacker_authid[32];
+		decl String:attacker_authid[32];
 		if (!GetClientAuthString(attacker, attacker_authid, sizeof(attacker_authid)))
 		{
 			strcopy(attacker_authid, sizeof(attacker_authid), "UNKNOWN");
 		}
-		decl String: victim_authid[32];
+		decl String:victim_authid[32];
 		if (!GetClientAuthString(victim, victim_authid, sizeof(victim_authid)))
 		{
 			strcopy(victim_authid, sizeof(victim_authid), "UNKNOWN");
@@ -115,9 +115,9 @@ stock LogKill(attacker, victim, const String:weapon[], bool:display_location = f
 			
 		if (display_location)
 		{
-			new Float: attacker_origin[3];
+			decl Float:attacker_origin[3];
 			GetClientAbsOrigin(attacker, attacker_origin);
-			new Float: victim_origin[3];
+			decl Float:victim_origin[3];
 			GetClientAbsOrigin(victim, victim_origin);
 			
 			LogToGame("\"%N<%d><%s><%s>\" killed \"%N<%d><%s><%s>\" with \"%s\"%s (attacker_position \"%d %d %d\") (victim_position \"%d %d %d\")", attacker, GetClientUserId(attacker), attacker_authid, g_team_list[GetClientTeam(attacker)], victim, GetClientUserId(victim), victim_authid, g_team_list[GetClientTeam(victim)], weapon, properties, RoundFloat(attacker_origin[0]), RoundFloat(attacker_origin[1]), RoundFloat(attacker_origin[2]), RoundFloat(victim_origin[0]), RoundFloat(victim_origin[1]), RoundFloat(victim_origin[2])); 
@@ -126,6 +126,31 @@ stock LogKill(attacker, victim, const String:weapon[], bool:display_location = f
 		{
 			LogToGame("\"%N<%d><%s><%s>\" killed \"%N<%d><%s><%s>\" with \"%s\"%s", attacker, GetClientUserId(attacker), attacker_authid, g_team_list[GetClientTeam(attacker)], victim, GetClientUserId(victim), victim_authid, g_team_list[GetClientTeam(victim)], weapon, properties); 
 		}
+	}
+}
+
+// For Psychostats "KTRAJ" kill trajectory log lines
+stock LogPSKillTraj(attacker, victim, const String:weapon[])
+{
+	if (IsValidPlayer(attacker) && IsValidPlayer(victim))
+	{
+		decl String:attacker_authid[32];
+		if (!GetClientAuthString(attacker, attacker_authid, sizeof(attacker_authid)))
+		{
+			strcopy(attacker_authid, sizeof(attacker_authid), "UNKNOWN");
+		}
+		decl String:victim_authid[32];
+		if (!GetClientAuthString(victim, victim_authid, sizeof(victim_authid)))
+		{
+			strcopy(victim_authid, sizeof(victim_authid), "UNKNOWN");
+		}
+		
+		decl Float:attacker_origin[3];
+		GetClientAbsOrigin(attacker, attacker_origin);
+		decl Float:victim_origin[3];
+		GetClientAbsOrigin(victim, victim_origin);
+		
+		LogToGame("[KTRAJ] \"%N<%d><%s><%s>\" killed \"%N<%d><%s><%s>\" with \"%s\" (attacker_position \"%d %d %d\") (victim_position \"%d %d %d\")", attacker, GetClientUserId(attacker), attacker_authid, g_team_list[GetClientTeam(attacker)], victim, GetClientUserId(victim), victim_authid, g_team_list[GetClientTeam(victim)], weapon, RoundFloat(attacker_origin[0]), RoundFloat(attacker_origin[1]), RoundFloat(attacker_origin[2]), RoundFloat(victim_origin[0]), RoundFloat(victim_origin[1]), RoundFloat(victim_origin[2]));
 	}
 }
 
@@ -142,9 +167,9 @@ stock LogKillLoc(attacker, victim)
 {
 	if (attacker > 0 && victim > 0)
 	{
-		new Float: attacker_origin[3];
+		decl Float:attacker_origin[3];
 		GetClientAbsOrigin(attacker, attacker_origin);
-		new Float: victim_origin[3];
+		decl Float:victim_origin[3];
 		GetClientAbsOrigin(victim, victim_origin);
 				
 		LogToGame("World triggered \"killlocation\" (attacker_position \"%d %d %d\") (victim_position \"%d %d %d\")", RoundFloat(attacker_origin[0]), RoundFloat(attacker_origin[1]), RoundFloat(attacker_origin[2]), RoundFloat(victim_origin[0]), RoundFloat(victim_origin[1]), RoundFloat(victim_origin[2]));
@@ -155,7 +180,7 @@ stock LogRoleChange(client, const String:role[], const String:properties[] = "")
 {
 	if (IsValidPlayer(client))
 	{
-		decl String: player_authid[32];
+		decl String:player_authid[32];
 		if (!GetClientAuthString(client, player_authid, sizeof(player_authid)))
 		{
 			strcopy(player_authid, sizeof(player_authid), "UNKNOWN");
