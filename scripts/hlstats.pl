@@ -541,7 +541,7 @@ sub rewardTeam
 
 
 #
-# int getPlayerId (int uniqueId)
+# int getPlayerId (uniqueId)
 #
 # Looks up a player's ID number, from their unique (WON) ID. Returns their PID.
 #

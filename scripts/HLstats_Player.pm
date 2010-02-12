@@ -302,9 +302,7 @@ sub check_history
 sub setUniqueId
 {
 	my ($self, $uniqueid) = @_;
-	my $tempPlayerId = 0;
-	
-	$tempPlayerId = &::getPlayerId($uniqueid);
+	my $tempPlayerId = &::getPlayerId($uniqueid);
 
 	if ($tempPlayerId > 0)
 	{
@@ -322,11 +320,11 @@ sub setUniqueId
 		if ($result->rows > 0) {
 			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
 			&::printEvent("DEBUG", "Doing Rank in setUniqueId");
-			$self->{session_start_pos} = $self->getRank();
 		} else {
 			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
 			$self->insertPlayer($tempPlayerId);
 		}
+		$self->{session_start_pos} = $self->getRank();
 		$result->finish;
 	}
 	else
@@ -345,7 +343,7 @@ sub setUniqueId
 				)
 			VALUES
 			(
-				$tempPlayerId,
+				".$self->{playerid}.",
 				'" . &::quoteSQL($uniqueid) . "',
 				'" . &::quoteSQL($::g_servers{$self->{server}}->{game}) . "'
 			)
@@ -354,10 +352,7 @@ sub setUniqueId
 	}
 	
 	$self->{uniqueid} = $uniqueid;
-
-	if ($tempPlayerId) {
-		$self->check_history();
-	}
+	$self->check_history();
 	
 	return 1;
 }
