@@ -1,3 +1,29 @@
+HLstatsX Community Edition 1.6.7
+February 13, 2010
+
++ Added missing headshot action for cstrike (#1069) (Packhead)
++ Added TF2 actions and awards for airshot_rocket and airshot_headshot  (#1065) (Packhead)
++ Added TF2 weapon, award and ribbons for taunt_medic (#1064) (FernFerret, Packhead)
++ Added tf_pumpkin_bomb weapon image and TF2 ball image (FernFerret)
++ Added the ability to search server and player chat logs as well as optimizations (#677, #1034, #1054, #1055) (octo-dhd, agent86)
++ Added L4D2 forum signature background images (gH0sTy)
+? Changed references of HLstatsX to HLstatsX: CE in perl scripts (#1036) (octo-dhd)
+? Changed "pickaxe" to "unique_pickaxe" in TF2 after Valve update (psychonic)
+? Cleaned up all known 'notice' errors in web code (#1058) (octo-dhd)
+? Resolved PHP4 compatibility issues (#1035) (octo-dhd)
+! Fixed double-connect announcements (octo-dhd)
+! Fixed STEAM_ID argument on playerinfo page (#1061) (psychonic)
+! Fixed players, clans and server counts on ingame MOTD being ignored (psychonic)
+! Fixed the reset page in the admin center to now show disabled games (#1050) (Packhead)
+! Fixed character display and maxlength issues in the administration center (#1053, #1062) (octo-dhd)
+! Fixed a daemon crash when a player joins and ranking is set to "kills" (#996, #1044) (psychonic)
+! Fixed some unpredictable behavior on map-specific plyr and plyrplyr actions (Thor_R, psychonic)
+! Fixed issue with short tags being used in certain pages (Kigen, octo-dhd) (#1052)
+! Fixed lastAddress, geolookup and flags not appearing on server status pages (#1010, #1011) (octo-dhd)
+! Fixed map run times being incorrect if the map didn't "start" (octo-dhd)
+! Fixed blank type filter causing no results to print on Admin Event History (psychonic)
+! Fixed team message coloring for L4D(2) and HL2MP in hlstatsx.sp (psychonic)
+
 HLstatsX Community Edition 1.6.6
 January 10, 2010
 + Added TF2 Ball weapon code (#992) (Packhead)
