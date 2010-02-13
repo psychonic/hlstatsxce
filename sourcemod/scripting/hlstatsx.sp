@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.7-pre3"
+#define VERSION "1.6.7"
 
 enum GameType {
 	Game_Unknown = -1,
