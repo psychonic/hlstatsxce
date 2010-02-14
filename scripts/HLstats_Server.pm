@@ -1267,7 +1267,7 @@ sub messageMany
 			{
 				$color = " 2";
 			}
-			$self->dorcon($self->{player_command}." \"$usersendlist\"$color \"$msg\"");
+			$self->dorcon($self->{player_command}." \"$usersendlist\"$color ".$self->quoteparam($msg));
 		}
 		elsif ($self->{mod} eq "AMXX")
 		{
@@ -1282,7 +1282,7 @@ sub messageMany
 						$usersendlist .= ",";
 					}
 				}
-				$self->dorcon("hlx_amx_bulkpsay \"$usersendlist\"".$self->{format_color}." \"$msg\"");
+				$self->dorcon("hlx_amx_bulkpsay \"$usersendlist\"".$self->{format_color}." ".$self->quoteparam($msg));
 			}
 		}
 		else
