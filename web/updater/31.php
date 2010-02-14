@@ -35,8 +35,8 @@
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
 				
-				('$game','airshot_rocket', 0, 0, '', 'Airshot Rocket', 1, 0, 0, 0),
-				('$game','airshot_headshot', 0, 0, '', 'Airshot Headshot', 1, 0, 0, 0);
+				('$game','airshot_rocket', 0, 0, '', 'Airshot Rocket', '1', '', '', ''),
+				('$game','airshot_headshot', 0, 0, '', 'Airshot Headshot', '1', '', '', '');
 		");				
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
