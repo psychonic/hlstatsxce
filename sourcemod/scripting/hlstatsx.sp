@@ -360,7 +360,7 @@ get_server_mod()
 		{
 			gamemod = Game_FOF;
 		}
-		else if (StrContains(strncmp(game_folder, "tf", 2, false) == 0)
+		else if (strncmp(game_folder, "tf", 2, false) == 0)
 		{
 			gamemod = Game_TF;
 		}
