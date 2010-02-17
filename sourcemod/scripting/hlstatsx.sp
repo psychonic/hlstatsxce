@@ -32,7 +32,8 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.7"
+#define VERSION "1.6.8-pre1"
+#define HLXTAG "HLstatsX:CE"
 
 enum GameType {
 	Game_Unknown = -1,
@@ -109,6 +110,7 @@ new bool:g_bServerTagAdded;
 new g_iSDKVersion = SOURCE_SDK_UNKNOWN;
 new Handle:g_cvarTeamPlay = INVALID_HANDLE;
 new g_bTeamPlay;
+new g_bLateLoad = false;
 
 public Plugin:myinfo = {
 	name = "HLstatsX CE Ingame Plugin",
@@ -117,6 +119,25 @@ public Plugin:myinfo = {
 	version = VERSION,
 	url = "http://www.hlxcommunity.com"
 };
+
+
+#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+#else
+public bool:AskPluginLoad(Handle:myself, bool:late, String:error[], err_max)
+#endif
+{
+	g_bLateLoad = late;
+	MarkNativeAsOptional("CS_SwitchTeam");
+	MarkNativeAsOptional("CS_RespawnPlayer");
+	MarkNativeAsOptional("SetCookieMenuItem");
+	
+#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
+	return APLRes_Success;
+#else
+	return true;
+#endif
+}
 
 
 public OnPluginStart() 
@@ -188,8 +209,36 @@ public OnPluginStart()
 	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
 	hlx_server_tag = CreateConVar("hlx_server_tag", "1", "If enabled, adds \"HLstatsX:CE\" to server tags on supported games. 1 = Enabled (default), 0 = Disabled",
 		FCVAR_PLUGIN, true, 0.0, true, 1.0);
-		
+	
 	sv_tags = FindConVar("sv_tags");
+	g_iSDKVersion = GuessSDKVersion();
+	
+	if (g_bLateLoad)
+	{
+		GetConVarString(hlx_message_prefix, message_prefix, sizeof(message_prefix));
+		decl String:protaddr[24];
+		GetConVarString(hlx_protect_address, protaddr, sizeof(protaddr));
+		OnProtectAddressChange(hlx_protect_address, "", protaddr);
+		if (sv_tags != INVALID_HANDLE && g_iSDKVersion < SOURCE_SDK_LEFT4DEAD)
+		{
+			decl String:tags[128];
+			GetConVarString(sv_tags, tags, sizeof(tags));
+			new bool:hastag = (StrContains(tags, HLXTAG) != -1);
+			new bool:needstag = GetConVarBool(hlx_server_tag);
+			if (!hastag && needstag)
+			{
+				DoServerTag();
+			}
+			else if (hastag && !needstag)
+			{
+				DoServerTag(false);
+			}
+		}
+	}
+	else
+	{
+		DoServerTag();
+	}
 	
 	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
@@ -204,26 +253,6 @@ public OnPluginStart()
 	message_recipients = CreateStack();
 	
 	GetTeams(gamemod == Game_INSMOD);
-	
-	g_iSDKVersion = GuessSDKVersion();
-	DoServerTag();
-}
-
-#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-#else
-public bool:AskPluginLoad(Handle:myself, bool:late, String:error[], err_max)
-#endif
-{
-	MarkNativeAsOptional("CS_SwitchTeam");
-	MarkNativeAsOptional("CS_RespawnPlayer");
-	MarkNativeAsOptional("SetCookieMenuItem");
-	
-#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
-	return APLRes_Success;
-#else
-	return true;
-#endif
 }
 
 
@@ -261,12 +290,12 @@ DoServerTag(bool:enable=true)
 	{
 		if (enable && !g_bServerTagAdded)
 		{
-			MyAddServerTag("HLstatsX:CE");
+			MyAddServerTag(HLXTAG);
 			g_bServerTagAdded = true;
 		}
 		else if (!enable && g_bServerTagAdded)
 		{
-			MyRemoveServerTag("HLstatsX:CE");
+			MyRemoveServerTag(HLXTAG);
 			g_bServerTagAdded = false;
 		}
 	}
@@ -428,7 +457,7 @@ public OnServerTagChange(Handle:cvar, const String:oldVal[], const String:newVal
 
 public OnProtectAddressChange(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
-	if (strcmp(newVal, "") != 0)
+	if (newVal[0] > 0)
 	{
 		decl String: log_command[192];
 		Format(log_command, sizeof(log_command), "logaddress_add %s", newVal);

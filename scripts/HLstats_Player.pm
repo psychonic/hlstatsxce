@@ -437,7 +437,7 @@ sub insertPlayerLivestats
 {
 	my ($self) = @_;
 	my $query = "
-		INSERT INTO
+		REPLACE INTO
 			hlstats_Livestats
 			(
 				player_id,

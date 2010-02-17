@@ -3214,7 +3214,7 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('LogChatAdmins', '0',0),
 ('GlobalChat', '0',0),
 ('SkillRatioCap', '0',0),
-('UseGeoIPBinary', '0',0),
+('UseGeoIPBinary', '1',0),
 ('contact', 'your@email.address',2),
 ('sitename', 'HLstatsX Community Edition',2),
 ('siteurl', 'http://www.yoursite.com/stats/',2),
