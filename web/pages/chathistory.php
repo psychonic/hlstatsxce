@@ -204,8 +204,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			</form>
 			</span>
 		</div>
-	</div>
-<?
+	</div><br />
+<?php
 	if ($numitems > 0)
 	{
 		$table->draw($result, $numitems, 95);
