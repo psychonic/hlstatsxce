@@ -204,7 +204,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			</form>
 			</span>
 		</div>
-	</div><br />
+	</div>
+	<div style="clear: both; padding-top: 20px;"></div>
 <?php
 	if ($numitems > 0)
 	{

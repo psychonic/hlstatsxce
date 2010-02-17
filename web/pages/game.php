@@ -499,7 +499,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 		if ($db->num_rows($resultAwards) > 0 && $awards_d_date) {
 ?>
-<div class="block">
+<div class="block" style="padding-top:20px">
 
 <?php
 	printSectionTitle((($awards_numdays == 1) ? 'Daily' : "$awards_numdays Day")." Awards ($awards_d_date)");

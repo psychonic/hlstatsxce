@@ -143,7 +143,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			</span>
 		</div>
 	</div>
-	<div style="clear:both;padding-top:4px;"></div>
+	<div style="clear:both;padding-top:20px;"></div>
 		<?php
 			$table = new Table(
 				array
@@ -233,8 +233,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 		 			count(*)
 				FROM
 					hlstats_Events_Chat
+				INNER JOIN
+					hlstats_Players
+				ON
+					hlstats_Players.playerId = hlstats_Events_Chat.playerId
+				INNER JOIN 
+					hlstats_Servers
+				ON
+					hlstats_Servers.serverId = hlstats_Events_Chat.serverId
 				WHERE
-					hlstats_Events_Chat.serverId $countclause $whereclause2
+					$whereclause $whereclause2
 			");
 			if ($db->num_rows() < 1) $numitems = 0;
 			else 
