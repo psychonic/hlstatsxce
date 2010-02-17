@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.8-pre1"
+#define VERSION "1.6.8-pre2"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -309,7 +309,10 @@ stock MyAddServerTag(const String:tag[])
 		GetConVarString(sv_tags, currtags, sizeof(currtags));
 		decl String:newtags[128];
 		Format(newtags, sizeof(newtags), "%s%s%s", currtags, (currtags[0]!=0)?",":"", tag);
+		new flags = GetConVarFlags(sv_tags);
+		SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
 		SetConVarString(sv_tags, newtags);
+		SetConVarFlags(sv_tags, flags);
 	}	
 }
 
@@ -321,7 +324,10 @@ stock MyRemoveServerTag(const String:tag[])
 		GetConVarString(sv_tags, newtags, sizeof(newtags));
 		ReplaceString(newtags, sizeof(newtags), "HLstatsX:CE", "");
 		ReplaceString(newtags, sizeof(newtags), ",,", "");
+		new flags = GetConVarFlags(sv_tags);
+		SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
 		SetConVarString(sv_tags, newtags);
+		SetConVarFlags(sv_tags, flags);
 	}
 }
 
