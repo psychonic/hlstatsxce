@@ -749,6 +749,8 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','killed_charged_medic', 'Juice Loosener', 'Charged Medics killed'),
 ('W','tf','ball', 'Fly Ball', 'kills with the Baseball'),
 ('W','tf','taunt_medic', 'Oktoberfest!', 'medic taunt kills'),
+('O','tf','airshot_rocket', 'Fly me to the moon!', 'air rocket hits'),
+('O','tf','airshot_headshot', 'Duck Hunt', 'air headshots'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -3191,7 +3193,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '31', 2),
+('dbversion', '32', 2),
 ('version', '1.6.7', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
