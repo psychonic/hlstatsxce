@@ -1053,11 +1053,11 @@ public Action:hlx_sm_psay(args)
 			
 			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(display_message, sizeof(display_message), "\x02%s%s\x0D\x0A", ((is_colored == 2)?"^4":""), client_message);
+				Format(display_message, sizeof(display_message), "Console: %s%s\n", ((is_colored == 2)?"^4":""), client_message);
 			}
 			else
 			{
-				Format(display_message, sizeof(display_message), "\x02^4%s:%s %s\x0D\x0A", message_prefix, ((is_colored == 2)?"":"^"), client_message);
+				Format(display_message, sizeof(display_message), "Console: \x02^4%s:%s %s\n", message_prefix, ((is_colored == 2)?"":"^"), client_message);
 			}
 			
 			PrintToChatRecipientsFF(display_message);
@@ -1206,11 +1206,11 @@ public Action:hlx_sm_psay2(args)
 		{
 			if (strcmp(message_prefix, "") == 0)
 			{
-				Format(client_message, sizeof(client_message), "\x02^4%s\x0D\x0A", buffer_message);
+				Format(client_message, sizeof(client_message), "Console: \x02^4%s\n", buffer_message);
 			}
 			else
 			{
-				Format(client_message, sizeof(client_message), "\x02^4%s: %s\x0D\x0A", message_prefix, buffer_message);
+				Format(client_message, sizeof(client_message), "Console: \x02^4%s: %s\n", message_prefix, buffer_message);
 			}
 			
 			PrintToChatRecipientsFF(client_message);
@@ -1995,8 +1995,9 @@ stock PrintToChatRecipientsFF(const String:message[])
 			hBf = StartMessageOne("SayText", client);
 			if (hBf != INVALID_HANDLE)
 			{
+				BfWriteByte(hBf, 0); // send as console
 				BfWriteString(hBf, message);
-				BfWriteByte(hBf, 1);
+				BfWriteByte(hBf, 1); // 1 to enable color parsing, 0 to not
 				EndMessage();
 			}
 		}
