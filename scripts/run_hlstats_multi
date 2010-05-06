@@ -1,0 +1,146 @@
+#!/bin/bash
+# HLstatsX Community Edition - Real-time player and clan rankings and statistics
+# Copyleft (L) 2008-20XX Nicholas Hastings (nshastings@gmail.com)
+# http://www.hlxcommunity.com
+#
+# HLstatsX Community Edition is a continuation of 
+# ELstatsNEO - Real-time player and clan rankings and statistics
+# Copyleft (L) 2008-20XX Malte Bayer (steam@neo-soft.org)
+# http://ovrsized.neo-soft.org/
+# 
+# ELstatsNEO is an very improved & enhanced - so called Ultra-Humongus Edition of HLstatsX
+# HLstatsX - Real-time player and clan rankings and statistics for Half-Life 2
+# http://www.hlstatsx.com/
+# Copyright (C) 2005-2007 Tobias Oetzel (Tobi@hlstatsx.com)
+#
+# HLstatsX is an enhanced version of HLstats made by Simon Garner
+# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# http://sourceforge.net/projects/hlstats/
+# Copyright (C) 2001  Simon Garner
+#             
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# 
+# For support and installation notes visit http://www.hlxcommunity.com
+
+# If you wish to run this script as a daemon script (in /etc/init.d, etc.)
+# you must configure the "confdir" variable below.
+# The other variables are optional and really should not be modified.
+
+# Set the path to the scripts folder (you should not need to modify this.)
+confdir=.
+
+# Define Ports for multiple instances here, be sure that the first Instance has index 0 instead index 1 !
+PORTS[0]=30000
+PORTS[1]=30010
+PORTS[2]=30020
+PORTS[3]=30030
+
+# Name of the daemon to run
+daemonfile=hlstats.pl
+# Directory to put logs in (within confdir)
+logdir=logs
+# Directory to store PID files in
+piddir=${confdir}
+
+# verify that we can see the daemon file
+if [ ! -f ${confdir}/${daemonfile} ]; then
+    echo "Can't see the daemon.  (${daemonfile})"
+    exit 1
+fi
+# Create a log directory if we do not have one.
+if [ ! -d ${confdir}/${logdir} ]; then
+	mkdir ${confdir}/${logdir}
+fi
+
+if [ ! -w ${confdir}/${logdir} ]; then
+	echo "you need write access to ${confdir}/${logdir}"
+	exit 1
+fi
+
+# Set the current directory so we can return after
+origdir=`pwd`
+
+# Change into the configured directory
+cd ${confdir}
+
+function start_process {
+	# takes the used port from $1 variable
+	PORT=$1
+	echo "Starting HLstatsX:CE PORT=${PORT}...";
+	PID=${piddir}/hlstats_${PORT}.pid
+	LOG=${logdir}/multi_${PORT}`date +_%Y%m%d_%H-%M-%S`
+	if [ -f ${PID} ]; then
+		kill -0 `cat ${PID}` >/dev/null 2>&1
+		if [ "$?" == "0" ]; then
+			echo "HLstatsX:CE PORT=${PORT} already running!"
+		else
+			rm -rf ${PID}
+			./${daemonfile} --port=${PORT} >${LOG} 2>&1 &
+			echo $! > ${PID}
+			echo "${PID} created"
+			echo "PORT=${PORT} Started successfully"
+		fi
+	else
+		./${daemonfile} --port=${PORT} >${LOG} 2>&1 &
+		echo $! >${PID}
+		echo "${PID} created"
+		echo "PORT=${PORT} Started successfully"
+	fi
+}
+
+function stop_process {
+ # takes the used port from $1 variable
+	PORT=$1
+	echo "Stopping HLstatsX:CE PORT=${PORT}...";
+	PID=${piddir}/hlstats_${PORT}.pid
+	kill -9 `cat ${PID}` >/dev/null 2>&1
+	if [ "$?" == "0" ]; then
+		rm -rf ${PID}
+		echo "PORT=${PORT} Stopped successfully"
+	else
+		echo "No HLstatsX:CE PORT=${PORT} running!"
+	fi
+}
+
+
+case "$1" in
+	start)
+		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
+			start_process ${PORTS[$element]}
+		done
+	;;
+
+	stop)
+		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
+			stop_process ${PORTS[$element]}
+		done
+	;;
+
+	restart)
+		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
+			stop_process ${PORTS[$element]}
+			start_process ${PORTS[$element]}
+		done
+	;;
+	
+	*)
+		echo "Usage: ./run_hlstats_multi [ start | stop | restart ]"
+	;;
+esac
+
+# Return to original directory
+cd ${origdir}
+
+exit 0

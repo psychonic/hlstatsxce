@@ -1,0 +1,4 @@
+# HlstatsX CE crontab
+#*/1 * * * * root cd /usr/local/games/hlstatsx/perl && ./run_hlstats start 2>&1 >/dev/null
+#00 00 * * * root cd /usr/local/games/hlstatsx/perl && ./hlstats-awards.pl 2>&1 >/dev/null
+
