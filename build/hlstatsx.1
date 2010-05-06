@@ -1,0 +1,54 @@
+.\" Process this file with
+.\" groff -man -Tascii foo.1
+.\"
+.TH hlstatsx 1 "MARCH 2009" hlstatsx(1)   "User Manual"
+.SH NAME
+HLstatsX Community Edition - Real-time player and clan rankings and statistics
+
+.SH DESCRIPTION
+HLstatsX Community Edition - Real-time player and clan rankings and statistics
+Copyleft (L) 2008-20XX Nicholas Hastings (nshastings@gmail.com)
+http://www.hlxcommunity.com
+
+HLstatsX Community Edition is a continuation of 
+ELstatsNEO - Real-time player and clan rankings and statistics
+Copyleft (L) 2008-20XX Malte Bayer (steam@neo-soft.org)
+http://ovrsized.neo-soft.org/
+
+ELstatsNEO is an very improved & enhanced - so called Ultra-Humongus Edition of HLstatsX
+HLstatsX - Real-time player and clan rankings and statistics for Half-Life 2
+http://www.hlstatsx.com/
+Copyright (C) 2005-2007 Tobias Oetzel (Tobi@hlstatsx.com)
+
+HLstatsX is an enhanced version of HLstats made by Simon Garner
+HLstats - Real-time player and clan rankings and statistics for Half-Life
+http://sourceforge.net/projects/hlstats/
+Copyright (C) 2001  Simon Garner
+
+For support and installation notes visit http://www.hlxcommunity.com
+.SH FILES
+.I /usr/local/games/hlstatsx
+.RS
+Main installation path for .deb and .rpm files.
+.RE
+.I /etc/hlstatsx/hlstats.conf
+.RS
+Perl daemon configuration file. Symlink to /usr/local/games/hlstatsx/perl/hlstats.conf
+.RE
+.I /var/www/html/hlstatsx
+.RS
+Symlink to /usr/local/games/hlstatsx/web
+.RE
+.I /etc/cron.d/hlstatsx.cron
+.RS
+Crontab file to be run to check if perl daemon and daily awards is generated as it should.
+.RE
+.I ~/hlstats
+.RS
+Userspecific configuration dir, place your hlstats.conf file here to be able to run
+/usr/local/games/hlstats/perl/run_hlstats as a "non root" user.
+.RE
+
+.SH AUTHOR
+Mattias Ryrlen <mattias at ryrlen dot org>
+
