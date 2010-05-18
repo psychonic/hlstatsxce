@@ -963,14 +963,14 @@ sub getPlayerInfoString
 
 
 #
-# array getPlayerInfo (string player, string forced_uniqueid, string $ipAddr)
+# array getPlayerInfo (string player, string $ipAddr)
 #
 # Get a player's name, uid, wonid and team from "Name<uid><wonid><team>".
 #
 
 sub getPlayerInfo
 {
-	my ($player, $create_player, $forced_uniqueid, $ipAddr) = @_;
+	my ($player, $create_player, $ipAddr) = @_;
 
 	if ($player =~ /^(.*?)<(\d+)><([^<>]*)><([^<>]*)>(?:<([^<>]*)>)?.*$/) {
 		my $name		= $1;
@@ -1053,9 +1053,7 @@ sub getPlayerInfo
 			$ipAddr = "";
 		}
 		
-		if ($forced_uniqueid) {
-			$uniqueid = $forced_uniqueid;
-		} elsif ($g_mode eq "NameTrack") {
+		if ($g_mode eq "NameTrack") {
 			$uniqueid = $name;
 		} elsif ($g_mode eq "LAN") {
 			if ($ipAddr ne "") {
@@ -1097,7 +1095,6 @@ sub getPlayerInfo
 				$md5->add($name);
 				$md5->add($s_addr);
 				$uniqueid = "BOT:" . $md5->hexdigest;
-				$forced_uniqueid = $uniqueid if ($g_mode eq "LAN");
 				$unique_id = $uniqueid if ($g_mode eq "LAN");
 				$bot = 1;
 			}
@@ -1149,7 +1146,7 @@ sub getPlayerInfo
 				$player->updateTimestamp();
 			}  
 		} else {
-			if ($userid != 0 && ($g_mode ne "LAN" || $forced_uniqueid)) {
+			if ($userid != 0) {
 				if ($create_player > 0) {
 					my $preIpAddr = "";
 					if ($g_preconnect->{"$s_addr/$userid/$name"}) {
@@ -2555,11 +2552,7 @@ while ($loop = &getLine()) {
 					$ipAddr = $1;
 				}
 				
-				if ($g_mode eq "LAN") {
-					$playerinfo = &getPlayerInfo($ev_player, 1, $ipAddr);
-				} else {
-					$playerinfo = &getPlayerInfo($ev_player, 1, 0, $ipAddr);
-				}
+				$playerinfo = &getPlayerInfo($ev_player, 1, $ipAddr);
 				
 				$ev_type = 1;
 				
