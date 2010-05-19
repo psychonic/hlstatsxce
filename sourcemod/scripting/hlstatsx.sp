@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.8-pre3"
+#define VERSION "1.6.8-pre4"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -1057,7 +1057,7 @@ public Action:hlx_sm_psay(args)
 			}
 			else
 			{
-				Format(display_message, sizeof(display_message), "Console: ^4%s:%s %s\n", g_szMsgPrefix, ((is_colored == 2)?"":"^"), client_message);
+				Format(display_message, sizeof(display_message), "Console: ^4%s:%s %s\n", message_prefix, ((is_colored == 2)?"":"^"), client_message);
 			}
 			
 			PrintToChatRecipientsFF(display_message);
