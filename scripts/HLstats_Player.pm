@@ -319,7 +319,6 @@ sub setUniqueId
 		my $result = &::doQuery($query);
 		if ($result->rows > 0) {
 			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
-			&::printEvent("DEBUG", "Doing Rank in setUniqueId");
 		} else {
 			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
 			$self->insertPlayer($tempPlayerId);
