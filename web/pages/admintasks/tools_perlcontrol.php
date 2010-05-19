@@ -111,7 +111,7 @@ For support and installation notes visit http://www.hlxcommunity.com
         
         <tr class="bg1">
             <td class="fNormal">
-
+Note: This page is still in beta and will not operate properly for all installs. If you have any trouble, you may need to interact with the daemon manually via command line/SSH.<br /><br />
 With this module, you have limited control over the backend, eg. if you want to re-read the changed configuration or kill the backend listener for delayed restart after updating perl scripts.
 <p>
 Choose Backend (only localhost at the moment):<br> 
