@@ -16,8 +16,13 @@
 	{			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
-				('$game','paintrain', 'The Pain Train', 'kills with The Pain Train', '2.00'),
-				('$game','sledgehammer', 'The Homewrecker', 'kills with The Homewrecker', '2.00');
+				('$game','paintrain', 'The Pain Train', 2),
+				('$game','sledgehammer', 'The Homewrecker', 2);
+		");
+		$db->query("
+			INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
+				('W', '$game','paintrain', 'The Pain Train', 'kills with The Pain Train'),
+				('W', '$game','sledgehammer', 'The Homewrecker', 'kills with The Homewrecker');
 		");
 	}
 	
@@ -32,8 +37,13 @@
 	{			
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
-				('$game','golfclub', 'Golf Club', 'kills with the Golf Club', '1.50'),
-				('$game','rifle_m60', 'M60', 'kills with M60', '1.00');
+				('$game','golfclub', 'Golf Club', 1.5),
+				('$game','rifle_m60', 'M60', 1);
+		");
+		$db->query("
+			INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
+				('W', '$game','golfclub', 'Golf Club', 'kills with the Golf Club'),
+				('W', '$game','rifle_m60', 'M60', 'kills with M60');
 		");
 	}
 	
