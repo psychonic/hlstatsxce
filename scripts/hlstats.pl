@@ -3259,11 +3259,7 @@ EOT
 			#print "checking $ev_unixtime\n";
 			# Clean up
 			# look
-			if(!$g_servers{$server}->{"srv_players"})
-			{
-				&printEvent(400, "$server srv_players doesn't exist!");
-			}
-			else
+			if($g_servers{$server}->{"srv_players"})
 			{
 				my %players_temp=%{$g_servers{$server}->{"srv_players"}};
 				while ( my($pl, $player) = each(%players_temp) ) {
