@@ -979,7 +979,6 @@ sub getPlayerInfo
 		my $team		= $4;
 		my $role		= $5;
 		my $bot			= 0;
-		my $haveplayer  = 0;
 		
 		$plainuniqueid = $uniqueid;
 		$uniqueid =~ s/^STEAM_[0-9]+?\://i;
@@ -1056,84 +1055,77 @@ sub getPlayerInfo
 		
 		if ($g_mode eq "NameTrack") {
 			$uniqueid = $name;
-		} else {
-			$bot = botidcheck($uniqueid);
-			if ($g_mode eq "LAN" && !$bot) {
-				if ($ipAddr ne "") {
-					$g_lan_noplayerinfo->{"$s_addr/$userid/$name"} = {
-						ipaddress => $ipAddr,
-						userid => $userid,
-						name => $name,
-						server => $s_addr
-						};
-					$uniqueid = $ipAddr;
-				} else {
-					while ( my($index, $player) = each(%g_players) ) {
-						if (($player->{userid} eq $userid) &&
-							($player->{name}   eq $name)) {
-						
-							$uniqueid = $player->{uniqueid}; 
-							$haveplayer = 1;
-							last;
-						}   
-					}
-					if (!$haveplayer) {
-						while ( my($index, $player) = each(%g_lan_noplayerinfo) ) {
-							if (($player->{server} eq $s_addr) &&
-								($player->{userid} eq $userid) &&
-								($player->{name}   eq $name)) {
-						
-								$uniqueid = $player->{ipaddress}; 
-								$haveplayer = 1;
-								last;
-							}    
-						}  
-					}
-					if (!$haveplayer) {
-						$uniqueid = "UNKNOWN";
-					}
-				}
-			} else {
-				# Normal (steamid) mode player and bot, as well as lan mode bots
-				if ($bot) {
-					$md5 = Digest::MD5->new;
-					$md5->add($name);
-					$md5->add($s_addr);
-					$uniqueid = "BOT:" . $md5->hexdigest;
-					$unique_id = $uniqueid if ($g_mode eq "LAN");
-				}
-			
-				if (($uniqueid =~ /^(?:STEAM|VALVE)_ID_PENDING$/) || ($uniqueid =~ /^(?:STEAM|VALVE)_ID_LAN$/) || ($uniqueid =~ /UNKNOWN$/)) {
-					return {
-						name     => $name,
-						userid   => $userid,
-						uniqueid => $uniqueid,
-						team     => $team
+		} elsif ($g_mode eq "LAN") {
+			if ($ipAddr ne "") {
+				$g_lan_noplayerinfo->{"$s_addr/$userid/$name"} = {
+					ipaddress => $ipAddr,
+					userid => $userid,
+					name => $name,
+					server => $s_addr
 					};
-				}
-			}
-		}
-		
-		if (!$haveplayer) {
-			while ( my ($index, $player) = each(%g_players) ) {
-				if ($player->{uniqueid} eq $uniqueid) {
-					$haveplayer = 1;
-					# Catch players reconnecting without first disconnecting
-					if ($player->{userid} != $userid) {
+				$uniqueid = $ipAddr;
+			} else {
+				my $found = 0; 
+				while ( my($index, $player) = each(%g_players) ) {
+					if (($player->{userid} eq $userid) &&
+						($player->{name}   eq $name)) {
 					
-						$ev_status = &doEvent_Disconnect(
-							$player->{"userid"},
-							$player->{"uniqueid"},
-							""
-						);
-						$haveplayer = 0;
-					}
+						$uniqueid = $player->{uniqueid}; 
+						$found++;
+					}   
 				}
-				last;
+				if ($found == 0) {
+					while ( my($index, $player) = each(%g_lan_noplayerinfo) ) {
+						if (($player->{server} eq $s_addr) &&
+							($player->{userid} eq $userid) &&
+							($player->{name}   eq $name)) {
+                     
+							$uniqueid = $player->{ipaddress}; 
+							$found++;
+						}    
+					}  
+				}
+				if ($found == 0) {
+					$uniqueid = "UNKNOWN";
+				}
+  			}
+		} else {
+			if (&botidcheck($uniqueid)) {
+				$md5 = Digest::MD5->new;
+				$md5->add($name);
+				$md5->add($s_addr);
+				$uniqueid = "BOT:" . $md5->hexdigest;
+				$unique_id = $uniqueid if ($g_mode eq "LAN");
+				$bot = 1;
+			}
+			
+			if (($uniqueid =~ /UNKNOWN/) || ($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
+				return {
+					name     => $name,
+					userid   => $userid,
+					uniqueid => $uniqueid,
+					team     => $team
+				};
+			}
+		}
+		$haveplayer = 0;
+		while ( my ($index, $player) = each(%g_players) ) {
+			if ($player->{uniqueid} eq $uniqueid) {
+				$haveplayer = 1;
+				# Catch players reconnecting without first disconnecting
+				if ($player->{userid} != $userid) {
+				
+					$ev_status = &doEvent_Disconnect(
+						$player->{"userid"},
+						$player->{"uniqueid"},
+						""
+					);
+					$haveplayer = 0;
+				}
 			}
 		}
 		
-		if ($haveplayer) {
+		if ($haveplayer > 0) {
 			my $player = lookupPlayer($s_addr, $userid, $uniqueid);
 			if ($player) {
 				if ($player->{team} ne $team) {
