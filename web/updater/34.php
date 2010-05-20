@@ -47,12 +47,6 @@
 				('$game', 'teleport_used_again', 0, 0, '', 'Teleporter Used Again (Past 10 Seconds) (Not Own)', '1', '0', '0', '0');
 		");
 		
-		$db->query("
-			INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
-				('W','$game','paintrain', 'Come on ride THE PAIN TRAIN', 'kills with The Pain Train'),
-				('W','$game','sledgehammer', 'Homewreckin', 'kills with The Homewrecker');
-		");		
-		
 		$db->query("UPDATE `hlstats_Actions` SET `for_PlayerActions` = '1', `for_PlayerPlayerActions` = '0', `for_TeamActions` = '0', `for_WorldActions` = '0' WHERE `code` = 'airshot_rocket' AND `game` = '$game';");
 		$db->query("UPDATE `hlstats_Actions` SET `for_PlayerActions` = '1', `for_PlayerPlayerActions` = '0', `for_TeamActions` = '0', `for_WorldActions` = '0' WHERE `code` = 'airshot_headshot' AND `game` = '$game';");
 	}
