@@ -14,7 +14,7 @@
 	
 	foreach($tf2games as $game)
 	{		
-		$db->query->("
+		$db->query("
 			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
 				('$game', 'air2airshot_pipebomb', 0, 0, '', 'Airshot Pipebomb (Airborne)', '1', '0', '0', '0'),
 				('$game', 'air2airshot_rocket', 0, 0, '', 'Airshot Rocket (Airborne)', '1', '0', '0', '0'),
