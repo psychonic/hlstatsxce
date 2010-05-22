@@ -16,14 +16,14 @@
 	{		
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
-				('$game', 'tribalkurki', 'Tribalman''s Shiv', 'kills with The Tribalman''s Shiv', '2.00'),
-				('$game', 'battleaxe', 'Scottsman''s Skullcutter', 'kills with The Scotsman''s Skullcutter', '2.00');
+				('$game', 'tribalkukri', 'The Tribalman''s Shiv', '2.00'),
+				('$game', 'battleaxe', 'The Scotsman''s Skullcutter', '2.00');
 		");
 		
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
-				('W','$game','tribalkurki', 'Tribalman''s Shiv', 'kills with the Tribalman''s Shiv'),
-				('W','$game','battleaxe', 'Scotsman''s Skullcutter', 'kills with the Scotsman''s Skullcutter');
+				('W','$game','tribalkukri', 'The Tribalman''s Shiv', 'kills with The Tribalman''s Shiv'),
+				('W','$game','battleaxe', 'The Scotsman''s Skullcutter', 'kills with The Scotsman''s Skullcutter');
 		");
 
 		for ($h = 1; $h<4; $h++) {
@@ -46,7 +46,7 @@
 
 			$db->query(" 
 				INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
-					('tribalkurki', 1, 0, '$game', '$awardCount_tribalkurki.png', '$level Tribalman''s Shiv'),
+					('tribalkukri', 1, 0, '$game', '$awardCount_tribalkukri.png', '$level Tribalman''s Shiv'),
 					('battleaxe', 1, 0, '$game', '$awardCount_battleaxe.png', '$level Scotsman''s Skullcutter');
 			");
 		}
