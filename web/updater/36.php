@@ -46,8 +46,8 @@
 
 			$db->query(" 
 				INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
-					('tribalkukri', $awardCount, 0, '$game', '{$i}_tribalkukri.png', '$level Tribalman''s Shiv'),
-					('battleaxe', $awardCount, 0, '$game', '{$i}_battleaxe.png', '$level Scotsman''s Skullcutter');
+					('tribalkukri', $awardCount, 0, '$game', '{$h}_tribalkukri.png', '$level Tribalman''s Shiv'),
+					('battleaxe', $awardCount, 0, '$game', '{$h}_battleaxe.png', '$level Scotsman''s Skullcutter');
 			");
 		}
 	}
