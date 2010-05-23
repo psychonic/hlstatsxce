@@ -204,6 +204,8 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('css', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '', '', ''),
 ('css', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '', '', ''),
 ('css', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '', '', ''),
+('css', 'domination', 5, 0, '', 'Domination', '', '1', '', ''),
+('css', 'revenge', 3, 0, '', 'Revenge', '', '1', '', ''),
 ('hl2ctf','ctf_flag_capture',15,0,'','Captured Enemy Flag','1','','',''),
 ('hl2ctf','ctf_flag_defend',2,0,'','Defended the Flag','1','','',''),
 ('hl2ctf','ctf_kill_carrier',5,0,'','Killed Enemy Flag Carrier','1','','',''),
