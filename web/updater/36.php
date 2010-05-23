@@ -51,6 +51,23 @@
 			");
 		}
 	}
-
+	$game = "";
+	
+	$cssgames = array();
+	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'css'");
+	while ($rowdata = $db->fetch_row($result))
+	{ 
+		array_push($cssgames, $db->escape($rowdata[0]));
+	}
+	
+	foreach($cssgames as $game)
+	{		
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+				('$game', 'domination', 5, 0, '', 'Domination', '0', '1', '0', '0'),
+				('$game', 'revenge', 3, 0, '', 'Revenge', '0', '1', '0', '0');
+		");
+	}	
+	
 	$db->query("UPDATE hlstats_Options SET `value` = '36' WHERE `keyname` = 'dbversion'");	
 ?>
