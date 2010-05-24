@@ -1,3 +1,31 @@
+HLstatsX Community Edition 1.6.8
+May 26, 2010
+
++ GameSupport: Added many new TF actions from SuperLogs:TF2 2.x (#1090, #1159) (Packhead)
++ GameSupport: Added 4 new TF weapons from recent TF2 updates (#1108, #1162) (Packhead)
++ GameSupport: Added 2 new L4D2 weapons from The Passing update (#1130) (Packhead)
++ GameSupport: Added new CSS (OB) actions provided by new SuperLogs:CSS (#1168) (Packhead)
+? Daemon: Removed some old debug messages that could confuse users (psychonic)
+? Web: Put 'beta' notice on perl backend control page as it is not meant to work on all installs yet (psychonic)
+? SMPlugin: Removed chat notification when adding to sv_tags (psychonic)
+? GameSupport: Change TF default TKPenalty to 0 (#1170) (psychonic)
+! Daemon: Fixed possible crash when inserting livestats data (#1063) (psychonic)
+! Daemon: Fixed 'EnablePublicCommands' option not being respected on some commands when disabled (#1116) (psychonic)
+! Daemon: Fixed IP addresses not being saved for players when tracking in LAN mode (#1142) (psychonic)
+! Daemon: Fixed issue causing bots (including l4d infected) to not be recognized in LAN mode (#1166) (psychonic)
+! Web: Fixed loading error on player chat history page due to short tags (psychonic)
+! Web: Fixed broken formatting on player chat history page (#1076) (psychonic)
+! Web: Added missing padding on game page between servers and awards (psychonic)
+! Web: Fixed incorrect page count on chat page (psychonic)
+! Web: Fixed occurence where options.php could have a blank POST, clearing all options (#1143) (psychonic)
+! Web: Fixed multibyte characters not displaying properly in some admin area fields (#1155) (psychonic)
+! SMPlugin: Fixed non-default cvar values being ignored after reload (#1073) (psychonic)
+! SMPlugin: Fixed sv_tags addition happening multiple times on reload (psychonic)
+! GameSupport: AOC no longer defaults to attempting to use ShowMenu for 'OSD' commands (psychonic)
+! GameSupport: BG2 now defaults to using ShowMenu for 'OSD' commands (psychonic)
+! GameSupport: Added workaround for broken chat in FF 2.4.1 (#1099) (psychonic)
+! GameSupport: Removed old NeoTokyo weapon codes and changed m41l to m41s (#1161) (psychonic)
+
 HLstatsX Community Edition 1.6.7
 February 13, 2010
 
