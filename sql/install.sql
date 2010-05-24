@@ -2558,7 +2558,7 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('tf', 'SkillMode', '0'),
 ('tf', 'SuicidePenalty', '5'),
 ('tf', 'SwitchAdmins', '0'),
-('tf', 'TKPenalty', '25'),
+('tf', 'TKPenalty', '0'),
 ('tf', 'TrackServerLoad', '1'),
 ('tf', 'UpdateHostname', '1'),
 ('tfc', 'Admins', ''),
