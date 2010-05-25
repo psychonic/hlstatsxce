@@ -4980,10 +4980,10 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'demoshield', 'Chargin'' Targe', 2.0),
 ('tf', 'ball', 'Baseball', 2.5),
 ('tf', 'taunt_medic', 'Medic Taunt', 5.0),
-('tf', 'paintrain', 'The Pain Train', 'kills with The Pain Train', '2.00'),
-('tf', 'sledgehammer', 'The Homewrecker', 'kills with The Homewrecker', '2.00'),
-('tf', 'tribalkukri', 'Tribalman''s Shiv', 'kills with The Tribalman''s Shiv', '2.00'),
-('tf', 'battleaxe', 'Scotsman''s Skullcutter', 'kills with The Scotsman''s Skullcutter', '2.00'),
+('tf', 'paintrain', 'The Pain Train', 2.00),
+('tf', 'sledgehammer', 'The Homewrecker', 2.00),
+('tf', 'tribalkukri', 'Tribalman''s Shiv', 2.00),
+('tf', 'battleaxe', 'Scotsman''s Skullcutter', 2.00),
 ('css','knife','Bundeswehr Advanced Combat Knife',2.00),
 ('css','usp','H&K USP .45 Tactical',1.40),
 ('css','glock','Glock 18 Select Fire',1.40),
@@ -5543,5 +5543,5 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('l4d2', 'sniper_scout', 'Steyr Scout', 1),
 ('l4d2', 'upgradepack_explosive', 'Explosive Pack', 1.5),
 ('l4d2', 'world', 'World', 1),
-('l4d2', 'golfclub', 'Golf Club', 'kills with the Golf Club', '1.50'),
-('l4d2', 'rifle_m60', 'M60', 'kills with M60', '1.00');
+('l4d2', 'golfclub', 'Golf Club', 1.50),
+('l4d2', 'rifle_m60', 'M60', 1.00);
