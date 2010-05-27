@@ -3,6 +3,7 @@ May 26, 2010
 
 + GameSupport: Added many new TF actions from SuperLogs:TF2 2.x (#1090, #1159) (Packhead)
 + GameSupport: Added 4 new TF weapons from recent TF2 updates (#1108, #1162) (Packhead)
++ GameSupport: Added many new TF weapon/award/ribbon images (psychonic, HeK, FernFerret)
 + GameSupport: Added 2 new L4D2 weapons from The Passing update (#1130) (Packhead)
 + GameSupport: Added new CSS (OB) actions provided by new SuperLogs:CSS (#1168) (Packhead)
 ? Daemon: Removed some old debug messages that could confuse users (psychonic)
@@ -21,6 +22,7 @@ May 26, 2010
 ! Web: Fixed multibyte characters not displaying properly in some admin area fields (#1155) (psychonic)
 ! SMPlugin: Fixed non-default cvar values being ignored after reload (#1073) (psychonic)
 ! SMPlugin: Fixed sv_tags addition happening multiple times on reload (psychonic)
+! GameSupport: Fixed many small issues with NeoTokyo support (#1161, #1173) (SolidSnake916, psychonic)
 ! GameSupport: AOC no longer defaults to attempting to use ShowMenu for 'OSD' commands (psychonic)
 ! GameSupport: BG2 now defaults to using ShowMenu for 'OSD' commands (psychonic)
 ! GameSupport: Added workaround for broken chat in FF 2.4.1 (#1099) (psychonic)
