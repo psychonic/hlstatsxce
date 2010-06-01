@@ -1129,8 +1129,8 @@ sub getPlayerInfo
 						);
 						$haveplayer = 0;
 					}
-					last;
 				}
+				last;
 			}
 		}
 		
