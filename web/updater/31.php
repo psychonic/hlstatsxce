@@ -40,7 +40,7 @@
 		");				
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
-				('W','$game','taunt_medic', 'Oktoberfest!', 'medic taunt kills');;
+				('W','$game','taunt_medic', 'Oktoberfest!', 'medic taunt kills');
 		");
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `game`, `image`, `ribbonName`, `awardCount`) VALUES
