@@ -105,22 +105,16 @@ sub lookupPlayer
 sub removePlayer
 {
 	my ($saddr, $id, $uniqueid) = @_;
-	my $deletefromchanged = 0;
 	my $deleteplayer = 0;
 	if(defined($g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}))
 	{
 		$deleteplayer = 1;
-		if ( defined( $g_changed_players{$g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}->{playerid}} ) ) {
-			$deletefromchanged = 1;
-		}
 	}
 	else
 	{
 		&::printEvent("400", "Bad attempted delete ($saddr) ($id/$uniqueid)");
 	}
-	if ($deletefromchanged == 1) {
-		delete( $g_changed_players{$g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}->{playerid}} );
-	}
+
 	if ($deleteplayer == 1) {
 		$g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}->playerCleanup();
 		delete($g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"});
@@ -1390,7 +1384,6 @@ $g_log_chat = 0;
 $g_log_chat_admins = 0;
 $g_global_chat = 0;
 $g_ranktype = "skill";
-%g_changed_players = ();
 $g_gi = undef;
 
 # Usage message
@@ -3231,15 +3224,18 @@ EOT
 			}
 		}
 		
-		if(time() > $next_player_update_time) {
+		if (!$g_stdin && defined($g_servers{$s_addr}) && time() > $g_servers{$s_addr}->{next_plyr_flush}) {
 			&printEvent("MYSQL", "Flushing player updates to database...",1);
-			while (my($playerid, $playerobj) = each(%g_changed_players)) {
-				bless $playerobj, "HLstats_Player";
-				$playerobj->flushDB();
+			if ($g_servers{$s_addr}->{"srv_players"}) {
+				while ( my($pl, $player) = each(%{$g_servers{$s_addr}->{"srv_players"}}) ) {
+					if ($player->{needsupdate}) {
+						$player->flushDB();
+					}
+				}
 			}
-			%g_changed_players = ();
 			&printEvent("MYSQL", "Flushing player updates to database is complete.",1);
-			$next_player_update_time = time() + 60+int(rand(30));
+			
+			$g_servers{$s_addr}->{next_plyr_flush} = time() + 30+int(rand(30));
 		}
 
 		if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
@@ -3338,7 +3334,16 @@ $end_time = time();
 if ($g_stdin) {
 	if ($import_logs_count > 0) {
 		print "\n";
-	}  
+	}
+	
+	if ($g_servers{$s_addr}->{"srv_players"}) {
+		while ( my($pl, $player) = each(%{$g_servers{$s_addr}->{"srv_players"}}) ) {
+			if ($player) {
+				# if the player is still in, do proper remove/flush before ending import
+				removePlayer($s_addr, $player->{userid}, $player->{uniqueid});
+			}
+		}
+	}
 	&execNonQuery("UPDATE hlstats_Players SET last_event=UNIX_TIMESTAMP();");
 	&printEvent("IMPORT", "Import of log file complete. Scanned ".$import_logs_count." lines in ".($end_time-$start_time)." seconds", 1, 1);
 }

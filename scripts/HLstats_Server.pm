@@ -183,6 +183,7 @@ sub new
 	$self->{nextkillheadshot}			= 0;
 	
 	$self->{next_timeout} = 0;
+	$self->{next_plyr_flush} = 0;
 	
 	$self->set_play_game($realgame);
 	
