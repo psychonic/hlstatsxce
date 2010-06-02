@@ -780,8 +780,6 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','killed_charged_medic', 'Juice Loosener', 'Charged Medics killed'),
 ('W','tf','ball', 'Fly Ball', 'kills with the Baseball'),
 ('W','tf','taunt_medic', 'Oktoberfest!', 'medic taunt kills'),
-('O','tf','airshot_rocket', 'Fly me to the moon!', 'air rocket hits'),
-('O','tf','airshot_headshot', 'Duck Hunt', 'air headshots'),
 ('W','tf','paintrain', 'Come on ride THE PAIN TRAIN', 'kills with The Pain Train'),
 ('W','tf','sledgehammer', 'Homewreckin', 'kills with The Homewrecker'),
 ('W','tf','tribalkukri', 'The Tribalman''s Shiv', 'kills with The Tribalman''s Shiv'),
