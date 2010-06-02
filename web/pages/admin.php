@@ -548,8 +548,16 @@ class EditList
 		{
 			echo "\n<tr>\n";
 			echo '<td align="center" class="bg1">';
-			echo '<img src="' . IMAGE_PATH . "/$this->icon.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" /></td>\n";
-
+			if  (file_exists(IMAGE_PATH . "/$this->icon.gif"))
+			{
+				echo '<img src="' . IMAGE_PATH . "/$this->icon.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" />";
+			} 
+			else 
+			{
+				echo '<img src="' . IMAGE_PATH . "/server.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" />";
+			}
+			echo "</td>\n";
+			
 			if ($this->showid)
 			{
 				echo '<td align="right" class="bg2 fSmall">' . $rowdata[$this->keycol] . "</td>\n";
