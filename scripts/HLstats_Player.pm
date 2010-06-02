@@ -825,6 +825,8 @@ sub flushDB
 	
 	$self->{last_update_skill} = $skill;
 	
+	$self->{needsupdate} = 0;
+	
 	&::printNotice("Updated player object " . $self->getInfoString());
 	
 	return 1;
