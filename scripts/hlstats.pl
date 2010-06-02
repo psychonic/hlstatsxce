@@ -1103,13 +1103,14 @@ sub getPlayerInfo
 					$unique_id = $uniqueid if ($g_mode eq "LAN");
 				}
 			
-			if (($uniqueid =~ /UNKNOWN/) || ($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
-				return {
-					name     => $name,
-					userid   => $userid,
-					uniqueid => $uniqueid,
-					team     => $team
-				};
+				if (($uniqueid =~ /UNKNOWN/) || ($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
+					return {
+						name     => $name,
+						userid   => $userid,
+						uniqueid => $uniqueid,
+						team     => $team
+					};
+				}
 			}
 		}
 		
