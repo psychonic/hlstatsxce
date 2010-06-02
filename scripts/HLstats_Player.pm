@@ -127,6 +127,7 @@ sub new
 	$self->{kill_streak}	   = 0;
 	$self->{death_streak}	   = 0;
 	$self->{trackable}         = 0;
+	$self->{needsupdate}       = 0;
 	
 	
 	# Set Property Values
@@ -847,8 +848,7 @@ sub updateTimestamp
 sub updateDB
 {
 	my ($self) = @_;
-	my $playerid = $self->{playerid};
-	$::g_changed_players{$playerid} = $self;
+	$self->{needsupdate} = 1;
 	
 }
 
