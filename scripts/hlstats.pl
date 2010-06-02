@@ -982,7 +982,7 @@ sub getPlayerInfo
 		my $haveplayer  = 0;
 		
 		$plainuniqueid = $uniqueid;
-		$uniqueid =~ s/^STEAM_[0-9]+?\://i;
+		$uniqueid =~ s/^STEAM_[0-9]+?\://;
 		
 		if (($uniqueid eq "Console") && ($team eq "Console")) {
 		  return 0;
@@ -1005,22 +1005,22 @@ sub getPlayerInfo
 			} elsif ($uniqueid eq "BOT") {
 				#all other bots have BOT for steamid
 				if ($team eq "Survivor") {
-					if ($name eq "Zoey") {
+					if ($name eq "Nick") {
+						$userid = -11;
+					} elsif ($name eq "Ellis") {
+						$userid = -13;
+					} elsif ($name eq "Rochelle") {
+						$userid = -14;
+					} elsif ($name eq "Coach") {
+						$userid = -12;
+					} elsif ($name eq "Louis") {
+						$userid = -4;
+					} elsif ($name eq "Zoey") {
 						$userid = -1;
 					} elsif ($name eq "Francis") {
 						$userid = -2;
 					} elsif ($name eq "Bill") {
 						$userid = -3;
-					} elsif ($name eq "Louis") {
-						$userid = -4;
-					} elsif ($name eq "Nick") {
-						$userid = -11;
-					} elsif ($name eq "Coach") {
-						$userid = -12;
-					} elsif ($name eq "Ellis") {
-						$userid = -13;
-					} elsif ($name eq "Rochelle") {
-						$userid = -14;
 					} else {
 						&printEvent("ERROR", "No survivor match for $name",0,1);
 						$userid = -4;
@@ -1032,14 +1032,14 @@ sub getPlayerInfo
 						$userid = -6;
 					} elsif ($name eq "Hunter") {
 						$userid = -7;
-					} elsif ($name eq "Tank") {
-						$userid = -8;
 					} elsif ($name eq "Spitter") {
 						$userid = -15;
 					} elsif ($name eq "Jockey") {
 						$userid = -16;
 					} elsif ($name eq "Charger") {
 						$userid = -17;
+					} elsif ($name eq "Tank") {
+						$userid = -8;
 					} else {
 						&printEvent("DEBUG", "No infected match for $name",0,1);
 						$userid = -8;
@@ -1103,7 +1103,10 @@ sub getPlayerInfo
 					$unique_id = $uniqueid if ($g_mode eq "LAN");
 				}
 			
-				if (($uniqueid =~ /UNKNOWN/) || ($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
+				if ($uniqueid eq "UNKNOWN"
+					|| $uniqueid eq "STEAM_ID_PENDING" || $uniqueid eq "STEAM_ID_LAN"
+					|| $uniqueid eq "VALVE_ID_PENDING" || $uniqueid eq "VALVE_ID_LAN"
+				) {
 					return {
 						name     => $name,
 						userid   => $userid,
@@ -1125,9 +1128,9 @@ sub getPlayerInfo
 					# Catch players reconnecting without first disconnecting
 					if ($player->{userid} != $userid) {
 					
-						$ev_status = &doEvent_Disconnect(
+						&doEvent_Disconnect(
 							$player->{"userid"},
-							$player->{"uniqueid"},
+							$uniqueid,
 							""
 						);
 						$haveplayer = 0;
@@ -1147,7 +1150,7 @@ sub getPlayerInfo
 					);
 				}
 				if ($role ne "" && $role ne $player->{role}) {
-					$ev_status = &doEvent_RoleSelection(
+					&doEvent_RoleSelection(
 						$player->{"userid"},
 						$player->{"uniqueid"},
 						$role
