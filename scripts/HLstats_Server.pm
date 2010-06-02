@@ -184,6 +184,7 @@ sub new
 	
 	$self->{next_timeout} = 0;
 	$self->{next_plyr_flush} = 0;
+	$self->{needsupdate} = 0;
 	
 	$self->set_play_game($realgame);
 	
@@ -1058,10 +1059,20 @@ sub analyze_teams
 }
 
 #
-# Update player information in database
+# Marks server as needing flush
 #
 
 sub updateDB
+{
+	my ($self) = @_;
+	$self->{needsupdate} = 1;
+}
+
+#
+# Flushes server information in database
+#
+
+sub flushDB
 {
 	my ($self) = @_;
    	$self->get_map(1);
@@ -1138,6 +1149,7 @@ sub updateDB
 	$self->set("ts_shots", 0);
 	$self->set("ts_hits", 0);
 	$self->set("map_changes", 0);
+	$self->{needsupdate} = 0;
 }
 
 sub update_server_loc

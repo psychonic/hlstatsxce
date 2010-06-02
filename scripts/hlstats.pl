@@ -1385,6 +1385,7 @@ $g_log_chat_admins = 0;
 $g_global_chat = 0;
 $g_ranktype = "skill";
 $g_gi = undef;
+$g_next_server_flush = 0;
 
 # Usage message
 
@@ -3296,6 +3297,15 @@ EOT
 				}
 			}
 			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
+		}
+		
+		if (time() > $g_next_server_flush)
+		{
+			if ($g_servers{$server}->{needsupdate}) {
+				$g_servers{$server}->flushDB();
+			}
+			
+			$g_next_server_flush = time() + 20;
 		}
 	}
 
