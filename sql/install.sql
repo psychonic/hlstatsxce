@@ -84,10 +84,12 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'flagevent_picked_up', 2, 0, '', 'Picked up the flag', '1', '', '', ''),
 ('tf', 'killedobject_obj_teleporter_exit', 2, 0, '', 'Destroyed a teleporter exit', '1', '', '', ''),
 ('tf', 'killedobject_obj_teleporter_entrance', 2, 0, '', 'Destroyed a teleporter entrance', '1', '', '', ''),
+('tf', 'killedobject_obj_teleporter', 2, 0, '', 'Destroyed a teleporter', '1', '', '', ''),
 ('tf', 'killedobject_obj_dispenser', 3, 0, '', 'Destroyed a dispenser', '1', '', '', ''),
 ('tf', 'killedobject_obj_sentrygun', 4, 0, '', 'Destroyed a sentry gun', '1', '', '', ''),
 ('tf', 'builtobject_obj_teleporter_exit', 2, 0, '', 'Built a teleporter exit', '1', '', '', ''),
 ('tf', 'builtobject_obj_teleporter_entrance', 2, 0, '', 'Built a teleporter entrance', '1', '', '', ''),
+('tf', 'builtobject_obj_teleporter', 2, 0, '', 'Built a teleporter', '1', '', '', ''),
 ('tf', 'builtobject_obj_dispenser', 3, 0, '', 'Built a dispenser', '1', '', '', ''),
 ('tf', 'builtobject_obj_sentrygun', 3, 0, '', 'Built a sentry gun', '1', '', '', ''),
 ('tf', 'captureblocked', 1, 0, '', 'Capture Blocked', '1', '', '', ''),
@@ -104,6 +106,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'owner_killedobject_obj_dispenser', -3, 0, '', 'Disassembled a dispenser', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_teleporter_entrance', -2, 0, '', 'Disassembled a teleporter entrance', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_teleporter_exit', -2, 0, '', 'Disassembled a teleporter exit', '1', '', '', ''),
+('tf', 'owner_killedobject_obj_teleporter', -2, 0, '', 'Disassembled a teleporter', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_attachment_sapper', -2, 0, '', 'Console-killed sapper', '1', '', '', ''),
 ('tf', 'backstab', 2, 0, '', 'Backstab Kill', '1', '', '', ''),
 ('tf', 'headshot', 2, 0, '', 'Headshot Kill', '1', '', '', ''),
@@ -3227,8 +3230,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '38', 2),
-('version', '1.6.8', 1),
+('dbversion', '39', 2),
+('version', '1.6.9', 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
 ('Rcon', '1',0),
