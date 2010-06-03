@@ -1,11 +1,12 @@
 HLstatsX Community Edition 1.6.9
 June ??, 2010
 
++ GameSupport: Updated HL2DM/HL2CTF weapon images (Carioca, Peterson)
 ? Daemon: Player stats are now flushed to the database about twice as often due to feedback from users (psychonic)
 ? Daemon: Player stats flush timer is now per server instead of global so potentially less are flushed at once (psychonic)
 ? Daemon: Server stats are now flushed on a timer (slightly more frequent than player stats), rather than instantly (#1176) (psychonic)
 ! Daemon: Fixed an issue that could cause player stats not to save correctly and lead to increased cpu usage (psychonic)
-! GameSupport: Fixed TF2 obj_teleporter_exit and _entrance being removed (now logging obj_teleporter instead) (#1177) (psychonic, Packhead)
+! GameSupport: Fixed TF2 obj_teleporter_exit and _entrance being removed (now logging obj_teleporter instead) (#1177) (Packhead, psychonic)
 ! Web: Fixed admin pages missing images in some places (#1182) (Packhead)
 
 HLstatsX Community Edition 1.6.8
