@@ -1,3 +1,11 @@
+HLstatsX Community Edition 1.6.9
+June ??, 2010
+
+! Daemon: Fixed a premature loop exit which could potentially cause significant MySQL CPU increase
+! Daemon: Fixed a slow query when calling total players for a game type (#1176) (psychonic)
+! GameSupport: Fixed TF2 obj_teleporter_exit and _entrance being removed (now logging obj_teleporter instead) (#1177) (psychonic, Packhead)
+! Web: Fixed admin pages missing images in some places (#1182) (Packhead)
+
 HLstatsX Community Edition 1.6.8
 May 26, 2010
 
