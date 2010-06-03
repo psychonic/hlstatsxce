@@ -78,14 +78,14 @@ For support and installation notes visit http://www.hlxcommunity.com
 			<?php
 				foreach ($getvars as $var=>$value)
 				{
-					echo '<input type="hidden" name="'.htmlentities($var, ENT_QUOTES).'" value="'.htmlentities($value, ENT_QUOTES)."\" />\n";
+					echo '<input type="hidden" name="'.htmlspecialchars($var, ENT_QUOTES).'" value="'.htmlspecialchars($value, ENT_QUOTES)."\" />\n";
 				}
 			?>
 					<table class="data-table" style="width:30%;">
 						<tr valign="middle" class="bg1">
 							<td nowrap="nowrap" style="width:30%;">Search For:</td>
 							<td style="width:70%;">
-								<input type="text" name="q" size="20" maxlength="128" value="<?php echo htmlentities(strip_tags($this->query), ENT_QUOTES, 'UTF-8'); ?>" style="width:300px;" />
+								<input type="text" name="q" size="20" maxlength="128" value="<?php echo htmlspecialchars($this->query, ENT_QUOTES); ?>" style="width:300px;" />
 							</td>
 						</tr>
 						<tr valign="middle" class="bg1">
