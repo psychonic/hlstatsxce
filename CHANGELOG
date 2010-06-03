@@ -8,6 +8,8 @@ June ??, 2010
 ! Daemon: Fixed an issue that could cause player stats not to save correctly and lead to increased cpu usage (psychonic)
 ! GameSupport: Fixed TF2 obj_teleporter_exit and _entrance being removed (now logging obj_teleporter instead) (#1177) (Packhead, psychonic)
 ! Web: Fixed admin pages missing images in some places (#1182) (Packhead)
+! Web: Whitespace is now trimmed from the beginner and end of search input (#1134) (psychonic)
+! Web: Fixed some redundancy and general silliness with sanitizing of search queries. (psychonic)
 
 HLstatsX Community Edition 1.6.8
 May 26, 2010
