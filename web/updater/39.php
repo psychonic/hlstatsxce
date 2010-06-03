@@ -36,9 +36,9 @@
 		list($tfDisassembledExitID,$tfDisassembledExitCount) = $db->fetch_row();
 		
 		// Take counts of old actions and add them to new action.
-		$db->query("UPDATE hlstats_Actions SET `count`=$tfBuiltEntranceCount+$tfBuiltExitCount WHERE `id`='$tfBuiltTeleportID'");
-		$db->query("UPDATE hlstats_Actions SET `count`=$tfDestroyedEntranceCount+$tfDestroyedExitCount WHERE `id`='$tfDestroyedTeleportID'");
-		$db->query("UPDATE hlstats_Actions SET `count`=$tfDisassembledEntranceCount+$tfDisassembledExitCount WHERE `id`='$tfDisassembledTeleportID'");
+		$db->query("UPDATE hlstats_Actions SET `count`=`count`+$tfBuiltEntranceCount+$tfBuiltExitCount WHERE `id`='$tfBuiltTeleportID'");
+		$db->query("UPDATE hlstats_Actions SET `count`=`count`+$tfDestroyedEntranceCount+$tfDestroyedExitCount WHERE `id`='$tfDestroyedTeleportID'");
+		$db->query("UPDATE hlstats_Actions SET `count`=`count`+$tfDisassembledEntranceCount+$tfDisassembledExitCount WHERE `id`='$tfDisassembledTeleportID'");
 
 		// Update Events_PlayerActions
 		$db->query("UPDATE hlstats_Events_PlayerActions SET `actionId`=$tfBuiltTeleportID WHERE `actionId` IN ($tfBuiltEntranceID,$tfBuiltExitID)");
