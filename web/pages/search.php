@@ -46,9 +46,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		array ('Search' => '')
 	);
 	$sr_query = $_GET['q'];
-	$search_pattern = array('/script/i', '/;/', '/%/');
-	$replace_pattern = array('', '', '');
-	$sr_query = preg_replace($search_pattern, $replace_pattern, $sr_query);
 	$sr_type = valid_request(strval($_GET['st']), 0) or 'player';
 	$sr_game = valid_request(strval((isset($_GET['game'])) ? $_GET['game'] : $game), 0);
 	$search = new Search($sr_query, $sr_type, $sr_game);
