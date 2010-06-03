@@ -46,7 +46,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		var $uniqueid_string_plural = 'Unique IDs';
 		function Search ($query, $type, $game)
 		{
-			$this->query = $query;
+			$this->query = trim($query);
 			$this->type = $type;
 			$this->game = $game;
 			if ($g_options['Mode'] == 'LAN')
