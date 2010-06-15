@@ -1352,6 +1352,8 @@ sub updatePlayerCount
 		}
 		$self->{num_trackable_players} = $trackable;
 	}
+	
+	$self->flushDB();
 }
 
 1;

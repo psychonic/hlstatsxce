@@ -104,7 +104,7 @@ sub lookupPlayer
 
 sub removePlayer
 {
-	my ($saddr, $id, $uniqueid) = @_;
+	my ($saddr, $id, $uniqueid, $dontUpdateCount) = @_;
 	my $deleteplayer = 0;
 	if(defined($g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}))
 	{
@@ -118,7 +118,10 @@ sub removePlayer
 	if ($deleteplayer == 1) {
 		$g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"}->playerCleanup();
 		delete($g_servers{$saddr}->{"srv_players"}->{"$id/$uniqueid"});
-		$g_servers{$saddr}->updatePlayerCount();
+		if (!$dontUpdateCount)  # double negative, i know...
+		{
+			$g_servers{$saddr}->updatePlayerCount();
+		}
 	}
 }
 
@@ -1183,7 +1186,6 @@ sub getPlayerInfo
 					}
 					# Increment number of players on server
 					$g_servers{$s_addr}->updatePlayerCount();
-					$g_servers{$s_addr}->updateDB();
 				}  
 			} elsif (($g_mode eq "LAN") && (defined($g_lan_noplayerinfo{"$s_addr/$userid/$name"}))) {
 				if ((!$haveplayer) && ($uniqueid ne "UNKNOWN") && ($create_player > 0)) {
@@ -1203,7 +1205,6 @@ sub getPlayerInfo
 					# Increment number of players on server
 					
 					$g_servers{$s_addr}->updatePlayerCount();
-					$g_servers{$s_addr}->updateDB();
 				} 
 			} else {
 				&printNotice("No player object available for player \"$name\" <U:$userid>");
@@ -3289,9 +3290,7 @@ EOT
 						# - they probably disconnected silently somehow.
 						if (($player->{is_bot} == 0) || ($g_stdin)) {
 							&printEvent(400, "Auto-disconnecting " . $player->getInfoString() ." for idling (" . ($ev_unixtime - $player->{timestamp}) . " sec) on server (".$server.")");
-							$player->updateDB();
 							removePlayer($server, $userid, $uniqueid);
-							$g_servers{$server}->updateDB();
 						}
 					}
 				}
