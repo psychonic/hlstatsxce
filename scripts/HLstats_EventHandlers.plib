@@ -600,7 +600,7 @@ sub doEvent_Disconnect
 	my $playerstr = &getPlayerInfoString($player, $pUserId);
 	
 	if ($player)
-	{		
+	{
 		if (($g_servers{$s_addr}->{ignore_bots} == 1) && (($player->{is_bot} == 1) || ($pUserId < 0)))
 		{
 			$player->updateDB();
@@ -2752,7 +2752,7 @@ sub doEvent_ChangeMap
 			if ($player->{is_bot} == 1)
 			{
 				$player->updateDB();
-				removePlayer($s_addr, $player->{userid}, $player->{uniqueid});
+				removePlayer($s_addr, $player->{userid}, $player->{uniqueid}, 1);
 			}
 		}
 		$g_servers{$s_addr}->setHlxCvars();
