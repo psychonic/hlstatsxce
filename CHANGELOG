@@ -1,5 +1,5 @@
 HLstatsX Community Edition 1.6.9
-June ??, 2010
+June 19, 2010
 
 + GameSupport: Updated HL2DM/HL2CTF weapon images (Carioca, Peterson)
 ? Daemon: Player stats are now flushed to the database about twice as often due to feedback from users (psychonic)
