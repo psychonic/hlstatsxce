@@ -491,7 +491,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('l4d', 'killed_tank', 3, 0, '', 'Killed a Tank', '1', '0', '0', '0'),
 ('l4d', 'killed_witch', 3, 0, '', 'Killed a Witch', '1', '0', '0', '0'),
 ('l4d', 'killed_survivor', 25, 0, '', 'Incapacitated/Killed Survivor', '0', '1', '0', '0'),
-('l4d', 'friendly_fire', -, 0, '', 'Friendly Fire', '1', '0', '0', '0'),
+('l4d', 'friendly_fire', -10, 0, '', 'Friendly Fire', '1', '0', '0', '0'),
 ('l4d', 'cr0wned', 0, 0, '', 'Cr0wned (killed witch with single headshot)', '1', '', '', ''),
 ('l4d', 'hunter_punter', 0, 0, '', 'Hunter Punter (melee a Hunter mid-jump)', '1', '', '', ''),
 ('l4d', 'tounge_twister', 0, 0, '', 'Tounge Twister (kill a Smoker while he is dragging you)', '1', '', '', ''),
