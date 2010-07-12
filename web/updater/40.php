@@ -28,7 +28,7 @@
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
 				('allsentrykills', 1, 0, '$game', '1_allsentrykills.png', 'Bronze Sentry Kills'),
-				('allsentrykills',5, 0, '$game', '2_allsentrykills.png', 'Silver Sentry Kills'),
+				('allsentrykills', 5, 0, '$game', '2_allsentrykills.png', 'Silver Sentry Kills'),
 				('allsentrykills', 10, 0, '$game', '3_allsentrykills.png', 'Gold Sentry Kills'),
 				('ball', 1, 0, '$game', '1_ball.png', 'Bronze Baseball'),
 				('ball', 5, 0, '$game', '2_ball.png', 'Silver Baseball'),

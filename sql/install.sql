@@ -4186,7 +4186,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('battleaxe', 5, 0, 'tf', '2_battleaxe.png', 'Silver Scotsman''s Skullcutter'),
 ('battleaxe', 10, 0, 'tf', '3_battleaxe.png', 'Gold Scotsman''s Skullcutter'),
 ('allsentrykills', 1, 0, 'tf', '1_allsentrykills.png', 'Bronze Sentry Kills'),
-('allsentrykills',5, 0, 'tf', '2_allsentrykills.png', 'Silver Sentry Kills'),
+('allsentrykills', 5, 0, 'tf', '2_allsentrykills.png', 'Silver Sentry Kills'),
 ('allsentrykills', 10, 0, 'tf', '3_allsentrykills.png', 'Gold Sentry Kills'),
 ('ball', 1, 0, 'tf', '1_ball.png', 'Bronze Baseball'),
 ('ball', 5, 0, 'tf', '2_ball.png', 'Silver Baseball'),
