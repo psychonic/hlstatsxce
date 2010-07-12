@@ -83,6 +83,7 @@ $opt_help = 0;
 $opt_version = 0;
 $opt_numdays = 1;
 $opt_noribbons = 0;
+$opt_nocleanup = 0;
 $opt_verbose = 0;
 
 $db_host = "localhost";
@@ -105,7 +106,8 @@ Generate awards from Half-Life server statistics.
       --date=YYYY-MM-DD           day after date to calculate awards for (defaults to today) 
                                     If you specify a date like 2008-01-04 it will do awards
                                     based on 2008-01-03 stats
-      --noribbons                  if set, ribbon calculation is skipped
+      --noribbons                 if set, ribbon calculation is skipped (only use if you know what you're doing)
+      --nocleanup                 if set, database cleanup is skipped (only use if you know what you're doing)
       --db-host=HOST              database ip:port
       --db-name=DATABASE          database name
       --db-password=PASSWORD      database password (WARNING: specifying the
@@ -122,7 +124,7 @@ Most options can be specified in the configuration file:
 Note: Options set on the command line take precedence over options set in the
 configuration file.
 
-HLstats: http://www.hlstats.org
+HLstatsX:CE: http://www.hlxce.com
 EOT
 ;
 
@@ -155,6 +157,7 @@ GetOptions(
 	"numdays=i"			=> \$opt_numdays,
 	"date=s"			=> \$date_ubase,
 	"noribbons"			=> \$opt_noribbons,
+	"nocleanup"			=> \$opt_nocleanup,
 	"db-host=s"			=> \$db_host,
 	"db-name=s"			=> \$db_name,
 	"db-password=s"		=> \$db_pass,
@@ -1021,6 +1024,11 @@ if ($gi) {
 		}
 	}
 	print "\n++ Missing locations found for ".$cnt." players.\n";
+}
+
+if ($opt_nocleanup)
+{
+	exit 0;
 }
 
 $result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
