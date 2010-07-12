@@ -4220,7 +4220,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('paintrain', 10, 0, 'tf', '3_paintrain.png', 'Gold Paintrain'),
 ('pyro_extinguish', 1, 0, 'tf', '1_pyro_extinguish.png', 'Bronze Pyro Extinguish'),
 ('pyro_extinguish', 5, 0, 'tf', '2_pyro_extinguish.png', 'Silver Pyro Extinguish'),
-('pyro_extinguish', 10, 0, 'tf', '3_pyro_extinguishc.png', 'Gold Pyro Extinguish'),
+('pyro_extinguish', 10, 0, 'tf', '3_pyro_extinguish.png', 'Gold Pyro Extinguish'),
 ('robot_arm', 1, 0, 'tf', '1_robot_arm.png', 'Bronze Gunslinger'),
 ('robot_arm', 5, 0, 'tf', '2_robot_arm.png', 'Silver Gunslinger'),
 ('robot_arm', 10, 0, 'tf', '3_robot_arm.png', 'Gold Gunslinger'),
