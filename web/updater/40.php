@@ -11,6 +11,13 @@
 		array_push($tfgames, $db->escape($rowdata[0]));
 	}
 	
+	$cssgames = array();
+	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'css'");
+	while ($rowdata = $db->fetch_row($result))
+	{ 
+		array_push($cssgames, $db->escape($rowdata[0]));
+	}	
+	
 	foreach($tfgames as $game)
 	{
 
@@ -101,6 +108,12 @@
 				('$game', 'wrangler_kill', 'Wrangler', '1.00');
 		");
 	}
+	
+	foreach ($cssgames as $game)
+	{
+		$db->query("UPDATE hlstats_Games_Defaults SET `value` = '3' WHERE `keyname` = 'GameEngine' AND `code` = '$game'");
+	}
+	
 	$db->query("UPDATE hlstats_Options SET `value` = '1.6.10' WHERE `keyname` = 'version'");
 	$db->query("UPDATE hlstats_Options SET `value` = '40' WHERE `keyname` = 'dbversion'");
 ?>

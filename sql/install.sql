@@ -2190,7 +2190,7 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('css', 'DefaultDisplayEvents', '1'),
 ('css', 'DisplayResultsInBrowser', '1'),
 ('css', 'EnablePublicCommands', '1'),
-('css', 'GameEngine', '2'),
+('css', 'GameEngine', '3'),
 ('css', 'GameType', '0'),
 ('css', 'HLStatsURL', 'http://yoursite.com/hlstats'),
 ('css', 'IgnoreBots', '1'),
