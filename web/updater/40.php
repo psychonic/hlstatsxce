@@ -111,7 +111,7 @@
 	
 	foreach ($cssgames as $game)
 	{
-		$db->query("UPDATE hlstats_Games_Defaults SET `value` = '3' WHERE `keyname` = 'GameEngine' AND `code` = '$game'");
+		$db->query("UPDATE hlstats_Games_Defaults SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `code` = '$game'");
 	}
 	
 	$db->query("UPDATE hlstats_Options SET `value` = '1.6.10' WHERE `keyname` = 'version'");
