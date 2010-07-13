@@ -82,6 +82,9 @@ binmode STDOUT, ":utf8";
 $opt_help = 0;
 $opt_version = 0;
 $opt_numdays = 1;
+$opt_noribbons = 0;
+$opt_nocleanup = 0;
+$opt_verbose = 0;
 
 $db_host = "localhost";
 $db_user = "";
@@ -102,7 +105,9 @@ Generate awards from Half-Life server statistics.
       --numdays                   number of days in period for awards
       --date=YYYY-MM-DD           day after date to calculate awards for (defaults to today) 
                                     If you specify a date like 2008-01-04 it will do awards
-				    based on 2008-01-03 stats
+                                    based on 2008-01-03 stats
+      --noribbons                 if set, ribbon calculation is skipped (only use if you know what you're doing)
+      --nocleanup                 if set, database cleanup is skipped (only use if you know what you're doing)
       --db-host=HOST              database ip:port
       --db-name=DATABASE          database name
       --db-password=PASSWORD      database password (WARNING: specifying the
@@ -119,7 +124,7 @@ Most options can be specified in the configuration file:
 Note: Options set on the command line take precedence over options set in the
 configuration file.
 
-HLstats: http://www.hlstats.org
+HLstatsX:CE: http://www.hlxce.com
 EOT
 ;
 
@@ -151,11 +156,14 @@ GetOptions(
 	"version|v"			=> \$opt_version,
 	"numdays=i"			=> \$opt_numdays,
 	"date=s"			=> \$date_ubase,
+	"noribbons"			=> \$opt_noribbons,
+	"nocleanup"			=> \$opt_nocleanup,
 	"db-host=s"			=> \$db_host,
 	"db-name=s"			=> \$db_name,
 	"db-password=s"		=> \$db_pass,
 	"db-username=s"		=> \$db_user,
-        "configfile|c=s"		=> \$configfile
+	"configfile|c=s"	=> \$configfile,
+	"verbose"			=> \$opt_verbose
 ) or die($usage);
 
 if ($opt_help)
@@ -210,9 +218,9 @@ if($date_ubase)
 
 # Startup
 
-print "++ HLstats Awards $g_version starting...\n\n";
+print "++ HLstatsX:CE Awards & Maintenance script version $g_version starting...\n\n";
 
-
+print "\n++ Player activity update started.\n";
 $g_minactivity = 2419200;
 # Inactive Players
 $result = &doQuery("
@@ -303,6 +311,8 @@ if ($g_minactivity > 0)
 }
 	
 # Daily Awards
+
+print "\n++ Awards processing started.\n";
 
 $resultAwards = &doQuery("
 	SELECT
@@ -759,8 +769,11 @@ while( ($awardId, $game, $awardType, $code) = $resultAwards->fetchrow_array )
 		$g_winner_count = "NULL";
 	}
 	
-	print "  - $d_winner_id ($d_winner_count)\n";
-	print "  - $g_winner_id ($g_winner_count)\n";
+	if ($opt_verbose)
+	{
+		print "  - $d_winner_id ($d_winner_count)\n";
+		print "  - $g_winner_id ($g_winner_count)\n";
+	}
 	
 	&execNonQuery("
 		UPDATE
@@ -789,81 +802,92 @@ while( ($awardId, $game, $awardType, $code) = $resultAwards->fetchrow_array )
 
 print "\n++ Awards generated successfully.\n";
 
-$result = &doQuery("SELECT `code` FROM `hlstats_Games`;");
-while( my($game) = $result->fetchrow_array ) {
-
-	&execNonQuery("DELETE FROM hlstats_Players_Ribbons WHERE game='".&quoteSQL($game)."';");
+if (!$opt_noribbons)
+{
+	print "\n++ Ribbon generation started.\n";
 	
-	$result2 = &doQuery("
-		SELECT
-			`ribbonId`,
-			`awardCode`,
-			`awardCount`,
-			`special`
-		FROM
-			`hlstats_Ribbons`
-		WHERE
-			game='".&quoteSQL($game)."' AND
-			(special=0 OR special=2);
-		");
-	while ( my($ribbonid, $code, $count, $special) = $result2->fetchrow_array ) {
-		# scan players for each ribbon ID
-		if ($special==2) {
-		# connection time
-			$result3 = &doQuery("
-				SELECT
-					playerId,
-					(connection_time/3600) AS CNT
-				FROM
-					hlstats_Players
-				WHERE
-					game='".&quoteSQL($game)."' 
-					AND hlstats_Players.hideranking=0
-					AND (connection_time/3600)>=".$count."
-				");
-		} else {
-			# awards ribbons
-			$having = "CNT>=".$count;
-			$result3 = &doQuery("
-				SELECT
-					hlstats_Players_Awards.playerId,
-					COUNT(hlstats_Players_Awards.playerId) AS CNT
-				FROM
-					hlstats_Players_Awards
-				INNER JOIN
-					hlstats_Awards
-				ON
-					(hlstats_Awards.awardId=hlstats_Players_Awards.awardId AND
-					hlstats_Awards.game=hlstats_Players_Awards.game)
-				INNER JOIN
-					hlstats_Players
-				ON
-					hlstats_Players.playerId = hlstats_Players_Awards.playerId
-					AND hlstats_Players.hideranking=0
-				WHERE
-					hlstats_Players_Awards.game='".&quoteSQL($game)."' AND
-					hlstats_Awards.code='".$code."' AND
-					hlstats_Awards.awardType<>'V'
-				GROUP BY
-					hlstats_Players_Awards.playerId    	
-				HAVING
-					".$having."  
-				");
-		}
+	$result = &doQuery("SELECT `code` FROM `hlstats_Games`;");
+	while( my($game) = $result->fetchrow_array ) {
 
-		while (my($playerid, $cnt) = $result3->fetchrow_array) {
-			&execNonQuery("
-				INSERT INTO hlstats_Players_Ribbons
-					(playerId, ribbonId, game)
-				VALUES
-					(".$playerid.",".$ribbonid.",'".&quoteSQL($game)."')
-				");  
-		}
-	}  
+		&execNonQuery("DELETE FROM hlstats_Players_Ribbons WHERE game='".&quoteSQL($game)."';");
+		
+		$result2 = &doQuery("
+			SELECT
+				`ribbonId`,
+				`awardCode`,
+				`awardCount`,
+				`special`
+			FROM
+				`hlstats_Ribbons`
+			WHERE
+				game='".&quoteSQL($game)."' AND
+				(special=0 OR special=2);
+			");
+		while ( my($ribbonid, $code, $count, $special) = $result2->fetchrow_array ) {
+			# scan players for each ribbon ID
+			if ($special==2) {
+			# connection time
+				$result3 = &doQuery("
+					SELECT
+						playerId,
+						(connection_time/3600) AS CNT
+					FROM
+						hlstats_Players
+					WHERE
+						game='".&quoteSQL($game)."' 
+						AND hlstats_Players.hideranking=0
+						AND (connection_time/3600)>=".$count."
+					");
+			} else {
+				# awards ribbons
+				$having = "CNT>=".$count;
+				$result3 = &doQuery("
+					SELECT
+						hlstats_Players_Awards.playerId,
+						COUNT(hlstats_Players_Awards.playerId) AS CNT
+					FROM
+						hlstats_Players_Awards
+					INNER JOIN
+						hlstats_Awards
+					ON
+						(hlstats_Awards.awardId=hlstats_Players_Awards.awardId AND
+						hlstats_Awards.game=hlstats_Players_Awards.game)
+					INNER JOIN
+						hlstats_Players
+					ON
+						hlstats_Players.playerId = hlstats_Players_Awards.playerId
+						AND hlstats_Players.hideranking=0
+					WHERE
+						hlstats_Players_Awards.game='".&quoteSQL($game)."' AND
+						hlstats_Awards.code='".$code."' AND
+						hlstats_Awards.awardType<>'V'
+					GROUP BY
+						hlstats_Players_Awards.playerId    	
+					HAVING
+						".$having."  
+					");
+			}
 
+			while (my($playerid, $cnt) = $result3->fetchrow_array) {
+				&execNonQuery("
+					INSERT INTO hlstats_Players_Ribbons
+						(playerId, ribbonId, game)
+					VALUES
+						(".$playerid.",".$ribbonid.",'".&quoteSQL($game)."')
+					");  
+			}
+		}  
+
+	}
+	print "\n++ Ribbons generated successfully.\n";
 }
-print "\n++ Ribbons generated successfully.\n";
 
+if ($date_ubase)
+{
+	exit 0;
+}
+
+print "\n++ Looking up missing player locations.\n";
 $useGeoIPBinary = 0;
 
 # Sanity checks to see if we can do geolocation updates
@@ -941,7 +965,10 @@ if ($gi) {
 	while (my($pid, $address, $name) = $result->fetchrow_array) {
 		$address = trim($address);
 		next if ($address !~ /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/);
-		print "Attempting to find location for: ".$name." (".$address.")\n";
+		if ($opt_verbose)
+		{
+			print "Attempting to find location for: ".$name." (".$address.")\n";
+		}
 		my $number = ip2number($address);
 		my $update = 0;
 		my $foundflag = "";
@@ -951,7 +978,10 @@ if ($gi) {
 		my $foundlat = 0;
 		my $foundlng = 0;
 		if ($useGeoIPBinary > 0) {
-			print "2 ".$pid." ".$address."\n";
+			if ($opt_verbose)
+			{
+				print "2 ".$pid." ".$address."\n";
+			}
 			my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude, $metro_code, $area_code) = $gi->get_city_record($address);
 			if ($longitude) {
 				$foundflag = encode("utf8",$country_code);
@@ -994,6 +1024,11 @@ if ($gi) {
 		}
 	}
 	print "\n++ Missing locations found for ".$cnt." players.\n";
+}
+
+if ($opt_nocleanup)
+{
+	exit 0;
 }
 
 $result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
