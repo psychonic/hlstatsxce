@@ -10,13 +10,13 @@
 	{ 
 		array_push($tfgames, $db->escape($rowdata[0]));
 	}
-	
-	$cssgames = array();
-	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'css'");
+
+	$cssserverids = array();
+	$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE `game` = (SELECT code FROM hlstats_Games WHERE `realgame` = 'css')");
 	while ($rowdata = $db->fetch_row($result))
 	{ 
-		array_push($cssgames, $db->escape($rowdata[0]));
-	}	
+		array_push($cssserverids, $db->escape($rowdata[0]));
+	}
 	
 	foreach($tfgames as $game)
 	{
@@ -109,10 +109,12 @@
 		");
 	}
 	
-	foreach ($cssgames as $game)
+	foreach ($cssserverids as $serverid)
 	{
-		$db->query("UPDATE hlstats_Games_Defaults SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `code` = '$game'");
+		$db->query("UPDATE hlstats_Servers_Config SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `serverId` = '$serverid'");
 	}
+
+	$db->query("UPDATE hlstats_Games_Defaults SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `code` = 'css'");
 	
 	$db->query("UPDATE hlstats_Options SET `value` = '1.6.10' WHERE `keyname` = 'version'");
 	$db->query("UPDATE hlstats_Options SET `value` = '40' WHERE `keyname` = 'dbversion'");
