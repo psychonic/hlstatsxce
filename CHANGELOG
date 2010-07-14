@@ -1,3 +1,11 @@
+HLstatsX Community Edition 1.6.10
+July 13, 2010
+
++ GameSupport: TF2 - Engineer Update - Added new weapons, awards, ribbons and map screenshots (#1205, #1206,#1207) (FernFerret, octo-dhd, Packhead)
++ GameSupport: TF2 - Added missing ribbon images and database support for various weapons (#1197) (octo-dhd, FernFerret, Packhead)
++ GameSupport: CSS - Changed default and existing installs to use GameEngine 3 (Orange Box) (#1203) (Packhead)
+? General: hlstats-awards now has three additional (optional) parameters and only runs award and ribbon generation when a date is specified (#1210) (psychonic)
+
 HLstatsX Community Edition 1.6.9
 June 19, 2010
 
