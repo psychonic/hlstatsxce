@@ -12,7 +12,7 @@
 	}
 
 	$cssserverids = array();
-	$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE `game` = (SELECT code FROM hlstats_Games WHERE `realgame` = 'css')");
+	$result = $db->query("SELECT hlstats_Servers.serverId FROM hlstats_Servers JOIN hlstats_Games ON hlstats_Servers.game = hlstats_Games.code WHERE hlstats_Games.realgame = 'css'");
 	while ($rowdata = $db->fetch_row($result))
 	{ 
 		array_push($cssserverids, $db->escape($rowdata[0]));
