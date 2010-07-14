@@ -4924,7 +4924,7 @@ INSERT INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcol
 ('l4d', 'Infected', 'Infected', '0', '#E5D5D5', '#68090B', 2),
 ('l4d2', 'Survivor', 'Survivors', '0', '#E0E4E5', '#4B6168', 1),
 ('l4d2', 'Infected', 'Infected', '0', '#E5D5D5', '#68090B', 2),
-('fof', 'DESPERADOS', 'Desparados', '0', '#D2E8F7','#0080C0', 1),
+('fof', 'DESPERADOS', 'Desperados', '0', '#D2E8F7','#0080C0', 1),
 ('fof', 'VIGILANTES', 'Vigilantes', '0', '#FFD5D5','#FF2D2D', 2),
 ('ges', 'MI6', 'MI6', '0', '#D2E8F7','#0080C0', 1),
 ('ges', 'Janus', 'Janus', '0', '#FFD5D5','#FF2D2D', 2),
