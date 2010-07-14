@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.10"
+#define VERSION "1.6.11-pre1"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -176,7 +176,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -864,6 +864,27 @@ color_team_entities(String:message[192])
 				}
 			}
 		}
+		case Game_FOF:
+		{
+			if (strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Desperados ", "\x03Desperados\x01 ") > 0
+						|| ReplaceString(message, sizeof(message), "Desparados ", "\x03Desperados\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Vigilantes ", "\x03Vigilantes\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+			}
+		}
 		case Game_HL2MP:
 		{
 			if (g_bTeamPlay && strcmp(message, "") != 0)
@@ -968,7 +989,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_GES:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES:
 		{
 			if (is_colored > 0)
 			{
@@ -1061,44 +1082,6 @@ public Action:hlx_sm_psay(args)
 			}
 			
 			PrintToChatRecipientsFF(display_message);
-		}
-		case Game_FOF:
-		{
-			new prefix = 0;
-			if (strcmp(message_prefix, "") != 0)
-			{
-				prefix = 1;
-				Format(display_message, 192, "%s: %s", message_prefix, client_message);
-			}
-			
-			while (IsStackEmpty(message_recipients) == false)
-			{
-				new recipient_client = -1;
-				PopStackCell(message_recipients, recipient_client);
-
-				new player_index = GetClientOfUserId(recipient_client);
-				if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
-				{
-					new Handle:hBf;
-					hBf = StartMessageOne("SayText", player_index);
-					if (hBf != INVALID_HANDLE)
-					{
-						BfWriteByte(hBf, player_index);						
-						if (prefix == 0)
-						{
-							BfWriteString(hBf, client_message);
-						}
-						else
-						{
-							BfWriteString(hBf, display_message);
-						}
-						BfWriteByte(hBf, 10);
-						BfWriteByte(hBf, 0);
-						BfWriteByte(hBf, 1);
-						EndMessage();
-					}
-				}
-			}
 		}
 		default:
 		{
