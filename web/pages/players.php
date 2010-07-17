@@ -375,6 +375,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Players_History.playerId = hlstats_Players.playerId
 				WHERE
 					hlstats_Players_History.game = '$game'
+					AND hlstats_Players.hideranking = 0
 					AND activity > 0
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) >= $minEvent
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) <= $maxEvent
@@ -403,6 +404,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Players_History.playerId = hlstats_Players.playerId
 				WHERE
 					hlstats_Players_History.game = '$game'
+					AND hlstats_Players.hideranking = 0
 					AND hlstats_Players_History.kills >= $minkills
 					AND activity > 0
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) >= $minEvent
@@ -433,7 +435,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					
 					foreach ($_GET as $k=>$v)
 					{
-					$v = valid_request($v, 0);
+						$v = valid_request($v, 0);
 						if ($k != 'minkills')
 						{
 							echo "<input type=\"hidden\" name=\"$k\" value=\"" . htmlspecialchars($v) . "\" />\n";
