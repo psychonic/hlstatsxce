@@ -108,7 +108,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Players.kill_streak,
 			hlstats_Players.death_streak,
 			IFNULL(ROUND((hits / shots * 100), 1), 0.0) AS acc,
-			CONCAT(hlstats_Clans.name) AS clan_name,
+			hlstats_Clans.name AS clan_name,
 			activity
 		FROM
 			hlstats_Players
