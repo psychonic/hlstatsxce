@@ -366,7 +366,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					SUM(hlstats_Players_History.headshots) AS headshots,
 					ROUND(SUM(hlstats_Players_History.headshots) / SUM(hlstats_Players_History.kills), 2) AS hpk,
 					IFNULL(ROUND((SUM(hlstats_Players_History.hits) / SUM(hlstats_Players_History.shots) * 100), 1), 0) AS acc,
-					IF(".$g_options['MinActivity']." > (UNIX_TIMESTAMP() - MAX(hlstats_Players.last_event)), ((100 / ".$g_options['MinActivity'].") * (".$g_options['MinActivity']." - (UNIX_TIMESTAMP() - MAX(hlstats_Players.last_event)))), 0) AS activity
+					activity
 				FROM
 					hlstats_Players_History
 				INNER JOIN
@@ -375,6 +375,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Players_History.playerId = hlstats_Players.playerId
 				WHERE
 					hlstats_Players_History.game = '$game'
+					AND activity > 0
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) >= $minEvent
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) <= $maxEvent
 				GROUP BY
@@ -393,8 +394,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$resultCount = $db->query
 			("
 				SELECT
-					hlstats_Players_History.playerId,
-					IF(".$g_options['MinActivity']." > (UNIX_TIMESTAMP() - MAX(hlstats_Players.last_event)), ((100 / ".$g_options['MinActivity'].") * (".$g_options['MinActivity']." - (UNIX_TIMESTAMP() - MAX(hlstats_Players.last_event)))), 0) AS activity
+					COUNT(hlstats_Players_History.playerId)
 				FROM
 					hlstats_Players_History
 				INNER JOIN
@@ -404,14 +404,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 				WHERE
 					hlstats_Players_History.game = '$game'
 					AND hlstats_Players_History.kills >= $minkills
+					AND activity > 0
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) >= $minEvent
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) <= $maxEvent
 				GROUP BY
 					hlstats_Players_History.playerId
-				HAVING 
-					activity > 0
 			");
-			$numitems = $db->num_rows($resultCount);
+			list($numitems) = $db->fetch_row($resultCount);
 		}
 		$table->draw($result, $numitems, 95);
 	?><br /><br />
