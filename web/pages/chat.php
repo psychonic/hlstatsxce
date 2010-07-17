@@ -145,49 +145,92 @@ For support and installation notes visit http://www.hlxcommunity.com
 	</div>
 	<div style="clear:both;padding-top:20px;"></div>
 		<?php
-			$table = new Table(
-				array
-				(
-					new TableColumn
+			if ($showserver == 0)
+			{
+				$table = new Table(
+					array
 					(
-						'eventTime',
-						'Date',
-						'width=13'
+						new TableColumn
+						(
+							'eventTime',
+							'Date',
+							'width=16'
+						),
+						new TableColumn
+						(
+							'lastName',
+							'Player',
+							'width=17&sort=no&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k')
+						),
+						new TableColumn
+						(
+							'message',
+							'Message',
+							'width=34&sort=no&embedlink=yes'
+						),
+						new TableColumn
+						(
+							'serverName',
+							'Server',
+							'width=23&sort=no'
+						),
+						new TableColumn
+						(
+							'map',
+							'Map',
+							'width=10&sort=no'
+						)
 					),
-					new TableColumn
+					'playerId',
+					'eventTime',
+					'lastName',
+					false,
+					50,
+					"page",
+					"sort",
+					"sortorder"
+				);
+			}
+			else
+			{
+				$table = new Table(
+					array
 					(
-						'lastName',
-						'Player',
-						'width=17&sort=no&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k')
+						new TableColumn
+						(
+							'eventTime',
+							'Date',
+							'width=16'
+						),
+						new TableColumn
+						(
+							'lastName',
+							'Player',
+							'width=24&sort=no&flag=1&link=' . urlencode('mode=playerinfo&amp;player=%k')
+						),
+						new TableColumn
+						(
+							'message',
+							'Message',
+							'width=44&sort=no&embedlink=yes'
+						),
+						new TableColumn
+						(
+							'map',
+							'Map',
+							'width=16&sort=no'
+						)
 					),
-					new TableColumn
-					(
-						'message',
-						'Message',
-						'width=34&sort=no&embedlink=yes'
-					),
-					new TableColumn
-					(
-						'serverName',
-						'Server',
-						'width=26&sort=no'
-					),
-					new TableColumn
-					(
-						'map',
-						'Map',
-						'width=10&sort=no'
-					)
-				),
-				'playerId',
-				'eventTime',
-				'lastName',
-				false,
-				50,
-				"page",
-				"sort",
-				"sortorder"
-			);
+					'playerId',
+					'eventTime',
+					'lastName',
+					false,
+					50,
+					"page",
+					"sort",
+					"sortorder"
+				);
+			}
 			$whereclause2='';
 			if(!empty($filter))
 			{
