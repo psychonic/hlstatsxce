@@ -718,6 +718,10 @@ sub doEvent_Suicide
 	{
 		$desc = "(IGNORED) BonusRound: ";
 	}
+	elsif ($player->{last_team_change}+2 > $ev_remotetime)
+	{
+		$desc = "(IGNORED) TEAMSWITCH: ";
+	}
 	elsif ($player)
 	{
 		if (($g_servers{$s_addr}->{ignore_bots} == 1) && ($player->{is_bot} == 1))
