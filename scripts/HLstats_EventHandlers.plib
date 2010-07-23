@@ -472,7 +472,7 @@ sub doEvent_Connect
 						}
 						elsif ($player->{skill} == 1000)
 						{
-							$msg = sprintf("New Player %s has connected from %s",$player->{name},$player->{country});
+							$msg = sprintf("New player %s has connected from %s",$player->{name},$player->{country});
 						}
 						elsif ($g_ranktype ne "kills")
 						{
