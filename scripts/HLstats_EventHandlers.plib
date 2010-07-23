@@ -2011,7 +2011,7 @@ sub doEvent_Chat
 				}
 			}
 
-			if (($g_log_chat > 0) && ($messagelen > 3)) {
+			if ($g_log_chat > 0) {
 				my $log = 1;
 				if ($g_log_chat_admins == 0)  {
 					my $steamid      = $player->{uniqueid};
