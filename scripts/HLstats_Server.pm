@@ -635,7 +635,15 @@ sub get_map
 					$self->{map} = $temp_map;
 					$update++;
 				}
-			}  
+			} else {
+				# Something went wrong, lets try the alternate way of checking the map (old udp package)
+				my $querymap = &::queryServer($self->{address}, $self->{port}, 'mapname');
+				if ($querymap ne "") {
+					$self->{map} = $querymap;
+					$update++;
+				}
+			}
+			
 			if (($temp_maxplayers != -1) && ($temp_maxplayers > 0) && ($temp_maxplayers ne "")) {
 				if ($self->{maxplayers} != $temp_maxplayers) {
 					$self->{maxplayers} = $temp_maxplayers;
@@ -654,14 +662,6 @@ sub get_map
 			}
 		  
 			&::printNotice("get_rcon_status successfully");
-		}
-
-		if ($self->{map} eq "") {
-			# Something went wrong, lets try the alternate way of checking the map (old udp package)
-			my $querymap = &::queryServer($self->{address}, $self->{port}, 'mapname');
-			if ($querymap ne "") {
-				$self->{map} = $querymap;
-			}
 		}
 	}  
 	return $self->{map};
