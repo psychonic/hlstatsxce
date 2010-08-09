@@ -403,7 +403,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						hlstats_Games.code = hlstats_Players.game
 					WHERE
 						hlstats_Games.hidden = '0'
-						AND connects.ipAddress = '$sr_query'
+						AND connects.ipAddress LIKE '$sr_query%'
 						$andgame
 					ORDER BY
 						$table->sort $table->sortorder,
@@ -437,7 +437,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						hlstats_Games.code = hlstats_Players.game
 					WHERE
 						hlstats_Games.hidden = '0'
-						AND connects.ipAddress = '$sr_query'
+						AND connects.ipAddress LIKE '$sr_query%'
 						$andgame
 				");
 				list($numitems) = $db->fetch_row($resultCount);
