@@ -304,7 +304,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 	if ($g_options["countrydata"]==1) {
 ?>
-			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-countryclans.png" alt="CountryClans" /></a> <a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading">Countries</a></li>
+			<li><a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game";  ?>" class="fHeading"><img src="<?php echo $iconpath; ?>/nav-countryclans.png" alt="CountryClans" /></a> <a href="<?php echo $g_options['scripturl']  . "?mode=countryclans&amp;game=$game&amp;sort=nummembers";  ?>" class="fHeading">Countries</a></li>
 <?php
 	}
 ?>
