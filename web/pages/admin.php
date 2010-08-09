@@ -434,10 +434,17 @@ class EditList
 					}
 
 					$value = mystripslashes($_POST[$row . "_" . $col->name]);
+					
+					//  legacy code that should have never been here. these should never be html-escaped in the db.
+					//  if there's a problem with removing this, it needs to be fixed on the web/display end
+					//  -psychonic
+					//
+					/*
 					if ( $col->name != 'rcon_password' && $col->type != 'password' && $col->name != 'pattern')
 					{
 						$value = htmlspecialchars($value);
 					}
+					*/
 
 					if ($col->type == 'checkbox' && $value == ('' || null))
 					{
