@@ -82,7 +82,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Actions.code,
 			hlstats_Actions.description,
 			COUNT(hlstats_Events_PlayerActions.id) AS obj_count,
-			COUNT(hlstats_Events_PlayerActions.id) * hlstats_Actions.reward_player AS obj_bonus
+			SUM(hlstats_Events_PlayerActions.bonus) AS obj_bonus
 		FROM
 			hlstats_Actions
 		LEFT JOIN
@@ -105,7 +105,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Actions.code,
 			hlstats_Actions.description,
 			COUNT(hlstats_Events_PlayerPlayerActions.id) AS obj_count,
-			COUNT(hlstats_Events_PlayerPlayerActions.id) * hlstats_Actions.reward_player AS obj_bonus
+			SUM(hlstats_Events_PlayerPlayerActions.bonus) AS obj_bonus
 		FROM
 			hlstats_Actions
 		LEFT JOIN
@@ -179,7 +179,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Actions.code,
 			hlstats_Actions.description,
 			COUNT(hlstats_Events_PlayerPlayerActions.id) AS obj_count,
-			COUNT(hlstats_Events_PlayerPlayerActions.id) * hlstats_Actions.reward_player * -1 AS obj_bonus
+			SUM(hlstats_Events_PlayerPlayerActions.bonus) * -1 AS obj_bonus
 		FROM
 			hlstats_Actions
 		LEFT JOIN
