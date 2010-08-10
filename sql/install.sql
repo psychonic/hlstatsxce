@@ -1172,7 +1172,6 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'fof', 'thrown_knife', 'Thrown Knife', 'kills with Thrown Knife'),
 ('W', 'fof', 'dualnavy', 'Dual Colt Navys', 'kills with Dual Colt Navys'),
 ('W', 'fof', 'dynamite', 'Dynamite', 'kills with Dynamite'),
-('W', 'fof', 'explosive_arrow', 'Explosive Arrow', 'kills with Explosive Arrows'),
 ('W', 'fof', 'fists', 'Fists', 'kills with Fists'),
 ('W', 'fof', 'axe', 'Axe', 'kills with Axe'),
 ('W', 'fof', 'dualpeacemaker', 'Dual Peacemakers', 'kills with Dual Peacemakers'),
