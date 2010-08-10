@@ -48,8 +48,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$result  = $db->query("SELECT `code`,`name` FROM hlstats_Weapons WHERE game='$game'");
 	while ($rowdata = $db->fetch_row($result)) 
 	{ 
-		$code = preg_replace('/[ \r\n\t]+/', '', $rowdata[0]);
-		$fname[strToLower($code)] = htmlspecialchars($rowdata[1]);
+		$code = $rowdata[0];
+		$fname[$code] = htmlspecialchars($rowdata[1]);
 	}
 	
 	$tblWeapons = new Table(
