@@ -319,7 +319,7 @@ class Table
 						}
 						else
 						{
-							$cellbody .= "<b>$colval</b>";
+							$cellbody .= '<b>'.ucwords(preg_replace('/_/', ' ', $colval)).'</b>';
 						}
 						break;
 					  
@@ -332,7 +332,7 @@ class Table
 						}
 						else
 						{
-							$cellbody .= '<b>' . (($col->fname[$colval] != '') ? $col->fname[$colval] : $colval) . '</b>';
+							$cellbody .= '<b>' . (($col->fname[$colval] != '') ? $col->fname[$colval] : ucwords(preg_replace('/_/', ' ', $colval))) . '</b>';
 						}
 						break;
 
