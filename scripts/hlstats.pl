@@ -2361,28 +2361,7 @@ while ($loop = &getLine()) {
 					}
 
 					$ev_type = 11;
-					if ($g_servers{$s_addr}->{play_game} == TFC() && !$victiminfo)
-					{
-						switch ($ev_obj_a)
-						{
-							case "Sentry_Destroyed"
-							{
-								$ev_obj_a = "Sentry_Dismantle";
-							}
-							case "Dispenser_Destroyed"
-							{
-								$ev_obj_a = "Dispenser_Dismantle";
-							}
-							case "Teleporter_Entrance_Destroyed"
-							{
-								$ev_obj_a = "Teleporter_Entrance_Dismantle"
-							}
-							case "Teleporter_Exit_Destroyed"
-							{
-								$ev_obj_a = "Teleporter_Exit_Dismantle"
-							}
-						}
-					}
+					
 					$ev_status = &doEvent_PlayerAction(
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
@@ -2656,7 +2635,29 @@ while ($loop = &getLine()) {
 							$playerinfo->{"uniqueid"},
 							$ev_properties{newclass}
 						);
-					} else {
+					} else {					
+						if ($g_servers{$s_addr}->{play_game} == TFC())
+						{
+							switch ($ev_obj_a)
+							{
+								case "Sentry_Destroyed"
+								{
+									$ev_obj_a = "Sentry_Dismantle";
+								}
+								case "Dispenser_Destroyed"
+								{
+									$ev_obj_a = "Dispenser_Dismantle";
+								}
+								case "Teleporter_Entrance_Destroyed"
+								{
+									$ev_obj_a = "Teleporter_Entrance_Dismantle"
+								}
+								case "Teleporter_Exit_Destroyed"
+								{
+									$ev_obj_a = "Teleporter_Exit_Dismantle"
+								}
+							}
+						}
 						
 						$ev_type = 11;
 				
