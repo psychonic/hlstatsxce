@@ -416,7 +416,7 @@ sub init_rcon
 	my $rcon_pass   = $self->{rcon};
 	my $game        = $self->{game};
 
-	if ($rcon_pass) {
+	if ($::g_rcon && $rcon_pass) {
 		if ($self->{game_engine} == 1) {
 			$self->{rcon_obj} = new BASTARDrcon($self);
 		} else {
@@ -627,36 +627,52 @@ sub get_map
 			my $servhostname	  = "";
 			my $difficulty      = 0;
 			my $update		  = 0;
-
-			($temp_map, $temp_maxplayers, $servhostname, $difficulty) = $self->rcon_getStatus();
-		
-			if ($temp_map ne "") {
-				if ($self->{map} ne $temp_map) {
-					$self->{map} = $temp_map;
-					$update++;
+			
+			if ($self->{rcon_obj})
+			{
+				($temp_map, $temp_maxplayers, $servhostname, $difficulty) = $self->rcon_getStatus();
+				
+				if ($temp_map ne "") {
+					if ($self->{map} ne $temp_map) {
+						$self->{map} = $temp_map;
+						$update++;
+					}
 				}
-			} else {
-				# Something went wrong, lets try the alternate way of checking the map (old udp package)
-				my $querymap = &::queryServer($self->{address}, $self->{port}, 'mapname');
+			
+				if (($temp_maxplayers != -1) && ($temp_maxplayers > 0) && ($temp_maxplayers ne "")) {
+					if ($self->{maxplayers} != $temp_maxplayers) {
+						$self->{maxplayers} = $temp_maxplayers;
+						$update++;
+					}
+				}
+				if (($difficulty > 0) && ($self->{play_game} == L4D())) {
+					$self->{difficulty} = $difficulty;
+				}
+				if (($self->{update_hostname} > 0) && ($self->{name} ne $servhostname) && ($servhostname ne "")) {
+						$self->{name} = $servhostname;
+						$update++;
+				}
+			} else {  # no rcon
+				my ($querymap, $queryhost, $querymax) = &::queryServer($self->{address}, $self->{port}, 'mapname', 'hostname', 'maxplayers');
 				if ($querymap ne "") {
 					$self->{map} = $querymap;
 					$update++;
+					
+					#if map is blank, query likely failed as a whole
+					
+					if (($querymax != -1) && ($querymax > 0)) {
+						if ($self->{maxplayers} != $querymax) {
+							$self->{maxplayers} = $querymax;
+							$update++;
+						}
+					}
+					if ($self->{update_hostname} > 0 && $queryhost ne "" && $self->{name} ne $queryhost) {
+						$self->{name} = $queryhost;
+						$update++;
+					}
 				}
 			}
-			
-			if (($temp_maxplayers != -1) && ($temp_maxplayers > 0) && ($temp_maxplayers ne "")) {
-				if ($self->{maxplayers} != $temp_maxplayers) {
-					$self->{maxplayers} = $temp_maxplayers;
-					$update++;
-				}
-			}
-			if (($difficulty > 0) && ($self->{play_game} == L4D())) {
-				$self->{difficulty} = $difficulty;
-			}
-			if (($self->{update_hostname} > 0) && ($self->{name} ne $servhostname) && ($servhostname ne "")) {
-					$self->{name} = $servhostname;
-					$update++;
-			}
+				
 			if ($update > 0 && $fromupdate == 0) {
 				$self->updateDB();
 			}
