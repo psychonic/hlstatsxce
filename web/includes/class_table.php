@@ -307,12 +307,11 @@ class Table
 						break;           
 
 					case 'roleimg':
-						$colval = strtolower(preg_replace('/[\r\n\t]*/', '', $colval));
-						$image = getImage("/games/$game/roles/$colval");
+						$image = getImage("/games/$game/roles/".strtolower($colval));
 						// check if image exists
 						if ($image)
 						{
-							$cellbody .= '<img src="' . str_replace('#','%23',$image['url']) . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
+							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
 						}
 						if ($col->fname[$colval] != '')
 						{
@@ -325,8 +324,7 @@ class Table
 						break;
 					  
 					case 'weaponimg':
-						$colval = strtolower(preg_replace("/[\r\n\t]*/", '', $colval));
-						$image = getImage("/games/$game/weapons/$colval");
+						$image = getImage("/games/$game/weapons/".strtolower($colval));
 						// check if image exists
 						if ($image)
 						{
@@ -334,7 +332,7 @@ class Table
 						}
 						else
 						{
-							$cellbody .= '<b>'.($col->fname[$colval] != '') ? $col->fname[$colval] : $colval . '</b>';
+							$cellbody .= '<b>' . (($col->fname[$colval] != '') ? $col->fname[$colval] : $colval) . '</b>';
 						}
 						break;
 
