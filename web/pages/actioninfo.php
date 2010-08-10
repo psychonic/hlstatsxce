@@ -324,7 +324,7 @@ if ( !defined('IN_HLSTATS') )
 	<a name="victims"><?php printSectionTitle("Action Victim Details"); ?></a>
 	<div class="subblock">
 		<div style="float:left;">
-			<strong>Victim of <?php echo $act_name; ?></strong> (Last <?php echo $g_options['DeleteDays']; ?> Days)
+			<strong>Victims of <?php echo $act_name; ?></strong> (Last <?php echo $g_options['DeleteDays']; ?> Days)
 		</div>
 	</div>
 	<div style="clear:both;padding:2px;"></div>
