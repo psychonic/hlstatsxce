@@ -51,7 +51,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$edlist->columns[] = new EditListColumn("address", "IP Address", 15, true, "ipaddress", "", 15);
 	$edlist->columns[] = new EditListColumn("port", "Port", 5, true, "text", "27015", 5);
 	$edlist->columns[] = new EditListColumn("name", "Server Name", 35, true, "text", "", 255);
-	$edlist->columns[] = new EditListColumn("rcon_password", "Rcon Password", 10, false, "password", "", 128);
+	$edlist->columns[] = new EditListColumn("rcon_password", "Rcon Password", 10, false, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("publicaddress", "Public Address", 20, false, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("game", "Game", 20, true, "select", "hlstats_Games.name/code/realgame='".getRealGame($gamecode)."'");
 	$edlist->columns[] = new EditListColumn("sortorder", "Sort Order", 2, true, "text", "", 255);
