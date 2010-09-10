@@ -221,7 +221,7 @@ sub send_global_chat
 			my $pcount = scalar keys %players_temp;
 			
 			if ($pcount > 0) {
-				while ( my($pl, $player) = each(%players_temp) ) {
+				while ( my($pl, $b_player) = each(%players_temp) ) {
 					my $b_userid  = $b_player->{userid};
 					if ($g_global_chat == 2)  {
 						my $b_steamid = $b_player->{uniqueid};
