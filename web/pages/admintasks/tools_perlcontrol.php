@@ -55,6 +55,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$host = $_POST['masterserver'];
 		$port = $_POST["port"];
 		$command = $commands[$_POST["command"]]["cmd"];
+		if (!$command) die ('Invalid command!');
 		if ($port==0) $port = "27500";
 
 		// Check if we're contacting a remote host -- if so, need proxy_key configured for this to work (die and throw an error if we're missing it)
