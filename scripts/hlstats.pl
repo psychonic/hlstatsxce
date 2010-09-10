@@ -63,7 +63,6 @@ use DBI;
 use Digest::MD5;
 use Encode;
 use bytes;
-use Switch;
 
 require "$opt_libdir/ConfigReaderSimple.pm";
 require "$opt_libdir/TRcon.pm";
@@ -1399,6 +1398,29 @@ $g_ranktype = "skill";
 $g_gi = undef;
 $g_next_server_flush = 0;
 
+my %dysweaponcodes = (
+	"1" => "Light Katana",
+	"2" => "Medium Katana",
+	"3" => "Fatman Fist",
+	"4" => "Machine Pistol",
+	"5" => "Shotgun",
+	"6" => "Laser Rifle",
+	"7" => "BoltGun",
+	"8" => "SmartLock Pistols",
+	"9" => "Assault Rifle",
+	"10" => "Grenade Launcher",
+	"11" => "MK-808 Rifle",
+	"12" => "Tesla Rifle",
+	"13" => "Rocket Launcher",
+	"14" => "Minigun",
+	"15" => "Ion Cannon",
+	"16" => "Basilisk",
+	"17" => "Frag Grenade",
+	"18" => "EMP Grenade",
+	"19" => "Spider Grenade",
+	"22" => "Cortex Bomb"
+);
+
 # Usage message
 
 $usage = <<EOT
@@ -2663,24 +2685,21 @@ while ($loop = &getLine()) {
 					} else {					
 						if ($g_servers{$s_addr}->{play_game} == TFC())
 						{
-							switch ($ev_obj_a)
+							if ($ev_obj_a eq "Sentry_Destroyed")
 							{
-								case "Sentry_Destroyed"
-								{
-									$ev_obj_a = "Sentry_Dismantle";
-								}
-								case "Dispenser_Destroyed"
-								{
-									$ev_obj_a = "Dispenser_Dismantle";
-								}
-								case "Teleporter_Entrance_Destroyed"
-								{
-									$ev_obj_a = "Teleporter_Entrance_Dismantle"
-								}
-								case "Teleporter_Exit_Destroyed"
-								{
-									$ev_obj_a = "Teleporter_Exit_Dismantle"
-								}
+								$ev_obj_a = "Sentry_Dismantle";
+							}
+							elsif ($ev_obj_a eq "Dispenser_Destroyed")
+							{
+								$ev_obj_a = "Dispenser_Dismantle";
+							}
+							elsif ($ev_obj_a eq "Teleporter_Entrance_Destroyed")
+							{
+								$ev_obj_a = "Teleporter_Entrance_Dismantle"
+							}
+							elsif ($ev_obj_a eq "Teleporter_Exit_Destroyed")
+							{
+								$ev_obj_a = "Teleporter_Exit_Dismantle"
 							}
 						}
 						
@@ -3087,33 +3106,7 @@ while ($loop = &getLine()) {
 				
 				$ev_type = 501;
 				
-				my $weapcode = "";
-				
-				switch ($weapon)
-				{
-					case "1" { $weapcode = "Light Katana"; }
-					case "2" { $weapcode = "Medium Katana"; }
-					case "3" { $weapcode = "Fatman Fist"; }
-					case "4" { $weapcode = "Machine Pistol"; }
-					case "5" { $weapcode = "Shotgun"; }
-					case "6" { $weapcode = "Laser Rifle"; }
-					case "7" { $weapcode = "BoltGun"; }
-					case "8" { $weapcode = "SmartLock Pistols"; }
-					case "9" { $weapcode = "Assault Rifle"; }
-					case "10" { $weapcode = "Grenade Launcher"; }
-					case "11" { $weapcode = "MK-808 Rifle"; }
-					case "12" { $weapcode = "Tesla Rifle"; }
-					case "13" { $weapcode = "Rocket Launcher"; }
-					case "14" { $weapcode = "Minigun"; }
-					case "15" { $weapcode = "Ion Cannon"; }
-					case "16" { $weapcode = "Basilisk"; }
-					case "17" { $weapcode = "Frag Grenade"; }
-					case "18" { $weapcode = "EMP Grenade"; }
-					case "19" { $weapcode = "Spider Grenade"; }
-					case "22" { $weapcode = "Cortex Bomb"; }
-				}
-				
-				$ev_type = 501;
+				my $weapcode = $dysweaponcodes{$weapon};
 				
 				foreach $player (values(%g_players)) {
 					if ($player->{uniqueid} eq $steamid) {
