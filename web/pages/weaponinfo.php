@@ -157,7 +157,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<?php printSectionTitle('Weapon Details'); ?>
     <div class="subblock">
 	<?php // figure out URL and absolute path of image
-		$imgurl = IMAGE_PATH . "/games/$game/weapons/$weapon";
 		$image = getImage("/games/$game/weapons/$weapon");
 		if ($image)
 		{
