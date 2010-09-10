@@ -43,7 +43,6 @@ no strict 'vars';
 use Sys::Hostname;
 use IO::Socket;
 use IO::Select;
-use Switch;
 use bytes;
 use Scalar::Util;
 
@@ -440,6 +439,12 @@ sub getVisiblePlayers
   return ($max_players);
 }
 
+my %l4d_difficulties = (
+	'Easy'       => 1,
+	'Normal'     => 2,
+	'Hard'       => 3,
+	'Impossible' => 4
+);
 
 sub getDifficulty
 {
@@ -450,7 +455,6 @@ sub getDifficulty
 	
   my ($self) = @_;
   my $zdifficulty = $self->execute("z_difficulty");
-  my $difficulty = 0;
 	
   my @lines = split(/[\r\n]+/, $zdifficulty);
   
@@ -458,20 +462,13 @@ sub getDifficulty
   {
     if ($line =~ /^\s*"z_difficulty"\s*=\s*"([A-Za-z]+)".*$/x)
     {
-		switch ($1) {
-			case "Easy" {
-				$difficulty = 1;
-			} case "Normal" {
-				$difficulty = 2;
-			} case "Hard" {
-				$difficulty = 3;
-			} case "Impossible" {
-				$difficulty = 4;
-			}
+		if (exists($l4d_difficulties[$1]))
+		{
+			return $l4d_difficulties[$1];
 		}
     }
   }
-  return ($difficulty);
+  return 0;
 }
 
 

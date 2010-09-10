@@ -21,3 +21,26 @@ use constant {
 	DYSTOPIA => 18,
 	NTS => 19
 };
+
+my %gamecode_to_game = (
+	'css'      => CSS(),
+	'hl2mp'    => HL2MP(),
+	'tf'       => TF(),
+	'dods'     => DODS(),
+	'insmod'   => INSMOD(),
+	'ff'       => FF(),
+	'hidden'   => HIDDEN(),
+	'zps'      => ZPS(),
+	'aoc'      => AOC(),
+	'cstrike'  => CSTRIKE(),
+	'tfc'      => TFC(),
+	'dod'      => DOD(),
+	'ns'       => NS(),
+	'l4d'      => L4D(),
+	'fof'      => FOF(),
+	'ges'      => GES(),
+	'bg2'      => BG2(),
+	'sgtls'    => SGTLS(),
+	'dystopia' => DYSTOPIA(),
+	'nts'      => NTS()
+);

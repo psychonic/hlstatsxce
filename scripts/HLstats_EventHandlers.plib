@@ -33,8 +33,6 @@
 # 
 # For support and installation notes visit http://www.hlxcommunity.com
 
-use Switch;
-
 sub get_fav_weapon  {
 
 	my ($player)  = @_;
@@ -1533,147 +1531,136 @@ sub doEvent_PlayerAction
 			}
 			$player->updateDB();
 		} else {
-			switch ($g_servers{$s_addr}->{play_game})
+			if ($g_servers{$s_addr}->{play_game} == TF())
 			{
-				case TF()
-				{
-					my $objectstring = "";
-					if (defined($properties{object})) {
-						$objectstring = "_".lc($properties{object});
-						$objectstring =~ s/\s/_/g;
-					}
-					my $eventstring = "";
-					if (defined($properties{event})) {
-						$eventstring = "_".lc($properties{event});
-						$eventstring =~ s/\s/_/g;
-					}
-					my $ownerstring = "";
-					if (defined($properties{objectowner})) {
-						my $owner = $properties{objectowner};
-						$owner =~ /.+?<STEAM_[0-9]+:([0-9]+:[0-9]+)>.*/;
-						$owner = $1;
-						if ($owner eq $player->{uniqueid}) {
-							$ownerstring = "owner_";
-						}
-					}
-					$action = $ownerstring.$action.$objectstring.$eventstring;
-					
-					switch ($action)
-					{
-						case "builtobject_obj_sentrygun"
-						{
-							$player->{last_sg_build}=$ev_remotetime;
-						}
-						case "builtobject_obj_dispenser"
-						{
-							$player->{last_disp_build}=$ev_remotetime;
-						}
-						case "builtobject_obj_teleporter_entrance"
-						{
-							$player->{last_entrance_build}=$ev_remotetime;
-						}
-						case "builtobject_obj_teleporter_exit"
-						{
-							$player->{last_exit_build}=$ev_remotetime;
-						}
-						case "flagevent_defended"
-						{
-							if ($player->{team} eq "Red") {
-								$g_servers{$s_addr}->{lastredflagdefend} = $ev_remotetime;
-							} else {
-								$g_servers{$s_addr}->{lastblueflagdefend} = $ev_remotetime;
-							}
-						}
-						case "flagevent_dropped"
-						{
-							if ($player->{team} eq "Red" && ($ev_remotetime - $g_servers{$s_addr}->{lastblueflagdefend}) <= 1) {
-								$g_servers{$s_addr}->{lastblueflagdefend} = 0;
-								$action="flagevent_dropped_death";
-							} elsif ($player->{team} eq "Blue" && ($ev_remotetime - $g_servers{$s_addr}->{lastredflagdefend}) <= 1) {
-								$g_servers{$s_addr}->{lastredflagdefend} = 0;
-								$action="flagevent_dropped_death";
-							}
-						}
-						case "player_extinguished"
-						{
-							$action = $player->{role}."_extinguish";
-						}
-						else
-						{
-							if (($action eq "owner_killedobject_obj_sentrygun" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
-								($action eq "owner_killedobject_obj_dispenser" && ($ev_remotetime - $player->{last_disp_build}) > 120) ||
-								($action eq "owner_killedobject_obj_teleporter_entrance" && ($ev_remotetime - $player->{last_entrance_build}) > 120) ||
-								($action eq "owner_killedobject_obj_teleporter_exit" && ($ev_remotetime - $player->{last_exit_build}) > 120))
-							{
-								return "(IGNORED) OBJECT MOVED: $playerstr triggered \"$action\"";
-							}
-						}
+				my $objectstring = "";
+				if (defined($properties{object})) {
+					$objectstring = "_".lc($properties{object});
+					$objectstring =~ s/\s/_/g;
+				}
+				my $eventstring = "";
+				if (defined($properties{event})) {
+					$eventstring = "_".lc($properties{event});
+					$eventstring =~ s/\s/_/g;
+				}
+				my $ownerstring = "";
+				if (defined($properties{objectowner})) {
+					my $owner = $properties{objectowner};
+					$owner =~ /.+?<STEAM_[0-9]+:([0-9]+:[0-9]+)>.*/;
+					$owner = $1;
+					if ($owner eq $player->{uniqueid}) {
+						$ownerstring = "owner_";
 					}
 				}
-				case TFC()
+				$action = $ownerstring.$action.$objectstring.$eventstring;
+				
+				if ($action eq "builtobject_obj_sentrygun")
 				{
-					switch ($action)
-					{
-						case "Sentry_Built_Level_1"
-						{
-							$player->{last_sg_build}=$ev_remotetime;
-						}
-						case "Built_Dispenser"
-						{
-							$player->{last_disp_build}=$ev_remotetime;
-						}
-						case "Teleporter_Entrance_Finished"
-						{
-							$player->{last_entrance_build}=$ev_remotetime;
-						}
-						case "Teleporter_Exit_Finished"
-						{
-							$player->{last_exit_build}=$ev_remotetime;
-						}
-						else
-						{
-							if (($action eq "Sentry_Dismantle" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
-								($action eq "Dispenser_Dismantle" && ($ev_remotetime - $player->{last_disp_build}) > 120) ||
-								($action eq "Teleporter_Entrance_Dismantle" && ($ev_remotetime - $player->{last_entrance_build}) > 120) ||
-								($action eq "Teleporter_Exit_Dismantle" && ($ev_remotetime - $player->{last_exit_build}) > 120))
-							{
-								return "(IGNORED) OBJECT MOVED: " . $playerstr . " triggered \"$action\"";
-							}
-						}
+					$player->{last_sg_build}=$ev_remotetime;
+				}
+				elsif ($action eq "builtobject_obj_dispenser")
+				{
+					$player->{last_disp_build}=$ev_remotetime;
+				}
+				elsif ($action eq "builtobject_obj_teleporter_entrance")
+				{
+					$player->{last_entrance_build}=$ev_remotetime;
+				}
+				elsif ($action eq "builtobject_obj_teleporter_exit")
+				{
+					$player->{last_exit_build}=$ev_remotetime;
+				}
+				elsif ($action eq "flagevent_defended")
+				{
+					if ($player->{team} eq "Red") {
+						$g_servers{$s_addr}->{lastredflagdefend} = $ev_remotetime;
+					} else {
+						$g_servers{$s_addr}->{lastblueflagdefend} = $ev_remotetime;
 					}
 				}
-				case FF()
+				elsif ($action eq "flagevent_dropped")
 				{
-					switch ($action)
-					{
-						case "build_sentrygun"
-						{
-							$player->{last_sg_build}=$ev_remotetime;
-						}
-						case "build_dispenser"
-						{
-							$player->{last_disp_build}=$ev_remotetime;
-						}
-						else
-						{
-							if (($action eq "sentry_dismantled" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
-								($action eq "dispenser_dismantled" && ($ev_remotetime - $player->{last_disp_build}) > 120))
-							{
-								return "(IGNORED) OBJECT MOVED: " . $playerstr . " triggered \"$action\"";
-							}
-						}
+					if ($player->{team} eq "Red" && ($ev_remotetime - $g_servers{$s_addr}->{lastblueflagdefend}) <= 1) {
+						$g_servers{$s_addr}->{lastblueflagdefend} = 0;
+						$action="flagevent_dropped_death";
+					} elsif ($player->{team} eq "Blue" && ($ev_remotetime - $g_servers{$s_addr}->{lastredflagdefend}) <= 1) {
+						$g_servers{$s_addr}->{lastredflagdefend} = 0;
+						$action="flagevent_dropped_death";
 					}
 				}
-				case NS()
+				elsif ($action eq "player_extinguished")
 				{
-					my $typestring = "";
-					if (defined($properties{type})) {
-						$typestring = "_".lc($properties{type});
-						$typestring =~ s/\s/_/g;
+					$action = $player->{role}."_extinguish";
+				}
+				else
+				{
+					if (($action eq "owner_killedobject_obj_sentrygun" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
+						($action eq "owner_killedobject_obj_dispenser" && ($ev_remotetime - $player->{last_disp_build}) > 120) ||
+						($action eq "owner_killedobject_obj_teleporter_entrance" && ($ev_remotetime - $player->{last_entrance_build}) > 120) ||
+						($action eq "owner_killedobject_obj_teleporter_exit" && ($ev_remotetime - $player->{last_exit_build}) > 120))
+					{
+						return "(IGNORED) OBJECT MOVED: $playerstr triggered \"$action\"";
 					}
-					$action .= $typestring;
 				}
 			}
+			elsif ($g_servers{$s_addr}->{play_game} == TFC())
+			{
+				if ($action eq "Sentry_Built_Level_1")
+				{
+					$player->{last_sg_build}=$ev_remotetime;
+				}
+				elsif ($action eq "Built_Dispenser")
+				{
+					$player->{last_disp_build}=$ev_remotetime;
+				}
+				elsif ($action eq "Teleporter_Entrance_Finished")
+				{
+					$player->{last_entrance_build}=$ev_remotetime;
+				}
+				elsif ($action eq "Teleporter_Exit_Finished")
+				{
+					$player->{last_exit_build}=$ev_remotetime;
+				}
+				else
+				{
+					if (($action eq "Sentry_Dismantle" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
+						($action eq "Dispenser_Dismantle" && ($ev_remotetime - $player->{last_disp_build}) > 120) ||
+						($action eq "Teleporter_Entrance_Dismantle" && ($ev_remotetime - $player->{last_entrance_build}) > 120) ||
+						($action eq "Teleporter_Exit_Dismantle" && ($ev_remotetime - $player->{last_exit_build}) > 120))
+					{
+						return "(IGNORED) OBJECT MOVED: " . $playerstr . " triggered \"$action\"";
+					}
+				}
+			}
+			elsif ($g_servers{$s_addr}->{play_game} == FF())
+			{
+				if ($action eq "build_sentrygun")
+				{
+					$player->{last_sg_build}=$ev_remotetime;
+				}
+				elsif ($action eq "build_dispenser")
+				{
+					$player->{last_disp_build}=$ev_remotetime;
+				}
+				else
+				{
+					if (($action eq "sentry_dismantled" && ($ev_remotetime - $player->{last_sg_build}) > 120) ||
+						($action eq "dispenser_dismantled" && ($ev_remotetime - $player->{last_disp_build}) > 120))
+					{
+						return "(IGNORED) OBJECT MOVED: " . $playerstr . " triggered \"$action\"";
+					}
+				}
+			}
+			elsif ($g_servers{$s_addr}->{play_game} == NS())
+			{
+				my $typestring = "";
+				if (defined($properties{type})) {
+					$typestring = "_".lc($properties{type});
+					$typestring =~ s/\s/_/g;
+				}
+				$action .= $typestring;
+			}
+			
 			if (defined($properties{position})) {
 				$coords = $properties{position};
 				($x,$y,$z) = split(/ /,$coords);
