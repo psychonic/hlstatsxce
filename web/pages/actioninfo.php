@@ -320,10 +320,15 @@ if ( !defined('IN_HLSTATS') )
 	
 		list($numitems, $totalact) = $db->fetch_row($resultCount);
 ?>
-</div>
 <div class="block">
-	<a name="victims"><?php printSectionTitle("Victims of $act_name (Last ".$g_options['DeleteDays'].'Days)'); ?></a>
-<br /><br />
+	<a name="victims"><?php printSectionTitle("Action Victim Details"); ?></a>
+	<div class="subblock">
+		<div style="float:left;">
+			<strong>Victims of <?php echo $act_name; ?></strong> (Last <?php echo $g_options['DeleteDays']; ?> Days)
+		</div>
+	</div>
+	<div style="clear:both;padding:2px;"></div>
+</div>
 <?php		
 		$table->draw($result, $numitems, 95, 'center');
 	}

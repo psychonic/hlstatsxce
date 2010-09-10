@@ -76,7 +76,11 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 							SET `value` = '" . $db->escape($script_path) . "'
 							WHERE serverId = '" . $insert_id . "' AND `parameter` = 'HLStatsURL'");
 				$_POST = array();
-				message("success", "Operation successful.");
+				
+				// psychonic - worst. redirect. ever.
+				//   but we can't just use header() since admin.php already started part of the page and hacking it in before would be even messier
+				echo "<script type=\"text/javascript\"> window.location.href=\"".$g_options['scripturl']."?mode=admin&game=$game&task=serversettings&key=$insert_id#startsettings\"; </script>";
+				exit;
 			}
 		}
 	}

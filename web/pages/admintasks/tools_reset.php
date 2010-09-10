@@ -601,6 +601,7 @@ function clear_all_delete_checked()
 		document.resetform.clear_awards.disabled = true;
 		document.resetform.clear_sessions.disabled = true;
 		document.resetform.clear_names.disabled = true;
+		document.resetform.clear_names_counts.disabled = true;
 		document.resetform.clear_skill.disabled = true;
 		document.resetform.clear_pcounts.disabled = true;
 		document.resetform.clear_scounts.disabled = true;
@@ -629,6 +630,7 @@ function clear_all_delete_checked()
 		document.resetform.clear_awards.checked = true;
 		document.resetform.clear_sessions.checked = true;
 		document.resetform.clear_names.checked = true;
+		document.resetform.clear_names_counts.checked = true;
 		document.resetform.clear_skill.checked = true;
 		document.resetform.clear_pcounts.checked = true;
 		document.resetform.clear_scounts.checked = true;
@@ -660,6 +662,7 @@ function clear_all_delete_checked()
 		document.resetform.clear_awards.disabled = false;
 		document.resetform.clear_sessions.disabled = false;
 		document.resetform.clear_names.disabled = false;
+		document.resetform.clear_names_counts.disabled = false;
 		document.resetform.clear_skill.disabled = false;
 		document.resetform.clear_pcounts.disabled = false;
 		document.resetform.clear_scounts.disabled = false;
@@ -688,6 +691,7 @@ function clear_all_delete_checked()
 		document.resetform.clear_awards.checked = false;
 		document.resetform.clear_sessions.checked = false;
 		document.resetform.clear_names.checked = false;
+		document.resetform.clear_names_counts.checked = false;
 		document.resetform.clear_skill.checked = false;
 		document.resetform.clear_pcounts.checked = false;
 		document.resetform.clear_scounts.checked = false;
@@ -721,6 +725,7 @@ function clear_all_checked()
 		document.resetform.clear_awards.disabled = true;
 		document.resetform.clear_sessions.disabled = true;
 		document.resetform.clear_names.disabled = true;
+		document.resetform.clear_names_counts.disabled = true;
 		document.resetform.clear_skill.disabled = true;
 		document.resetform.clear_pcounts.disabled = true;
 		document.resetform.clear_scounts.disabled = true;
@@ -748,6 +753,7 @@ function clear_all_checked()
 		document.resetform.clear_awards.checked = true;
 		document.resetform.clear_sessions.checked = true;
 		document.resetform.clear_names.checked = true;
+		document.resetform.clear_names_counts.checked = true;
 		document.resetform.clear_skill.checked = true;
 		document.resetform.clear_pcounts.checked = true;
 		document.resetform.clear_scounts.checked = true;
@@ -778,6 +784,7 @@ function clear_all_checked()
 		document.resetform.clear_awards.disabled = false;
 		document.resetform.clear_sessions.disabled = false;
 		document.resetform.clear_names.disabled = false;
+		document.resetform.clear_names_counts.disabled = false;
 		document.resetform.clear_skill.disabled = false;
 		document.resetform.clear_pcounts.disabled = false;
 		document.resetform.clear_scounts.disabled = false;
@@ -805,6 +812,7 @@ function clear_all_checked()
 		document.resetform.clear_awards.checked = false;
 		document.resetform.clear_sessions.checked = false;
 		document.resetform.clear_names.checked = false;
+		document.resetform.clear_names_counts.checked = false;
 		document.resetform.clear_skill.checked = false;
 		document.resetform.clear_pcounts.checked = false;
 		document.resetform.clear_scounts.checked = false;
