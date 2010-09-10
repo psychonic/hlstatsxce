@@ -40,128 +40,112 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 ?>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width=9 height=6 class="imageformat"><b>&nbsp;<?php echo $task->title; ?></b><p>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" ><strong>&nbsp;<?php echo $task->title; ?></strong>
 
 <?php
 
-   $servers[0]["name"] = "Perl Backend, listening on 127.0.0.1";
-   $servers[0]["host"] = "127.0.0.1"; 
- 
-   $commands[0]["name"] = "Reload the PERL & Servers Configuration from the database";
+   $commands[0]["name"] = "Reload Configuration";
    $commands[0]["cmd"] = "RELOAD";
-   $commands[1]["name"] = "Shut down the perl backend script";
+   $commands[1]["name"] = "Shut down the Daemon *";
    $commands[1]["cmd"] = "KILL";
     
  
     if (isset($_POST['confirm']))
     {
-      echo "<ul>\n";
-      $s_id = $_POST['masterserver'];
-      $host = $servers[$s_id]["host"];
-      $port = $_POST["port"];
-      $command = $commands[$_POST["command"]]["cmd"];
-      if ($port==0) $port = "27500";
-      
-      echo "<li>Sending Command to Perl backend...";
-      $host = gethostbyname($host);
-      $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-      $packet = "C;".$command.";";
-      $bytes_sent = socket_sendto($socket, $packet, strlen($packet), 0, $host, $port);
-      echo "<b>".$bytes_sent."</b> bytes <b>OK</b></li>";
+		$host = $_POST['masterserver'];
+		$port = $_POST["port"];
+		$command = $commands[$_POST["command"]]["cmd"];
+		if ($port==0) $port = "27500";
 
-      echo "<li>Waiting for Backend Answer...";
-      $recv_bytes = 0;
-      $buffer     = "";
-      $timeout    = 5;
-      $answer     = "";
-      $packets    = 0;
-      $read       = array($socket);
-      while (socket_select($read, $write = NULL, $except = NULL, &$timeout) > 0) {
-        $recv_bytes += socket_recvfrom($socket, &$buffer, 2000, 0, &$host, &$port);
-        $answer     .= $buffer;
-        $buffer     = "";
-        $timeout    = "1";
-        $packets++;
-      }   
+		// Check if we're contacting a remote host -- if so, need proxy_key configured for this to work (die and throw an error if we're missing it)
+		if (($host != "127.0.0.1") && ($host != "localhost")) 
+		{
+			if ($g_options['Proxy_Key'] == "") 
+			{
+				echo "<p><strong>Warning:</strong> You are connecting to a remote daemon and do not have a Proxy Key configured.</p>";
+				
+				echo "<p>Please visit the <a href=\"{$g_options['scripturl']}?mode=admin&task=options#options\">HLstatsX:CE Settings page</a> and configure a Proxy Key.  Once configured, manually restart your daemon.</p>";
+				die();
+			}
+		}
+		
+		echo "<div style=\"margin-left: 50px;\"><ul>\n";      
+		echo "<li>Sending Command to HLstatsX: CE Daemon at $host:$port &mdash; ";
+		$host = gethostbyname($host);
+		$socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+		$packet = "PROXY Key={$g_options['Proxy_Key']} PROXY C;".$command.";";
+		$bytes_sent = socket_sendto($socket, $packet, strlen($packet), 0, $host, $port);
+		echo "<strong>".$bytes_sent."</strong> bytes <strong>OK</strong></li>";
 
-//      $steam_ids = explode(chr(255), $answer);
-//      array_pop($steam_ids);
-      echo "recieving <b>$recv_bytes</b> bytes in <b>$packets</b> packets...<b>OK</b></li>";
+		echo "<li>Waiting for Backend Answer...";
+		$recv_bytes = 0;
+		$buffer     = "";
+		$timeout    = 5;
+		$answer     = "";
+		$packets    = 0;
+		$read       = array($socket);
+		while (socket_select($read, $write = NULL, $except = NULL, &$timeout) > 0) {
+			$recv_bytes += socket_recvfrom($socket, &$buffer, 2000, 0, &$host, &$port);
+			$answer     .= $buffer;
+			$buffer     = "";
+			$timeout    = "1";
+			$packets++;
+		}   
+
+
+		echo "recieving <strong>$recv_bytes</strong> bytes in <strong>$packets</strong> packets...<strong>OK</strong></li>";
       
-      if ($packets>0) {
-       echo "<li>Backend Answer: ".$answer;
-      } else {
-       echo "<li><i>No packets received - check if backend dead or not listening on $host:$port</i>";
-      }
+		if ($packets>0) {
+			echo "<li>Backend Answer: ".$answer."</li>";
+		} 
+		else 
+		{
+			echo "<li><em>No packets received &mdash; check if backend dead or not listening on $host:$port</em></li>";
+		}
       
-      echo "<li>Closing connection to backend...";
-      socket_close($socket);
-      echo "<b>OK</b></li>";
-      echo "</ul>\n";
-    } else {
+		echo "<li>Closing connection to backend...";
+		socket_close($socket);
+		echo "<strong>OK</strong></li>";
+		echo "</ul></div>\n";
+		
+		echo "<img src=\"".IMAGE_PATH."/rightarrow.gif\" /> <a href=\"{$g_options['scripturl']}?mode=admin\">Return to Administration Center</a>";
+		}
+		else
+		{
         
 ?>        
 
+<p>After every configuration change made in the Administration Center, you should reload the daemon configuration.  To do so, enter the hostname or IP address of your HLXCE daemon and choose the reload option.  You can also shut down your daemon from this panel.  <strong>NOTE: The daemon can not be restarted through the web interface!</strong></p>
+
 <form method="POST">
-<table width="60%" align="center" border=0 cellspacing=0 cellpadding=0 class="border">
 
-<tr>
-    <td>
-        <table width="100%" border=0 cellspacing=1 cellpadding=10>
-        
-        <tr class="bg1">
-            <td class="fNormal">
-Note: This page is still in beta and will not operate properly for all installs. If you have any trouble, you may need to interact with the daemon manually via command line/SSH.<br /><br />
-With this module, you have limited control over the backend, eg. if you want to re-read the changed configuration or kill the backend listener for delayed restart after updating perl scripts.
-<p>
-Choose Backend (only localhost at the moment):<br> 
-<SELECT NAME="masterserver">
-
-<?php
-  $i = 0;
-  foreach ($servers as $server) {
-   echo "<OPTION VALUE=\"$i\">".$server["name"];
-   $i++;
-  } 
-?>   
-</SELECT>
-
-<p>
-Specify port, the backend listens on:  
-<INPUT TYPE='text' SIZE='6' VALUE='27500' NAME='port'>
-
-
-<p>
-Choose Command to be executed by the backend:<br> 
-<SELECT NAME="command">
-
-<?php
+	<table class="data-table">
+		<tr class="bg1">
+			<td width="40%"><label for="masterserver">Daemon IP or Hostname:</label><p>Hostname or IP address of your HLX:CE Daemon<br />Normally the IP or Hostname listed in the "logaddress_add" line on your game server.<br />example: daemon1.hlxce.com <em>or</em> 1.2.3.4</p></td>
+			<td><input type="text" name="masterserver" value="localhost"></td>
+		</tr>
+		<tr class="bg2">
+			<td><label for="port">Daemon Port:</label><p>Port number the daemon (or proxy_daemon) is listening on.<br />Normally the port listed in the "logaddress_add" line on your game server configuration.<br />example: 27500</p></td>
+			<td><input type="text" name="port" value="27500" size="6"></td>
+		</tr>
+		<tr class="bg1">
+			<td><label for="command">Command:</label><p>Select the operation to perform on the daemon<br /><strong>* Note: If you shut the daemond down through this page it can not be restarted through this interface!</strong></p></td>
+			<td><SELECT NAME="command"><?php
   $i = 0;
   foreach ($commands as $cmd) {
    echo "<OPTION VALUE=\"$i\">".$cmd["name"];
    $i++;
   } 
-?>   
-
-</SELECT>
-
-<p>
-
-Note: Backend will only be restarted when using the <b>run_hlstats_autorestart</b> script, otherwise the backend will not come up again without manual start.
-<p>
-
-<input type="hidden" name="confirm" value="1">
-<center><input type="submit" value="  EXECUTE  "></center>
-</td>
-        </tr>
-        
-        </table></td>
-</tr>
-
-</table>
+?>
+					</SELECT></td>
+	</table>
+	
+	<input type="hidden" name="confirm" value="1">
+	<div style="text-align: center; margin-top: 20px;">
+		<input type="submit" value="  EXECUTE  ">
+	</div>
 </form>
 
 <?php
     }
 ?>    
-    
