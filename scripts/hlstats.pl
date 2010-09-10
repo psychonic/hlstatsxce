@@ -1331,6 +1331,21 @@ sub isTrackableTeam
 	return 1;
 }
 
+sub flushAll
+{
+	while( my($se, $server) = each(%g_servers))
+	{	
+		while ( my($pl, $player) = each(%{$g_servers{$server}->{"srv_players"}}) )
+		{
+			if ($player)
+			{
+				$player->playerCleanup();
+			}
+		}
+		$server->flushDB();
+	}
+}
+
 
 ##
 ## MAIN
@@ -1925,11 +1940,13 @@ while ($loop = &getLine()) {
 
 			if ($data[1] eq "RELOAD") {
 				&printEvent("CONTROL", "Re-Reading Configuration by request from Frontend...", 1);
+				&flushAll;
 				&readDatabaseConfig;
 			} 
 
 			if ($data[1] eq "KILL") {
 				&printEvent("CONTROL", "SHUTTING DOWN SCRIPT", 1);
+				&flushAll;
 				die "Exit script by request";
 			} 
 			
