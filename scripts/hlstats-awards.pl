@@ -40,11 +40,11 @@
 ##
 
 # $opt_configfile - Absolute path and filename of configuration file.
-$opt_configfile = "./hlstats.conf";
+my $opt_configfile = "./hlstats.conf";
 
 # $opt_libdir - Directory to look in for local required files
 #               (our *.plib, *.pm files).
-$opt_libdir = "./";
+my $opt_libdir = "./";
 
 
 ##
@@ -79,35 +79,54 @@ binmode STDOUT, ":utf8";
 
 # Options
 
-$opt_help = 0;
-$opt_version = 0;
-$opt_numdays = 1;
-$opt_noribbons = 0;
-$opt_nocleanup = 0;
-$opt_verbose = 0;
+my $opt_help = 0;
+my $opt_version = 0;
+my $opt_numdays = 1;
+my $opt_player_activity = 0;
+my $opt_awards = 0;
+my $opt_ribbons = 0;
+my $opt_geoip = 0;
+my $opt_prune = 0;
+my $opt_optimize = 0;
+my $opt_verbose = 0;
 
-$db_host = "localhost";
-$db_user = "";
-$db_pass = "";
-$db_name = "hlstats";
+my $db_host = "localhost";
+my $db_user = "";
+my $db_pass = "";
+my $db_name = "hlstats";
 
-$date_ubase="";
-$date_base="CURRENT_DATE()";
+my $date_ubase="";
+my $date_base="CURRENT_DATE()";
 
 # Usage message
+	"inactive|i"		=> \$opt_player_activity,
+	"awards|a"			=> \$opt_awards,
+	"ribbons|r"			=> \$opt_ribbons,
+	"geoip|g"			=> \$opt_geoip,
+	"prune|p"			=> \$opt_prune,
+	"optimize|o"		=> \$opt_optimize,
 
-$usage = <<EOT
+my $usage = <<EOT
 Usage: hlstats-awards.pl [OPTION]...
 Generate awards from Half-Life server statistics.
+	
+ Actions (specify none or more, default -iarp):
+  -i, --inactive                  Calculate player activity
+                                    and deactivate inactive players
+  -a, --awards                    Process daily awards (see --date descr for more info)
+  -r, --ribbons                   Process ribbons
+  -g, --geoip                     Attempt to lookup and store locations for players with
+                                    unknown/no location. (run after updating geoip data)
+  -p, --prune                     Prune old events and sessions
+  -o, --optimize                  Optimize all db tables
 
+ Other options:
   -h, --help                      display this help and exit
   -v, --version                   output version information and exit
       --numdays                   number of days in period for awards
       --date=YYYY-MM-DD           day after date to calculate awards for (defaults to today) 
                                     If you specify a date like 2008-01-04 it will do awards
                                     based on 2008-01-03 stats
-      --noribbons                 if set, ribbon calculation is skipped (only use if you know what you're doing)
-      --nocleanup                 if set, database cleanup is skipped (only use if you know what you're doing)
       --db-host=HOST              database ip:port
       --db-name=DATABASE          database name
       --db-password=PASSWORD      database password (WARNING: specifying the
@@ -156,8 +175,12 @@ GetOptions(
 	"version|v"			=> \$opt_version,
 	"numdays=i"			=> \$opt_numdays,
 	"date=s"			=> \$date_ubase,
-	"noribbons"			=> \$opt_noribbons,
-	"nocleanup"			=> \$opt_nocleanup,
+	"inactive|i"		=> \$opt_player_activity,
+	"awards|a"			=> \$opt_awards,
+	"ribbons|r"			=> \$opt_ribbons,
+	"geoip|g"			=> \$opt_geoip,
+	"prune|p"			=> \$opt_prune,
+	"optimize|o"		=> \$opt_optimize,
 	"db-host=s"			=> \$db_host,
 	"db-name=s"			=> \$db_name,
 	"db-password=s"		=> \$db_pass,
@@ -211,155 +234,191 @@ if ($opt_version)
 	exit(0);
 }
 
-if($date_ubase)
+if ($date_ubase)
 {
 	$date_base = "'" . $date_ubase . "'";
+}
+
+if (0 == ($opt_player_activity + $opt_awards + $opt_ribbons + $opt_geoip + $opt_prune + $opt_optimize))
+{
+	$opt_player_activity = 1;
+	$opt_awards = 1;
+	$opt_ribbons = 1;
+	$opt_prune = 1;
 }
 
 # Startup
 
 print "++ HLstatsX:CE Awards & Maintenance script version $g_version starting...\n\n";
 
-print "\n++ Player activity update started.\n";
-$g_minactivity = 2419200;
-# Inactive Players
-$result = &doQuery("
-	SELECT
-		value
-	FROM
-		hlstats_Options
-	WHERE
-		keyname = 'MinActivity'
-");
+DoInactive() if ($opt_player_activity);
+DoAwards() if ($opt_awards);
+DoRibbons() if ($opt_ribbons);
+DoGeoIP() if ($opt_geoip);
+DoPruning() if ($opt_prune);
+DoOptimize() if ($opt_optimize);
 
+print "++ HLstatsX:CE Awards & Maintenance script finished.\n\n";
 
-if ($result->rows > 0) {
-	my ($tempminact) = $result->fetchrow_array;
-	$g_minactivity = $tempminact * 86400;
-}
-
-if ($g_minactivity > 0)
+sub DoInactive
 {
-	$g_timestamp = 0;
-
-	$result = &doQuery("
+	print "\n++ Player activity update started.\n";
+	$g_minactivity = 2419200;
+	# Inactive Players
+	my $result = &doQuery("
 		SELECT
 			value
 		FROM
 			hlstats_Options
 		WHERE
-			keyname = 'UseTimestamp'
+			keyname = 'MinActivity'
 	");
 
-
 	if ($result->rows > 0) {
-		($g_timestamp) = $result->fetchrow_array;
+		my ($tempminact) = $result->fetchrow_array;
+		$g_minactivity = $tempminact * 86400;
 	}
-
-	%last_events = ();
-
-	if ($g_timestamp > 0)
+	
+	if ($g_minactivity > 0)
 	{
+		$g_timestamp = 0;
+	
 		$result = &doQuery("
 			SELECT
-				game,
-				MAX(last_event)
+				value
 			FROM
-				hlstats_Servers
-			GROUP BY
-				game
+				hlstats_Options
+			WHERE
+				keyname = 'UseTimestamp'
 		");
-		my %last_events = ();
-
-
-		while ( my($game, $last) = $result->fetchrow_array) {
-			$last_events{$game} = $last
+		
+		
+		if ($result->rows > 0) {
+			($g_timestamp) = $result->fetchrow_array;
 		}
-		while ( my($game, $last) = each(%last_events))
+		
+		%last_events = ();
+		
+		if ($g_timestamp > 0)
+		{
+			$result = &doQuery("
+				SELECT
+					game,
+					MAX(last_event)
+				FROM
+					hlstats_Servers
+				GROUP BY
+					game
+			");
+			my %last_events = ();
+	
+	
+			while ( my($game, $last) = $result->fetchrow_array) {
+				$last_events{$game} = $last
+			}
+			while ( my($game, $last) = each(%last_events))
+			{
+				&execNonQuery("
+					UPDATE
+						hlstats_Players
+					SET
+						hlstats_Players.activity = IF(($g_minactivity > $last - hlstats_Players.last_event), ((100 / $g_minactivity) * ($g_minactivity - ($last - hlstats_Players.last_event))), -1)
+					WHERE
+						hlstats_Players.game = '".&quoteSQL($game)."'
+				");
+			}
+		}
+		else
 		{
 			&execNonQuery("
 				UPDATE
 					hlstats_Players
 				SET
-					hlstats_Players.activity = IF(($g_minactivity > $last - hlstats_Players.last_event), ((100 / $g_minactivity) * ($g_minactivity - ($last - hlstats_Players.last_event))), -1)
-				WHERE
-					hlstats_Players.game = '".&quoteSQL($game)."'
+					hlstats_Players.activity = IF(($g_minactivity > UNIX_TIMESTAMP() - hlstats_Players.last_event), ((100 / $g_minactivity) * ($g_minactivity - (UNIX_TIMESTAMP() - hlstats_Players.last_event))), -1)
 			");
 		}
-	}
-	else
-	{
+	
 		&execNonQuery("
 			UPDATE
 				hlstats_Players
 			SET
-				hlstats_Players.activity = IF(($g_minactivity > UNIX_TIMESTAMP() - hlstats_Players.last_event), ((100 / $g_minactivity) * ($g_minactivity - (UNIX_TIMESTAMP() - hlstats_Players.last_event))), -1)
+				hideranking = 3
+			WHERE
+				hideranking = 0
+				AND activity < 0
+		");
+	}
+	
+	print "\n++ Player activity updated successfully.\n";
+}
+
+sub DoAwards
+{
+	print "\n++ Awards processing started.\n";
+	
+	my $resultAwards = &doQuery("
+		SELECT
+			hlstats_Awards.awardId,
+			hlstats_Awards.game,
+			hlstats_Awards.awardType,
+			hlstats_Awards.code
+		FROM
+			hlstats_Awards
+		LEFT JOIN hlstats_Games ON
+			hlstats_Games.code = hlstats_Awards.game
+		WHERE
+			hlstats_Games.hidden='0'
+		ORDER BY
+			hlstats_Awards.game,
+			hlstats_Awards.awardType
+	");
+
+	my $result = &doQuery("
+		SELECT
+			value,
+			DATE_SUB($date_base, INTERVAL 1 DAY)
+		FROM
+			hlstats_Options
+		WHERE
+			keyname = 'awards_d_date'
+	");
+
+	if ($result->rows > 0)
+	{
+		($awards_d_date, $awards_d_date_new) = $result->fetchrow_array;
+		
+		&execNonQuery("
+			UPDATE
+				hlstats_Options
+			SET
+				value='$awards_d_date_new'
+			WHERE
+				keyname='awards_d_date'
+		");
+		
+		print "\n++ Generating awards for $awards_d_date_new (previous: $awards_d_date)...\n\n";
+	}
+	else
+	{
+		&execNonQuery("
+			INSERT INTO
+				hlstats_Options
+				(
+					keyname,
+					value,
+					opttype
+				)
+			VALUES
+			(
+				'awards_d_date',
+				DATE_SUB($date_base, INTERVAL 1 DAY),
+				2
+			)
 		");
 	}
 
 	&execNonQuery("
-		UPDATE
-			hlstats_Players
-		SET
-			hideranking = 3
-		WHERE
-			hideranking = 0
-			AND activity < 0
-	");
-	
-	print "\n++ Player activity updated successfully.\n";
-}
-	
-# Daily Awards
-
-print "\n++ Awards processing started.\n";
-
-$resultAwards = &doQuery("
-	SELECT
-		hlstats_Awards.awardId,
-		hlstats_Awards.game,
-		hlstats_Awards.awardType,
-		hlstats_Awards.code
-	FROM
-		hlstats_Awards
-	LEFT JOIN hlstats_Games ON
-		hlstats_Games.code = hlstats_Awards.game
-	WHERE
-		hlstats_Games.hidden='0'
-	ORDER BY
-		hlstats_Awards.game,
-		hlstats_Awards.awardType
-");
-
-$result = &doQuery("
-	SELECT
-		value,
-		DATE_SUB($date_base, INTERVAL 1 DAY)
-	FROM
-		hlstats_Options
-	WHERE
-		keyname = 'awards_d_date'
-");
-
-if ($result->rows > 0)
-{
-	($awards_d_date, $awards_d_date_new) = $result->fetchrow_array;
-	
-	&execNonQuery("
-		UPDATE
-			hlstats_Options
-		SET
-			value='$awards_d_date_new'
-		WHERE
-			keyname='awards_d_date'
-	");
-	
-	print "\n++ Generating awards for $awards_d_date_new (previous: $awards_d_date)...\n\n";
-}
-else
-{
-	&execNonQuery("
-		INSERT INTO
+		REPLACE INTO
 			hlstats_Options
 			(
 				keyname,
@@ -368,445 +427,429 @@ else
 			)
 		VALUES
 		(
-			'awards_d_date',
-			DATE_SUB($date_base, INTERVAL 1 DAY),
+			'awards_numdays',
+			$opt_numdays,
 			2
 		)
 	");
-}
 
-&execNonQuery("
-	REPLACE INTO
-		hlstats_Options
-		(
-			keyname,
-			value,
-			opttype
-		)
-	VALUES
-	(
-		'awards_numdays',
-		$opt_numdays,
-		2
-	)
-");
-
-while( ($awardId, $game, $awardType, $code) = $resultAwards->fetchrow_array )
-{
-
-	if ($awardType eq "O")
+	while( ($awardId, $game, $awardType, $code) = $resultAwards->fetchrow_array )
 	{
-		$table = "hlstats_Events_PlayerActions";
-		$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
-		$matchfield = "hlstats_Actions.code";
-		$playerfield = "$table.playerId";
-	}
-	elsif ($awardType eq "W")
-	{
-		$table = "hlstats_Events_Frags";
-		$playerfield = "$table.killerId";
-		if ($code eq "headshot") {
-			$join  = "";
-			$matchfield = "$table.headshot";
-			$code = 1;
-		} else {
-			$join  = "";
-			$matchfield = "$table.weapon";
+
+		if ($awardType eq "O")
+		{
+			$table = "hlstats_Events_PlayerActions";
+			$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
+			$matchfield = "hlstats_Actions.code";
+			$playerfield = "$table.playerId";
 		}
-	}
-	elsif ($awardType eq "P")
-	{
-		$table = "hlstats_Events_PlayerPlayerActions";
-		$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
-		$matchfield = "hlstats_Actions.code";
-		$playerfield = "$table.playerId";
-	}
-	elsif ($awardType eq "V")
-	{
-		$table = "hlstats_Events_PlayerPlayerActions";
-		$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
-		$matchfield = "hlstats_Actions.code";
-		$playerfield = "$table.victimId";
-	}
-	
-    if ($code eq "latency") {
-		$resultDaily = &doQuery("
-			SELECT
-				hlstats_Events_Latency.playerId,
-				ROUND(ROUND(SUM(ping) /	COUNT(ping), 0) / 2, 0) AS av_latency
-			FROM
-				hlstats_Events_Latency
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Latency.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Latency.playerId
-				AND hlstats_Players.hideranking=0
-			WHERE   
-				hlstats_Events_Latency.eventTime < $date_base
-				AND hlstats_Events_Latency.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-			GROUP BY
-				hlstats_Events_Latency.playerId
-			ORDER BY 
-				av_latency
-			LIMIT 1    	
-		"); 	
-	    $resultGlobal = &doQuery("
-			SELECT
-				hlstats_Events_Latency.playerId,
-				ROUND(ROUND(SUM(ping) /	COUNT(ping), 0) / 2, 0) AS av_latency
-			FROM
-				hlstats_Events_Latency
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Latency.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Latency.playerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				hlstats_Events_Latency.playerId
-			ORDER BY 
-				av_latency
-			LIMIT 1    	
-		"); 	
-    } elsif ($code eq "mostkills") {
-		$resultDaily = &doQuery("
-			SELECT
-				hlstats_Events_Frags.killerId,
-				count(hlstats_Events_Frags.killerId) AS av_mostkills
-			FROM
-				hlstats_Events_Frags
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Frags.killerId
-				AND hlstats_Players.hideranking=0
-			WHERE
-				hlstats_Events_Frags.eventTime < $date_base
-				AND hlstats_Events_Frags.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-			GROUP BY
-				hlstats_Events_Frags.killerId
-			ORDER BY
-				av_mostkills DESC
-			LIMIT 1"
-		);
-		$resultGlobal = &doQuery("
-			SELECT
-				hlstats_Events_Frags.killerId,
-				count(hlstats_Events_Frags.killerId) AS av_mostkills
-			FROM
-				hlstats_Events_Frags
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Frags.killerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				hlstats_Events_Frags.killerId
-			ORDER BY
-				av_mostkills DESC
-			LIMIT 1 
-		");
-	}
-    elsif ($code eq "suicide") {
-		$resultDaily = &doQuery("
-			SELECT
-				hlstats_Events_Suicides.playerId,
-				count(hlstats_Events_Suicides.playerId) AS av_suicides
-			FROM
-				hlstats_Events_Suicides
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Suicides.playerId
-				AND hlstats_Players.hideranking=0
-			WHERE
-				hlstats_Events_Suicides.eventTime < $date_base
-				AND hlstats_Events_Suicides.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-			GROUP BY
-				hlstats_Events_Suicides.playerId
-			ORDER BY
-				av_suicides DESC
-			LIMIT 1       
-		");
-		$resultGlobal = &doQuery("
-			SELECT
-				hlstats_Events_Suicides.playerId,
-				count(hlstats_Events_Suicides.playerId) AS av_suicides
-			FROM
-				hlstats_Events_Suicides
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Suicides.playerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				hlstats_Events_Suicides.playerId
-			ORDER BY
-				av_suicides DESC
-			LIMIT 1       
-		");
-    } elsif ($code eq "teamkills") {
-		$resultDaily = &doQuery("
-			SELECT
-				hlstats_Events_Teamkills.killerId,
-				count(hlstats_Events_Teamkills.killerId) AS av_teamkills
-			FROM
-				hlstats_Events_Teamkills
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
-				AND hlstats_Players.hideranking=0
-			WHERE
-				hlstats_Events_Teamkills.eventTime < $date_base
-				AND hlstats_Events_Teamkills.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-			GROUP BY
-				hlstats_Events_Teamkills.killerId
-			ORDER BY
-				av_teamkills DESC
-			LIMIT 1       
-		");
-		$resultGlobal = &doQuery("
-			SELECT
-				hlstats_Events_Teamkills.killerId,
-				count(hlstats_Events_Teamkills.killerId) AS av_teamkills
-			FROM
-				hlstats_Events_Teamkills
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				hlstats_Events_Teamkills.killerId
-			ORDER BY
-				av_teamkills DESC
-			LIMIT 1       
-		");
-    } elsif ($code eq "bonuspoints") {
-		$resultDaily = &doQuery("
-			SELECT
-				actions.playerId,
-				SUM(actions.bonus) AS av_bonuspoints
-			FROM
-				(SELECT
-					playerId, bonus, serverId, eventTime 
-				FROM
-					hlstats_Events_PlayerActions 
-				WHERE
-					eventTime < $date_base AND eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				UNION ALL
+		elsif ($awardType eq "W")
+		{
+			$table = "hlstats_Events_Frags";
+			$playerfield = "$table.killerId";
+			if ($code eq "headshot") {
+				$join  = "";
+				$matchfield = "$table.headshot";
+				$code = 1;
+			} else {
+				$join  = "";
+				$matchfield = "$table.weapon";
+			}
+		}
+		elsif ($awardType eq "P")
+		{
+			$table = "hlstats_Events_PlayerPlayerActions";
+			$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
+			$matchfield = "hlstats_Actions.code";
+			$playerfield = "$table.playerId";
+		}
+		elsif ($awardType eq "V")
+		{
+			$table = "hlstats_Events_PlayerPlayerActions";
+			$join  = "LEFT JOIN hlstats_Actions ON hlstats_Actions.id = $table.actionId";
+			$matchfield = "hlstats_Actions.code";
+			$playerfield = "$table.victimId";
+		}
+		
+		if ($code eq "latency") {
+			$resultDaily = &doQuery("
 				SELECT
-					playerId, bonus, serverId, eventTime
+					hlstats_Events_Latency.playerId,
+					ROUND(ROUND(SUM(ping) /	COUNT(ping), 0) / 2, 0) AS av_latency
 				FROM
-					hlstats_Events_PlayerPlayerActions
-				WHERE
-					eventTime < $date_base AND eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				) actions
-			INNER JOIN
-				hlstats_Servers	ON
-				hlstats_Servers.serverId=actions.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = actions.playerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				playerId
-			ORDER BY
-				av_bonuspoints DESC
-			LIMIT 1       
-		");
-		$resultGlobal = &doQuery("
-			SELECT
-				actions.playerId,
-				SUM(actions.bonus) AS av_bonuspoints
-			FROM
-				(SELECT
-					playerId, bonus, serverId, eventTime 
-				FROM
-					hlstats_Events_PlayerActions 
-				UNION ALL
+					hlstats_Events_Latency
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Latency.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Latency.playerId
+					AND hlstats_Players.hideranking=0
+				WHERE   
+					hlstats_Events_Latency.eventTime < $date_base
+					AND hlstats_Events_Latency.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+				GROUP BY
+					hlstats_Events_Latency.playerId
+				ORDER BY 
+					av_latency
+				LIMIT 1    	
+			"); 	
+			$resultGlobal = &doQuery("
 				SELECT
-					playerId, bonus, serverId, eventTime
+					hlstats_Events_Latency.playerId,
+					ROUND(ROUND(SUM(ping) /	COUNT(ping), 0) / 2, 0) AS av_latency
 				FROM
-					hlstats_Events_PlayerPlayerActions
-				) actions
-			INNER JOIN
-				hlstats_Servers ON
-				hlstats_Servers.serverId=actions.serverId
-				AND hlstats_Servers.game='".&quoteSQL($game)."'
-			INNER JOIN
-				hlstats_Players	ON
-				hlstats_Players.playerId = actions.playerId
-				AND hlstats_Players.hideranking=0
-			GROUP BY
-				playerId
-			ORDER BY
-				av_bonuspoints DESC
-			LIMIT 1       
-		");
-	} elsif ($code eq "allsentrykills") {
-		$resultDaily = &doQuery("
-			SELECT
-				hlstats_Events_Frags.killerId,
-				COUNT(hlstats_Events_Frags.weapon) AS awardcount
-			FROM
-				hlstats_Events_Frags
-			INNER JOIN hlstats_Players ON
-				hlstats_Players.playerId = hlstats_Events_Frags.killerId
-				AND hlstats_Players.hideranking=0
+					hlstats_Events_Latency
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Latency.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Latency.playerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					hlstats_Events_Latency.playerId
+				ORDER BY 
+					av_latency
+				LIMIT 1    	
+			"); 	
+		} elsif ($code eq "mostkills") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Events_Frags.killerId,
+					count(hlstats_Events_Frags.killerId) AS av_mostkills
+				FROM
+					hlstats_Events_Frags
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Frags.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Frags.killerId
+					AND hlstats_Players.hideranking=0
+				WHERE
+					hlstats_Events_Frags.eventTime < $date_base
+					AND hlstats_Events_Frags.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+				GROUP BY
+					hlstats_Events_Frags.killerId
+				ORDER BY
+					av_mostkills DESC
+				LIMIT 1"
+			);
+			$resultGlobal = &doQuery("
+				SELECT
+					hlstats_Events_Frags.killerId,
+					count(hlstats_Events_Frags.killerId) AS av_mostkills
+				FROM
+					hlstats_Events_Frags
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Frags.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Frags.killerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					hlstats_Events_Frags.killerId
+				ORDER BY
+					av_mostkills DESC
+				LIMIT 1 
+			");
+		}
+		elsif ($code eq "suicide") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Events_Suicides.playerId,
+					count(hlstats_Events_Suicides.playerId) AS av_suicides
+				FROM
+					hlstats_Events_Suicides
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Suicides.playerId
+					AND hlstats_Players.hideranking=0
+				WHERE
+					hlstats_Events_Suicides.eventTime < $date_base
+					AND hlstats_Events_Suicides.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+				GROUP BY
+					hlstats_Events_Suicides.playerId
+				ORDER BY
+					av_suicides DESC
+				LIMIT 1       
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					hlstats_Events_Suicides.playerId,
+					count(hlstats_Events_Suicides.playerId) AS av_suicides
+				FROM
+					hlstats_Events_Suicides
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Suicides.playerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					hlstats_Events_Suicides.playerId
+				ORDER BY
+					av_suicides DESC
+				LIMIT 1       
+			");
+		} elsif ($code eq "teamkills") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Events_Teamkills.killerId,
+					count(hlstats_Events_Teamkills.killerId) AS av_teamkills
+				FROM
+					hlstats_Events_Teamkills
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
+					AND hlstats_Players.hideranking=0
+				WHERE
+					hlstats_Events_Teamkills.eventTime < $date_base
+					AND hlstats_Events_Teamkills.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+				GROUP BY
+					hlstats_Events_Teamkills.killerId
+				ORDER BY
+					av_teamkills DESC
+				LIMIT 1       
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					hlstats_Events_Teamkills.killerId,
+					count(hlstats_Events_Teamkills.killerId) AS av_teamkills
+				FROM
+					hlstats_Events_Teamkills
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					hlstats_Events_Teamkills.killerId
+				ORDER BY
+					av_teamkills DESC
+				LIMIT 1       
+			");
+		} elsif ($code eq "bonuspoints") {
+			$resultDaily = &doQuery("
+				SELECT
+					actions.playerId,
+					SUM(actions.bonus) AS av_bonuspoints
+				FROM
+					(SELECT
+						playerId, bonus, serverId, eventTime 
+					FROM
+						hlstats_Events_PlayerActions 
+					WHERE
+						eventTime < $date_base AND eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+					UNION ALL
+					SELECT
+						playerId, bonus, serverId, eventTime
+					FROM
+						hlstats_Events_PlayerPlayerActions
+					WHERE
+						eventTime < $date_base AND eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+					) actions
+				INNER JOIN
+					hlstats_Servers	ON
+					hlstats_Servers.serverId=actions.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = actions.playerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					playerId
+				ORDER BY
+					av_bonuspoints DESC
+				LIMIT 1       
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					actions.playerId,
+					SUM(actions.bonus) AS av_bonuspoints
+				FROM
+					(SELECT
+						playerId, bonus, serverId, eventTime 
+					FROM
+						hlstats_Events_PlayerActions 
+					UNION ALL
+					SELECT
+						playerId, bonus, serverId, eventTime
+					FROM
+						hlstats_Events_PlayerPlayerActions
+					) actions
+				INNER JOIN
+					hlstats_Servers ON
+					hlstats_Servers.serverId=actions.serverId
+					AND hlstats_Servers.game='".&quoteSQL($game)."'
+				INNER JOIN
+					hlstats_Players	ON
+					hlstats_Players.playerId = actions.playerId
+					AND hlstats_Players.hideranking=0
+				GROUP BY
+					playerId
+				ORDER BY
+					av_bonuspoints DESC
+				LIMIT 1       
+			");
+		} elsif ($code eq "allsentrykills") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Events_Frags.killerId,
+					COUNT(hlstats_Events_Frags.weapon) AS awardcount
+				FROM
+					hlstats_Events_Frags
+				INNER JOIN hlstats_Players ON
+					hlstats_Players.playerId = hlstats_Events_Frags.killerId
+					AND hlstats_Players.hideranking=0
+				WHERE
+					hlstats_Events_Frags.eventTime < $date_base
+					AND hlstats_Events_Frags.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+					AND hlstats_Players.game='".&quoteSQL($game)."'
+					AND hlstats_Events_Frags.weapon LIKE 'obj_sentrygun%'
+				GROUP BY
+					hlstats_Events_Frags.killerId
+				ORDER BY
+					awardcount DESC,
+					hlstats_Players.skill DESC
+				LIMIT 1
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					hlstats_Events_Frags.killerId,
+					COUNT(hlstats_Events_Frags.weapon) AS awardcount
+				FROM
+					hlstats_Events_Frags
+				INNER JOIN hlstats_Players ON
+					hlstats_Players.playerId = hlstats_Events_Frags.killerId
+					AND hlstats_Players.hideranking=0
+				WHERE
+					hlstats_Players.game='".&quoteSQL($game)."'
+					AND hlstats_Events_Frags.weapon LIKE 'obj_sentrygun%'
+				GROUP BY
+					hlstats_Events_Frags.killerId
+				ORDER BY
+					awardcount DESC,
+					hlstats_Players.skill DESC
+				LIMIT 1
+			");
+		} else {
+			$resultDaily = &doQuery("
+				SELECT
+					$playerfield,
+					COUNT($matchfield) AS awardcount
+				FROM
+					$table
+				INNER JOIN hlstats_Players ON
+					hlstats_Players.playerId = $playerfield
+					AND hlstats_Players.hideranking=0
+				$join
+				WHERE
+					$table.eventTime < $date_base
+					AND $table.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
+					AND hlstats_Players.game='".&quoteSQL($game)."'
+					AND $matchfield='$code'
+				GROUP BY
+					$playerfield
+				ORDER BY
+					awardcount DESC,
+					hlstats_Players.skill DESC
+				LIMIT 1
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					$playerfield,
+					COUNT($matchfield) AS awardcount
+				FROM
+					$table
+				INNER JOIN hlstats_Players ON
+					hlstats_Players.playerId = $playerfield
+					AND hlstats_Players.hideranking=0
+				$join
+				WHERE
+					hlstats_Players.game='".&quoteSQL($game)."'
+					AND $matchfield='$code'
+				GROUP BY
+					$playerfield
+				ORDER BY
+					awardcount DESC,
+					hlstats_Players.skill DESC
+				LIMIT 1
+			");
+		}
+		
+		($d_winner_id, $d_winner_count) = $resultDaily->fetchrow_array;
+		($g_winner_id, $g_winner_count) = $resultGlobal->fetchrow_array;
+		
+		if (!$d_winner_id || $d_winner_count < 1)
+		{
+			$d_winner_id = "NULL";
+			$d_winner_count = "NULL";
+		}
+		if (!$g_winner_id || $g_winner_count < 1)
+		{
+			$g_winner_id = "NULL";
+			$g_winner_count = "NULL";
+		}
+		
+		if ($opt_verbose)
+		{
+			print "  - $d_winner_id ($d_winner_count)\n";
+			print "  - $g_winner_id ($g_winner_count)\n";
+		}
+		
+		&execNonQuery("
+			UPDATE
+				hlstats_Awards
+			SET
+				d_winner_id=$d_winner_id,
+				d_winner_count=$d_winner_count,
+				g_winner_id=$g_winner_id,
+				g_winner_count=$g_winner_count
 			WHERE
-				hlstats_Events_Frags.eventTime < $date_base
-				AND hlstats_Events_Frags.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				AND hlstats_Players.game='".&quoteSQL($game)."'
-				AND hlstats_Events_Frags.weapon LIKE 'obj_sentrygun%'
-			GROUP BY
-				hlstats_Events_Frags.killerId
-			ORDER BY
-				awardcount DESC,
-				hlstats_Players.skill DESC
-			LIMIT 1
-		");
-		$resultGlobal = &doQuery("
-			SELECT
-				hlstats_Events_Frags.killerId,
-				COUNT(hlstats_Events_Frags.weapon) AS awardcount
-			FROM
-				hlstats_Events_Frags
-			INNER JOIN hlstats_Players ON
-				hlstats_Players.playerId = hlstats_Events_Frags.killerId
-				AND hlstats_Players.hideranking=0
-			WHERE
-				hlstats_Players.game='".&quoteSQL($game)."'
-				AND hlstats_Events_Frags.weapon LIKE 'obj_sentrygun%'
-			GROUP BY
-				hlstats_Events_Frags.killerId
-			ORDER BY
-				awardcount DESC,
-				hlstats_Players.skill DESC
-			LIMIT 1
-		");
-	} else {
-		$resultDaily = &doQuery("
-			SELECT
-				$playerfield,
-				COUNT($matchfield) AS awardcount
-			FROM
-				$table
-			INNER JOIN hlstats_Players ON
-				hlstats_Players.playerId = $playerfield
-				AND hlstats_Players.hideranking=0
-			$join
-			WHERE
-				$table.eventTime < $date_base
-				AND $table.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				AND hlstats_Players.game='".&quoteSQL($game)."'
-				AND $matchfield='$code'
-			GROUP BY
-				$playerfield
-			ORDER BY
-				awardcount DESC,
-				hlstats_Players.skill DESC
-			LIMIT 1
-		");
-		$resultGlobal = &doQuery("
-			SELECT
-				$playerfield,
-				COUNT($matchfield) AS awardcount
-			FROM
-				$table
-			INNER JOIN hlstats_Players ON
-				hlstats_Players.playerId = $playerfield
-				AND hlstats_Players.hideranking=0
-			$join
-			WHERE
-				hlstats_Players.game='".&quoteSQL($game)."'
-				AND $matchfield='$code'
-			GROUP BY
-				$playerfield
-			ORDER BY
-				awardcount DESC,
-				hlstats_Players.skill DESC
-			LIMIT 1
+				awardId=$awardId
 		");
 	}
-	
-	($d_winner_id, $d_winner_count) = $resultDaily->fetchrow_array;
-	($g_winner_id, $g_winner_count) = $resultGlobal->fetchrow_array;
-	
-	if (!$d_winner_id || $d_winner_count < 1)
-	{
-		$d_winner_id = "NULL";
-		$d_winner_count = "NULL";
-	}
-	if (!$g_winner_id || $g_winner_count < 1)
-	{
-		$g_winner_id = "NULL";
-		$g_winner_count = "NULL";
-	}
-	
-	if ($opt_verbose)
-	{
-		print "  - $d_winner_id ($d_winner_count)\n";
-		print "  - $g_winner_id ($g_winner_count)\n";
-	}
-	
+
+
 	&execNonQuery("
-		UPDATE
-			hlstats_Awards
-		SET
-			d_winner_id=$d_winner_id,
-			d_winner_count=$d_winner_count,
-			g_winner_id=$g_winner_id,
-			g_winner_count=$g_winner_count
-		WHERE
-			awardId=$awardId
-	");
+		INSERT IGNORE INTO 
+			hlstats_Players_Awards 
+		SELECT 
+			value, awardId, d_winner_id, d_winner_count, game 
+		FROM 
+			hlstats_Options INNER JOIN hlstats_Awards 
+		WHERE 
+			keyname='awards_d_date' AND NOT ISNULL(d_winner_id);
+		");
+
+	print "\n++ Awards generated successfully.\n";
 }
 
-
-&execNonQuery("
-	INSERT IGNORE INTO 
-		hlstats_Players_Awards 
-	SELECT 
-		value, awardId, d_winner_id, d_winner_count, game 
-	FROM 
-		hlstats_Options INNER JOIN hlstats_Awards 
-	WHERE 
-		keyname='awards_d_date' AND NOT ISNULL(d_winner_id);
-	");
-
-print "\n++ Awards generated successfully.\n";
-
-if (!$opt_noribbons)
+sub DoRibbons
 {
 	print "\n++ Ribbon generation started.\n";
 	
-	$result = &doQuery("SELECT `code` FROM `hlstats_Games`;");
+	my $result = &doQuery("SELECT `code` FROM `hlstats_Games`;");
 	while( my($game) = $result->fetchrow_array ) {
 
 		&execNonQuery("DELETE FROM hlstats_Players_Ribbons WHERE game='".&quoteSQL($game)."';");
@@ -882,197 +925,196 @@ if (!$opt_noribbons)
 	print "\n++ Ribbons generated successfully.\n";
 }
 
-if ($date_ubase)
+sub DoGeoIP
 {
-	exit 0;
-}
-
-print "\n++ Looking up missing player locations.\n";
-$useGeoIPBinary = 0;
-
-# Sanity checks to see if we can do geolocation updates
-$result = &doQuery("
-	SELECT
-		value
-	FROM
-		hlstats_Options
-	WHERE
-		keyname='UseGeoIPBinary'
-		AND value > '0'
-	LIMIT 1
-");
-
-if ($result->rows > 0)
-{
-	$useGeoIPBinary = 1;
-	$geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
-}
-else
-{
-	$useGeoIPBinary = 0;
-}
-
-$gi = undef;
-$dogeo = 0;
-
-if ($useGeoIPBinary == 0)
-{
-	my $result = &doQuery("SELECT locId FROM geoLiteCity_Blocks LIMIT 1;");
+	print "\n++ Looking up missing player locations.\n";
+	
+	my $useGeoIPBinary = 0;
+	my $gi = undef;
+	my $dogeo = 0;
+	
+	# Sanity checks to see if we can do geolocation updates
+	$result = &doQuery("
+		SELECT
+			value
+		FROM
+			hlstats_Options
+		WHERE
+			keyname='UseGeoIPBinary'
+			AND value > '0'
+		LIMIT 1
+	");
+	
 	if ($result->rows > 0)
 	{
-		$dogeo = 1;
+		$useGeoIPBinary = 1;
+		$geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
 	}
 	else
 	{
-		&printEvent("ERROR", "GeoIP method set to database but geoLiteCity tables are empty.", 1);
+		$useGeoIPBinary = 0;
 	}
-}
-elsif ($useGeoIPBinary == 1 && -r $geoipfile) {
-	$gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
-	if ($gi) 
-	{
-		$dogeo = 1;
-	}
-	else
-	{
-		&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile errored while opening.", 1);
-		close($gi{fh});
-	}
-}
-else
-{
-	&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
-}
-
 	
-if ($gi) {
-	sub ip2number {
-		my ($ipstr) = @_;
-		my @ip = split(/\./, $ipstr);
-		my $number = ($ip[0]*16777216) + ($ip[1]*65536) + ($ip[2]*256) + $ip[3];
-
-		return $number;
-	}
-
-	sub trim {
-		my $string = shift;
-		$string =~ s/^\s+|\s+$//g;
-		return $string;
-	}
-	$cnt = 0;
-	$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
-			
-	while (my($pid, $address, $name) = $result->fetchrow_array) {
-		$address = trim($address);
-		next if ($address !~ /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/);
-		if ($opt_verbose)
+	if ($useGeoIPBinary == 0)
+	{
+		my $result = &doQuery("SELECT locId FROM geoLiteCity_Blocks LIMIT 1;");
+		if ($result->rows > 0)
 		{
-			print "Attempting to find location for: ".$name." (".$address.")\n";
-		}
-		my $number = ip2number($address);
-		my $update = 0;
-		my $foundflag = "";
-		my $foundcountry = "";
-		my $foundcity = "";
-		my $foundstate = "";
-		my $foundlat = 0;
-		my $foundlng = 0;
-		if ($useGeoIPBinary > 0) {
-			if ($opt_verbose)
-			{
-				print "2 ".$pid." ".$address."\n";
-			}
-			my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude, $metro_code, $area_code) = $gi->get_city_record($address);
-			if ($longitude) {
-				$foundflag = encode("utf8",$country_code);
-				$foundcountry = encode("utf8",$country_name);
-				$foundcity = encode("utf8",$city);
-				$foundstate = encode("utf8",$region);
-				$foundlat = $latitude;
-				$foundlng = $longitude;
-				$update++;
-			}
+			$dogeo = 1;
 		}
 		else
 		{
-			$result2 = &doQuery("SELECT locId FROM geoLiteCity_Blocks WHERE startIpNum<=".$number." AND endIpNum>=".$number." LIMIT 1;");
-			if ($result2->rows > 0) {
-				my ($locid) = $result2->fetchrow_array;
-				$data = &doQuery("SELECT city, region AS state, name AS country, country AS flag, latitude AS lat, longitude AS lng FROM geoLiteCity_Location a  inner join hlstats_Countries b ON a.country=b.flag WHERE locId=".$locid." LIMIT 1;");
-				if ($data->rows > 0) {
-					($foundcity, $foundstate, $foundcountry, $foundflag, $foundlat, $foundlng) = $data->fetchrow_array;
+			&printEvent("ERROR", "GeoIP method set to database but geoLiteCity tables are empty.", 1);
+		}
+	}
+	elsif ($useGeoIPBinary == 1 && -r $geoipfile) {
+		$gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+		if ($gi) 
+		{
+			$dogeo = 1;
+		}
+		else
+		{
+			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile errored while opening.", 1);
+			close($gi{fh});
+		}
+	}
+	else
+	{
+		&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
+	}
+
+		
+	if ($gi || !$useGeoIPBinary) {
+		sub ip2number {
+			my ($ipstr) = @_;
+			my @ip = split(/\./, $ipstr);
+			my $number = ($ip[0]*16777216) + ($ip[1]*65536) + ($ip[2]*256) + $ip[3];
+
+			return $number;
+		}
+
+		sub trim {
+			my $string = shift;
+			$string =~ s/^\s+|\s+$//g;
+			return $string;
+		}
+		$cnt = 0;
+		$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
+				
+		while (my($pid, $address, $name) = $result->fetchrow_array) {
+			$address = trim($address);
+			next if ($address !~ /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/);
+			if ($opt_verbose)
+			{
+				print "Attempting to find location for: ".$name." (".$address.")\n";
+			}
+			my $number = ip2number($address);
+			my $update = 0;
+			my $foundflag = "";
+			my $foundcountry = "";
+			my $foundcity = "";
+			my $foundstate = "";
+			my $foundlat = 0;
+			my $foundlng = 0;
+			if ($useGeoIPBinary > 0) {
+				if ($opt_verbose)
+				{
+					print "2 ".$pid." ".$address."\n";
+				}
+				my ($country_code, $country_code3, $country_name, $region, $city, $postal_code, $latitude, $longitude, $metro_code, $area_code) = $gi->get_city_record($address);
+				if ($longitude) {
+					$foundflag = encode("utf8",$country_code);
+					$foundcountry = encode("utf8",$country_name);
+					$foundcity = encode("utf8",$city);
+					$foundstate = encode("utf8",$region);
+					$foundlat = $latitude;
+					$foundlng = $longitude;
 					$update++;
 				}
 			}
+			else
+			{
+				$result2 = &doQuery("SELECT locId FROM geoLiteCity_Blocks WHERE startIpNum<=".$number." AND endIpNum>=".$number." LIMIT 1;");
+				if ($result2->rows > 0) {
+					my ($locid) = $result2->fetchrow_array;
+					$data = &doQuery("SELECT city, region AS state, name AS country, country AS flag, latitude AS lat, longitude AS lng FROM geoLiteCity_Location a  inner join hlstats_Countries b ON a.country=b.flag WHERE locId=".$locid." LIMIT 1;");
+					if ($data->rows > 0) {
+						($foundcity, $foundstate, $foundcountry, $foundflag, $foundlat, $foundlng) = $data->fetchrow_array;
+						$update++;
+					}
+				}
+			}
+			if ($update > 0)
+			{
+				&execNonQuery("
+					UPDATE
+						hlstats_Players
+					SET
+						flag='".&quoteSQL($foundflag)."',
+						country='".&quoteSQL($foundcountry)."',
+						lat='".(($foundlat ne "")?$foundlat:undef)."',
+						lng='".(($foundlng ne "")?$foundlng:undef)."',
+						city='".&quoteSQL($foundcity)."',
+						state='".&quoteSQL($foundstate)."'
+					WHERE
+						playerId=".$pid
+				);
+				$cnt++;
+			}
 		}
-		if ($update > 0)
-		{
-			&execNonQuery("
-				UPDATE
-					hlstats_Players
-				SET
-					flag='".&quoteSQL($foundflag)."',
-					country='".&quoteSQL($foundcountry)."',
-					lat='".(($foundlat ne "")?$foundlat:undef)."',
-					lng='".(($foundlng ne "")?$foundlng:undef)."',
-					city='".&quoteSQL($foundcity)."',
-					state='".&quoteSQL($foundstate)."'
-				WHERE
-					playerId=".$pid
-			);
-			$cnt++;
-		}
+		print "\n++ Missing locations found for ".$cnt." players.\n";
 	}
-	print "\n++ Missing locations found for ".$cnt." players.\n";
+	print "\n++ Lookup of missing player locations finished successfully.\n";
 }
 
-if ($opt_nocleanup)
+sub DoPruning
 {
-	exit 0;
-}
+	$result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
+	my $g_deletedays;
+	($g_deletedays) = $result->fetchrow_array;
+	
+	print "\n++ Cleaning up database: deleting events older than $g_deletedays days ...\n";
+	
+	foreach $eventTable (keys(%g_eventTables))
+	{
+		&execNonQuery("
+			DELETE FROM
+					hlstats_Events_$eventTable
+			WHERE
+					eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
+			");
+	}
 
-$result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
-my $g_deletedays;
-($g_deletedays) = $result->fetchrow_array;
- 
-print "\n++ Cleaning up database: deleting events older than $g_deletedays days ...\n";
- 
-foreach $eventTable (keys(%g_eventTables)) {
-        &execNonQuery("
-				DELETE FROM
-						hlstats_Events_$eventTable
-				WHERE
-						eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
-		");
-}
-
-print "\n++ Cleaning up database: deleting player history older than $g_deletedays days ...\n";
-&execNonQuery("
-	DELETE FROM
-		hlstats_Players_History
-	WHERE
-		eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
-");
-
-print "\n++ Cleaning up database: deleting stale trend samples ...\n";
-&execNonQuery("
-	DELETE FROM
-		hlstats_Trend
-	WHERE
-		timestamp < (UNIX_TIMESTAMP() - 172800)
-");
-
-print "\n++ Optimizing all tables ...\n";
-
-$result = &doQuery("SHOW TABLES");
-while ( ($row) = $result->fetchrow_array ) {
-	push(@g_allTables, $row);
-}
-foreach $table (@g_allTables) {
+	print "\n++ Cleaning up database: deleting player history older than $g_deletedays days ...\n";
 	&execNonQuery("
-		OPTIMIZE TABLE $table
+		DELETE FROM
+			hlstats_Players_History
+		WHERE
+			eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
+	");
+	
+	print "\n++ Cleaning up database: deleting stale trend samples ...\n";
+	&execNonQuery("
+		DELETE FROM
+			hlstats_Trend
+		WHERE
+			timestamp < (UNIX_TIMESTAMP() - 172800)
 	");
 }
-print "\n++ Database Cleanup complete\n";
 
-exit(0);
+sub DoOptimize
+{	
+	print "\n++ Optimizing all tables ...\n";
+
+	$result = &doQuery("SHOW TABLES");
+	while ( ($row) = $result->fetchrow_array ) {
+		push(@g_allTables, $row);
+	}
+	foreach $table (@g_allTables) {
+		&execNonQuery("
+			OPTIMIZE TABLE $table
+		");
+	}
+	print "\n++ Database Cleanup complete\n";
+}
