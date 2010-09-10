@@ -74,7 +74,7 @@ function setdefaults($key)
 	
 ?>
 	
-	<table width="60%" align="center" border=0 cellspacing=0 cellpadding=0 class="border">
+	<table id="startsettings" width="60%" align="center" border=0 cellspacing=0 cellpadding=0 class="border">
 <tr>
     <td>
         <table width="100%" border=0 cellspacing=1 cellpadding=10>

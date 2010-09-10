@@ -65,11 +65,6 @@ use Encode;
 use bytes;
 use Switch;
 
-eval {
-  require Geo::IP::PurePerl;
-};
-import Geo::IP::PurePerl;
-
 require "$opt_libdir/ConfigReaderSimple.pm";
 require "$opt_libdir/TRcon.pm";
 require "$opt_libdir/BASTARDrcon.pm";
@@ -1336,6 +1331,21 @@ sub isTrackableTeam
 	return 1;
 }
 
+sub flushAll
+{
+	while( my($se, $server) = each(%g_servers))
+	{	
+		while ( my($pl, $player) = each(%{$g_servers{$server}->{"srv_players"}}) )
+		{
+			if ($player)
+			{
+				$player->playerCleanup();
+			}
+		}
+		$server->flushDB();
+	}
+}
+
 
 ##
 ## MAIN
@@ -1369,6 +1379,7 @@ $g_stdin = 0;
 $g_server_ip = "";
 $g_server_port = 27015;
 $g_timestamp = 0;
+$g_cpanelhack = 0;
 $g_dns_resolveip = 1;
 $g_dns_timeout = 5;
 $g_skill_maxchange = 100;
@@ -1597,7 +1608,8 @@ if ($opt_configfile && -r $opt_configfile) {
 		"DBLowPriority",		"db_lowpriority",
 		"BindIP",					"s_ip",
 		"Port",						"s_port",
-		"DebugLevel",			"g_debug"
+		"DebugLevel",			"g_debug",
+		"CpanelHack",			"g_cpanelhack"
 	);
 
 	%directives_mysql = (
@@ -1674,6 +1686,17 @@ if ($configfile && -r $configfile) {
 
 # these are set above, we then reload them to override values in the actual config
 setOptionsConf(%copts);
+
+if ($g_cpanelhack) {
+	my $home_dir = $ENV{ HOME };
+	my $base_module_dir = (-d "$home_dir/perl" ? "$home_dir/perl" : ( getpwuid($>) )[7] . '/perl/');
+	unshift @INC, map { $base_module_dir . $_ } @INC;
+}
+
+eval {
+  require Geo::IP::PurePerl;
+};
+import Geo::IP::PurePerl;
 
 if ($opt_help) {
 	print $usage;
@@ -1917,11 +1940,13 @@ while ($loop = &getLine()) {
 
 			if ($data[1] eq "RELOAD") {
 				&printEvent("CONTROL", "Re-Reading Configuration by request from Frontend...", 1);
+				&flushAll;
 				&readDatabaseConfig;
 			} 
 
 			if ($data[1] eq "KILL") {
 				&printEvent("CONTROL", "SHUTTING DOWN SCRIPT", 1);
+				&flushAll;
 				die "Exit script by request";
 			} 
 			
