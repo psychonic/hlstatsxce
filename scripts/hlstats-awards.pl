@@ -58,11 +58,6 @@ use Getopt::Long;
 use DBI;
 use Encode;
 
-eval {
-	require Geo::IP::PurePerl;
-};
-import Geo::IP::PurePerl;
-
 require "$opt_libdir/ConfigReaderSimple.pm";
 do "$opt_libdir/HLstats.plib";
 
@@ -89,6 +84,7 @@ my $opt_geoip = 0;
 my $opt_prune = 0;
 my $opt_optimize = 0;
 my $opt_verbose = 0;
+my $opt_cpanelhack = 0;
 
 my $db_host = "localhost";
 my $db_user = "";
@@ -159,6 +155,7 @@ if (-r $opt_configfile)
 		"DBUsername",		"db_user",
 		"DBPassword",		"db_pass",
 		"DBName",			"db_name",
+		"CpanelHack",		"opt_cpanelhack"
 	);
 	
 	&doConf($conf, %directives);
@@ -967,7 +964,19 @@ sub DoGeoIP
 			&printEvent("ERROR", "GeoIP method set to database but geoLiteCity tables are empty.", 1);
 		}
 	}
-	elsif ($useGeoIPBinary == 1 && -r $geoipfile) {
+	elsif ($useGeoIPBinary == 1 && -r $geoipfile)
+	{
+		if ($opt_cpanelhack) {
+			my $home_dir = $ENV{ HOME };
+			my $base_module_dir = (-d "$home_dir/perl" ? "$home_dir/perl" : ( getpwuid($>) )[7] . '/perl/');
+			unshift @INC, map { $base_module_dir . $_ } @INC;
+		}
+
+		eval {
+		  require Geo::IP::PurePerl;
+		};
+		import Geo::IP::PurePerl;
+		
 		$gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
 		if ($gi) 
 		{
@@ -985,7 +994,7 @@ sub DoGeoIP
 	}
 
 		
-	if ($gi || !$useGeoIPBinary) {
+	if ($dogeo) {
 		sub ip2number {
 			my ($ipstr) = @_;
 			my @ip = split(/\./, $ipstr);
