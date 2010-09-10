@@ -431,27 +431,13 @@ function getEmailLink($email, $maxlength = 40)
  */
 function getImage($filename)
 {
-	$url = IMAGE_PATH . $filename;
+	preg_match('/^(.*\/)(.+)$/', $filename, $matches);
+	$relpath = $matches[1];
+	$realfilename = $matches[2];
+	
+	$path = IMAGE_PATH . $filename;
+	$url = IMAGE_PATH . $relpath . urlencode($realfilename);
 
-	if (IMAGE_PATH)
-	{
-		$path = IMAGE_PATH . $filename;
-	}
-	else
-	{
-		// figure out absolute path of image
-		if (!preg_match('/^\//', IMAGE_PATH))
-		{
-			preg_match('/(.+)\/[^\/]+$/', $_SERVER['SCRIPT_NAME'], $regs);
-			$path = "$regs[1]/$url";
-		}
-		else
-		{
-			$path = $url;
-		}
-
-		$path = $_SERVER['DOCUMENT_ROOT'] . $path;
-	}
 	// check if image exists
 	if (file_exists($path . '.png'))
 	{

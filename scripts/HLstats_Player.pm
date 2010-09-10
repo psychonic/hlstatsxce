@@ -311,7 +311,7 @@ sub setUniqueId
 		# An existing player. Get their skill rating.
 		my $query = "
 			SELECT
-				skill, kills, displayEvents, kill_streak, death_streak
+				skill, kills, displayEvents, kill_streak, death_streak, flag
 			FROM
 				hlstats_Players
 			WHERE
@@ -319,7 +319,7 @@ sub setUniqueId
 		";
 		my $result = &::doQuery($query);
 		if ($result->rows > 0) {
-			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak}) = $result->fetchrow_array;
+			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak},$self->{flag}) = $result->fetchrow_array;
 		} else {
 			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
 			$self->insertPlayer($tempPlayerId);
@@ -448,15 +448,16 @@ sub insertPlayerLivestats
 				team,
 				ping,
 				connected,
-				skill
+				skill,
+				cli_flag
 			)
 		VALUES
 		(
-			?,?,?,?,?,?,?,?,?
+			?,?,?,?,?,?,?,?,?,?
 		)
 	";
 	my @vals = ($self->{playerid}, $self->{server_id}, $self->{address}, $self->{plain_uniqueid},
-		$self->{name}, $self->{team}, $self->{ping}, $self->{connect_time}, $self->{skill});
+		$self->{name}, $self->{team}, $self->{ping}, $self->{connect_time}, $self->{skill}, $self->{flag});
 	&::execCached("player_livestats_insert", $query, @vals);
 }
 
