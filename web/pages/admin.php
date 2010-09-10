@@ -362,7 +362,7 @@ class EditList
 						$qvals .= ', ';
 					}
 
-					if ($col->type == 'password')
+					if ($col->type == 'password' && $col->name != 'rcon_password')
 					{
 						$value = md5($value);
 					}
@@ -472,7 +472,7 @@ class EditList
 						$query .= ', ';
 					}
 
-					if ($col->type == 'password')
+					if ($col->type == 'password' && $col->name != 'rcon_password')
 					{
 						$query .= $col->name . "='" . md5($value) . "'";
 					}
