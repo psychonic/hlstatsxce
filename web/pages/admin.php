@@ -1027,7 +1027,7 @@ $admintasks['ranks'] = new AdminTask('Ranks (triggered by Kills)', 80, 'game');
 $admintasks['ribbons'] = new AdminTask('Ribbons (triggered by Awards)', 80, 'game');
 
 // Tools
-$admintasks['tools_perlcontrol'] = new AdminTask('Perl Stats Backend', 80, 'tool', 'Remote control tasks for the Perl Backend Script');
+$admintasks['tools_perlcontrol'] = new AdminTask('HLstatsX: CE Daemon Control', 80, 'tool', 'Reload or stop your HLX: CE Daemons');
 $admintasks['tools_editdetails'] = new AdminTask('Edit Player or Clan Details', 80, 'tool', 'Edit a player or clan\'s profile information.');
 $admintasks['tools_adminevents'] = new AdminTask('Admin-Event History', 80, 'tool', 'View event history of logged Rcon commands and Admin Mod messages.');
 $admintasks['tools_ipstats'] = new AdminTask('Host Statistics', 80, 'tool', 'See which ISPs your players are using.');
