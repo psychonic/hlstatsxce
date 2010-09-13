@@ -84,23 +84,16 @@ my $opt_geoip = 0;
 my $opt_prune = 0;
 my $opt_optimize = 0;
 my $opt_verbose = 0;
-my $opt_cpanelhack = 0;
+our $opt_cpanelhack = 0;
 
-my $db_host = "localhost";
-my $db_user = "";
-my $db_pass = "";
-my $db_name = "hlstats";
+our $db_host = "localhost";
+our $db_user = "";
+our $db_pass = "";
+our $db_name = "hlstats";
 
 my $date_ubase="";
 my $date_base="CURRENT_DATE()";
 
-# Usage message
-	"inactive|i"		=> \$opt_player_activity,
-	"awards|a"			=> \$opt_awards,
-	"ribbons|r"			=> \$opt_ribbons,
-	"geoip|g"			=> \$opt_geoip,
-	"prune|p"			=> \$opt_prune,
-	"optimize|o"		=> \$opt_optimize,
 
 my $usage = <<EOT
 Usage: hlstats-awards.pl [OPTION]...
@@ -145,20 +138,19 @@ EOT
 
 # Read Config File
 
+my %conf_directives = (
+	"DBHost",			"db_host",
+	"DBUsername",		"db_user",
+	"DBPassword",		"db_pass",
+	"DBName",			"db_name",
+	"CpanelHack",		"opt_cpanelhack"
+);
+
 if (-r $opt_configfile)
 {
 	$conf = ConfigReaderSimple->new($opt_configfile);
 	$conf->parse();
-	
-	%directives = (
-		"DBHost",			"db_host",
-		"DBUsername",		"db_user",
-		"DBPassword",		"db_pass",
-		"DBName",			"db_name",
-		"CpanelHack",		"opt_cpanelhack"
-	);
-	
-	&doConf($conf, %directives);
+	&doConf($conf, %conf_directives);
 }
 else
 {
@@ -196,7 +188,7 @@ if ($configfile && -r $configfile) {
 	$conf = '';
 	$conf = ConfigReaderSimple->new($configfile);
 	$conf->parse();
-	&doConf($conf, %directives);
+	&doConf($conf, %conf_directives);
 }
 
 print "-- Connecting to MySQL database '$db_name' on '$db_host' as user '$db_user' ... ";

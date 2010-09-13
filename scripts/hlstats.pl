@@ -1618,53 +1618,50 @@ sub readDatabaseConfig()
 
 # Read Config File
 
+my %conf_directives = (
+	"DBHost",					"db_host",
+	"DBUsername",			"db_user",
+	"DBPassword",			"db_pass",
+	"DBName",					"db_name",
+	"DBLowPriority",		"db_lowpriority",
+	"BindIP",					"s_ip",
+	"Port",						"s_port",
+	"DebugLevel",			"g_debug",
+	"CpanelHack",			"g_cpanelhack"
+);
+
+my %directives_mysql = (
+	"version",					"g_version",
+	"MailTo",					"g_mailto",
+	"MailPath",					"g_mailpath",
+	"Mode",						"g_mode",
+	"DeleteDays",				"g_deletedays",
+	"UseTimestamp",				"g_timestamp",
+	"DNSResolveIP",				"g_dns_resolveip",
+	"DNSTimeout",				"g_dns_timeout",
+	"RconIgnoreSelf",			"g_rcon_ignoreself",
+	"Rcon",						"g_rcon",
+	"RconRecord",				"g_rcon_record",
+	"MinPlayers",				"g_minplayers",
+	"SkillMaxChange",			"g_skill_maxchange",
+	"SkillMinChange",			"g_skill_minchange",
+	"PlayerMinKills",			"g_player_minkills",
+	"AllowOnlyConfigServers",	"g_onlyconfig_servers",
+	"TrackStatsTrend",			"g_track_stats_trend",
+	"GlobalBanning",			"g_global_banning",
+	"LogChat",					"g_log_chat",
+	"LogChatAdmins",			"g_log_chat_admins",
+	"GlobalChat",				"g_global_chat",
+	"SkillRatioCap",			"g_skill_ratio_cap",
+	"rankingtype",				"g_ranktype",
+	"UseGeoIPBinary",			"g_geoip_binary",
+	"Proxy_Key",				"proxy_key"
+);
+
 if ($opt_configfile && -r $opt_configfile) {
 	$conf = ConfigReaderSimple->new($opt_configfile);
 	$conf->parse();
-	
-	%directives = (
-		"DBHost",					"db_host",
-		"DBUsername",			"db_user",
-		"DBPassword",			"db_pass",
-		"DBName",					"db_name",
-		"DBLowPriority",		"db_lowpriority",
-		"BindIP",					"s_ip",
-		"Port",						"s_port",
-		"DebugLevel",			"g_debug",
-		"CpanelHack",			"g_cpanelhack"
-	);
-
-	%directives_mysql = (
-		"version",					"g_version",
-		"MailTo",					"g_mailto",
-		"MailPath",					"g_mailpath",
-		"Mode",						"g_mode",
-		"DeleteDays",				"g_deletedays",
-		"UseTimestamp",				"g_timestamp",
-		"DNSResolveIP",				"g_dns_resolveip",
-		"DNSTimeout",				"g_dns_timeout",
-		"RconIgnoreSelf",			"g_rcon_ignoreself",
-		"Rcon",						"g_rcon",
-		"RconRecord",				"g_rcon_record",
-		"MinPlayers",				"g_minplayers",
-		"SkillMaxChange",			"g_skill_maxchange",
-		"SkillMinChange",			"g_skill_minchange",
-		"PlayerMinKills",			"g_player_minkills",
-		"AllowOnlyConfigServers",	"g_onlyconfig_servers",
-		"TrackStatsTrend",			"g_track_stats_trend",
-		"GlobalBanning",			"g_global_banning",
-		"LogChat",					"g_log_chat",
-		"LogChatAdmins",			"g_log_chat_admins",
-		"GlobalChat",				"g_global_chat",
-		"SkillRatioCap",			"g_skill_ratio_cap",
-		"rankingtype",				"g_ranktype",
-		"UseGeoIPBinary",			"g_geoip_binary",
-		"Proxy_Key",				"proxy_key"
-	);
-
-#		"Servers",                "g_config_servers"
-	&doConf($conf, %directives);
-
+	&doConf($conf, %conf_directives);
 } else {
 	print "-- Warning: unable to open configuration file '$opt_configfile'\n";
 }
@@ -1703,7 +1700,7 @@ if ($configfile && -r $configfile) {
 	$conf = '';
     $conf = ConfigReaderSimple->new($configfile);
     $conf->parse();
-	&doConf($conf, %directives);
+	&doConf($conf, %conf_directives);
 }
 
 # these are set above, we then reload them to override values in the actual config
