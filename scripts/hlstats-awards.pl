@@ -247,11 +247,11 @@ DoGeoIP() if ($opt_geoip);
 DoPruning() if ($opt_prune);
 DoOptimize() if ($opt_optimize);
 
-print "++ HLstatsX:CE Awards & Maintenance script finished.\n\n";
+print "\n++ HLstatsX:CE Awards & Maintenance script finished.\n\n";
 
 sub DoInactive
 {
-	print "\n++ Player activity update started.\n";
+	print "++ Updating player activity... ";
 	$g_minactivity = 2419200;
 	# Inactive Players
 	my $result = &doQuery("
@@ -338,12 +338,12 @@ sub DoInactive
 		");
 	}
 	
-	print "\n++ Player activity updated successfully.\n";
+	print "done\n";
 }
 
 sub DoAwards
 {
-	print "\n++ Awards processing started.\n";
+	print "++ Processing awards... ";
 	
 	my $resultAwards = &doQuery("
 		SELECT
@@ -385,7 +385,7 @@ sub DoAwards
 				keyname='awards_d_date'
 		");
 		
-		print "\n++ Generating awards for $awards_d_date_new (previous: $awards_d_date)...\n\n";
+		print "(generating awards for $awards_d_date_new (previous: $awards_d_date))... ";
 	}
 	else
 	{
@@ -831,12 +831,12 @@ sub DoAwards
 			keyname='awards_d_date' AND NOT ISNULL(d_winner_id);
 		");
 
-	print "\n++ Awards generated successfully.\n";
+	print "done\n";
 }
 
 sub DoRibbons
 {
-	print "\n++ Ribbon generation started.\n";
+	print "++ Processing ribbons... ";
 	
 	my $result = &doQuery("SELECT `code` FROM `hlstats_Games`;");
 	while( my($game) = $result->fetchrow_array ) {
@@ -911,16 +911,17 @@ sub DoRibbons
 		}  
 
 	}
-	print "\n++ Ribbons generated successfully.\n";
+	print "done\n";
 }
 
 sub DoGeoIP
 {
-	print "\n++ Looking up missing player locations.\n";
+	print "++ Looking up missing player locations... ";
 	
 	my $useGeoIPBinary = 0;
 	my $gi = undef;
 	my $dogeo = 0;
+	my $cnt = 0;
 	
 	# Sanity checks to see if we can do geolocation updates
 	$result = &doQuery("
@@ -1000,7 +1001,6 @@ sub DoGeoIP
 			$string =~ s/^\s+|\s+$//g;
 			return $string;
 		}
-		$cnt = 0;
 		$result = &doQuery("SELECT playerId, lastAddress, lastName FROM hlstats_Players WHERE flag='' AND lastAddress<>'';");
 				
 		while (my($pid, $address, $name) = $result->fetchrow_array) {
@@ -1064,18 +1064,17 @@ sub DoGeoIP
 				$cnt++;
 			}
 		}
-		print "\n++ Missing locations found for ".$cnt." players.\n";
 	}
-	print "\n++ Lookup of missing player locations finished successfully.\n";
+	printf ("done%s\n", (($cnt>0)?" (updated $cnt players)":""));
 }
 
 sub DoPruning
 {
+	print "++ Cleaning up database: deleting events older than $g_deletedays days ...";
+	
 	$result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
 	my $g_deletedays;
 	($g_deletedays) = $result->fetchrow_array;
-	
-	print "\n++ Cleaning up database: deleting events older than $g_deletedays days ...\n";
 	
 	foreach $eventTable (keys(%g_eventTables))
 	{
@@ -1086,8 +1085,8 @@ sub DoPruning
 					eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
 			");
 	}
-
-	print "\n++ Cleaning up database: deleting player history older than $g_deletedays days ...\n";
+	
+	print "done\n++ Cleaning up database: deleting player history older than $g_deletedays days ...";
 	&execNonQuery("
 		DELETE FROM
 			hlstats_Players_History
@@ -1095,18 +1094,19 @@ sub DoPruning
 			eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
 	");
 	
-	print "\n++ Cleaning up database: deleting stale trend samples ...\n";
+	print "done\n++ Cleaning up database: deleting stale trend samples ...";
 	&execNonQuery("
 		DELETE FROM
 			hlstats_Trend
 		WHERE
 			timestamp < (UNIX_TIMESTAMP() - 172800)
 	");
+	print "done\n";
 }
 
 sub DoOptimize
 {	
-	print "\n++ Optimizing all tables ...\n";
+	print "++ Optimizing all tables ...";
 
 	$result = &doQuery("SHOW TABLES");
 	while ( ($row) = $result->fetchrow_array ) {
@@ -1117,5 +1117,5 @@ sub DoOptimize
 			OPTIMIZE TABLE $table
 		");
 	}
-	print "\n++ Database Cleanup complete\n";
+	print "done\n";
 }
