@@ -31,7 +31,7 @@
 	{
 		$gamestring = '('.preg_replace('/,$/', '', $gamestring).')';
 		
-		$db->query("UPDATE IGNORE hlstats_Awards SET code='Oil Pot' WHERE game IN $gamestring AND awardType='W' AND code='oilpot'")
+		$db->query("UPDATE IGNORE hlstats_Awards SET code='Oil Pot' WHERE game IN $gamestring AND awardType='W' AND code='oilpot'");
 		$db->query("UPDATE IGNORE hlstats_Awards SET code='chivalry' WHERE game IN $gamestring AND awardType='W' AND code='env_explosion'");		
 		$db->query("UPDATE IGNORE hlstats_Weapons SET code='Oil Pot' WHERE game IN $gamestring AND code='oilpot'");
 		$db->query("UPDATE IGNORE hlstats_Weapons SET code='chivalry' WHERE game IN $gamestring AND code='env_explosion'");
