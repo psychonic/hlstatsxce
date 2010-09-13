@@ -1070,7 +1070,7 @@ sub DoGeoIP
 
 sub DoPruning
 {
-	print "++ Cleaning up database: deleting events older than $g_deletedays days ...";
+	print "++ Cleaning up database: deleting events older than $g_deletedays days... ";
 	
 	$result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
 	my $g_deletedays;
@@ -1086,7 +1086,7 @@ sub DoPruning
 			");
 	}
 	
-	print "done\n++ Cleaning up database: deleting player history older than $g_deletedays days ...";
+	print "done\n++ Cleaning up database: deleting player history older than $g_deletedays days... ";
 	&execNonQuery("
 		DELETE FROM
 			hlstats_Players_History
@@ -1094,7 +1094,7 @@ sub DoPruning
 			eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
 	");
 	
-	print "done\n++ Cleaning up database: deleting stale trend samples ...";
+	print "done\n++ Cleaning up database: deleting stale trend samples... ";
 	&execNonQuery("
 		DELETE FROM
 			hlstats_Trend
@@ -1106,7 +1106,7 @@ sub DoPruning
 
 sub DoOptimize
 {	
-	print "++ Optimizing all tables ...";
+	print "++ Optimizing all tables... ";
 
 	$result = &doQuery("SHOW TABLES");
 	while ( ($row) = $result->fetchrow_array ) {
