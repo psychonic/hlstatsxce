@@ -1001,7 +1001,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O', 'aoc', 'headshot', 'Headshot/Decapitation', 'Headshots and Decapitations'),
 ('W', 'aoc','latency','Best Latency','ms average connection'),
 ('W', 'aoc', 'Fists','Fists','kills with fists'),
-('W', 'aoc', 'Throwing Axe','Throwing Axe','kills with throwing axes')
+('W', 'aoc', 'Throwing Axe','Throwing Axe','kills with throwing axes'),
 ('O','cstrike','headshot','Headshot King','headshots'),
 ('O','cstrike','Defused_The_Bomb','Top Defuser','bomb defusions'),
 ('O','cstrike','Planted_The_Bomb','Top Demolitionist','bomb plantings'),
@@ -5292,7 +5292,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('aoc', 'chivalry', 'Fire', 1),
 ('aoc', 'Oil Pot', 'Oil Pot', 1),
 ('aoc', 'Fists', 'Fists',2),
-('aoc', 'Throwing Axe', 'Throwing Axe',1)
+('aoc', 'Throwing Axe', 'Throwing Axe',1),
 ('cstrike','knife','Bundeswehr Advanced Combat Knife',1.80),
 ('cstrike','usp','H&K USP .45 Tactical',1.50),
 ('cstrike','glock18','Glock 18 Select Fire',1.50),
