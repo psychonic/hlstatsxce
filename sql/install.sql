@@ -1001,7 +1001,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O', 'aoc', 'headshot', 'Headshot/Decapitation', 'Headshots and Decapitations'),
 ('W', 'aoc','latency','Best Latency','ms average connection'),
 ('W', 'aoc', 'Fists','Fists','kills with fists'),
-('W', 'aoc', 'Throwing Axe','Throwing Axe','kills with throwing axes')
+('W', 'aoc', 'Throwing Axe','Throwing Axe','kills with throwing axes'),
 ('O','cstrike','headshot','Headshot King','headshots'),
 ('O','cstrike','Defused_The_Bomb','Top Defuser','bomb defusions'),
 ('O','cstrike','Planted_The_Bomb','Top Demolitionist','bomb plantings'),
@@ -3292,7 +3292,7 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('slider', '1',2),
 ('modrewrite','0',2),
 ('showqueries','0',2),
-('Proxy_Key', '', 1),
+('Proxy_Key', SUBSTRING(MD5(RAND()) FROM 1 FOR 24), 1),
 ('Proxy_Daemons', '', 2),
 ('sourcebans_address', '', 2),
 ('forum_address', '', 2),
@@ -5292,7 +5292,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('aoc', 'chivalry', 'Fire', 1),
 ('aoc', 'Oil Pot', 'Oil Pot', 1),
 ('aoc', 'Fists', 'Fists',2),
-('aoc', 'Throwing Axe', 'Throwing Axe',1)
+('aoc', 'Throwing Axe', 'Throwing Axe',1),
 ('cstrike','knife','Bundeswehr Advanced Combat Knife',1.80),
 ('cstrike','usp','H&K USP .45 Tactical',1.50),
 ('cstrike','glock18','Glock 18 Select Fire',1.50),

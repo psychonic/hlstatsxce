@@ -74,7 +74,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		echo "<li>Sending Command to HLstatsX: CE Daemon at $host:$port &mdash; ";
 		$host = gethostbyname($host);
 		$socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-		$packet = "PROXY Key={$g_options['Proxy_Key']} PROXY C;".$command.";";
+		$packet = "";
+		if ($g_options['Proxy_Key'])
+		{
+			$packet = "PROXY Key={$g_options['Proxy_Key']} PROXY C;".$command.";";
+		}
+		else
+		{
+			$packet = "C;".$command.";";
+		}
 		$bytes_sent = socket_sendto($socket, $packet, strlen($packet), 0, $host, $port);
 		echo "<strong>".$bytes_sent."</strong> bytes <strong>OK</strong></li>";
 
