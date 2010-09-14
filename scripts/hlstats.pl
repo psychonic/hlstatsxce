@@ -37,6 +37,10 @@
 use strict;
 no strict 'vars';
 
+$SIG{HUP} = 'HUP_handler';
+$SIG{INT} = 'INT_handler';  # unix
+$SIG{INT2} = 'INT_handler';  # windows
+
 ##
 ## Settings
 ##
@@ -1343,6 +1347,13 @@ sub isTrackableTeam
 	return 1;
 }
 
+sub reloadConfiguration
+{
+	&flushAll;
+	&readDatabaseConfig;
+}
+
+
 sub flushAll
 {
 	# we only need to flush events if we're about to shut down. they are unaffected by server/player deletion
@@ -1996,8 +2007,7 @@ while ($loop = &getLine()) {
 
 			if ($data[1] eq "RELOAD") {
 				&printEvent("CONTROL", "Re-Reading Configuration by request from Frontend...", 1);
-				&flushAll;
-				&readDatabaseConfig;
+				&reloadConfiguration;
 			} 
 
 			if ($data[1] eq "KILL") {
@@ -3401,4 +3411,17 @@ if ($g_stdin) {
 	&flushAll(1);
 	&execNonQuery("UPDATE hlstats_Players SET last_event=UNIX_TIMESTAMP();");
 	&printEvent("IMPORT", "Import of log file complete. Scanned ".$import_logs_count." lines in ".($end_time-$start_time)." seconds", 1, 1);
+}
+
+sub INT_handler
+{
+	print "SIGINT received. Flushing data and shutting down...\n";
+	flushAll(1);
+	exit(0);
+}
+
+sub HUP_handler
+{
+	print "SIGHUP received. Flushing data and reloading configuration...\n";
+	&reloadConfiguration;
 }
