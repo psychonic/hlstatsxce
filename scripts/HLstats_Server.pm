@@ -202,9 +202,9 @@ sub set_play_game
 {
 	my ($self, $realgame) = @_;
 	
-	if (exists($gamecode_to_game[$realgame]))
+	if (exists($gamecode_to_game{$realgame}))
 	{
-		$self->{play_game} = $gamecode_to_game[$realgame];
+		$self->{play_game} = $gamecode_to_game{$realgame};
 	}
 }
 

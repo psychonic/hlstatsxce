@@ -22,7 +22,7 @@ use constant {
 	NTS => 19
 };
 
-my %gamecode_to_game = (
+%gamecode_to_game = (
 	'css'      => CSS(),
 	'hl2mp'    => HL2MP(),
 	'tf'       => TF(),
