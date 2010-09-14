@@ -247,20 +247,17 @@ sub send_global_chat
 # Adds an event to an Events table.
 #
 
-sub recordEvent
+my %g_eventtable_data = ();
+
+sub buildEventInsertData
 {
-	my $table = shift;
-	my $getid = shift;
-	my @coldata = @_;
-	
-	my @cols = @{$g_eventTables{$table}};
-	my $lastid = -1;
-	
 	my $insertType = "";
 	$insertType = " DELAYED" if ($db_lowpriority);
-	my $allownullcols = 0;
-	
-	my $query = "
+	while ( my ($table, $colsref) = each(%g_eventTables) )
+	{
+		$g_eventtable_data{$table}{queue} = [];
+		$g_eventtable_data{$table}{nullallowed} = 0;
+		$g_eventtable_data{$table}{query} = "
 		INSERT$insertType INTO
 			hlstats_Events_$table
 			(
@@ -268,38 +265,54 @@ sub recordEvent
 				serverId,
 				map"
 				;
-	my $j = 0;
-	foreach $i (@cols) {
-		$query .= ",\n$i";
-		if ($i =~ /^pos_/) {
-			$allownullcols |= (1 << $j);
+		my $j = 0;
+		foreach $i (@{$colsref})
+		{
+			$g_eventtable_data{$table}{query} .= ",\n$i";
+			if (substr($i, 0, 4) eq 'pos_') {
+				$g_eventtable_data{$table}{nullallowed} |= (1 << $j);
+			}
+			$j++;
 		}
-		$j++;
+		$g_eventtable_data{$table}{query} .= ") VALUES\n";
 	}
+}
+
+sub recordEvent
+{
+	my $table = shift;
+	my $unused = shift;
+	my @coldata = @_;
 	
-	my @vals = ($::ev_unixtime,$g_servers{$s_addr}->{"id"}, $g_servers{$s_addr}->get_map());
-			
-	$query .= ") VALUES (FROM_UNIXTIME(?),?,?";
+	my $value = "(FROM_UNIXTIME($::ev_unixtime),".$g_servers{$s_addr}->{'id'}.",'".quoteSQL($g_servers{$s_addr}->get_map())."'";
 	$j = 0;
 	for $i (@coldata) {
-		my $value_string = $i;
-		if ($allownullcols & (1 << $j) && $i eq "") {
-			$value_string = undef;
+		if ($g_eventtable_data{$table}{nullallowed} & (1 << $j) && (!defined($i) || $i eq "")) {
+			$value .= ",NULL";
 		} elsif (!defined($i)) {
-			$value_string = "";
+			$value .= ",''";
+		} else {
+			$value .= ",'".quoteSQL($i)."'";
 		}
-		$query .= ",?" ;
-		push(@vals, $value_string);
 		$j++;
 	}
+	$value .= ")";
+	
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) > 10)
+	{
+		my $query = $g_eventtable_data{$table}{query};
+		foreach (@{$g_eventtable_data{$table}{queue}})
+		{
+			$query .= $_.",";
+		}
+		$query .= $value;
+		execNonQuery($query);
+		$g_eventtable_data{$table}{queue} = [];
 		
-	$query .= ")";
-	
-	&execCached("recordEvent_$table", $query, @vals);
-	
-	if ($getid) {
-		return $db_conn->{'mysql_insertid'};
+		return;
 	}
+	
+	push(@{$g_eventtable_data{$table}{queue}}, $value);
 }
 
 
@@ -1332,6 +1345,27 @@ sub isTrackableTeam
 
 sub flushAll
 {
+	# we only need to flush events if we're about to shut down. they are unaffected by server/player deletion
+	my ($flushevents) = @_;
+	if ($flushevents)
+	{
+		while ( my ($table, $colsref) = each(%g_eventTables) )
+		{
+			if (scalar(@{$g_eventtable_data{$table}{queue}} == 0))
+			{
+				next;
+			}
+			
+			my $query = $g_eventtable_data{$table}{query};
+			foreach (@{$g_eventtable_data{$table}{queue}})
+			{
+				$query .= $_.",";
+			}
+			$query =~ s/,$//;
+			execNonQuery($query);
+		}
+	}
+	
 	while( my($se, $server) = each(%g_servers))
 	{	
 		while ( my($pl, $player) = each(%{$g_servers{$server}->{"srv_players"}}) )
@@ -1760,6 +1794,7 @@ if ($opt_version) {
 
 &doConnect;
 &readDatabaseConfig;
+&buildEventInsertData;
 
 if ($g_mode ne "Normal" && $g_mode ne "LAN" && $g_mode ne "NameTrack") {
 	$g_mode = "Normal";
@@ -3363,14 +3398,7 @@ if ($g_stdin) {
 		print "\n";
 	}
 	
-	if ($g_servers{$s_addr}->{"srv_players"}) {
-		while ( my($pl, $player) = each(%{$g_servers{$s_addr}->{"srv_players"}}) ) {
-			if ($player) {
-				# if the player is still in, do proper remove/flush before ending import
-				removePlayer($s_addr, $player->{userid}, $player->{uniqueid});
-			}
-		}
-	}
+	&flushAll(1);
 	&execNonQuery("UPDATE hlstats_Players SET last_event=UNIX_TIMESTAMP();");
 	&printEvent("IMPORT", "Import of log file complete. Scanned ".$import_logs_count." lines in ".($end_time-$start_time)." seconds", 1, 1);
 }
