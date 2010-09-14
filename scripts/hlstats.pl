@@ -246,9 +246,9 @@ sub send_global_chat
 }
 
 #
-# void recordEvent (string table, array cols, bool getid, [mixed eventData ...])
+# void buildEventInsertData ()
 #
-# Adds an event to an Events table.
+# Ran at startup to init event table queues, build initial queries, and set allowed-null columns
 #
 
 my %g_eventtable_data = ();
@@ -282,6 +282,12 @@ sub buildEventInsertData
 	}
 }
 
+#
+# void recordEvent (string table, array cols, bool getid, [mixed eventData ...])
+#
+# Queues an event for addition to an Events table, flushing when hitting table queue limit.
+#
+
 sub recordEvent
 {
 	my $table = shift;
@@ -302,7 +308,7 @@ sub recordEvent
 	}
 	$value .= ")";
 	
-	if (scalar(@{$g_eventtable_data{$table}{queue}}) > 10)
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) > $g_event_queue_size)
 	{
 		my $query = $g_eventtable_data{$table}{query};
 		foreach (@{$g_eventtable_data{$table}{queue}})
@@ -311,6 +317,7 @@ sub recordEvent
 		}
 		$query .= $value;
 		execNonQuery($query);
+		&printEvent("DEBUG","Execing\n$query");
 		$g_eventtable_data{$table}{queue} = [];
 		
 		return;
@@ -1424,6 +1431,7 @@ $g_server_ip = "";
 $g_server_port = 27015;
 $g_timestamp = 0;
 $g_cpanelhack = 0;
+$g_event_queue_size = 10;
 $g_dns_resolveip = 1;
 $g_dns_timeout = 5;
 $g_skill_maxchange = 100;
@@ -1675,7 +1683,8 @@ if ($opt_configfile && -r $opt_configfile) {
 		"BindIP",					"s_ip",
 		"Port",						"s_port",
 		"DebugLevel",			"g_debug",
-		"CpanelHack",			"g_cpanelhack"
+		"CpanelHack",			"g_cpanelhack",
+		"EventQueueSize",		"g_event_queue_size"
 	);
 
 	%directives_mysql = (
