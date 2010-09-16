@@ -317,7 +317,6 @@ sub recordEvent
 		}
 		$query .= $value;
 		execNonQuery($query);
-		&printEvent("DEBUG","Execing\n$query");
 		$g_eventtable_data{$table}{queue} = [];
 		
 		return;
