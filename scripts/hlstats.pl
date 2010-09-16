@@ -2319,105 +2319,138 @@ while ($loop = &getLine()) {
 		my %ev_player = ();
 	
 		if ($s_output =~ /^
-				(?:\([^\(\)]+\))?		# l4d prefix, such as (DEATH) or (INCAP)
+				(?:\(DEATH\))?		# l4d prefix, such as (DEATH) or (INCAP)
 				"(.+?(?:<.+?>)*?
-				(?:<setpos_exact\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d);.*?)?
+				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string with or without l4d-style location coords
-				\s([^"\(]+)\s			# verb (ex. attacked, killed, triggered)
+				\skilled\s			# verb (ex. attacked, killed, triggered)
 				"(.+?(?:<.+?>)*?
-				(?:<setpos_exact\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d);.*?)?
+				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string as above or action name
-				\s[^"\(]+\s				# (ex. with, against)
-				"(.+?(?:<.+?>)*?
-				(?:<setpos_exact\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d)\s((?:|-)\d+?\.\d\d);.*?)?
-				)"						# player string as above or weapon name
-				(?:\s[^"\(]+\s"(.+?)")?	# weapon name on plyrplyr actions
+				\swith\s				# (ex. with, against)
+				"([^"]*)"
 				(.*)					#properties
-				$/x)
+				/x)
 		{
 
 			# Prototype: "player" verb "obj_a" ?... "obj_b"[properties]
 			# Matches:
 			#  8. Kills
-			#  800. L4D Incapacitation
-			#  9. Injuring OBSOLETE
-			# 10. Player-Player Actions
-			# 11. Player Objectives/Actions
 			
 			$ev_player = $1;
 			$ev_l4dXcoord = $2; # attacker/player coords (L4D)
 			$ev_l4dYcoord = $3;
 			$ev_l4dZcoord = $4;
-			$ev_verb   = $5; # killed; attacked; triggered
-			$ev_obj_a  = $6; # kill:victim; action:actionname
-			$ev_l4dXcoordKV = $7; # kill victim coords (L4D)
-			$ev_l4dYcoordKV = $8;
-			$ev_l4dZcoordKV = $9;
-			$ev_obj_b  = $10; # kill:weapon; action:victim
-			$ev_l4dXcoordPV = $11; # action victim coords (L4D)
-			$ev_l4dYcoordPV = $12;
-			$ev_l4dZcoordPV = $13;
-			$ev_obj_c  = $14; # action:weapon
-			$ev_properties = $15;
+			$ev_obj_a  = $5; # victim
+			$ev_l4dXcoordKV = $6; # kill victim coords (L4D)
+			$ev_l4dYcoordKV = $7;
+			$ev_l4dZcoordKV = $8;
+			$ev_obj_b  = $9; # weapon
+			$ev_properties = $10;
 			%ev_properties_hash = &getProperties($ev_properties);
 			
-			if (like($ev_verb, "killed") || like($ev_verb, "was incapped by")) {
-				my $killerinfo = undef;
-				my $victiminfo = undef;
+			my $killerinfo = &getPlayerInfo($ev_player, 1);
+			my $victiminfo = &getPlayerInfo($ev_obj_a, 1);
+			$ev_type = 8;
+			
+			$headshot = 0;
+			if ($ev_properties =~ m/headshot/) {
+				$headshot = 1;
+			}
+			
+			if ($killerinfo && $victiminfo) {
+				my $killerId       = $killerinfo->{"userid"};
+				my $killerUniqueId = $killerinfo->{"uniqueid"};
+				my $killer         = lookupPlayer($s_addr, $killerId, $killerUniqueId);
 				
-				if (like($ev_verb, "killed")) {
-					$killerinfo = &getPlayerInfo($ev_player, 1);
-					$victiminfo = &getPlayerInfo($ev_obj_a, 1);
-					$ev_type = 8;
-				} else {
-					# reverse killer/victim (x was incapped by y = y killed x)
-					$killerinfo = &getPlayerInfo($ev_obj_a, 1);
-					$victiminfo = &getPlayerInfo($ev_player, 1);
-					if ($victiminfo->{team} eq "Infected") {
-						$victiminfo = undef;
-					}
-					$ev_type = 800;
+				# octo
+				if($killer->{role} eq "scout") {
+					$ev_status = &doEvent_PlayerAction(
+						$killerinfo->{"userid"},
+						$killerinfo->{"uniqueid"},
+						"kill_as_scout",
+						"kill_as_scout"
+					);
 				}
+				if($killer->{role} eq "spy") {
+					$ev_status = &doEvent_PlayerAction(
+						$killerinfo->{"userid"},
+						$killerinfo->{"uniqueid"},
+						"kill_as_spy",
+						"kill_as_spy"
+					);
+				}
+
+				my $victimId       = $victiminfo->{"userid"};
+				my $victimUniqueId = $victiminfo->{"uniqueid"};
+				my $victim         = lookupPlayer($s_addr, $victimId, $victimUniqueId);
+
+				$ev_status = &doEvent_Frag(
+					$killerinfo->{"userid"},
+					$killerinfo->{"uniqueid"},
+					$victiminfo->{"userid"},
+					$victiminfo->{"uniqueid"},
+					$ev_obj_b,
+					$headshot,
+					$ev_l4dXcoord,
+					$ev_l4dYcoord,
+					$ev_l4dZcoord,
+					$ev_l4dXcoordKV,
+					$ev_l4dYcoordKV,
+					$ev_l4dZcoordKV,
+					&getProperties($ev_properties)
+				);
+			} 
+		} elsif ($g_servers{$s_addr}->{play_game} == L4D())
+			if ($s_output =~ /^
+				\(INCAP\)		# l4d prefix, such as (DEATH) or (INCAP)
+				"(.+?(?:<.+?>)*?
+				<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*
+				)"						# player string with or without l4d-style location coords
+				\swas\sincapped\sby\s			# verb (ex. attacked, killed, triggered)
+				"(.+?(?:<.+?>)*?
+				<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*
+				)"						# player string as above or action name
+				\swith\s				# (ex. with, against)
+				"([^"]*)"					# weapon name
+				(.*)					#properties
+				/x)
+			{
+				#  800. L4D Incapacitation
+				
+				$ev_player = $1;
+				$ev_l4dXcoord = $2; # attacker/player coords (L4D)
+				$ev_l4dYcoord = $3;
+				$ev_l4dZcoord = $4;
+				$ev_obj_a  = $5; # victim
+				$ev_l4dXcoordKV = $6; # kill victim coords (L4D)
+				$ev_l4dYcoordKV = $7;
+				$ev_l4dZcoordKV = $8;
+				$ev_obj_b  = $9; # weapon
+				$ev_properties = $10;
+				%ev_properties_hash = &getProperties($ev_properties);
+				
+				# reverse killer/victim (x was incapped by y = y killed x)
+				my $killerinfo = &getPlayerInfo($ev_obj_a, 1);
+				my $victiminfo = &getPlayerInfo($ev_player, 1);
+				
+				if ($victiminfo->{team} eq "Infected") {
+					$victiminfo = undef;
+				}
+				$ev_type = 800;
 								
 				$headshot = 0;
-	    		if ($ev_properties =~ m/headshot/) {
+				if ($ev_properties =~ m/headshot/) {
 					$headshot = 1;
 				}
-  				if ($killerinfo && $victiminfo) {
+				if ($killerinfo && $victiminfo) {
 					my $killerId       = $killerinfo->{"userid"};
 					my $killerUniqueId = $killerinfo->{"uniqueid"};
 					my $killer         = lookupPlayer($s_addr, $killerId, $killerUniqueId);
-					if (($killer) && ($killerinfo->{"team"} ne "") && ($killer->{team} ne $killerinfo->{"team"}) ) 	{
-						$killer->set("team", $killerinfo->{"team"});
-						$killer->updateDB();
-						$killer->updateTimestamp();
-					}  
-					# octo
-					if($killer->{role} eq "scout") {
-						$ev_status = &doEvent_PlayerAction(
-							$killerinfo->{"userid"},
-							$killerinfo->{"uniqueid"},
-							"kill_as_scout",
-							"kill_as_scout"
-						);
-					}
-					if($killer->{role} eq "spy") {
-						$ev_status = &doEvent_PlayerAction(
-							$killerinfo->{"userid"},
-							$killerinfo->{"uniqueid"},
-							"kill_as_spy",
-							"kill_as_spy"
-						);
-					}
 
 					my $victimId       = $victiminfo->{"userid"};
 					my $victimUniqueId = $victiminfo->{"uniqueid"};
 					my $victim         = lookupPlayer($s_addr, $victimId, $victimUniqueId);
-					if (($victim) && ($victiminfo->{"team"} ne "") && ($victim->{team} ne $victiminfo->{"team"}) ) 	{
-						$victim->set("team", $victiminfo->{"team"});
-						$victim->updateDB();
-						$victim->updateTimestamp();
-					}
 
 					$ev_status = &doEvent_Frag(
 						$killerinfo->{"userid"},
@@ -2435,7 +2468,76 @@ while ($loop = &getLine()) {
 						&getProperties($ev_properties)
 					);
 				} 
-			} elsif (like($ev_verb, "triggered")) {
+			} elsif ($s_output =~ /^\(TONGUE\)\sTongue\sgrab\sstarting\.\s+Smoker:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))"\.\s+Victim:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))".*/) {
+				# Prototype: (TONGUE) Tongue grab starting.  Smoker:"player". Victim:"victim".
+				# Matches:
+				# 11. Player Action
+				
+				$ev_player = $1;
+				$ev_l4dXcoord = $2;
+				$ev_l4dYcoord = $3;
+				$ev_l4dZcoord = $4;
+				$ev_victim = $5;
+				$ev_l4dXcoordV = $6;
+				$ev_l4dYcoordV = $7;
+				$ev_l4dZcoordV = $8;
+				
+				$playerinfo = &getPlayerInfo($ev_player, 1);
+				$victiminfo = &getPlayerInfo($ev_victim, 1);
+
+				$ev_type = 11;
+					
+				if ($playerinfo) {
+					$ev_status = &doEvent_PlayerAction(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
+						"tongue_grab"
+					);
+				}
+				if ($playerinfo && $victiminfo) {
+						$ev_status = &doEvent_PlayerPlayerAction(
+							$playerinfo->{"userid"},
+							$playerinfo->{"uniqueid"},
+							$victiminfo->{"userid"},
+							$victiminfo->{"uniqueid"},
+							"tongue_grab",
+							$ev_l4dXcoord,
+							$ev_l4dYcoord,
+							$ev_l4dZcoord,
+							$ev_l4dXcoordV,
+							$ev_l4dYcoordV,
+							$ev_l4dZcoordV
+						);
+				}
+			}
+		} elsif ($s_output =~ /^
+				"(.+?(?:<.+?>)*?
+				)"						# player string
+				\s(triggered(?:\sa)?)\s			# verb (ex. attacked, killed, triggered)
+				"(.+?(?:<.+?>)*?
+				)"						# player string as above or action name
+				\s[a-zA-Z]+\s				# (ex. with, against)
+				"(.+?(?:<.+?>)*?
+				)"						# player string as above or weapon name
+				(?:\s[a-zA-Z]+\s"(.+?)")?	# weapon name on plyrplyr actions
+				(.*)					#properties
+				/x)
+		{			
+		
+			# 10. Player-Player Actions
+			
+			# no l4d/2 actions are logged with the locations (in fact, very few are logged period) so the l4d/2 location parsing can be skipped
+			
+			$ev_player = $1;
+			$ev_verb   = $2; # triggered or triggered a
+			$ev_obj_a  = $3; # action
+			$ev_obj_b  = $4; # victim
+			$ev_obj_c  = $5; # weapon (optional)
+			$ev_properties = $6;
+			%ev_properties_hash = &getProperties($ev_properties);
+			
+
+			if ($ev_verb eq "triggered") {  # it's either 'triggered' or 'triggered a'
 			
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				my $victiminfo = &getPlayerInfo($ev_obj_b, 1);
@@ -2449,12 +2551,12 @@ while ($loop = &getLine()) {
 							$victiminfo->{"userid"},
 							$victiminfo->{"uniqueid"},
 							$ev_obj_a,
-							$ev_l4dXcoord,
-							$ev_l4dYcoord,
-							$ev_l4dZcoord,
-							$ev_l4dXcoordPV,
-							$ev_l4dYcoordPV,
-							$ev_l4dZcoordPV,
+							undef,
+							undef,
+							undef,
+							undef,
+							undef,
+							undef,
 							&getProperties($ev_properties)
 						);
 					}
@@ -2471,7 +2573,7 @@ while ($loop = &getLine()) {
 						&getProperties($ev_properties)
 					);
 				}
-			} elsif (like($ev_verb, "triggered a")) {
+			} else {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				$ev_type = 11;
 				
@@ -2581,18 +2683,7 @@ while ($loop = &getLine()) {
 			$ev_properties = $3;
 			%ev_properties = &getProperties($ev_properties);
 	
-			if (like($ev_verb, "latency")) {
-				$ev_type = 503;
-				my $playerinfo = &getPlayerInfo($ev_player, 0);
-	
-				if ($playerinfo) {
-					$ev_status = &doEvent_Statsme_Latency(
-						$playerinfo->{"userid"},
-						$playerinfo->{"uniqueid"},
-						$ev_properties{"ping"}
-					);
-				}
-			} elsif (like($ev_verb, "time")) {
+			if ($ev_verb eq "time") {
 				$ev_type = 504;
 				my $playerinfo = &getPlayerInfo($ev_player, 0);
 	
@@ -2610,8 +2701,19 @@ while ($loop = &getLine()) {
 						"$hour:$min:$sec"
 					);
 				}
+			} else { # latency
+				$ev_type = 503;
+				my $playerinfo = &getPlayerInfo($ev_player, 0);
+	
+				if ($playerinfo) {
+					$ev_status = &doEvent_Statsme_Latency(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
+						$ev_properties{"ping"}
+					);
+				}
 			}
-		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))" ([^"\(]+) "(.+?)"(.*)$/) {
+		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?)" ([a-zA-Z]+) "(.+?)"(.*)$/) {
 			# Prototype: "player" verb "obj_a"[properties]
 			# Matches:
 			#  1. Connection
@@ -2623,15 +2725,12 @@ while ($loop = &getLine()) {
 			# 14. a) Chat; b) Team Chat
 			
 			$ev_player = $1;
-			$ev_l4dXcoord = $2;
-			$ev_l4dYcoord = $3;
-			$ev_l4dZcoord = $4;
-			$ev_verb   = $5;
-			$ev_obj_a  = $6;
-			$ev_properties = $7;
+			$ev_verb   = $2;
+			$ev_obj_a  = $3;
+			$ev_properties = $4;
 			%ev_properties = &getProperties($ev_properties);
 			
-			if (like($ev_verb, "connected, address")) {
+			if ($ev_verb eq "connected, address") {
 				my $ipAddr = $ev_obj_a;
 				my $playerinfo;
 				
@@ -2666,7 +2765,7 @@ while ($loop = &getLine()) {
 						);
 					}
 				}
-			} elsif (like($ev_verb, "committed suicide with")) {
+			} elsif ($ev_verb eq "committed suicide with") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 4;
@@ -2679,7 +2778,7 @@ while ($loop = &getLine()) {
 						%ev_properties
 					);
 				}
-			} elsif (like($ev_verb, "joined team")) {
+			} elsif ($ev_verb eq "joined team") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 5;
@@ -2691,7 +2790,7 @@ while ($loop = &getLine()) {
 						$ev_obj_a
 					);
 				}
-			} elsif (like($ev_verb, "changed role to")) {
+			} elsif ($ev_verb eq "changed role to") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 6;
@@ -2703,7 +2802,7 @@ while ($loop = &getLine()) {
 						$ev_obj_a
 					);
 				}
-			} elsif (like($ev_verb, "changed name to")) {
+			} elsif ($ev_verb eq "changed name to") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 7;
@@ -2715,7 +2814,7 @@ while ($loop = &getLine()) {
 						$ev_obj_a
 					);
 				}
-			} elsif (like($ev_verb, "triggered")) {
+			} elsif ($ev_verb eq "triggered") {
 
 			    # in cs:s players dropp the bomb if they are the only ts
 			    # and disconnect...the dropp the bomb after they disconnected :/
@@ -2768,7 +2867,7 @@ while ($loop = &getLine()) {
 						);
 					}
 				}
-			} elsif (like($ev_verb, "triggered a")) {
+			} elsif ($ev_verb eq "triggered a") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 11;
@@ -2785,7 +2884,7 @@ while ($loop = &getLine()) {
 						%ev_properties
 					);
 				}
-			} elsif (like($ev_verb, "say")) {
+			} elsif ($ev_verb eq "say") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 14;
@@ -2798,7 +2897,7 @@ while ($loop = &getLine()) {
 						$ev_obj_a
 					);
 				}
-			} elsif (like($ev_verb, "say_team")) {
+			} elsif ($ev_verb eq "say_team") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 14;
@@ -2812,7 +2911,7 @@ while ($loop = &getLine()) {
 					);
 				}
 			}
-		} elsif ($s_output =~ /^(?:Kick: |)"(.+?(?:<.+?>)*)" ([^\(]+)(.*)$/) {
+		} elsif ($s_output =~ /^(?:Kick: )?"(.+?(?:<.+?>)*)" ([^\(]+)(.*)$/) {
 			# Prototype: "player" verb[properties]
 			# Matches:
 			#  2. Enter Game
@@ -3100,47 +3199,6 @@ while ($loop = &getLine()) {
 				substr($ev_obj_b, 0, 255),
 				$ev_obj_a
 			);
-		} elsif ($s_output =~ /^\(TONGUE\)\sTongue\sgrab\sstarting\.\s+Smoker:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))"\.\s+Victim:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))".*$/) {
-			# Prototype: (TONGUE) Tongue grab starting.  Smoker:"player". Victim:"victim".
-			# Matches:
-		    # 11. Player Action
-			
-			$ev_player = $1;
-			$ev_l4dXcoord = $2;
-			$ev_l4dYcoord = $3;
-			$ev_l4dZcoord = $4;
-			$ev_victim = $5;
-			$ev_l4dXcoordV = $6;
-			$ev_l4dYcoordV = $7;
-			$ev_l4dZcoordV = $8;
-			
-			$playerinfo = &getPlayerInfo($ev_player, 1);
-			$victiminfo = &getPlayerInfo($ev_victim, 1);
-
-			$ev_type = 11;
-				
-			if ($playerinfo) {
-				$ev_status = &doEvent_PlayerAction(
-					$playerinfo->{"userid"},
-					$playerinfo->{"uniqueid"},
-					"tongue_grab"
-				);
-			}
-			if ($playerinfo && $victiminfo) {
-					$ev_status = &doEvent_PlayerPlayerAction(
-						$playerinfo->{"userid"},
-						$playerinfo->{"uniqueid"},
-						$victiminfo->{"userid"},
-						$victiminfo->{"uniqueid"},
-						"tongue_grab",
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
-						$ev_l4dXcoordV,
-						$ev_l4dYcoordV,
-						$ev_l4dZcoordV
-					);
-			}
 		} elsif ($g_servers{$s_addr}->{play_game} == DYSTOPIA()) {
 			if ($s_output =~ /^weapon { steam_id: 'STEAM_\d+:(.+?)', weapon_id: (\d+), class: \d+, team: \d+, shots: \((\d+),(\d+)\), hits: \((\d+),(\d+)\), damage: \((\d+),(\d+)\), headshots: \((\d+),(\d+)\), kills: \(\d+,\d+\) }$/ && $g_mode eq "Normal") {
 			
