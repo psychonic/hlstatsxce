@@ -1008,7 +1008,7 @@ sub doEvent_Frag
 			} elsif ($g_servers{$s_addr}->{play_game} == FOF()) {
 				# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
 				$weapon =~ s/2$//;
-				if ($weapon = "bow") {
+				if ($weapon eq "bow") {
 					$weapon = "arrow";
 				}
 			}
