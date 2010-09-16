@@ -2851,9 +2851,8 @@ sub doEvent_Statsme
 			$desc = "(IGNORED) BOT: ";
 		} else {
 		
-			if ($g_servers{$s_addr}->{play_game} == FOF()) {
-				$weapon =~ s/2$//;
-				$weapon =~ s/^bow$/arrow/;
+			if ($weapon eq "bow") {
+				$weapon = "arrow";
 			}
 
 			if ($shots>0) 
@@ -2941,7 +2940,9 @@ sub doEvent_Statsme2
 		} else {
 			if ($g_servers{$s_addr}->{play_game} == FOF()) {
 				$weapon =~ s/2$//;
-				$weapon =~ s/^bow$/arrow/;
+				if ($weapon eq "bow") {
+					$weapon = "arrow";
+				}
 			}
 			&recordEvent("Statsme2", 0,
 				$player->{playerid},
