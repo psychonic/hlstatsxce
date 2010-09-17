@@ -110,7 +110,7 @@ case "$1" in
 	
 	stop)
 		echo "Stopping HLstatsX:CE..."
-		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+		kill -2 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/hlstats.pid
 			echo "Stopped successfully"
@@ -121,7 +121,7 @@ case "$1" in
 	
 	restart)
 		echo "Restarting HLstatsX:CE..."
-		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+		kill -2 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
        
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/hlstats.pid
