@@ -513,7 +513,7 @@ sub track_server_load
 				$string = $self->dorcon("stats");
 	
 				#		$string =~ /.*\n(.*)\Z/;
-				$string =~ /.*\n(.*)\n*L{0,1}.*\Z/;
+				$string =~ /CPU.*\n(.*)\n*L{0,1}.*\Z/;
 				$string = $1;
 				$string =~ s/[\s\s]{2,10}/ /g;
 				$string =~ /([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+)+/;
