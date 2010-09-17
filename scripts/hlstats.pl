@@ -1376,7 +1376,7 @@ sub flushAll
 	{
 		while ( my ($table, $colsref) = each(%g_eventTables) )
 		{
-			if (scalar(@{$g_eventtable_data{$table}{queue}} == 0))
+			if (scalar(@{$g_eventtable_data{$table}{queue}}) == 0)
 			{
 				next;
 			}
@@ -1393,7 +1393,7 @@ sub flushAll
 	
 	while( my($se, $server) = each(%g_servers))
 	{	
-		while ( my($pl, $player) = each(%{$g_servers{$server}->{"srv_players"}}) )
+		while ( my($pl, $player) = each(%{$server->{"srv_players"}}) )
 		{
 			if ($player)
 			{
