@@ -934,6 +934,9 @@ sub doEvent_Frag
 	if (defined($properties{attacker_position})) {
 		$coords = $properties{attacker_position};
 		($x,$y,$z) = split(/ /,$coords);
+	} elsif (defined($properties{killerpos})) { #pvkii
+		$coords = $properties{killerpos};
+		($x,$y,$z) = split(/ /,$coords);
 	} elsif ($g_servers{$s_addr}->{nextkillx} ne "") {
 	# else use coords stored from plugin if available
 		$x = $g_servers{$s_addr}->{nextkillx};
@@ -948,6 +951,9 @@ sub doEvent_Frag
 		# if killer coords were on kill line, use them
 	if (defined($properties{victim_position})) {
 		$coords = $properties{victim_position};
+		($vx,$vy,$vz) = split(/ /,$coords);
+	} elsif (defined($properties{victimpos})) { #pvkii
+		$coords = $properties{victimpos};
 		($vx,$vy,$vz) = split(/ /,$coords);
 	} elsif ($g_servers{$s_addr}->{nextkillvicx} ne "") {
 	# else use coords stored from plugin if available
@@ -1010,6 +1016,29 @@ sub doEvent_Frag
 				$weapon =~ s/2$//;
 				if ($weapon eq "bow") {
 					$weapon = "arrow";
+				}
+			} elsif ($g_servers{$s_addr}->{play_game} == PVKII()) {
+				if (defined($properties{killerclass})) {
+					my $krole = $properties{killerclass};
+					if ($krole ne "" && $krole ne $killer->{role})
+					{
+						&doEvent_RoleSelection(
+							$killer->{"userid"},
+							$killer->{"uniqueid"},
+							$krole
+						);
+					}
+				}
+				if (defined($properties{victimclass})) {
+					my $vrole = $properties{victimclass};
+					if ($vrole ne "" && $vrole ne $victim->{role})
+					{
+						&doEvent_RoleSelection(
+							$victim->{"userid"},
+							$victim->{"uniqueid"},
+							$vrole
+						);
+					}
 				}
 			}
 			
