@@ -20,7 +20,8 @@ use constant {
 	SGTLS => 17,
 	DYSTOPIA => 18,
 	NTS => 19,
-	PVKII => 20
+	PVKII => 20,
+	CSP => 21
 };
 
 %gamecode_to_game = (
@@ -44,5 +45,6 @@ use constant {
 	'sgtls'    => SGTLS(),
 	'dystopia' => DYSTOPIA(),
 	'nts'      => NTS(),
-	'pvkii'    => PVKII()
+	'pvkii'    => PVKII(),
+	'csp'      => CSP()
 );
