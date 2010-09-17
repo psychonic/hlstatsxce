@@ -1292,7 +1292,7 @@ sub getProperties
 	my %properties;
 	my $dods_flag = 0;
 	
-	while ($propstring =~ s/^\s*\((\S+)(?: "(.+?)")?\)//) {
+	while ($propstring =~ s/^\s*\((\S+)(?: "?([^"]+)"?)?\)//) {
 		my $key = $1;
 		if (defined($2)) {
 			if ($key eq "player") {
