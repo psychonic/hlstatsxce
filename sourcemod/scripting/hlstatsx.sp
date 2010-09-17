@@ -24,15 +24,13 @@
  
 #define REQUIRE_EXTENSIONS 
 #include <sourcemod>
-#include <keyvalues>
-#include <menus>
 #include <sdktools>
 #include <loghelper>
 #undef REQUIRE_EXTENSIONS
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.11-pre4"
+#define VERSION "1.6.11-pre5"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -113,11 +111,14 @@ new String: message_prefix[32];
 new bool:g_bPlyrCanDoMotd[MAXPLAYERS+1];
 new bool:g_bGameCanDoMotd = true;
 new bool:g_bTrackColors4Chat;
-new bool:g_bServerTagAdded;
 new g_iSDKVersion = SOURCE_SDK_UNKNOWN;
 new Handle:g_cvarTeamPlay = INVALID_HANDLE;
-new g_bTeamPlay;
-new g_bLateLoad = false;
+new bool:g_bTeamPlay;
+new bool:g_bLateLoad = false;
+new bool:g_bIgnoreNextTagChange = false;
+new Handle:g_hCustomTags;
+
+#define SVTAGSIZE 128
 
 public Plugin:myinfo = {
 	name = "HLstatsX CE Ingame Plugin",
@@ -217,6 +218,7 @@ public OnPluginStart()
 	hlx_server_tag = CreateConVar("hlx_server_tag", "1", "If enabled, adds \"HLstatsX:CE\" to server tags on supported games. 1 = Enabled (default), 0 = Disabled",
 		FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
+	g_hCustomTags = CreateArray(SVTAGSIZE);
 	sv_tags = FindConVar("sv_tags");
 	g_iSDKVersion = GuessSDKVersion();
 	
@@ -226,30 +228,14 @@ public OnPluginStart()
 		decl String:protaddr[24];
 		GetConVarString(hlx_protect_address, protaddr, sizeof(protaddr));
 		OnProtectAddressChange(hlx_protect_address, "", protaddr);
-		if (sv_tags != INVALID_HANDLE && g_iSDKVersion < SOURCE_SDK_LEFT4DEAD)
-		{
-			decl String:tags[128];
-			GetConVarString(sv_tags, tags, sizeof(tags));
-			new bool:hastag = (StrContains(tags, HLXTAG) != -1);
-			new bool:needstag = GetConVarBool(hlx_server_tag);
-			if (!hastag && needstag)
-			{
-				DoServerTag();
-			}
-			else if (hastag && !needstag)
-			{
-				DoServerTag(false);
-			}
-		}
 	}
-	else
-	{
-		DoServerTag();
-	}
+	
+	MyAddServerTag(HLXTAG);
 	
 	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
 	HookConVarChange(hlx_server_tag, OnServerTagChange);
+	HookConVarChange(sv_tags, OnSVTagsChange);
 	
 	RegServerCmd("log", ProtectLoggingChange);
 	RegServerCmd("logaddress_del", ProtectForwardingChange);
@@ -314,51 +300,74 @@ public OnConfigsExecuted()
 }
 //
 
-DoServerTag(bool:enable=true)
-{
-	if (sv_tags != INVALID_HANDLE && g_iSDKVersion < SOURCE_SDK_LEFT4DEAD)
-	{
-		if (enable && !g_bServerTagAdded)
-		{
-			MyAddServerTag(HLXTAG);
-			g_bServerTagAdded = true;
-		}
-		else if (!enable && g_bServerTagAdded)
-		{
-			MyRemoveServerTag(HLXTAG);
-			g_bServerTagAdded = false;
-		}
-	}
-}
-
 stock MyAddServerTag(const String:tag[])
 {
-	decl String:currtags[128];
-	if (sv_tags != INVALID_HANDLE)
+	if (sv_tags == INVALID_HANDLE || (g_iSDKVersion != SOURCE_SDK_EPISODE2 && g_iSDKVersion != SOURCE_SDK_EPISODE2VALVE))
 	{
-		GetConVarString(sv_tags, currtags, sizeof(currtags));
-		decl String:newtags[128];
-		Format(newtags, sizeof(newtags), "%s%s%s", currtags, (currtags[0]!=0)?",":"", tag);
-		new flags = GetConVarFlags(sv_tags);
-		SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
-		SetConVarString(sv_tags, newtags);
-		SetConVarFlags(sv_tags, flags);
-	}	
+		// game doesn't support sv_tags
+		return;
+	}
+	
+	if (!GetConVarBool(hlx_server_tag))
+	{
+		return;
+	}
+	
+	if (FindStringInArray(g_hCustomTags, tag) == -1)
+	{
+		PushArrayString(g_hCustomTags, tag);
+	}
+	
+	decl String:current_tags[SVTAGSIZE];
+	GetConVarString(sv_tags, current_tags, sizeof(current_tags));
+	if (StrContains(current_tags, tag) > -1)
+	{
+		// already have tag
+		return;
+	}
+	
+	decl String:new_tags[SVTAGSIZE];
+	Format(new_tags, sizeof(new_tags), "%s%s%s", current_tags, (current_tags[0]!=0)?",":"", tag);
+	
+	new flags = GetConVarFlags(sv_tags);
+	SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
+	g_bIgnoreNextTagChange = true;
+	SetConVarString(sv_tags, new_tags);
+	g_bIgnoreNextTagChange = false;
+	SetConVarFlags(sv_tags, flags);
 }
 
 stock MyRemoveServerTag(const String:tag[])
 {
-	decl String:newtags[128];
-	if (sv_tags != INVALID_HANDLE)
+	if (sv_tags == INVALID_HANDLE || (g_iSDKVersion != SOURCE_SDK_EPISODE2 && g_iSDKVersion != SOURCE_SDK_EPISODE2VALVE))
 	{
-		GetConVarString(sv_tags, newtags, sizeof(newtags));
-		ReplaceString(newtags, sizeof(newtags), "HLstatsX:CE", "");
-		ReplaceString(newtags, sizeof(newtags), ",,", "");
-		new flags = GetConVarFlags(sv_tags);
-		SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
-		SetConVarString(sv_tags, newtags);
-		SetConVarFlags(sv_tags, flags);
+		// game doesn't support sv_tags
+		return;
 	}
+	
+	new idx = FindStringInArray(g_hCustomTags, tag);
+	if (idx > -1)
+	{
+		RemoveFromArray(g_hCustomTags, idx);
+	}
+	
+	decl String:current_tags[SVTAGSIZE];
+	GetConVarString(sv_tags, current_tags, sizeof(current_tags));
+	if (StrContains(current_tags, tag) == -1)
+	{
+		// tag isn't on here, just bug out
+		return;
+	}
+	
+	ReplaceString(current_tags, sizeof(current_tags), tag, "");
+	ReplaceString(current_tags, sizeof(current_tags), ",,", "");
+	
+	new flags = GetConVarFlags(sv_tags);
+	SetConVarFlags(sv_tags, flags & ~FCVAR_NOTIFY);
+	g_bIgnoreNextTagChange = true;
+	SetConVarString(sv_tags, current_tags);
+	g_bIgnoreNextTagChange = false;
+	SetConVarFlags(sv_tags, flags);
 }
 
 get_server_mod()
@@ -503,7 +512,32 @@ public motdQuery(QueryCookie:cookie, client, ConVarQueryResult:result, const Str
 
 public OnServerTagChange(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
-	DoServerTag(GetConVarBool(hlx_server_tag));
+	if (GetConVarBool(hlx_server_tag))
+	{
+		MyAddServerTag(HLXTAG);
+	}
+	else
+	{
+		MyRemoveServerTag(HLXTAG);
+	}
+}
+
+public OnSVTagsChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+{
+	if (g_bIgnoreNextTagChange)
+	{
+		// we fired this callback, no need to reapply tags
+		return;
+	}
+	
+	// reapply each custom tag
+	new cnt = GetArraySize(g_hCustomTags);
+	for (new i = 0; i < cnt; i++)
+	{
+		decl String:tag[SVTAGSIZE];
+		GetArrayString(g_hCustomTags, i, tag, sizeof(tag));
+		MyAddServerTag(tag);
+	}
 }
 
 
