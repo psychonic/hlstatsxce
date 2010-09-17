@@ -872,6 +872,8 @@ sub getServerMod
 		$playgame = "zps";
 	} elsif ($gamename =~ /^NS /i) {
 		$playgame = "ns";
+	} elsif ($gamename =~ /^pvkii/i) {
+		$playgame = "pvkii";
 		
 	# We didn't found our mod, trying secondary way. This is required for some games such as FOF and GES and is a fallback for others
 	} elsif ($gamedir =~ /^ges/i) {
@@ -908,6 +910,8 @@ sub getServerMod
 		$playgame = "ns";
 	} elsif ($gamedir =~ /^bg/i) {
 		$playgame = "bg2";
+	} elsif ($gamedir =~ /^pvkii/i) {
+		$playgame = "pvkii";
 	} else {
 		# We didn't found our mod, giving up.
 		&printEvent("DETECT", "Failed to get Server Mod");
@@ -2318,7 +2322,60 @@ while ($loop = &getLine()) {
 		my %ev_properties = ();
 		my %ev_player = ();
 	
-		if ($s_output =~ /^
+		# pvkii parrot log lines also fit the death line parsing
+		if ($g_servers{$s_addr}->{play_game} == PVKII()
+			&& $s_output =~ /^
+				"(.+?(?:<[^>]*>){3})"		# player string
+				\s[a-z]{6}\s				# 'killed'
+				"npc_parrot<.+?>"			# parrot string
+				\s[a-z]{5}\s[a-z]{2}\s		# 'owned by'
+				"(.+?(?:<[^>]*>){3})"		# owner string
+				\s[a-z]{4}\s				# 'with'
+				"([^"]*)"				#weapon
+				(.*)					#properties
+				/x)
+		{
+			$ev_player = $1; # player
+			$ev_obj_b  = $2; # victim
+			$ev_obj_c  = $3; # weapon
+			$ev_properties = $4;
+			%ev_properties_hash = &getProperties($ev_properties);
+			
+			my $playerinfo = &getPlayerInfo($ev_player, 1);
+			my $victiminfo = &getPlayerInfo($ev_obj_b, 1);
+			$ev_type = 10;
+
+			if ($playerinfo) {
+				if ($victiminfo) {
+					$ev_status = &doEvent_PlayerPlayerAction(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
+						$victiminfo->{"userid"},
+						$victiminfo->{"uniqueid"},
+						"killed_parrot",
+						undef,
+						undef,
+						undef,
+						undef,
+						undef,
+						undef,
+						&getProperties($ev_properties)
+					);
+				}
+
+				$ev_type = 11;
+				
+				$ev_status = &doEvent_PlayerAction(
+					$playerinfo->{"userid"},
+					$playerinfo->{"uniqueid"},
+					"killed_parrot",
+					undef,
+					undef,
+					undef,
+					&getProperties($ev_properties)
+				);
+			}
+		} elsif ($s_output =~ /^
 				(?:\(DEATH\))?		# l4d prefix, such as (DEATH) or (INCAP)
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
@@ -2401,7 +2458,7 @@ while ($loop = &getLine()) {
 					&getProperties($ev_properties)
 				);
 			} 
-		} elsif ($g_servers{$s_addr}->{play_game} == L4D())
+		} elsif ($g_servers{$s_addr}->{play_game} == L4D()) {
 			if ($s_output =~ /^
 				\(INCAP\)		# l4d prefix, such as (DEATH) or (INCAP)
 				"(.+?(?:<.+?>)*?

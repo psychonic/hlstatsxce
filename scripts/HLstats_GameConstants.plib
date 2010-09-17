@@ -19,7 +19,8 @@ use constant {
 	BG2 => 16,
 	SGTLS => 17,
 	DYSTOPIA => 18,
-	NTS => 19
+	NTS => 19,
+	PVKII => 20
 };
 
 %gamecode_to_game = (
@@ -42,5 +43,6 @@ use constant {
 	'bg2'      => BG2(),
 	'sgtls'    => SGTLS(),
 	'dystopia' => DYSTOPIA(),
-	'nts'      => NTS()
+	'nts'      => NTS(),
+	'pvkii'    => PVKII()
 );

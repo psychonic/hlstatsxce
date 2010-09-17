@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.11-pre2"
+#define VERSION "1.6.11-pre3"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -47,7 +47,8 @@ enum GameType {
 	Game_ZPS,
 	Game_AOC,
 	Game_FOF,
-	Game_GES
+	Game_GES,
+	Game_PVKII
 };
 
 new GameType:gamemod = Game_Unknown;
@@ -102,7 +103,8 @@ new const String: modnamelist[][] = {
 	"Zombie Panic: Source",
 	"Age of Chivalry",
 	"Fistful of Frags",
-	"GoldenEye: Source"
+	"GoldenEye: Source",
+	"Pirates, Vikings, and Knights"
 };
 
 new String: message_prefix[32];
@@ -179,7 +181,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -284,6 +286,10 @@ public OnMapStart()
 	{
 		find_player_team_slot(2);
 		find_player_team_slot(3);
+		if (gamemod == Game_PVKII)
+		{
+			find_player_team_slot(4);
+		}
 	}
 }
 
@@ -395,6 +401,10 @@ get_server_mod()
 	{
 		gamemod = Game_AOC;
 	}
+	else if (StrContains(game_description, "PVKII", false) != -1)
+	{
+		gamemod = Game_PVKII;
+	}
 	
 	// game mod could not detected, try further
 	if (gamemod == Game_Unknown)
@@ -445,6 +455,10 @@ get_server_mod()
 		else if (StrContains(game_folder, "gesource", false) != -1)
 		{
 			gamemod = Game_GES;
+		}
+		else if (StrContains(game_folder, "pvkii", false) != -1)
+		{
+			gamemod = Game_PVKII;
 		}
 		else
 		{
@@ -628,7 +642,7 @@ stock validate_team_colors()
 		}
 		else
 		{
-			if (i == 2 || i == 3)
+			if (i == 2 || i == 3 || (i == 4 && gamemod == Game_PVKII))
 			{
 				find_player_team_slot(i);
 			}
@@ -927,6 +941,33 @@ color_team_entities(String:message[192])
 				}
 			}
 		}
+		case Game_PVKII:
+		{
+			if (strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Pirates ", "\x03Pirates\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Vikings ", "\x03Vikings\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+				if (ColorSlotArray[4] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Knights ", "\x03Knights\x01 ") > 0)
+					{
+						return ColorSlotArray[4];
+					}
+				}
+			}
+		}
 	}
 
 	return -1;
@@ -1011,7 +1052,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII:
 		{
 			if (is_colored > 0)
 			{
