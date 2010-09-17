@@ -105,7 +105,7 @@ function stop_process {
 	PORT=$1
 	echo "Stopping HLstatsX:CE PORT=${PORT}...";
 	PID=${piddir}/hlstats_${PORT}.pid
-	kill -2 `cat ${PID}` >/dev/null 2>&1
+	kill -s SIGINT `cat ${PID}` >/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		rm -rf ${PID}
 		echo "PORT=${PORT} Stopped successfully"
@@ -114,6 +114,13 @@ function stop_process {
 	fi
 }
 
+function reload_process {
+	#takes the used port from $1 variable
+	PORT=$1
+	echo "Reloading HLstatsX:CE PORT=${PORT}...";
+	PID=${piddir}/hlstats_${PORT}.pid
+	kill -s SIGHUP `cat ${PID}` >/dev/null 2>&1
+}
 
 case "$1" in
 	start)
@@ -135,8 +142,14 @@ case "$1" in
 		done
 	;;
 	
+	reload)
+		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
+			reload_process ${PORTS[$element]}
+		done
+	;;	
+	
 	*)
-		echo "Usage: ./run_hlstats_multi [ start | stop | restart ]"
+		echo "Usage: ./run_hlstats_multi [ start | stop | restart | reload ]"
 	;;
 esac
 
