@@ -32,7 +32,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.11-pre3"
+#define VERSION "1.6.11-pre4"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -48,7 +48,8 @@ enum GameType {
 	Game_AOC,
 	Game_FOF,
 	Game_GES,
-	Game_PVKII
+	Game_PVKII,
+	Game_CSP
 };
 
 new GameType:gamemod = Game_Unknown;
@@ -104,7 +105,8 @@ new const String: modnamelist[][] = {
 	"Age of Chivalry",
 	"Fistful of Frags",
 	"GoldenEye: Source",
-	"Pirates, Vikings, and Knights"
+	"Pirates, Vikings, and Knights",
+	"CSPromod"
 };
 
 new String: message_prefix[32];
@@ -405,6 +407,10 @@ get_server_mod()
 	{
 		gamemod = Game_PVKII;
 	}
+	else if (StrContains(game_description, "CSPromod", false) != -1)
+	{
+		gamemod = Game_CSP;
+	}
 	
 	// game mod could not detected, try further
 	if (gamemod == Game_Unknown)
@@ -459,6 +465,10 @@ get_server_mod()
 		else if (StrContains(game_folder, "pvkii", false) != -1)
 		{
 			gamemod = Game_PVKII;
+		}
+		else if (StrContains(game_folder, "cspromod", false) != -1)
+		{
+			gamemod = Game_CSP;
 		}
 		else
 		{
@@ -667,7 +677,7 @@ public OnClientDisconnect(client)
 color_player(color_type, player_index, String: client_message[192]) 
 {
 	new color_player_index = -1;
-	if (g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_GES))
+	if (g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_GES) || (gamemod == Game_CSP))
 	{
 		decl String: client_name[192];
 		GetClientName(player_index, client_name, sizeof(client_name));
@@ -680,7 +690,7 @@ color_player(color_type, player_index, String: client_message[192])
 				decl String: colored_player_name[192];
 				switch (gamemod)
 				{
-					case Game_DODS, Game_GES:
+					case Game_DODS, Game_GES, Game_CSP:
 						Format(colored_player_name, sizeof(colored_player_name), "\x04%s\x01 ", client_name);
 					case Game_HL2MP:
 						Format(colored_player_name, sizeof(colored_player_name), "%c%s\x01 ", g_bTeamPlay?3:4, client_name);
@@ -735,7 +745,7 @@ color_player(color_type, player_index, String: client_message[192])
 color_all_players(String: message[192]) 
 {
 	new color_index = -1;
-	if ((g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES)) && (PlayerColorArray != INVALID_HANDLE))
+	if ((g_bTrackColors4Chat || (gamemod == Game_DODS) || (gamemod == Game_ZPS) || (gamemod == Game_FF) || (gamemod == Game_GES) || (gamemod == Game_CSP)) && (PlayerColorArray != INVALID_HANDLE))
 	{
 		if (strcmp(message, "") != 0)
 		{
@@ -1052,7 +1062,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP:
 		{
 			if (is_colored > 0)
 			{
