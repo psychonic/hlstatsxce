@@ -77,6 +77,6 @@ ul#header_gameslist li{
 	font-size: 2em;
 }
 
-.warning .warning-text [
+.warning .warning-text {
 	font-size: 1em;
 }
