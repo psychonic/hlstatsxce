@@ -110,7 +110,7 @@ case "$1" in
 	
 	stop)
 		echo "Stopping HLstatsX:CE..."
-		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+		kill -s SIGINT `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/hlstats.pid
 			echo "Stopped successfully"
@@ -121,7 +121,7 @@ case "$1" in
 	
 	restart)
 		echo "Restarting HLstatsX:CE..."
-		kill -9 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+		kill -s SIGINT `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
        
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/hlstats.pid
@@ -141,8 +141,27 @@ case "$1" in
 		fi
 	;;
 	
+	reload)
+		if [ -f ${piddir}/hlstats.pid ]; then
+			kill -0 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+			if [ "$?" == "0" ]; then
+				echo "Reloading HLstatsX:CE Configuration..."
+				kill -s SIGHUP `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+			else
+				echo "HLstatsX:CE Daemon not running -- starting it.";
+				rm -rf ${piddir}/hlstats.pid
+				./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+				echo $! >${piddir}/hlstats.pid
+			fi
+		else
+			echo "HLstatsX:CE Daemon not running -- starting it.";
+			./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
+			echo $! >${piddir}/hlstats.pid
+		fi
+	;;	
+	
    *)
-		echo "Usage: ./run_hlstats [ start | stop | restart ]"
+		echo "Usage: ./run_hlstats [ start | stop | restart | reload ]"
 	;;
 esac
 
