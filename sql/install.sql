@@ -1,23 +1,9 @@
--- phpMyAdmin SQL Dump
--- version 2.11.6
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Aug 31, 2008 at 02:05 PM
--- Server version: 5.0.45
--- PHP Version: 5.2.6
+-- HLstatsX: CE Installation Database file
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+-- This file is only needed for new installations.
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `clanrick_stats`
---
+SET @DBVERSION="46";
+SET @VERSION="1.6.10";
 
 -- --------------------------------------------------------
 
@@ -3343,8 +3329,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Options` (
 --
 
 INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
-('dbversion', '40', 2),
-('version', '1.6.10', 1),
+('dbversion', @DBVERSION, 2),
+('version', @VERSION, 1),
 ('DNSResolveIP', '1',0),
 ('DNSTimeout', '3',0),
 ('Rcon', '1',0),
