@@ -672,6 +672,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('pvkii', 'mvp2', 0, 0, '', 'Most Valuable Player #2', '1', '0', '0', '0'),
 ('pvkii', 'mvp3', 0, 0, '', 'Most Valuable Player #3', '1', '0', '0', '0'),
 ('pvkii', 'chest_capture', 3, 0, '', 'Chest Capture', '1', '0', '0', '0'),
+('pvkii', 'chest_defend', 2, 0, '', 'Chest Defend', '1', '0', '0', '0'),
 ('pvkii', 'obj_complete', 3, 0, '', 'Complted Objective', '1', '0', '0', '0'),
 ('pvkii', 'grail_defend', 2, 0, '', 'Defended Grail', '1', '0', '0', '0'),
 ('pvkii', 'killed_parrot', 1, 0, '', 'Killed Parrot', '1', '0', '0', '0'),

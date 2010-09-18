@@ -22,6 +22,7 @@
 			('pvkii', 'mvp2', 0, 0, '', 'Most Valuable Player #2', '1', '0', '0', '0'),
 			('pvkii', 'mvp3', 0, 0, '', 'Most Valuable Player #3', '1', '0', '0', '0'),
 			('pvkii', 'chest_capture', 3, 0, '', 'Chest Capture', '1', '0', '0', '0'),
+			('pvkii', 'chest_defend', 2, 0, '', 'Defended Chest', '1', '0', '0', '0'),
 			('pvkii', 'obj_complete', 3, 0, '', 'Complted Objective', '1', '0', '0', '0'),
 			('pvkii', 'grail_defend', 2, 0, '', 'Defended Grail', '1', '0', '0', '0'),
 			('pvkii', 'killed_parrot', 1, 0, '', 'Killed Parrot', '1', '0', '0', '0'),
@@ -195,6 +196,51 @@
 			('pvkii', 'swordshield', 'Heavy Knight Sword/Shield', 1.00),
 			('pvkii', 'crusher', 'Crusher', 1.00);
 	");
+
+	$db->query("
+		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`)
+			('pvkii', 'recruit', '0', '49', 'Recruit'),
+			('pvkii', 'private', '50', '99', 'Private'),
+			('pvkii', 'private-first-class', '100', '199', 'Private First Class'),
+			('pvkii', 'lance-corporal', '200', '299', 'Lance Corporal'),
+			('pvkii', 'corporal', '300', '399', 'Corporal'),
+			('pvkii', 'sergeant', '400', '499', 'Sergeant'),
+			('pvkii', 'staff-sergeant', '500', '599', 'Staff Sergeant'),
+			('pvkii', 'gunnery-sergeant', '600', '699', 'Gunnery Sergeant'),
+			('pvkii', 'master-sergeant', '700', '799', 'Master Sergeant'),
+			('pvkii', 'first-sergeant', '800', '899', 'First Sergeant'),
+			('pvkii', 'master-chief', '900', '999', 'Master Chief'),
+			('pvkii', 'sergeant-major', '1000', '1199', 'Sergeant Major'),
+			('pvkii', 'ensign', '1200', '1399', 'Ensign'),
+			('pvkii', 'third-lieutenant', '1400', '1599', 'Third Lieutenant'),
+			('pvkii', 'second-lieutenant', '1600', '1799', 'Second Lieutenant'),
+			('pvkii', 'first-lieutenant', '1800', '1999', 'First Lieutenant'),
+			('pvkii', 'captain', '2000', '2249', 'Captain'),
+			('pvkii', 'group-captain', '2250', '2499', 'Group Captain'),
+			('pvkii', 'senior-captain', '2500', '2749', 'Senior Captain'),
+			('pvkii', 'lieutenant-major', '2750', '2999', 'Lieutenant Major'),
+			('pvkii', 'major', '3000', '3499', 'Major'),
+			('pvkii', 'group-major', '3500', '3999', 'Group Major'),
+			('pvkii', 'lieutenant-commander', '4000', '4499', 'Lieutenant Commander'),
+			('pvkii', 'commander', '4500', '4999', 'Commander'),
+			('pvkii', 'group-commander', '5000', '5749', 'Group Commander'),
+			('pvkii', 'lieutenant-colonel', '5750', '6499', 'Lieutenant Colonel'),
+			('pvkii', 'colonel', '6500', '7249', 'Colonel'),
+			('pvkii', 'brigadier', '7250', '7999', 'Brigadier'),
+			('pvkii', 'brigadier-general', '8000', '8999', 'Brigadier General'),
+			('pvkii', 'major-general', '9000', '9999', 'Major General'),
+			('pvkii', 'lieutenant-general', '10000', '12499', 'Lieutenant General'),
+			('pvkii', 'general', '12500', '14999', 'General'),
+			('pvkii', 'commander-general', '15000', '17499', 'Commander General'),
+			('pvkii', 'field-vice-marshal', '17500', '19999', 'Field Vice Marshal'),
+			('pvkii', 'field-marshal', '20000', '22499', 'Field Marshal'),
+			('pvkii', 'vice-commander-of-the-army', '22500', '24999', 'Vice Commander of the Army'),
+			('pvkii', 'commander-of-the-army', '25000', '27499', 'Commander of the Army'),
+			('pvkii', 'high-commander', '27500', '29999', 'High Commander'),
+			('pvkii', 'supreme-commander', '30000', '34999', 'Supreme Commander'),
+			('pvkii', 'terminator', '35000', '9999999', 'Terminator');
+	");
+
 	}
 	
 	$db->query("UPDATE hlstats_Options SET `value` = '46' WHERE `keyname` = 'dbversion'");
