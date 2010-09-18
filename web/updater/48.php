@@ -103,7 +103,7 @@
 	");
 
 	$db->query("
-		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`)
+		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
 			('csp', 'recruit', '0', '49', 'Recruit'),
 			('csp', 'private', '50', '99', 'Private'),
 			('csp', 'private-first-class', '100', '199', 'Private First Class'),
