@@ -81,6 +81,7 @@ my $opt_player_activity = 0;
 my $opt_awards = 0;
 my $opt_ribbons = 0;
 my $opt_geoip = 0;
+my $opt_clans = 0;
 my $opt_prune = 0;
 my $opt_optimize = 0;
 my $opt_verbose = 0;
@@ -106,6 +107,7 @@ Generate awards from Half-Life server statistics.
   -r, --ribbons                   Process ribbons
   -g, --geoip                     Attempt to lookup and store locations for players with
                                     unknown/no location. (run after updating geoip data)
+  -t, --clans                     Recalculate player's clan affiliations
   -p, --prune                     Prune old events and sessions
   -o, --optimize                  Optimize all db tables
 
@@ -168,6 +170,7 @@ GetOptions(
 	"awards|a"			=> \$opt_awards,
 	"ribbons|r"			=> \$opt_ribbons,
 	"geoip|g"			=> \$opt_geoip,
+	"clans|t"			=> \$opt_clans,
 	"prune|p"			=> \$opt_prune,
 	"optimize|o"		=> \$opt_optimize,
 	"db-host=s"			=> \$db_host,
@@ -228,7 +231,7 @@ if ($date_ubase)
 	$date_base = "'" . $date_ubase . "'";
 }
 
-if (0 == ($opt_player_activity + $opt_awards + $opt_ribbons + $opt_geoip + $opt_prune + $opt_optimize))
+if (0 == ($opt_player_activity + $opt_awards + $opt_ribbons + $opt_geoip + $opt_clans + $opt_prune + $opt_optimize))
 {
 	$opt_player_activity = 1;
 	$opt_awards = 1;
@@ -244,6 +247,7 @@ DoInactive() if ($opt_player_activity);
 DoAwards() if ($opt_awards);
 DoRibbons() if ($opt_ribbons);
 DoGeoIP() if ($opt_geoip);
+DoClans() if ($opt_clans);
 DoPruning() if ($opt_prune);
 DoOptimize() if ($opt_optimize);
 
@@ -1066,6 +1070,105 @@ sub DoGeoIP
 		}
 	}
 	printf ("done%s\n", (($cnt>0)?" (updated $cnt players)":""));
+}
+
+sub DoClans
+{
+	print "++ Reparsing player names to recalculate clan affiliations... ";
+	
+	my @clanpatterns = ();
+	my $result = &doQuery("
+		SELECT
+			pattern,
+			position,
+			LENGTH(pattern) AS pattern_length
+		FROM
+			hlstats_ClanTags
+		ORDER BY
+			pattern_length DESC,
+			id
+	");
+	
+	while ( my($pattern, $position) = $result->fetchrow_array) {
+		my $regpattern = quotemeta($pattern);
+		$regpattern =~ s/([A-Za-z0-9]+[A-Za-z0-9_-]*)/\($1\)/; # to find clan name from tag
+		$regpattern =~ s/A/./g;
+		$regpattern =~ s/X/.?/g;
+		if ($position eq "START") {
+			push(@clanpatterns, "^($regpattern).+");
+		} elsif ($position eq "END") {
+			push(@clanpatterns, ".+($regpattern)\$");
+		} elsif ($position eq "EITHER") {
+			push(@clanpatterns, "^($regpattern).+");
+			push(@clanpatterns, ".+($regpattern)\$");
+		}
+	}
+	
+	$result = &doQuery("
+		SELECT
+			playerId, lastName, game
+		FROM
+			hlstats_Players
+	");
+	
+	while ( my($playerId, $name, $game) = $result->fetchrow_array)
+	{
+		my $clanTag = "";
+		my $clanId = 0;
+		foreach (@clanpatterns)
+		{
+			$clanTag = "";
+			if ($name =~ /$_/i)
+			{
+				$clanTag  = $1;
+				$clanName = $2;
+				last;
+			}			
+		}
+		if (!$clanTag)
+		{
+			&execCached("playerclan_clear", "UPDATE hlstats_Players SET clan=0 WHERE playerId=?", $playerId);
+			next;
+		}
+		
+		my $query = "
+			SELECT
+				clanId
+			FROM
+				hlstats_Clans
+			WHERE
+				tag=? AND
+				game=?
+		";
+		my $clanresult = &execCached("clan_select", $query, $clanTag, $game);
+
+		if ($clanresult->rows) {
+			my ($id) = $clanresult->fetchrow_array;
+			$clanresult->finish;
+			$clanId = $id;
+		} else {
+			# The clan doesn't exist yet, so we create it.
+			$query = "
+				REPLACE INTO
+					hlstats_Clans
+					(
+						tag,
+						name,
+						game
+					)
+				VALUES
+				(
+					?,?,?
+				)
+			";
+			&execCached("clan_insertupdate", $query, $clanTag, $clanName, $game);
+			
+			$clanId = $db_conn->{'mysql_insertid'};
+		}
+		&execCached("playerclan_update", "UPDATE hlstats_Players SET clan=? WHERE playerId=?", $clanId, $playerId);
+	}
+	
+	print "done\n";
 }
 
 sub DoPruning
