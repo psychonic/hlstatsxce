@@ -73,7 +73,7 @@
 			('csp', 'SwitchAdmins', '0'),
 			('csp', 'TKPenalty', '25'),
 			('csp', 'TrackServerLoad', '1'),
-			('csp', 'UpdateHostname', '1'),
+			('csp', 'UpdateHostname', '1');
 	");
 	
 	$db->query("
@@ -84,7 +84,7 @@
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcolor`, `playerlist_color`, `playerlist_index`) VALUES
 			('csp','Terrorists','Terrorists','0','#FFD5D5','#FF2D2D',1),
-			('csp','Counter-Terrorists','Counter-Terrorists','0','#D2E8F7','#0080C0',2),
+			('csp','Counter-Terrorists','Counter-Terrorists','0','#D2E8F7','#0080C0',2);
 	");
 	
 	$db->query("
