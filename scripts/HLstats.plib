@@ -211,6 +211,7 @@ sub execCached {
 		#&printEvent("HLSTATSX", "Prepared a statement ($query_id) for the first time.", 1);
 	} 
 	$db_stmt_cache{$query_id}->execute(@bind_args) or die ("Unable to execute query ($query_id):\n$query\n$DBI::errstr");
+	return $db_stmt_cache{$query_id};
 }
 
 #
