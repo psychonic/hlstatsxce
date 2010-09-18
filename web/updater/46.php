@@ -2,7 +2,9 @@
 	if ( !defined('IN_UPDATER') )
 	{
 		die('Do not access this file directly.');
-	}		
+	}
+	
+	$dbversion = 46;
 
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
@@ -240,8 +242,6 @@
 			('pvkii', 'supreme-commander', '30000', '34999', 'Supreme Commander'),
 			('pvkii', 'terminator', '35000', '9999999', 'Terminator');
 	");
-
-	}
 	
-	$db->query("UPDATE hlstats_Options SET `value` = '46' WHERE `keyname` = 'dbversion'");
+	$db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
