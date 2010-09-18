@@ -200,7 +200,7 @@
 	");
 
 	$db->query("
-		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`)
+		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
 			('pvkii', 'recruit', '0', '49', 'Recruit'),
 			('pvkii', 'private', '50', '99', 'Private'),
 			('pvkii', 'private-first-class', '100', '199', 'Private First Class'),
