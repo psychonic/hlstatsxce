@@ -1292,7 +1292,7 @@ sub getProperties
 	my %properties;
 	my $dods_flag = 0;
 	
-	while ($propstring =~ s/^\s*\((\S+)(?: "?([^"]+)"?)?\)//) {
+	while ($propstring =~ s/^\s*\((\S+)(?:(?: "(.+?)")|(?: ([^\)]+)))?\)//) {
 		my $key = $1;
 		if (defined($2)) {
 			if ($key eq "player") {
@@ -1304,6 +1304,8 @@ sub getProperties
 				}
 			}
 			$properties{$key} = $2;
+		} elsif (defined($3)) {
+			$properties{$key} = $3;
 		} else {
 			$properties{$key} = 1; # boolean property
 		}
@@ -2459,7 +2461,7 @@ while ($loop = &getLine()) {
 					$ev_l4dXcoordKV,
 					$ev_l4dYcoordKV,
 					$ev_l4dZcoordKV,
-					&getProperties($ev_properties)
+					%ev_properties_hash
 				);
 			} 
 		} elsif ($g_servers{$s_addr}->{play_game} == L4D()) {
