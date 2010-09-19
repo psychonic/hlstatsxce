@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="49";
-SET @VERSION="1.6.10";
+SET @DBVERSION="50";
+SET @VERSION="1.6.11-dev";
 
 -- --------------------------------------------------------
 
@@ -675,7 +675,19 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('csp', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '', '', ''),
 ('csp', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '', '', ''),
 ('csp', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '', '', ''),
-('csp', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '', '', '');
+('csp', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '', '', ''),
+('valve', 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '', '', ''),
+('valve', 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '', '', ''),
+('valve', 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '', '', ''),
+('valve', 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '', '', ''),
+('valve', 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '', '', ''),
+('valve', 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '', '', ''),
+('valve', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '', '', ''),
+('valve', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '', '', ''),
+('valve', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '', '', ''),
+('valve', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '', '', ''),
+('valve', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '', '', ''),
+('valve', 'headshot', 1, 0, '', 'Headshot Kill', '1', '0', '0', '0');
 
 
 -- --------------------------------------------------------
@@ -864,9 +876,9 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O', 'css', 'Killed_A_Hostage', 'Top Hostage Killer', 'hostages killed'),
 ('W', 'css', 'mostkills', 'Most Kills', 'kills'),
 ('W', 'css', 'suicide', 'Suicides', 'suicides'),
-('W', 'css', 'teamkills', 'Team Killer', 'team kills');
+('W', 'css', 'teamkills', 'Team Killer', 'team kills'),
 ('W','hl2ctf','crowbar','Crowbar','bludgeonings with ole red'),
-('W','hl2ctf','physcannon','Anger Issues','kills with physics' ),
+('W','hl2ctf','physcannon','Anger Issues','kills with physics'),
 ('W','hl2ctf','stunstick','Stun Stick','kills with stunstick'),
 ('W','hl2ctf','pistol','Pistol','kills with pistol'),
 ('W','hl2ctf','shotgun','A freakin 12 gague!','kills with shotgun'),
@@ -1369,7 +1381,6 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'pvkii', 'mostkills', 'Most Kills', 'kills'),
 ('W', 'pvkii', 'teamkills', 'Most Team Kills', 'team kills'),
 ('W', 'pvkii', 'bonuspoints', 'Most bonus points', 'bonus points'),
-('W', 'pvkii', 'latency', 'Best Latency', 'ms average connection'),
 ('W', 'pvkii', 'zerking', 'Zerking', 'kills with Zerking'),
 ('W', 'pvkii', 'slidingdoor', 'Sliding Door', 'kills with Sliding Door'),
 ('W', 'pvkii', 'seaxshield', 'Langseax & Shield', 'kills with Langseax & Shield'),
@@ -1438,7 +1449,25 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'csp', 'latency', 'Best Latency', 'ms average connection'),
 ('W', 'csp', 'mostkills', 'Most Kills', 'kills'),
 ('W', 'csp', 'suicide', 'Suicides', 'suicides'),
-('W', 'csp', 'teamkills', 'Team Killer', 'team kills');
+('W', 'csp', 'teamkills', 'Team Killer', 'team kills'),
+('W', 'valve', '357', '357', 'kills with 357'),
+('W', 'valve', '9mmAR', 'MP5', 'kills with 9mmAR'),
+('W', 'valve', '9mmhandgun', 'Glock', 'kills with 9mmhandgun'),
+('W', 'valve', 'crossbow', 'Crossbow Sniper', 'kills with crossbow'),
+('W', 'valve', 'crowbar', 'Crowbar Maniac', 'murders with crowbar'),
+('W', 'valve', 'gluon gun', 'Gauss King', 'kills with gluon gun'),
+('W', 'valve', 'tau_cannon', 'Egon', 'kills with tau_cannon'),
+('W', 'valve', 'grenade', 'Grenadier', 'kills with grenade'),
+('W', 'valve', 'hornet', 'Hornet Master', 'kills with hornet'),
+('W', 'valve', 'rpg_rocket', 'Rocketeer', 'kills with rocket'),
+('W', 'valve', 'satchel', 'Lord Satchel', 'kills with satchel'),
+('W', 'valve', 'shotgun', 'Redneck', 'kills with shotgun'),
+('W', 'valve', 'snark', 'Snark Master', 'kills with snark'),
+('W', 'valve', 'tripmine', 'Shady Assassin', 'kills with tripmine'),
+('O', 'valve', 'headshot', 'Headshot King', 'shots in the head'),
+('W', 'valve', 'latency', 'Latency', 'ms average connection'),
+('W', 'valve', 'mostkills', 'Most Kills', 'kills'),
+('W', 'valve', 'suicide', 'Suicides', 'suicides');
 
 
 -- --------------------------------------------------------
@@ -2217,7 +2246,8 @@ INSERT INTO `hlstats_Games` (`code`, `name`, `realgame`, `hidden`) VALUES
 ('dystopia', 'Dystopia', 'dystopia', '1'),
 ('nts','NeoTokyo','nts','1'),
 ('pvkii', 'Pirates, Vikings, & Knights II', 'pvkii', '1'),
-('csp', 'CSPromod', 'csp', '1');
+('csp', 'CSPromod', 'csp', '1'),
+('valve', 'Half-Life 1 Multiplayer', 'valve', '1');
 
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hlstats_Games_Defaults` (
@@ -2793,7 +2823,32 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('nts', 'SwitchAdmins', '0'),
 ('nts', 'TKPenalty', '25'),
 ('nts', 'TrackServerLoad', '1'),
-('nts', 'UpdateHostname', '1');
+('nts', 'UpdateHostname', '1'),
+('valve', 'Admins', ''),
+('valve', 'AutoBanRetry', '0'),
+('valve', 'AutoTeamBalance', '0'),
+('valve', 'BonusRoundIgnore', '0'),
+('valve', 'BonusRoundTime', '0'),
+('valve', 'BroadCastEvents', '1'),
+('valve', 'BroadCastPlayerActions', '1'),
+('valve', 'ConnectAnnounce', '1'),
+('valve', 'DefaultDisplayEvents', '1'),
+('valve', 'DisplayResultsInBrowser', '1'),
+('valve', 'EnablePublicCommands', '1'),
+('valve', 'GameEngine', '1'),
+('valve', 'GameType', '0'),
+('valve', 'HLStatsURL', 'http://yoursite.com/hlstats'),
+('valve', 'IgnoreBots', '1'),
+('valve', 'MinimumPlayersRank', '0'),
+('valve', 'MinPlayers', '4'),
+('valve', 'PlayerEvents', '1'),
+('valve', 'ShowStats', '1'),
+('valve', 'SkillMode', '0'),
+('valve', 'SuicidePenalty', '5'),
+('valve', 'SwitchAdmins', '0'),
+('valve', 'TKPenalty', '25'),
+('valve', 'TrackServerLoad', '1'),
+('valve', 'UpdateHostname', '1');	
 
 
 CREATE TABLE IF NOT EXISTS `hlstats_Games_Supported` (
@@ -2828,7 +2883,8 @@ INSERT INTO `hlstats_Games_Supported` (`code`, `name`) VALUES
 ('sgtls', 'Stargate: The Last Stand'),
 ('dystopia', 'Dystopia'),
 ('nts','NeoTokyo'),
-('pvkii', 'Pirates, Vikings, & Knights II');
+('pvkii', 'Pirates, Vikings, & Knights II'),
+('valve', 'Half-Life 1 Multiplayer');
 
 CREATE TABLE IF NOT EXISTS `hlstats_Heatmap_Config` (
   `id` int(255) NOT NULL auto_increment,
@@ -5213,7 +5269,9 @@ INSERT INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcol
 ('nts','NSF','NSF','0','#7EA5CC','#4F677F',2),
 ('pvkii', 'Pirates', 'Pirates', '0', '#FFD5D5', '#FF2D2D', 1),
 ('pvkii', 'Vikings', 'Vikings', '0', '#93FF89', '#4B8246', 2),
-('pvkii', 'Knights', 'Knights', '0', '#D2E8F7', '#0080C0', 3);
+('pvkii', 'Knights', 'Knights', '0', '#D2E8F7', '#0080C0', 3),
+('valve', 'scientist', 'Team robo', '0', '#D2E8F7', '#0080C0',1),
+('valve', 'hgrunt', 'Team hgrunt', '0', '#FFD5D5', '#FF2D2D',2);
 
 -- --------------------------------------------------------
 
@@ -5341,7 +5399,6 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'sticky_resistance', 'Scottish Resistance', 1.0),
 ('tf', 'taunt_demoman', 'Demoman Taunt', 5.0),				
 ('tf', 'taunt_soldier', 'Soldier Taunt', 5.0),
-('tf', 'robot_arm_blender_kill', 'Gunslinger Taunt Kill', 5.0),
 ('tf', 'demoshield', 'Chargin'' Targe', 2.0),
 ('tf', 'ball', 'Baseball', 2.5),
 ('tf', 'taunt_medic', 'Medic Taunt', 5.0),
@@ -5583,7 +5640,6 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('aoc', 'Spiked Mace', 'Spiked Mace', 1),
 ('aoc', 'Spiked Mace & Buckler','Spiked Mace & Buckler',1),
 ('aoc', 'Halberd', 'Halberd', 1),
-('aoc', 'chivalry', 'Fire', 1),
 ('aoc', 'Oil Pot', 'Oil Pot', 1),
 ('aoc', 'Fists', 'Fists',2),
 ('aoc', 'Throwing Axe', 'Throwing Axe',1),
@@ -5975,4 +6031,19 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('pvkii', 'hkshieldbash', 'Heavy Knight Bash', 1.00),
 ('pvkii', 'javelin', 'Javelins', 1.00),
 ('pvkii', 'swordshield', 'Heavy Knight Sword/Shield', 1.00),
-('pvkii', 'crusher', 'Crusher', 1.00);
+('pvkii', 'crusher', 'Crusher', 1.00),
+('valve', '357', '357 Revolver', '1.60'),
+('valve', '9mmAR', '9mm Automatic Rifle', 1.00),
+('valve', '9mmhandgun', '9mm Handgun', 1.50),
+('valve', 'bolt', 'Crossbow Bolt', 1.70),
+('valve', 'crossbow', 'Crossbow', 1.40),
+('valve', 'crowbar', 'Crowbar', 1.90),
+('valve', 'tau_cannon', 'Egon Tau Cannon / Rail Gun', 1.00),
+('valve', 'gluon gun', 'Gluon / Gauss Gun', 1.00),
+('valve', 'grenade', 'Grenade', 1.00),
+('valve', 'hornet', 'Hornet', 1.30),
+('valve', 'rpg_rocket', 'Rocket Propelled Grenade', 1.00),
+('valve', 'satchel', 'Satchel Charge', 1.50),
+('valve', 'shotgun', 'Shotgun', 1.20),
+('valve', 'snark', 'Snark', 1.80),
+('valve', 'tripmine', 'Trip Mine', 1.60);	
