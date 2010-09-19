@@ -265,6 +265,9 @@ sub get_game_mod_opts
 				|| $self->{play_game} == ZPS()
 				|| $self->{play_game} == FF()
 				|| $self->{play_game} == GES()
+				|| $self->{play_game} == FOF()
+				|| $self->{play_game} == PVKII()
+				|| $self->{play_game} == CSP()
 				)
 			)
 			|| ($self->{mod} eq "AMXX"
