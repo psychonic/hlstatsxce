@@ -306,7 +306,7 @@ sub quoteparam {
 	$message =~ s/'/ ' /g;
 	$message =~ s/"/ '' /g;
 	
-	if ($self->{game_engine} != 2 || $self->{mod} eq "SOURCEMOD") {
+	if (($self->{game_engine} != 2 || $self->{mod} eq "SOURCEMOD") && $self->{mod} ne "MANI") {
 		return "\"".$message."\"";
 	}
 	return $message;
@@ -1295,6 +1295,11 @@ sub setHlxCvars
 		$self->dorcon("hlxce_webpage \"".$self->{hlstats_url}."\"");
 	}
 	$self->dorcon("hlxce_version \"".$::g_version."\"");
+	
+	if ($self->{play_game} eq "MANI" && $self->dorcon("mani_hlx_prefix" =~ /gameme/i))
+	{
+		$self->dorcon("mani_hlx_prefix \"HLstatsX\"");
+	}
 }
 
 sub updatePlayerCount
