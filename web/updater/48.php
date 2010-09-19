@@ -73,7 +73,7 @@
 			('csp', 'SwitchAdmins', '0'),
 			('csp', 'TKPenalty', '25'),
 			('csp', 'TrackServerLoad', '1'),
-			('csp', 'UpdateHostname', '1'),
+			('csp', 'UpdateHostname', '1');
 	");
 	
 	$db->query("
@@ -84,7 +84,7 @@
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcolor`, `playerlist_color`, `playerlist_index`) VALUES
 			('csp','Terrorists','Terrorists','0','#FFD5D5','#FF2D2D',1),
-			('csp','Counter-Terrorists','Counter-Terrorists','0','#D2E8F7','#0080C0',2),
+			('csp','Counter-Terrorists','Counter-Terrorists','0','#D2E8F7','#0080C0',2);
 	");
 	
 	$db->query("
@@ -103,7 +103,7 @@
 	");
 
 	$db->query("
-		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`)
+		INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
 			('csp', 'recruit', '0', '49', 'Recruit'),
 			('csp', 'private', '50', '99', 'Private'),
 			('csp', 'private-first-class', '100', '199', 'Private First Class'),
@@ -226,24 +226,6 @@
 			('latency', 20, 0, 'csp', '4_latency.png', 'Gold Lowpinger'),
 			('latency', 30, 0, 'csp', '5_latency.png', 'Platinum Lowpinger'),
 			('latency', 50, 0, 'csp', '6_latency.png', 'Supreme Lowpinger'),
-			('mostkills', 1, 0, 'csp', '1_mostkills.png', 'Award of Most Kills'),
-			('mostkills', 5, 0, 'csp', '2_mostkills.png', 'Bronze Most Kills'),
-			('mostkills', 12, 0, 'csp', '3_mostkills.png', 'Silver Most Kills'),
-			('mostkills', 20, 0, 'csp', '4_mostkills.png', 'Gold Most Kills'),
-			('mostkills', 30, 0, 'csp', '5_mostkills.png', 'Platinum Most Kills'),
-			('mostkills', 50, 0, 'csp', '6_mostkills.png', 'Supreme Most Kills'),
-			('suicide', 1, 0, 'csp', '1_suicide.png', 'Award of Suicider'),
-			('suicide', 5, 0, 'csp', '2_suicide.png', 'Bronze Suicider'),
-			('suicide', 12, 0, 'csp', '3_suicide.png', 'Silver Suicider'),
-			('suicide', 20, 0, 'csp', '4_suicide.png', 'Gold Suicider'),
-			('suicide', 30, 0, 'csp', '5_suicide.png', 'Platinum Suicider'),
-			('suicide', 50, 0, 'csp', '6_suicide.png', 'Supreme Suicider'),
-			('teamkills', 1, 0, 'csp', '1_teamkills.png', 'Award of Team Killer'),
-			('teamkills', 5, 0, 'csp', '2_teamkills.png', 'Bronze Team Killer'),
-			('teamkills', 12, 0, 'csp', '3_teamkills.png', 'Silver Team Killer'),
-			('teamkills', 20, 0, 'csp', '4_teamkills.png', 'Gold Team Killer'),
-			('teamkills', 30, 0, 'csp', '5_teamkills.png', 'Platinum Team Killer'),
-			('teamkills', 50, 0, 'csp', '6_teamkills.png', 'Supreme Team Killer'),
 			('headshot', 1, 0, 'csp', '1_headshot.png', 'Award of Headshots'),
 			('headshot', 5, 0, 'csp', '2_headshot.png', 'Bronze Headshots'),
 			('headshot', 12, 0, 'csp', '3_headshot.png', 'Silver Headshots'),
