@@ -3433,7 +3433,7 @@ EOT
 			}
 			&printEvent("MYSQL", "Flushing player updates to database is complete.",1);
 			
-			$g_servers{$s_addr}->{next_plyr_flush} = time() + 30+int(rand(30));
+			$g_servers{$s_addr}->{next_plyr_flush} = time() + 15+int(rand(15));
 		}
 
 		if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
