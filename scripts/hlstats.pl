@@ -876,6 +876,8 @@ sub getServerMod
 		$playgame = "pvkii";
 	} elsif ($gamename =~ /^CSPromod/i) {
 		$playgame = "csp";
+	} elsif ($gamename eq "Half-Life") {
+		$playgame = "valve";
 		
 	# We didn't found our mod, trying secondary way. This is required for some games such as FOF and GES and is a fallback for others
 	} elsif ($gamedir =~ /^ges/i) {
@@ -916,6 +918,8 @@ sub getServerMod
 		$playgame = "pvkii";
 	} elsif ($gamedir =~ /^cspromod/i) {
 		$playgame = "csp";
+	} elsif ($gamedir =~ /^valve$/i) {
+		$playgame = "valve";
 	} else {
 		# We didn't found our mod, giving up.
 		&printEvent("DETECT", "Failed to get Server Mod");
