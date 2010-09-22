@@ -876,6 +876,8 @@ sub getServerMod
 		$playgame = "pvkii";
 	} elsif ($gamename =~ /^CSPromod/i) {
 		$playgame = "csp";
+	} elsif ($gamename eq "Half-Life") {
+		$playgame = "valve";
 		
 	# We didn't found our mod, trying secondary way. This is required for some games such as FOF and GES and is a fallback for others
 	} elsif ($gamedir =~ /^ges/i) {
@@ -916,6 +918,8 @@ sub getServerMod
 		$playgame = "pvkii";
 	} elsif ($gamedir =~ /^cspromod/i) {
 		$playgame = "csp";
+	} elsif ($gamedir =~ /^valve$/i) {
+		$playgame = "valve";
 	} else {
 		# We didn't found our mod, giving up.
 		&printEvent("DETECT", "Failed to get Server Mod");
@@ -3429,7 +3433,7 @@ EOT
 			}
 			&printEvent("MYSQL", "Flushing player updates to database is complete.",1);
 			
-			$g_servers{$s_addr}->{next_plyr_flush} = time() + 30+int(rand(30));
+			$g_servers{$s_addr}->{next_plyr_flush} = time() + 15+int(rand(15));
 		}
 
 		if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
