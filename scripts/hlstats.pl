@@ -2776,7 +2776,7 @@ while ($loop = &getLine()) {
 					);
 				}
 			}
-		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?)" ([a-zA-Z]+) "(.+?)"(.*)$/) {
+		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?)" ([a-zA-Z,\s]+) "(.+?)"(.*)$/) {
 			# Prototype: "player" verb "obj_a"[properties]
 			# Matches:
 			#  1. Connection
