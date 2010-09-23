@@ -1023,6 +1023,54 @@
        $ID++;
       }
     }
+	
+   function drawHorizontalLegend($XPos,$YPos,$DataDescription,$R,$G,$B,$Rs=-1,$Gs=-1,$Bs=-1,$Rt=0,$Gt=0,$Bt=0,$Border=TRUE)
+    {
+     /* Validate the Data and DataDescription array */
+     $this->validateDataDescription("drawLegend",$DataDescription);
+
+     if ( !isset($DataDescription["Description"]) )
+      return(-1);
+
+     $C_TextColor =$this->AllocateColor($this->Picture,$Rt,$Gt,$Bt);
+
+     /* <-10->[8]<-4->Text<-10-> */
+     $MaxWidth = 0; $MaxHeight = 8;
+     foreach($DataDescription["Description"] as $Key => $Value)
+      {
+       $Position   = imageftbbox($this->FontSize,0,$this->FontName,$Value);
+       $TextWidth  = $Position[2]-$Position[0];
+       $TextHeight = $Position[1]-$Position[7];
+       if ( $TextHeight > $MaxHeight) { $MaxHeight = $TextHeight; }
+       $MaxWidth = $MaxWidth + $TextWidth + 12;
+      }
+     $MaxHeight = $MaxHeight - 5;
+     $MaxWidth  = $MaxWidth + 32;
+
+     if ( $Rs == -1 || $Gs == -1 || $Bs == -1 )
+      { $Rs = $R-30; $Gs = $G-30; $Bs = $B-30; }
+
+     if ( $Border )
+      {
+       $this->drawFilledRoundedRectangle($XPos+1,$YPos+1,$XPos+$MaxWidth+1,$YPos+$MaxHeight+1,5,$Rs,$Gs,$Bs);
+       $this->drawFilledRoundedRectangle($XPos,$YPos,$XPos+$MaxWidth,$YPos+$MaxHeight,5,$R,$G,$B);
+      }
+	 
+	 $ID = 0;
+     $XOffset = 4 + $this->FontSize;
+	 $YOffset = 4 + $this->FontSize + $TextHeight;
+     foreach($DataDescription["Description"] as $Key => $Value)
+      {
+       $this->drawFilledRoundedRectangle($XPos+10+$XOffset,$YPos-4+$YOffset,$XPos+14+$XOffset,$YPos-4+$YOffset,2,$this->Palette[$ID]["R"],$this->Palette[$ID]["G"],$this->Palette[$ID]["B"]);
+       imagettftext($this->Picture,$this->FontSize,0,$XPos+22+$XOffset,$YPos+$YOffset,$C_TextColor,$this->FontName,$Value);
+
+       $Position   = imageftbbox($this->FontSize,0,$this->FontName,$Value);
+       $TextHeight = $Position[1]-$Position[7];
+
+       $XOffset = $XOffset + $TextWidth + 6;
+       $ID++;
+      }
+    }
 
    /* Draw the data legends */
    function drawPieLegend($XPos,$YPos,$Data,$DataDescription,$R,$G,$B)
