@@ -182,21 +182,6 @@ function f_num($number) {
 	//// Main
 	////
 
-
-/** 
-  * Convert colors Usage:  color::hex2rgb("FFFFFF")
-  * 
-  * @author      Tim Johannessen <root@it.dk>
-  * @version    1.0.1
-*/
-function hex2rgb($hexVal = '') { 
-	$hexVal = preg_replace('/[^a-fA-F0-9]/i', '', $hexVal); 
-	if (strlen($hexVal) != 6) { return 'ERR: Incorrect colorcode, expecting 6 chars (a-f, 0-9)'; } 
-	$arrTmp = explode(' ', chunk_split($hexVal, 2, ' ')); 
-	$arrTmp = array_map('hexdec', $arrTmp); 
-	return array('red' => $arrTmp[0], 'green' => $arrTmp[1], 'blue' => $arrTmp[2]); 
-}
-
 if ((isset($_GET['color'])) && (is_string($_GET['color'])))
 	$color = hex2rgb(valid_request($_GET['color'], 0));
 if ((isset($_GET['caption_color'])) && (is_string($_GET['caption_color'])))
