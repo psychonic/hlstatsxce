@@ -89,7 +89,6 @@ sub execute
 	if ($ans =~ /bad rcon_password/i)
 	{
 		$self->{"error"} = "Bad Password";
-		$self->{server_object}->{rcon} = "";
 	}
 	return $ans;
 }
