@@ -62,8 +62,8 @@
 		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], 0));
 
 	$color = array('red' => 213, 'green' => 217, 'blue' => 221);
-	//if ((isset($_GET['color'])) && (is_string($_GET['color'])))
-	//	$color = hex2rgb(valid_request($_GET['color'], 0));
+	if ((isset($_GET['color'])) && (is_string($_GET['color'])))
+		$color = hex2rgb(valid_request($_GET['color'], 0));
 	
 	if (isset($_GET['player'])) $player = (int)$_GET['player'];
 	if (!$player) exit();
