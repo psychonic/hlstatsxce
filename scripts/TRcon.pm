@@ -103,12 +103,10 @@ sub get_auth_code
     &::printEvent("TRCON", "Rcon password refused");
     $self->{"auth"} = 0;
     $auth           = 0;
-	$self->{"server_object"}->{rcon} = "";
   } else {
     &::printEvent("TRCON", "Bad password response id=$id");
     $self->{"auth"} = 0;
     $auth           = 0;
-	$self->{"server_object"}->{rcon} = "";
   }
   return $auth;
 
