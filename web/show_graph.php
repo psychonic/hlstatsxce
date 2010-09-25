@@ -122,24 +122,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$iconpath = $iconpath . "/" . $selectedStyle;
 	}		
 
-	/**
-	 * Convert colors Usage:  color::hex2rgb("FFFFFF")
-	 * 
-	 * @author      Tim Johannessen <root@it.dk>
-	 * @version    1.0.1
-	 */
-	function hex2rgb($hexVal = '')
-	{
-		$hexVal = preg_replace('[^a-fA-F0-9]', '', $hexVal);
-		if (strlen($hexVal) != 6)
-		{
-			return 'ERR: Incorrect colorcode, expecting 6 chars (a-f, 0-9)';
-		}
-		$arrTmp = explode(' ', chunk_split($hexVal, 2, ' '));
-		$arrTmp = array_map('hexdec', $arrTmp);
-		return array('red' => $arrTmp[0], 'green' => $arrTmp[1], 'blue' => $arrTmp[2]);
-	}
-
 	$bg_color = array('red' => 171, 'green' => 204, 'blue' => 214);
 	if ((isset($_GET['bgcolor'])) && (is_string($_GET['bgcolor'])))
 		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], 0));
