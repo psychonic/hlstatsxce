@@ -2774,6 +2774,10 @@ sub doEvent_ChangeMap
 				$player->updateDB();
 				removePlayer($s_addr, $player->{userid}, $player->{uniqueid}, 1);
 			}
+			else
+			{
+				endKillStreak($player);
+			}
 		}
 		$g_servers{$s_addr}->setHlxCvars();
 		return "Loading map \"$newmap\"";
