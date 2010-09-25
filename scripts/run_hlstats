@@ -123,6 +123,28 @@ case "$1" in
 		echo "Restarting HLstatsX:CE..."
 		kill -s SIGINT `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
        
+		# Perform check to see if Daemon has stopped
+		i="0"
+		echo -ne "Waiting for HLstatsX:CE Daemon to stop... "
+		while [ $i -lt 5 ]
+		do
+			kill -0 `cat ${piddir}/hlstats.pid` >/dev/null 2>&1
+			if [ "$?" == "0" ]; then
+				i=$[$i+1]
+				echo -ne " ${i} "
+				if [ $i -eq 4 ]; then
+					echo ""
+					echo "Daemon did not stop in time. Aborting."
+					exit
+				fi
+				
+				sleep 5
+			else
+				echo ""
+				break
+			fi
+		done
+	   
 		if [ "$?" == "0" ]; then
 			rm -rf ${piddir}/hlstats.pid
 			./${daemonfile} --configfile=${conffile} > ${logdir}/${logfile} 2>&1 &
