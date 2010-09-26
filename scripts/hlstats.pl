@@ -308,7 +308,8 @@ sub recordEvent
 	}
 	$value .= ")";
 	
-	if (scalar(@{$g_eventtable_data{$table}{queue}}) > $g_event_queue_size)
+	my $evcount = scalar(@{$g_eventtable_data{$table}{queue}});
+	if (($evcount > $g_event_queue_size) || ($g_last_event_flush + 30) < time())
 	{
 		my $query = $g_eventtable_data{$table}{query};
 		foreach (@{$g_eventtable_data{$table}{queue}})
@@ -317,6 +318,7 @@ sub recordEvent
 		}
 		$query .= $value;
 		execNonQuery($query);
+		$g_last_event_flush = time();
 		$g_eventtable_data{$table}{queue} = [];
 		
 		return;
@@ -1463,6 +1465,7 @@ $g_global_chat = 0;
 $g_ranktype = "skill";
 $g_gi = undef;
 $g_next_server_flush = 0;
+$g_last_event_flush = time();
 
 my %dysweaponcodes = (
 	"1" => "Light Katana",
