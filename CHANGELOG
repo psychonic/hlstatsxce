@@ -30,6 +30,7 @@ HLstatsX Community Edition 1.6.11
 ? Web: Countries page now defaults to sorting by Avg Skill (psychonic)
 ? Web: After adding a new server, you now automatically get redirected to the server settings page (psychonic)
 ? Web: RCon password is no longer displayed on Edit Servers list (psychonic)
+? Web: Update check in admin area is now async and will not hang admin page if hlx site is down (psychonic)
 ! GameSupport: Fixed daemon TFC object dismantle logic not working (psychonic)
 ! GameSupport: Fixed GES weapon image filenames not matching weapon codes (psychonic)
 ! GameSupport: Fixed db issue causing some TFC actions to not track properly (psychonic)
