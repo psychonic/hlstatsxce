@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="50";
-SET @VERSION="1.6.11-dev";
+SET @DBVERSION="51";
+SET @VERSION="1.6.11-beta1";
 
 -- --------------------------------------------------------
 
@@ -71,9 +71,11 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'killedobject_obj_teleporter', 2, 0, '', 'Destroyed a teleporter', '1', '', '', ''),
 ('tf', 'killedobject_obj_dispenser', 3, 0, '', 'Destroyed a dispenser', '1', '', '', ''),
 ('tf', 'killedobject_obj_sentrygun', 4, 0, '', 'Destroyed a sentry gun', '1', '', '', ''),
+('tf', 'killedobject_obj_sentrygun_mini', 4, 0, '', 'Destroyed a mini sentry gun', '1', '', '', ''),
 ('tf', 'builtobject_obj_teleporter', 2, 0, '', 'Built a teleporter', '1', '', '', ''),
 ('tf', 'builtobject_obj_dispenser', 3, 0, '', 'Built a dispenser', '1', '', '', ''),
 ('tf', 'builtobject_obj_sentrygun', 3, 0, '', 'Built a sentry gun', '1', '', '', ''),
+('tf', 'builtobject_obj_sentrygun_mini', 3, 0, '', 'Built a mini sentry gun', '1', '', '', ''),
 ('tf', 'captureblocked', 1, 0, '', 'Capture Blocked', '1', '', '', ''),
 ('tf', 'pointcaptured', 5, 5, '', 'Point Captured', '1', '', '1', ''),
 ('tf', 'kill assist', 2, 0, '', 'Kill Assist', '1', '', '', ''),
@@ -85,6 +87,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'Round_Win', 0, 10, '', 'Round Win', '', '', '1', ''),
 ('tf', 'Mini_Round_Win', 0, 5, '', 'Mini-Round Win', '', '', '1', ''),
 ('tf', 'owner_killedobject_obj_sentrygun', -3, 0, '', 'Disassembled a sentry gun', '1', '', '', ''),
+('tf', 'owner_killedobject_obj_sentrygun_mini', -3, 0, '', 'Disassembled a mini sentry gun', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_dispenser', -3, 0, '', 'Disassembled a dispenser', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_teleporter', -2, 0, '', 'Disassembled a teleporter', '1', '', '', ''),
 ('tf', 'owner_killedobject_obj_attachment_sapper', -2, 0, '', 'Console-killed sapper', '1', '', '', ''),
@@ -773,7 +776,9 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('O','tf','flagevent_captured','The Mad Capper','flag captures'),
 ('O','tf','killedobject_obj_dispenser','NO METAL FOR YOU!','dispensers destroyed'),
 ('O','tf','killedobject_obj_sentrygun','Say no to sentries','sentry guns destroyed'),
+('O','tf','killedobject_obj_sentrygun_mini','Say no to mini sentries','mini sentry guns destroyed'),
 ('O','tf','builtobject_obj_sentrygun','Bob the Builder','sentry guns built'),
+('O','tf','builtobject_obj_sentrygun_mini','Mini Bob the Builder','mini sentry guns built'),
 ('O','tf','builtobject_obj_attachment_sapper','Super Sapper','sappers placed'),
 ('O','tf','kill_assist_medic','Medic Assistance','medic assists'),
 ('P','tf','stun','Absolutely Stunning','stuns'),
@@ -4336,17 +4341,20 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('deflect_arrow',5,0,'tf','2_deflect_arrow.png','Silver Deflected Arrow'),
 ('deflect_arrow',10,0,'tf','3_deflect_arrow.png','Gold Deflected Arrow'),
 ('ambassador', 1, 0, 'tf', '1_ambassador.png', 'Bronze Ambassador'),
-('ambassador', 10, 0, 'tf', '3_ambassador.png', 'Gold Ambassador'),
 ('ambassador', 5, 0, 'tf', '2_ambassador.png', 'Silver Ambassador'),
+('ambassador', 10, 0, 'tf', '3_ambassador.png', 'Gold Ambassador'),
 ('buff_deployed', 1, 0, 'tf', '1_buff_deployed.png', 'Bronze Buff Deploy'),
-('buff_deployed', 10, 0, 'tf', '3_buff_deployed.png', 'Gold Buff Deploy'),
 ('buff_deployed', 5, 0, 'tf', '2_buff_deployed.png', 'Silver Buff Deploy'),
-('builtobject_obj_dispenser', 10, 0, 'tf', '3_builtobject_obj_dispenser.png', 'Gold Built Dispenser'),
-('builtobject_obj_dispenser', 5, 0, 'tf', '2_builtobject_obj_dispenser.png', 'Silver Built Dispenser'),
+('buff_deployed', 10, 0, 'tf', '3_buff_deployed.png', 'Gold Buff Deploy'),
 ('builtobject_obj_dispenser', 1, 0, 'tf', '1_builtobject_obj_dispenser.png', 'Bronze Built Dispenser'),
-('builtobject_obj_sentrygun', 5, 0, 'tf', '2_builtobject_obj_sentrygun.png', 'Silver Built Sentry Gun'),
+('builtobject_obj_dispenser', 5, 0, 'tf', '2_builtobject_obj_dispenser.png', 'Silver Built Dispenser'),
+('builtobject_obj_dispenser', 10, 0, 'tf', '3_builtobject_obj_dispenser.png', 'Gold Built Dispenser'),
 ('builtobject_obj_sentrygun', 1, 0, 'tf', '1_builtobject_obj_sentrygun.png', 'Bronze Built Sentry Gun'),
+('builtobject_obj_sentrygun', 5, 0, 'tf', '2_builtobject_obj_sentrygun.png', 'Silver Built Sentry Gun'),
 ('builtobject_obj_sentrygun', 10, 0, 'tf', '3_builtobject_obj_sentrygun.png', 'Gold Built Sentry Gun'),
+('builtobject_obj_sentrygun_mini', 1, 0, 'tf', '1_builtobject_obj_sentrygun_mini.png', 'Bronze Built Mini Sentry Gun'),
+('builtobject_obj_sentrygun_mini', 5, 0, 'tf', '2_builtobject_obj_sentrygun_mini.png', 'Silver Built Mini Sentry Gun'),
+('builtobject_obj_sentrygun_mini', 10, 0, 'tf', '3_builtobject_obj_sentrygun_mini.png', 'Gold Built Mini Sentry Gun'),
 ('defended_medic', 5, 0, 'tf', '2_defended_medic.png', 'Silver Defended Medic'),
 ('defended_medic', 1, 0, 'tf', '1_defended_medic.png', 'Bronze Defended Medic'),
 ('defended_medic', 10, 0, 'tf', '3_defended_medic.png', 'Gold Defended Medic'),
@@ -4443,6 +4451,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('killedobject_obj_sentrygun', 1, 0, 'tf', '1_killedobject_obj_sentrygun.png', 'Bronze Sentry Guns Destroyed'),
 ('killedobject_obj_sentrygun', 5, 0, 'tf', '2_killedobject_obj_sentrygun.png', 'Silver Sentry Guns Destroyed'),
 ('killedobject_obj_sentrygun', 10, 0, 'tf', '3_killedobject_obj_sentrygun.png', 'Gold Sentry Guns Destroyed'),
+('killedobject_obj_sentrygun_mini', 1, 0, 'tf', '1_killedobject_obj_sentrygun_mini.png', 'Bronze Mini Sentry Guns Destroyed'),
+('killedobject_obj_sentrygun_mini', 5, 0, 'tf', '2_killedobject_obj_sentrygun_mini.png', 'Silver Mini Sentry Guns Destroyed'),
+('killedobject_obj_sentrygun_mini', 10, 0, 'tf', '3_killedobject_obj_sentrygun_mini.png', 'Gold Mini Sentry Guns Destroyed'),
 ('medic_extinguish', 1, 0, 'tf', '1_medic_extinguish.png', 'Bronze Medic Entinguish'),
 ('medic_extinguish', 5, 0, 'tf', '2_medic_extinguish.png', 'Silver Medic Entinguish'),
 ('medic_extinguish', 10, 0, 'tf', '3_medic_extinguish.png', 'Gold Medic Entinguish'),

@@ -153,6 +153,6 @@
 			('valve', 'tripmine', 'Trip Mine', '1.60');	
 	");	
 
-	$db->query("UPDATE hlstats_Options SET `value` = '$dersion' WHERE `keyname` = 'version'");
+	$db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
 	$db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
