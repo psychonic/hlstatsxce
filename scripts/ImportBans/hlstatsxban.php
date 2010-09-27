@@ -135,16 +135,15 @@ if ($useamx)
 				++$ubcnt;
 			}
 		}		
-	} else {
-		// Handles (apparently) 6.0 version DB or higher
-		if ($unbans = $con->query("SELECT `player_id` FROM `".AMX_PREFIX."_bans` WHERE `expired` = 1")) {
-			while ($unbanned = $unbans->fetch_array(MYSQL_ASSOC)) {
-				if(!in_array($unbanned["player_id"], $bannedplayers) && !in_array($unbanned["player_id"], $unbannedplayers))
-				{
-					$unbannedplayers[] = $unbanned["player_id"];
-					++$ubcnt;
-				}
-			}	
+	}
+	// Handles (apparently) 6.0 version DB or higher
+	else if ($unbans = $con->query("SELECT `player_id` FROM `".AMX_PREFIX."_bans` WHERE `expired` = 1")) {
+		while ($unbanned = $unbans->fetch_array(MYSQL_ASSOC)) {
+			if(!in_array($unbanned["player_id"], $bannedplayers) && !in_array($unbanned["player_id"], $unbannedplayers))
+			{
+				$unbannedplayers[] = $unbanned["player_id"];
+				++$ubcnt;
+			}
 		}
 	} else {
 		die('[-] Error retrieving unbanned players: ' . $con->error);
