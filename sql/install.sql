@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="51";
+SET @DBVERSION="52";
 SET @VERSION="1.6.11-beta1";
 
 -- --------------------------------------------------------
@@ -4475,6 +4475,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('robot_arm_blender_kill', 1, 0, 'tf', '1_robot_arm_blender_kill.png', 'Bronze Engineer Taunt (Gunslinger)'),
 ('robot_arm_blender_kill', 5, 0, 'tf', '2_robot_arm_blender_kill.png', 'Silver Engineer Taunt (Gunslinger)'),
 ('robot_arm_blender_kill', 10, 0, 'tf', '3_robot_arm_blender_kill.png', 'Gold Engineer Taunt (Gunslinger)'),
+('robot_arm_combo_kill', 1, 0, 'tf', '1_robot_arm_combo_kill.png', 'Bronze Gunslinger Combo Kill'),
+('robot_arm_combo_kill', 5, 0, 'tf', '2_robot_arm_combo_kill.png', 'Silver Gunslinger Combo Kill'),
+('robot_arm_combo_kill', 10, 0, 'tf', '3_robot_arm_combo_kill.png', 'Gold Gunslinger Combo Kill'),
 ('sledgehammer', 1, 0, 'tf', '1_sledgehammer.png', 'Bronze Homewrecker'),
 ('sledgehammer', 5, 0, 'tf', '2_sledgehammer.png', 'Silver Homewrecker'),
 ('sledgehammer', 10, 0, 'tf', '3_sledgehammer.png', 'Gold Homewrecker'),
@@ -4487,6 +4490,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('taunt_guitar_kill', 1, 0, 'tf', '1_taunt_guitar_kill.png', 'Bronze Engineer Taunt (Guitar)'),
 ('taunt_guitar_kill', 5, 0, 'tf', '2_taunt_guitar_kill.png', 'Silver Engineer Taunt (Guitar)'),
 ('taunt_guitar_kill', 10, 0, 'tf', '3_taunt_guitar_kill.png', 'Gold Engineer Taunt (Guitar)'),
+('bleed_kill', 1, 0, 'tf', '1_bleed_kill.png', 'Bronze Bleed Kills'),
+('bleed_kill', 5, 0, 'tf', '2_bleed_kill.png', 'Silver Bleed Kills'),
+('bleed_kill', 10, 0, 'tf', '3_bleed_kill.png', 'Gold Bleed Kills'),
 ('telefrag', 1, 0, 'tf', '1_telefrag.png', 'Bronze Telefrags'),
 ('telefrag', 5, 0, 'tf', '2_telefrag.png', 'Silver Telefrags'),
 ('telefrag', 10, 0, 'tf', '3_telefrag.png', 'Gold Telefrags'),
