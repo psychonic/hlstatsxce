@@ -38,8 +38,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly'); }
 
-// DB_NAME - The name of the database
-define("DB_NAME", "");
+// DB_ADDR - The address of the database server, in host:port format.
+//           (You might also try setting this to e.g. ":/tmp/mysql.sock" to
+//           use a Unix domain socket, if your mysqld is on the same box as
+//           your web server.)
+define("DB_ADDR", "localhost");
 
 // DB_USER - The username to connect to the database as
 define("DB_USER", "");
@@ -47,11 +50,8 @@ define("DB_USER", "");
 // DB_PASS - The password for DB_USER
 define("DB_PASS", "");
 
-// DB_ADDR - The address of the database server, in host:port format.
-//           (You might also try setting this to e.g. ":/tmp/mysql.sock" to
-//           use a Unix domain socket, if your mysqld is on the same box as
-//           your web server.)
-define("DB_ADDR", "localhost");
+// DB_NAME - The name of the database
+define("DB_NAME", "");
 
 // DB_TYPE - The database server type. Only "mysql" is supported currently
 define("DB_TYPE", "mysql");
