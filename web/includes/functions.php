@@ -436,7 +436,7 @@ function getImage($filename)
 	$realfilename = $matches[2];
 	
 	$path = IMAGE_PATH . $filename;
-	$url = IMAGE_PATH . $relpath . urlencode($realfilename);
+	$url = IMAGE_PATH . $relpath . rawurlencode($realfilename);
 
 	// check if image exists
 	if (file_exists($path . '.png'))

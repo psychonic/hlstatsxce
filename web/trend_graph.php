@@ -150,7 +150,7 @@
 		
 		$Chart->setFontProperties(IMAGE_PATH . '/sig/font/DejaVuSans.ttf',7);
 		$Chart->drawHorizontalLegend(235, -1, $DataSet->GetDataDescription(),
-			0, 0, 0, 0, 0, 0, 255, 255, 255, FALSE);
+			0, 0, 0, 0, 0, 0, $color['red'], $color['green'], $color['blue'], FALSE);
 	}
 	
 	$cache_image = IMAGE_PATH . "/progress/trend_{$player}_{$last_time}.png";
