@@ -381,7 +381,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) <= $maxEvent
 				GROUP BY
 					hlstats_Players_History.playerId
-					AND kills >= $minkills
+				HAVING
+					SUM(hlstats_Players_History.kills) >= $minkills
 				ORDER BY
 					$table->sort $table->sortorder,
 					$table->sort2 $table->sortorder,
