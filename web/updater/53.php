@@ -17,7 +17,7 @@
 	foreach ($tfgames as $game)
 	{
 		$db->query("
-			INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
+			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 				('$game', 'battleneedle', 'The Vita-Saw', 1.00),
 				('$game', 'powerjack', 'The Powerjack', 1.00),
 				('$game', 'degreaser', 'The Degreaser', 1.00),
