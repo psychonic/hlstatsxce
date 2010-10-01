@@ -18,12 +18,12 @@
 	{
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
-				('robot_arm_combo_kill', 1, 0, 'tf', '1_robot_arm_combo_kill.png', 'Bronze Gunslinger Combo Kill'),
-				('robot_arm_combo_kill', 5, 0, 'tf', '2_robot_arm_combo_kill.png', 'Silver Gunslinger Combo Kill'),
-				('robot_arm_combo_kill', 10, 0, 'tf', '3_robot_arm_combo_kill.png', 'Gold Gunslinger Combo Kill'),
-				('bleed_kill', 1, 0, 'tf', '1_bleed_kill.png', 'Bronze Bleed Kills'),
-				('bleed_kill', 5, 0, 'tf', '2_bleed_kill.png', 'Silver Bleed Kills'),
-				('bleed_kill', 10, 0, 'tf', '3_bleed_kill.png', 'Gold Bleed Kills');
+				('robot_arm_combo_kill', 1, 0, '$game', '1_robot_arm_combo_kill.png', 'Bronze Gunslinger Combo Kill'),
+				('robot_arm_combo_kill', 5, 0, '$game', '2_robot_arm_combo_kill.png', 'Silver Gunslinger Combo Kill'),
+				('robot_arm_combo_kill', 10, 0, '$game', '3_robot_arm_combo_kill.png', 'Gold Gunslinger Combo Kill'),
+				('bleed_kill', 1, 0, '$game', '1_bleed_kill.png', 'Bronze Bleed Kills'),
+				('bleed_kill', 5, 0, '$game', '2_bleed_kill.png', 'Silver Bleed Kills'),
+				('bleed_kill', 10, 0, '$game', '3_bleed_kill.png', 'Gold Bleed Kills');
 		");
 	}
 	
