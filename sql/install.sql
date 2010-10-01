@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="53";
+SET @DBVERSION="54";
 SET @VERSION="1.6.11-beta2";
 
 -- --------------------------------------------------------
@@ -2595,7 +2595,7 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('hl2mp', 'DefaultDisplayEvents', '1'),
 ('hl2mp', 'DisplayResultsInBrowser', '1'),
 ('hl2mp', 'EnablePublicCommands', '1'),
-('hl2mp', 'GameEngine', '2'),
+('hl2mp', 'GameEngine', '3'),
 ('hl2mp', 'GameType', '0'),
 ('hl2mp', 'HLStatsURL', 'http://yoursite.com/hlstats'),
 ('hl2mp', 'IgnoreBots', '1'),
