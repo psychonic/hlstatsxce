@@ -181,7 +181,7 @@ class Heatmap {
 			if (is_dir(CACHE_DIR . "/$code")) {
 			if ($handle = opendir(CACHE_DIR. "/$code")) {
 				while (false !== ($file = readdir($handle))) {
-					if ($file != "." && $file != ".." && preg_match("/${map}_(\d+).png/i", $file, $matches)) {
+					if ($file != "." && $file != ".." && preg_match(str_replace("\$","\\\$","/${map}_(\d+).png/i"), $file, $matches)) {
 					$cache_file = CACHE_DIR . "/$code/$file";
 					$oldtimestamp = $matches[1];
 
