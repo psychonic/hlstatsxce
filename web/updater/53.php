@@ -25,9 +25,7 @@
 				('$game', 'holy_mackerel', 'The Holy Mackerel', 1.00),
 				('$game', 'letranger', 'L''Etranger', 1.00),
 				('$game', 'eternal_reward', 'Your Eternal Reward', 2.00),
-				('$game', 'fryingpan', 'Frying Pan', 2.00),
-				('$game', 'bushwacka', 'The Bushwacka', 2.00),
-				('$game', 'gloves_urgent', 'Gloves of Running Urgently', 2.00);
+				('$game', 'fryingpan', 'Frying Pan', 2.00);
 		");
 
 		$db->query("
@@ -39,9 +37,7 @@
 				('W','$game','holy_mackerel', 'Something''s Fishy', 'kills with The Holy Mackerel'),
 				('W','$game','letranger', 'Ranged', 'kills with the L''Etranger'),
 				('W','$game','eternal_reward', 'It goes on and on...', 'kills with Your Eternal Reward'),
-				('W','$game','fryingpan', 'Fried Egg', 'kills with the Frying Pan'),
-				('W','$game','bushwacka', 'George Bushwacka', 'kills with The Bushwacka'),
-				('W','$game','gloves_urgent', 'It''s Urgent', 'kills with the Gloves of Running Urgently');
+				('W','$game','fryingpan', 'Fried Egg', 'kills with the Frying Pan');
 		");
 		
 		$db->query("
@@ -70,12 +66,6 @@
 				('fryingpan', 1, 0, '$game', '1_fryingpan.png', 'Bronze Frying Pan'),
 				('fryingpan', 5, 0, '$game', '2_fryingpan.png', 'Silver Frying Pan'),
 				('fryingpan', 10, 0, '$game', '3_fryingpan.png', 'Gold Frying Pan'),
-				('bushwacka', 1, 0, '$game', '1_bushwacka.png', 'Bronze Bushwacka'),
-				('bushwacka', 5, 0, '$game', '2_bushwacka.png', 'Silver Bushwacka'),
-				('bushwacka', 10, 0, '$game', '3_bushwacka.png', 'Gold Bushwacka'),
-				('gloves_urgent', 1, 0, '$game', '1_gloves_urgent.png', 'Bronze Gloves of Running Urgently'),
-				('gloves_urgent', 5, 0, '$game', '2_gloves_urgent.png', 'Silver Gloves of Running Urgently'),
-				('gloves_urgent', 10, 0, '$game', '3_gloves_urgent.png', 'Gold Gloves of Running Urgently'),
 				('robot_arm_combo_kill', 1, 0, '$game', '1_robot_arm_combo_kill.png', 'Bronze Gunslinger Combo Kill'),
 				('robot_arm_combo_kill', 5, 0, '$game', '2_robot_arm_combo_kill.png', 'Silver Gunslinger Combo Kill'),
 				('robot_arm_combo_kill', 10, 0, '$game', '3_robot_arm_combo_kill.png', 'Gold Gunslinger Combo Kill'),
