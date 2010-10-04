@@ -42,7 +42,7 @@
 confdir=.
 
 # Set the configuration file for the daemon (you should not need to modify this.)
-conffile=proxy.conf
+conffile=hlstats.conf
 # Set the filename of the daemon to use (you should not need to modify this.)
 daemonfile=proxy-daemon.pl
 # Set where you want to log to.  This is a directory inside of the confdir setting.
