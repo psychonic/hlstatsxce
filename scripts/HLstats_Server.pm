@@ -1135,7 +1135,7 @@ sub flush_player_count
 {
 	my ($self) = @_;
 	
-	&::execCacheQuery("flush_plyr_cnt",
+	&::execCached("flush_plyr_cnt",
 		"UPDATE hlstats_Servers SET act_players=? WHERE serverId=?",
 		$self->{numplayers},
 		$self->{id}
