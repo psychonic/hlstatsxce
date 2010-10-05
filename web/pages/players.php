@@ -290,6 +290,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$result = $db->query
 			("
 				SELECT
+					SQL_CALC_FOUND_ROWS
 					hlstats_Players.playerId,
 					hlstats_Players.connection_time,
 					hlstats_Players.lastName,
@@ -318,17 +319,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->startitem,
 					$table->numperpage
 			");
-			$resultCount = $db->query
-			("
-				SELECT
-					COUNT(*)
-				FROM
-					hlstats_Players
-				WHERE
-					hlstats_Players.game = '$game'
-					AND hlstats_Players.hideranking = 0
-					AND hlstats_Players.kills >= $minkills
-			");
+			
+			$resultCount = $db->query("SELECT FOUND_ROWS()");
 			list($numitems) = $db->fetch_row($resultCount);
 		}
 		else
@@ -352,6 +344,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$result = $db->query
 			("
 				SELECT
+					SQL_CALC_FOUND_ROWS
 					hlstats_Players_History.playerId,
 					hlstats_Players.lastName,
 					hlstats_Players.flag,
@@ -391,26 +384,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->startitem,
 					$table->numperpage
 			");
-			$resultCount = $db->query
-			("
-				SELECT
-					COUNT(hlstats_Players_History.playerId)
-				FROM
-					hlstats_Players_History
-				INNER JOIN
-					hlstats_Players
-				ON
-					hlstats_Players_History.playerId = hlstats_Players.playerId
-				WHERE
-					hlstats_Players_History.game = '$game'
-					AND hlstats_Players.hideranking = 0
-					AND hlstats_Players_History.kills >= $minkills
-					AND activity > 0
-					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) >= $minEvent
-					AND UNIX_TIMESTAMP(hlstats_Players_History.eventTime) <= $maxEvent
-				GROUP BY
-					hlstats_Players_History.playerId
-			");
+			$resultCount = $db->query("SELECT FOUND_ROWS()");
 			list($numitems) = $db->fetch_row($resultCount);
 		}
 		$table->draw($result, $numitems, 95);
@@ -418,20 +392,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<div class="subblock">
 		<div style="float:left;">
 			<form method="get" action="<?php echo $g_options['scripturl']; ?>">
-				<?php
-					$db->query
-					("
-						SELECT
-							COUNT(*) AS total_players
-						FROM
-							hlstats_Players
-						WHERE
-							hlstats_Players.game = '$game'
-							AND hlstats_Players.hideranking = 0
-					");
-					
-					list($total_players) = $db->fetch_row();
-					
+				<?php					
 					foreach ($_GET as $k=>$v)
 					{
 						$v = valid_request($v, 0);
@@ -442,7 +403,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					}
 				?>
 				<strong>&#8226;</strong> Only show players with
-					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>" class="textbox" /> or more kills from a total of <strong><?php echo number_format($total_players); ?></strong> players
+					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>" class="textbox" /> or more kills.
 					<input type="submit" value="Apply" class="smallsubmit" />
 			</form>
 		</div>
