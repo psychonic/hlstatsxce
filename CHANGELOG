@@ -7,6 +7,7 @@ HLstatsX Community Edition 1.6.11
 + GameSupport: Chat colors enhanced in FoF now that 3.0+ supports them (psychonic)
 + GameSupport: Added missing AOC weapon codes, chivalry, Throwing Axe, and Fists (psychonic)
 + GameSupport: Added some missing award images for CS:S/CSP (Dragonshadow)
++ GameSupport: Added some missing award and ribbon images for TF2 (FernFerret, Packhead)
 + Daemon: Added support for retrieving hostname and maxplayers via server query if rcon is unavailable (psychonic)
 + Daemon: Added 'CpanelHack' conf directive to optionally add $home/perl to include path before loading Geo::IP modules (psychonic)
 + Daemon: Added SIGINT handling to clean up and flush data upon interupt (ctrl-c), also on C;SHUTDOWN; and C;RELOAD; (psychonic)
