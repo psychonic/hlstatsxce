@@ -22,7 +22,7 @@
 				('$game','rifle_m60', 'M60', 1);
 		");
 		$db->query("
-			INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
+			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
 				('W', '$game','golfclub', 'Golf Club', 'kills with the Golf Club'),
 				('W', '$game','rifle_m60', 'M60', 'kills with M60');
 		");
