@@ -3,7 +3,7 @@
 -- This file is only needed for new installations.
 
 SET @DBVERSION="55";
-SET @VERSION="1.6.11-beta2";
+SET @VERSION="1.6.11-beta3";
 
 -- --------------------------------------------------------
 
