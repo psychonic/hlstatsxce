@@ -1131,6 +1131,17 @@ sub flushDB
 	$self->{needsupdate} = 0;
 }
 
+sub flush_player_count
+{
+	my ($self) = @_;
+	
+	&::execCached("flush_plyr_cnt",
+		"UPDATE hlstats_Servers SET act_players=? WHERE serverId=?",
+		$self->{numplayers},
+		$self->{id}
+	);
+}
+
 sub update_server_loc
 {
 	my ($self)      = @_;
@@ -1337,7 +1348,7 @@ sub updatePlayerCount
 		$self->{num_trackable_players} = $trackable;
 	}
 	
-	$self->flushDB();
+	$self->flush_player_count();
 }
 
 1;
