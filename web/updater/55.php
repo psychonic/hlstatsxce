@@ -8,7 +8,7 @@
 	$version = "1.6.11-beta3";
 
 	$l4d2games = array();
-	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'l4d' AND (code LIKE 'l4d2%' OR code LIKE 'l4dii%'");
+	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'l4d' AND (code LIKE 'l4d2%' OR code LIKE 'l4dii%')");
 	while ($rowdata = $db->fetch_row($result))
 	{ 
 		array_push($l4d2games, $db->escape($rowdata[0]));
