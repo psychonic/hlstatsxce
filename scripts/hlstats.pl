@@ -2471,8 +2471,7 @@ while ($loop = &getLine()) {
 					%ev_properties_hash
 				);
 			} 
-		} elsif ($g_servers{$s_addr}->{play_game} == L4D()) {
-			if ($s_output =~ /^
+		} elsif ($g_servers{$s_addr}->{play_game} == L4D() && $s_output =~ /^
 				\(INCAP\)		# l4d prefix, such as (DEATH) or (INCAP)
 				"(.+?(?:<.+?>)*?
 				<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*
@@ -2485,100 +2484,99 @@ while ($loop = &getLine()) {
 				"([^"]*)"					# weapon name
 				(.*)					#properties
 				/x)
-			{
-				#  800. L4D Incapacitation
-				
-				$ev_player = $1;
-				$ev_l4dXcoord = $2; # attacker/player coords (L4D)
-				$ev_l4dYcoord = $3;
-				$ev_l4dZcoord = $4;
-				$ev_obj_a  = $5; # victim
-				$ev_l4dXcoordKV = $6; # kill victim coords (L4D)
-				$ev_l4dYcoordKV = $7;
-				$ev_l4dZcoordKV = $8;
-				$ev_obj_b  = $9; # weapon
-				$ev_properties = $10;
-				%ev_properties_hash = &getProperties($ev_properties);
-				
-				# reverse killer/victim (x was incapped by y = y killed x)
-				my $killerinfo = &getPlayerInfo($ev_obj_a, 1);
-				my $victiminfo = &getPlayerInfo($ev_player, 1);
-				
-				if ($victiminfo->{team} eq "Infected") {
-					$victiminfo = undef;
-				}
-				$ev_type = 800;
-								
-				$headshot = 0;
-				if ($ev_properties =~ m/headshot/) {
-					$headshot = 1;
-				}
-				if ($killerinfo && $victiminfo) {
-					my $killerId       = $killerinfo->{"userid"};
-					my $killerUniqueId = $killerinfo->{"uniqueid"};
-					my $killer         = lookupPlayer($s_addr, $killerId, $killerUniqueId);
+		{
+			#  800. L4D Incapacitation
+			
+			$ev_player = $1;
+			$ev_l4dXcoord = $2; # attacker/player coords (L4D)
+			$ev_l4dYcoord = $3;
+			$ev_l4dZcoord = $4;
+			$ev_obj_a  = $5; # victim
+			$ev_l4dXcoordKV = $6; # kill victim coords (L4D)
+			$ev_l4dYcoordKV = $7;
+			$ev_l4dZcoordKV = $8;
+			$ev_obj_b  = $9; # weapon
+			$ev_properties = $10;
+			%ev_properties_hash = &getProperties($ev_properties);
+			
+			# reverse killer/victim (x was incapped by y = y killed x)
+			my $killerinfo = &getPlayerInfo($ev_obj_a, 1);
+			my $victiminfo = &getPlayerInfo($ev_player, 1);
+			
+			if ($victiminfo->{team} eq "Infected") {
+				$victiminfo = undef;
+			}
+			$ev_type = 800;
+							
+			$headshot = 0;
+			if ($ev_properties =~ m/headshot/) {
+				$headshot = 1;
+			}
+			if ($killerinfo && $victiminfo) {
+				my $killerId       = $killerinfo->{"userid"};
+				my $killerUniqueId = $killerinfo->{"uniqueid"};
+				my $killer         = lookupPlayer($s_addr, $killerId, $killerUniqueId);
 
-					my $victimId       = $victiminfo->{"userid"};
-					my $victimUniqueId = $victiminfo->{"uniqueid"};
-					my $victim         = lookupPlayer($s_addr, $victimId, $victimUniqueId);
+				my $victimId       = $victiminfo->{"userid"};
+				my $victimUniqueId = $victiminfo->{"uniqueid"};
+				my $victim         = lookupPlayer($s_addr, $victimId, $victimUniqueId);
 
-					$ev_status = &doEvent_Frag(
-						$killerinfo->{"userid"},
-						$killerinfo->{"uniqueid"},
+				$ev_status = &doEvent_Frag(
+					$killerinfo->{"userid"},
+					$killerinfo->{"uniqueid"},
+					$victiminfo->{"userid"},
+					$victiminfo->{"uniqueid"},
+					$ev_obj_b,
+					$headshot,
+					$ev_l4dXcoord,
+					$ev_l4dYcoord,
+					$ev_l4dZcoord,
+					$ev_l4dXcoordKV,
+					$ev_l4dYcoordKV,
+					$ev_l4dZcoordKV,
+					&getProperties($ev_properties)
+				);
+			}
+		} elsif ($g_servers{$s_addr}->{play_game} == L4D() && $s_output =~ /^\(TONGUE\)\sTongue\sgrab\sstarting\.\s+Smoker:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))"\.\s+Victim:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))".*/) {
+			# Prototype: (TONGUE) Tongue grab starting.  Smoker:"player". Victim:"victim".
+			# Matches:
+			# 11. Player Action
+			
+			$ev_player = $1;
+			$ev_l4dXcoord = $2;
+			$ev_l4dYcoord = $3;
+			$ev_l4dZcoord = $4;
+			$ev_victim = $5;
+			$ev_l4dXcoordV = $6;
+			$ev_l4dYcoordV = $7;
+			$ev_l4dZcoordV = $8;
+			
+			$playerinfo = &getPlayerInfo($ev_player, 1);
+			$victiminfo = &getPlayerInfo($ev_victim, 1);
+
+			$ev_type = 11;
+				
+			if ($playerinfo) {
+				$ev_status = &doEvent_PlayerAction(
+					$playerinfo->{"userid"},
+					$playerinfo->{"uniqueid"},
+					"tongue_grab"
+				);
+			}
+			if ($playerinfo && $victiminfo) {
+					$ev_status = &doEvent_PlayerPlayerAction(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
 						$victiminfo->{"userid"},
 						$victiminfo->{"uniqueid"},
-						$ev_obj_b,
-						$headshot,
+						"tongue_grab",
 						$ev_l4dXcoord,
 						$ev_l4dYcoord,
 						$ev_l4dZcoord,
-						$ev_l4dXcoordKV,
-						$ev_l4dYcoordKV,
-						$ev_l4dZcoordKV,
-						&getProperties($ev_properties)
+						$ev_l4dXcoordV,
+						$ev_l4dYcoordV,
+						$ev_l4dZcoordV
 					);
-				} 
-			} elsif ($s_output =~ /^\(TONGUE\)\sTongue\sgrab\sstarting\.\s+Smoker:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))"\.\s+Victim:"(.+?(?:<.+?>)*?(?:|<setpos_exact ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d) ((?:|-)\d+?\.\d\d);.*?))".*/) {
-				# Prototype: (TONGUE) Tongue grab starting.  Smoker:"player". Victim:"victim".
-				# Matches:
-				# 11. Player Action
-				
-				$ev_player = $1;
-				$ev_l4dXcoord = $2;
-				$ev_l4dYcoord = $3;
-				$ev_l4dZcoord = $4;
-				$ev_victim = $5;
-				$ev_l4dXcoordV = $6;
-				$ev_l4dYcoordV = $7;
-				$ev_l4dZcoordV = $8;
-				
-				$playerinfo = &getPlayerInfo($ev_player, 1);
-				$victiminfo = &getPlayerInfo($ev_victim, 1);
-
-				$ev_type = 11;
-					
-				if ($playerinfo) {
-					$ev_status = &doEvent_PlayerAction(
-						$playerinfo->{"userid"},
-						$playerinfo->{"uniqueid"},
-						"tongue_grab"
-					);
-				}
-				if ($playerinfo && $victiminfo) {
-						$ev_status = &doEvent_PlayerPlayerAction(
-							$playerinfo->{"userid"},
-							$playerinfo->{"uniqueid"},
-							$victiminfo->{"userid"},
-							$victiminfo->{"uniqueid"},
-							"tongue_grab",
-							$ev_l4dXcoord,
-							$ev_l4dYcoord,
-							$ev_l4dZcoord,
-							$ev_l4dXcoordV,
-							$ev_l4dYcoordV,
-							$ev_l4dZcoordV
-						);
-				}
 			}
 		} elsif ($s_output =~ /^
 				"(.+?(?:<.+?>)*?
