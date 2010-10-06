@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="54";
+SET @DBVERSION="55";
 SET @VERSION="1.6.11-beta2";
 
 -- --------------------------------------------------------
@@ -5042,6 +5042,10 @@ INSERT INTO `hlstats_Roles` (`game`, `code`, `name`, `hidden`) VALUES
 ('l4d', 'TANK', 'Tank', '0'),
 ('l4d', 'infected', 'Infected Horde', '0'),
 ('l4d', 'witch', 'Witch', '0'),
+('l4d2', 'NamVet', 'Bill', '0'),
+('l4d2', 'TeenGirl', 'Zoey', '0'),
+('l4d2', 'Biker', 'Francis', '0'),
+('l4d2', 'Manager', 'Louis', '0'),
 ('l4d2', 'Producer', 'Rochelle', '0'),
 ('l4d2', 'Mechanic', 'Ellis', '0'),
 ('l4d2', 'Coach', 'Coach', '0'),
