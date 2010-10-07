@@ -261,6 +261,7 @@ sub buildEventInsertData
 	{
 		$g_eventtable_data{$table}{queue} = [];
 		$g_eventtable_data{$table}{nullallowed} = 0;
+		$g_eventtable_data{$table}{lastflush} = time();
 		$g_eventtable_data{$table}{query} = "
 		INSERT$insertType INTO
 			hlstats_Events_$table
@@ -308,23 +309,32 @@ sub recordEvent
 	}
 	$value .= ")";
 	
-	my $evcount = scalar(@{$g_eventtable_data{$table}{queue}});
-	if (($evcount > $g_event_queue_size) || ($g_last_event_flush + 30) < time())
+	push(@{$g_eventtable_data{$table}{queue}}, $value);
+	
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) > $g_event_queue_size)
 	{
-		my $query = $g_eventtable_data{$table}{query};
-		foreach (@{$g_eventtable_data{$table}{queue}})
-		{
-			$query .= $_.",";
-		}
-		$query .= $value;
-		execNonQuery($query);
-		$g_last_event_flush = time();
-		$g_eventtable_data{$table}{queue} = [];
-		
+		flushEventTable($table);
+	}
+}
+
+sub flushEventTable
+{
+	my ($table) = @_;
+	
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) == 0)
+	{
 		return;
 	}
 	
-	push(@{$g_eventtable_data{$table}{queue}}, $value);
+	my $query = $g_eventtable_data{$table}{query};
+	foreach (@{$g_eventtable_data{$table}{queue}})
+	{
+		$query .= $_.",";
+	}
+	$query =~ s/,$//;
+	execNonQuery($query);
+	$g_eventtable_data{$table}{lastflush} = time();
+	$g_eventtable_data{$table}{queue} = [];
 }
 
 
@@ -1384,18 +1394,7 @@ sub flushAll
 	{
 		while ( my ($table, $colsref) = each(%g_eventTables) )
 		{
-			if (scalar(@{$g_eventtable_data{$table}{queue}}) == 0)
-			{
-				next;
-			}
-			
-			my $query = $g_eventtable_data{$table}{query};
-			foreach (@{$g_eventtable_data{$table}{queue}})
-			{
-				$query .= $_.",";
-			}
-			$query =~ s/,$//;
-			execNonQuery($query);
+			flushEventTable($table);
 		}
 	}
 	
@@ -1465,7 +1464,6 @@ $g_global_chat = 0;
 $g_ranktype = "skill";
 $g_gi = undef;
 $g_next_server_flush = 0;
-$g_last_event_flush = time();
 
 my %dysweaponcodes = (
 	"1" => "Light Katana",
@@ -3493,6 +3491,14 @@ EOT
 				}
 			}
 			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
+		}
+		
+		while( my($table) = each(%g_eventtable_data))
+		{
+			if ($g_eventtable_data{$table}{lastflush} + 30 < time())
+			{
+				flushEventTable($table);
+			}
 		}
 		
 		if (time() > $g_next_server_flush)
