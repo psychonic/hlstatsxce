@@ -145,7 +145,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		else
 			echo IMAGE_PATH . '/game.gif';
 		echo "\" alt=\"$game\" />&nbsp;";
-		echo '<b>'.$rowdata['name'].'</b>';
+		echo '<b>'.htmlspecialchars($rowdata['name']).'</b>';
                         ?></td>
 			<td class="game-table-cell"><?php
 		echo "$addr <a href=\"steam://connect/$addr\" style=\"color:black\">(Join)</a>";
