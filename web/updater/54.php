@@ -13,9 +13,11 @@
 	{ 
 		array_push($hl2mpserverids, $db->escape($rowdata[0]));
 	}
-	$serverids = implode(",", $hl2mpserverids);
-	$db->query("UPDATE IGNORE `hlstats_Servers_Config` SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `serverId` in ($serverids);");
-
+	if(count($hl2mpserverids)>0)
+    {
+		$serverids = implode(",", $hl2mpserverids);
+        $db->query("UPDATE IGNORE `hlstats_Servers_Config` SET `value` = '3' WHERE `parameter` = 'GameEngine' AND `serverId` in ($serverids);");
+    }
 	
 	$db->query("UPDATE IGNORE `hlstats_Games_Defaults` SET `value` = '3' WHERE `code` = 'hl2mp' AND `parameter` = 'GameEngine';");
 	
