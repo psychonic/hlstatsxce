@@ -34,6 +34,7 @@
 				('dalokohs', 5, 0, '$game', '2_dalokohs.png', 'Silver Dalokohs'),
 				('dalokohs', 10, 0, '$game', '3_dalokohs.png', 'Gold Dalokohs');
 		");
+	}
 	
 	$db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
 	$db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
