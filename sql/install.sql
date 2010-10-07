@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="55";
+SET @DBVERSION="57";
 SET @VERSION="1.6.11-beta3";
 
 -- --------------------------------------------------------
@@ -160,6 +160,8 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'teleport_self_again', 0, 0, '', 'Teleported Self Again (Past 10 Seconds)', '1', '0', '0', '0'),
 ('tf', 'teleport_used', 0, 0, '', 'Teleporter Used (Not Own)', '1', '0', '0', '0'),
 ('tf', 'teleport_used_again', 0, 0, '', 'Teleporter Used Again (Past 10 Seconds) (Not Own)', '1', '0', '0', '0'),
+('tf', 'dalokohs', 0, 0, '', 'Ate a Dalokohs Bar', '1', '', '', ''),
+('tf', 'dalokohs_healself', 0, 0, '', 'Ate Dalokohs Bar for Health', '1', '0', '0', '0'),
 ('css','Begin_Bomb_Defuse_Without_Kit',0,0,'CT','Start Defusing the Bomb Without a Defuse Kit','1','','',''),
 ('css','Begin_Bomb_Defuse_With_Kit',0,0,'CT','Start Defusing the Bomb With a Defuse Kit','1','','',''),
 ('css','Planted_The_Bomb',10,2,'TERRORIST','Plant the Bomb','1','','',''),
@@ -836,6 +838,11 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W','tf','letranger', 'Ranged', 'kills with the L''Etranger'),
 ('W','tf','eternal_reward', 'It goes on and on...', 'kills with Your Eternal Reward'),
 ('W','tf','fryingpan', 'Fried Egg', 'kills with the Frying Pan'),
+('W','tf','bushwacka', 'George Bushwacka', 'kills with The Bushwacka'),
+('W','tf','glovesurgent', 'It''s Urgent', 'kills with the Gloves of Running Urgently'),
+('W','tf','blackbox', 'What''s in the box?', 'kills with The Black Box'),
+('W','tf','sydneysleeper', 'Down Under', 'kills with The Sydney Sleeper'),
+('O','tf','dalokohs', 'Dalokohs is delicious!', 'Dalokohs eaten'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -4531,6 +4538,21 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('fryingpan', 1, 0, 'tf', '1_fryingpan.png', 'Bronze Frying Pan'),
 ('fryingpan', 5, 0, 'tf', '2_fryingpan.png', 'Silver Frying Pan'),
 ('fryingpan', 10, 0, 'tf', '3_fryingpan.png', 'Gold Frying Pan'),
+('bushwacka', 1, 0, 'tf', '1_bushwacka.png', 'Bronze Bushwacka'),
+('bushwacka', 5, 0, 'tf', '2_bushwacka.png', 'Silver Bushwacka'),
+('bushwacka', 10, 0, 'tf', '3_bushwacka.png', 'Gold Bushwacka'),
+('glovesurgent', 1, 0, 'tf', '1_gloves_urgent.png', 'Bronze Gloves of Running Urgently'),
+('glovesurgent', 5, 0, 'tf', '2_gloves_urgent.png', 'Silver Gloves of Running Urgently'),
+('glovesurgent', 10, 0, 'tf', '3_gloves_urgent.png', 'Gold Gloves of Running Urgently'),
+('blackbox', 1, 0, 'tf', '1_blackbox.png', 'Bronze Black Box'),
+('blackbox', 5, 0, 'tf', '2_blackbox.png', 'Silver Black Box'),
+('blackbox', 10, 0, 'tf', '3_blackbox.png', 'Gold Black Box'),
+('sydneysleeper', 1, 0, 'tf', '1_sydney_sleeper.png', 'Bronze Sydney Sleeper'),
+('sydneysleeper', 5, 0, 'tf', '2_sydney_sleeper.png', 'Silver Sydney Sleeper'),
+('sydneysleeper', 10, 0, 'tf', '3_sydney_sleeper.png', 'Gold Sydney Sleeper'),
+('dalokohs', 1, 0, 'tf', '1_dalokohs.png', 'Bronze Dalokohs'),
+('dalokohs', 5, 0, 'tf', '2_dalokohs.png', 'Silver Dalokohs'),
+('dalokohs', 10, 0, 'tf', '3_dalokohs.png', 'Gold Dalokohs'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
@@ -5476,6 +5498,10 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'letranger', 'L''Etranger', 1.00),
 ('tf', 'eternal_reward', 'Your Eternal Reward', 2.00),
 ('tf', 'fryingpan', 'Frying Pan', 2.00),
+('tf', 'bushwacka', 'The Bushwacka', 2.00),
+('tf', 'glovesurgent', 'Gloves of Running Urgently', 2.00),
+('tf', 'blackbox', 'The Black Box', 1.00),
+('tf', 'sydneysleeper', 'The Sydney Sleeper', 1.00),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
