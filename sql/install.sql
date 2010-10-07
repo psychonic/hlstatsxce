@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="56";
+SET @DBVERSION="57";
 SET @VERSION="1.6.11-beta3";
 
 -- --------------------------------------------------------
@@ -160,6 +160,8 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'teleport_self_again', 0, 0, '', 'Teleported Self Again (Past 10 Seconds)', '1', '0', '0', '0'),
 ('tf', 'teleport_used', 0, 0, '', 'Teleporter Used (Not Own)', '1', '0', '0', '0'),
 ('tf', 'teleport_used_again', 0, 0, '', 'Teleporter Used Again (Past 10 Seconds) (Not Own)', '1', '0', '0', '0'),
+('tf', 'dalokohs', 0, 0, '', 'Ate a Dalokohs Bar', '1', '', '', ''),
+('tf', 'dalokohs_healself', 0, 0, '', 'Ate Dalokohs Bar for Health', '1', '0', '0', '0'),
 ('css','Begin_Bomb_Defuse_Without_Kit',0,0,'CT','Start Defusing the Bomb Without a Defuse Kit','1','','',''),
 ('css','Begin_Bomb_Defuse_With_Kit',0,0,'CT','Start Defusing the Bomb With a Defuse Kit','1','','',''),
 ('css','Planted_The_Bomb',10,2,'TERRORIST','Plant the Bomb','1','','',''),
@@ -840,6 +842,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W','tf','glovesurgent', 'It''s Urgent', 'kills with the Gloves of Running Urgently'),
 ('W','tf','blackbox', 'What''s in the box?', 'kills with The Black Box'),
 ('W','tf','sydneysleeper', 'Down Under', 'kills with The Sydney Sleeper'),
+('O','tf','dalokohs', 'Dalokohs is delicious!', 'Dalokohs eaten'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
 ('W','hl2mp','physbox','05. (Physbox) Baffmaster','hits with this and that'),
@@ -4547,6 +4550,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('sydneysleeper', 1, 0, 'tf', '1_sydney_sleeper.png', 'Bronze Sydney Sleeper'),
 ('sydneysleeper', 5, 0, 'tf', '2_sydney_sleeper.png', 'Silver Sydney Sleeper'),
 ('sydneysleeper', 10, 0, 'tf', '3_sydney_sleeper.png', 'Gold Sydney Sleeper'),
+('dalokohs', 1, 0, 'tf', '1_dalokohs.png', 'Bronze Dalokohs'),
+('dalokohs', 5, 0, 'tf', '2_dalokohs.png', 'Silver Dalokohs'),
+('dalokohs', 10, 0, 'tf', '3_dalokohs.png', 'Gold Dalokohs'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
