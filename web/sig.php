@@ -138,7 +138,7 @@ function f_num($number) {
 		$game = valid_request($_GET['game'], 0);
 
 		$steam_id_escaped=$db->escape($steam_id);
-		$game_escape=$db->escape($game);
+		$game_escaped=$db->escape($game);
 		// Obtain player_id from the steam_id and game code
 		$db->query("
 			SELECT

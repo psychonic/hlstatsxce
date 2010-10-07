@@ -1989,7 +1989,7 @@ sub doEvent_Chat
 		my $p_userid = $g_servers{$s_addr}->format_userid($player->{userid});
 		my $messagelen = length($message);
 		
-		if ( ($g_global_chat > 0) || (($g_log_chat > 0) && ($messagelen > 3))) {
+		if ($g_global_chat > 0 || $g_log_chat > 0) {
 			$hlx_command = 0;
 			my $cmd = $message;
 			if (($cmd =~ /^\/?skill$/i) || ($cmd =~ /^\/?rank$/i) || ($cmd =~ /^\/?points$/i) || ($cmd =~ /^\/?place$/i) ||
