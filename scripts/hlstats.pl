@@ -1527,6 +1527,8 @@ a MySQL database.
                                     data, instead of the current time on the
                                     database server, when recording events
       --notimestamp               disables above
+      --event-queue-size=SIZE     manually set event queue size to control flushing
+                                    (recommend 100+ for STDIN)
 
 Long options can be abbreviated, where such abbreviation is not ambiguous.
 Default values for options are indicated in square brackets [...].
@@ -1762,7 +1764,8 @@ GetOptions(
 	"server-ip=s"		=> \$copts{g_server_ip},
 	"server-port=i"		=> \$copts{g_server_port},
 	"timestamp!"		=> \$copts{g_timestamp},
-	"t"					=> \$copts{g_timestamp}
+	"t"					=> \$copts{g_timestamp},
+	"event-queue-size"  => \$copts{g_event_queue_size}
 ) or die($usage);
 
 
@@ -1899,6 +1902,8 @@ if ($g_global_chat == 1) {
 } else {
 	&printEvent("HLSTATSX", "Broadcasting public chat is disabled", 1);
 }
+
+&printEvent("HLSTATSX", "Event queue size is set to ".$g_event_queue_size, 1);
 
 
 %g_servers = ();
