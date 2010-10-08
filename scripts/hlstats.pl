@@ -3498,14 +3498,6 @@ EOT
 			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
 		}
 		
-		while( my($table) = each(%g_eventtable_data))
-		{
-			if ($g_eventtable_data{$table}{lastflush} + 30 < time())
-			{
-				flushEventTable($table);
-			}
-		}
-		
 		if (time() > $g_next_server_flush)
 		{
 			if ($g_servers{$server}->{needsupdate}) {
@@ -3532,6 +3524,14 @@ EOT
 		while (my($addr, $server) = each(%g_servers)) {
 			if (defined($server)) {
 				$server->track_server_load();
+			}
+		}
+		
+		while( my($table) = each(%g_eventtable_data))
+		{
+			if ($g_eventtable_data{$table}{lastflush} + 30 < time())
+			{
+				flushEventTable($table);
 			}
 		}
 	}
