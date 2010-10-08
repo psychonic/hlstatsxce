@@ -3534,11 +3534,11 @@ EOT
 				flushEventTable($table);
 			}
 		}
-	}
-	
-	if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
-		if (($g_servers{$s_addr}->{map} eq "") && (($timeout > 0) && ($timeout % 60 == 0))) {
-			$g_servers{$s_addr}->get_map();
+		
+		if (defined($g_servers{$s_addr})) {
+			if (($g_servers{$s_addr}->{map} eq "") && (($timeout > 0) && ($timeout % 60 == 0))) {
+				$g_servers{$s_addr}->get_map();
+			}
 		}
 	}  
 	
