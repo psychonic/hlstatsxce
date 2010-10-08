@@ -81,7 +81,7 @@ function setdefaults($key)
         
         <tr bgcolor="#FF0000">
             <td class="fNormal" style="color: #FFF; font-weight: bold; font-size: medium;" align="center">
-				For changes on this page to take effect, you must restart the perl daemon to reload settings.
+				Note: For changes on this page to take effect, you <strong>must</strong> <a href="<?php echo $g_options['scripturl'] . "?mode=admin&amp;task=tools_perlcontrol"; ?>">reload</a> or restart the HLX:CE daemon.
 			</td>
         </tr>
         
