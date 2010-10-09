@@ -1463,7 +1463,6 @@ $g_log_chat_admins = 0;
 $g_global_chat = 0;
 $g_ranktype = "skill";
 $g_gi = undef;
-$g_next_server_flush = 0;
 
 my %dysweaponcodes = (
 	"1" => "Light Katana",
@@ -3498,13 +3497,12 @@ EOT
 			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
 		}
 		
-		if (time() > $g_next_server_flush)
+		if (time() > $g_servers{$server}->{next_flush}
+			&& $g_servers{$server}->{needsupdate}
+			)
 		{
-			if ($g_servers{$server}->{needsupdate}) {
-				$g_servers{$server}->flushDB();
-			}
-			
-			$g_next_server_flush = time() + 20;
+			$g_servers{$server}->flushDB();
+			$g_servers{$server}->{next_flush} = time() + 20;
 		}
 	}
 
