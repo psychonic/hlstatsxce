@@ -2637,9 +2637,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 						&getProperties($ev_properties)
 					);
 				}
@@ -2652,9 +2652,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 				        &getProperties($ev_properties)
 					);
 				}
@@ -2804,7 +2804,7 @@ while ($loop = &getLine()) {
 				my $ipAddr = $ev_obj_a;
 				my $playerinfo;
 				
-				if ($ipAddr =~ /([\d.]+):(\d+)/) {
+				if ($ipAddr =~ /([\d\.]+):(\d+)/) {
 					$ipAddr = $1;
 				}
 				
@@ -2930,9 +2930,9 @@ while ($loop = &getLine()) {
 							$playerinfo->{"userid"},
 							$playerinfo->{"uniqueid"},
 							$ev_obj_a,
-							$ev_l4dXcoord,
-							$ev_l4dYcoord,
-							$ev_l4dZcoord,
+							undef,
+							undef,
+							undef,
 							%ev_properties
 						);
 					}
@@ -2948,9 +2948,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 						%ev_properties
 					);
 				}
