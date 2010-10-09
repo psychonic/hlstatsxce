@@ -462,9 +462,9 @@ sub getDifficulty
   {
     if ($line =~ /^\s*"z_difficulty"\s*=\s*"([A-Za-z]+)".*$/x)
     {
-		if (exists($l4d_difficulties[$1]))
+		if (exists($l4d_difficulties{$1}))
 		{
-			return $l4d_difficulties[$1];
+			return $l4d_difficulties{$1};
 		}
     }
   }
