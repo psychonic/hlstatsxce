@@ -595,11 +595,13 @@ sub get_map
 			{
 				($temp_map, $temp_maxplayers, $servhostname, $difficulty) = $self->rcon_getStatus();
 				
-				if ($temp_map ne "") {
-					if ($self->{map} ne $temp_map) {
-						$self->{map} = $temp_map;
-						$update++;
-					}
+				if ($temp_map eq "") {
+					goto STATUSFAIL;
+				}
+				
+				if ($self->{map} ne $temp_map) {
+					$self->{map} = $temp_map;
+					$update++;
 				}
 			
 				if (($temp_maxplayers != -1) && ($temp_maxplayers > 0) && ($temp_maxplayers ne "")) {
@@ -615,7 +617,10 @@ sub get_map
 						$self->{name} = $servhostname;
 						$update++;
 				}
-			} else {  # no rcon
+			}
+			else
+			{  # no rcon or status command failed
+			STATUSFAIL:
 				my ($querymap, $queryhost, $querymax) = &::queryServer($self->{address}, $self->{port}, 'mapname', 'hostname', 'maxplayers');
 				if ($querymap ne "") {
 					$self->{map} = $querymap;
