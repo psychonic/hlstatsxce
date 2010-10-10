@@ -38,122 +38,13 @@
 # you must configure the "confdir" variable below.
 # The other variables are optional and really should not be modified.
 
-# Set the path to the scripts folder (you should not need to modify this.)
-confdir=.
+echo "
+WARNING: run_hlstats_multi is deprecated as of 1.6.11.
+If you need to start multiple daemons you should now use run_hlstats with the correct parameters.
 
-# Define Ports for multiple instances here, be sure that the first Instance has index 0 instead index 1 !
-PORTS[0]=30000
-PORTS[1]=30010
-PORTS[2]=30020
-PORTS[3]=30030
+For information run_hlstats, run:
 
-# Name of the daemon to run
-daemonfile=hlstats.pl
-# Directory to put logs in (within confdir)
-logdir=logs
-# Directory to store PID files in
-piddir=${confdir}
+./run_hlstats help
 
-# verify that we can see the daemon file
-if [ ! -f ${confdir}/${daemonfile} ]; then
-    echo "Can't see the daemon.  (${daemonfile})"
-    exit 1
-fi
-# Create a log directory if we do not have one.
-if [ ! -d ${confdir}/${logdir} ]; then
-	mkdir ${confdir}/${logdir}
-fi
-
-if [ ! -w ${confdir}/${logdir} ]; then
-	echo "you need write access to ${confdir}/${logdir}"
-	exit 1
-fi
-
-# Set the current directory so we can return after
-origdir=`pwd`
-
-# Change into the configured directory
-cd ${confdir}
-
-function start_process {
-	# takes the used port from $1 variable
-	PORT=$1
-	echo "Starting HLstatsX:CE PORT=${PORT}...";
-	PID=${piddir}/hlstats_${PORT}.pid
-	LOG=${logdir}/multi_${PORT}`date +_%Y%m%d_%H-%M-%S`
-	if [ -f ${PID} ]; then
-		kill -0 `cat ${PID}` >/dev/null 2>&1
-		if [ "$?" == "0" ]; then
-			echo "HLstatsX:CE PORT=${PORT} already running!"
-		else
-			rm -rf ${PID}
-			./${daemonfile} --port=${PORT} >${LOG} 2>&1 &
-			echo $! > ${PID}
-			echo "${PID} created"
-			echo "PORT=${PORT} Started successfully"
-		fi
-	else
-		./${daemonfile} --port=${PORT} >${LOG} 2>&1 &
-		echo $! >${PID}
-		echo "${PID} created"
-		echo "PORT=${PORT} Started successfully"
-	fi
-}
-
-function stop_process {
- # takes the used port from $1 variable
-	PORT=$1
-	echo "Stopping HLstatsX:CE PORT=${PORT}...";
-	PID=${piddir}/hlstats_${PORT}.pid
-	kill -s SIGINT `cat ${PID}` >/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-		rm -rf ${PID}
-		echo "PORT=${PORT} Stopped successfully"
-	else
-		echo "No HLstatsX:CE PORT=${PORT} running!"
-	fi
-}
-
-function reload_process {
-	#takes the used port from $1 variable
-	PORT=$1
-	echo "Reloading HLstatsX:CE PORT=${PORT}...";
-	PID=${piddir}/hlstats_${PORT}.pid
-	kill -s SIGHUP `cat ${PID}` >/dev/null 2>&1
-}
-
-case "$1" in
-	start)
-		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
-			start_process ${PORTS[$element]}
-		done
-	;;
-
-	stop)
-		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
-			stop_process ${PORTS[$element]}
-		done
-	;;
-
-	restart)
-		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
-			stop_process ${PORTS[$element]}
-			start_process ${PORTS[$element]}
-		done
-	;;
-	
-	reload)
-		for element in $(seq 0 $((${#PORTS[@]} - 1))); do
-			reload_process ${PORTS[$element]}
-		done
-	;;	
-	
-	*)
-		echo "Usage: ./run_hlstats_multi [ start | stop | restart | reload ]"
-	;;
-esac
-
-# Return to original directory
-cd ${origdir}
-
+or visit http://wiki.hlxce.com/wiki/Controlling_the_HLXCE_daemon"
 exit 0
