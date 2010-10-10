@@ -1,4 +1,5 @@
 HLstatsX Community Edition 1.6.11
+October 10, 2010
 
 + GameSupport: Added PVKII support (Munra, CoZmicShReddeR, psychonic, Packhead)
 + GameSupport: Added CSPromod support (requires SuperLogs:CSPromod) (psychonic, Packhead, Unity)
@@ -36,6 +37,8 @@ HLstatsX Community Edition 1.6.11
 ? Daemon: Changed some parsing to aid pvkii support and potentially give a minor boost in speed (psychonic)
 ? Daemon: Run script now sends SIGINT instead of SIGKILL when stopping daemon to allow cleanup (Packhead)
 ? Daemon: run_proxy now defaults to using hlstats.conf instead of the non-existant proxy.conf (psychonic)
+? Daemon: Re-wrote run_hlstats to now handle start/stop/reload/restart/status single or multiple daemons (Packhead)
+? Daemon: run_hlstats_multi has been deprecated (Packhead)
 ? Web: Chat page no longer shows server column when showing chat for a single server (psychonic)
 ? Web: Countries page now defaults to sorting by Avg Skill (psychonic)
 ? Web: After adding a new server, you now automatically get redirected to the server settings page (psychonic)
