@@ -982,7 +982,7 @@ sub DoGeoIP
 		else
 		{
 			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile errored while opening.", 1);
-			close($gi{fh});
+			close($gi->{fh});
 		}
 	}
 	else
@@ -1173,11 +1173,10 @@ sub DoClans
 
 sub DoPruning
 {
-	print "++ Cleaning up database: deleting events older than $g_deletedays days... ";
-	
 	$result = &doQuery("SELECT `value` FROM hlstats_Options WHERE keyname='DeleteDays'");
-	my $g_deletedays;
-	($g_deletedays) = $result->fetchrow_array;
+	my ($g_deletedays) = $result->fetchrow_array;
+	
+	print "++ Cleaning up database: deleting events older than $g_deletedays days... ";
 	
 	foreach $eventTable (keys(%g_eventTables))
 	{
