@@ -395,7 +395,7 @@ if [ -f ${PIDDIR}/hlstats.pid ]; then
 	kill -KILL `cat ${PIDDIR}/hlstats.pid` &> /dev/null
 	sleep 1
 	# Check if PID is dead
-	local i=1
+	i=1
 	while [ $i -le 5 ]
 	do
 		kill -0 `cat ${PIDDIR}/hlstats.pid` &> /dev/null
