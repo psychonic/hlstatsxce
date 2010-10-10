@@ -295,6 +295,10 @@ sub getPlayers
 {
   my ($self) = @_;
   my $status = $self->execute("status", 1);
+  if (!$status)
+  {
+  	return ("", -1, "", 0);
+  }
   
   my @lines = split(/[\r\n]+/, $status);
 
@@ -462,9 +466,9 @@ sub getDifficulty
   {
     if ($line =~ /^\s*"z_difficulty"\s*=\s*"([A-Za-z]+)".*$/x)
     {
-		if (exists($l4d_difficulties[$1]))
+		if (exists($l4d_difficulties{$1}))
 		{
-			return $l4d_difficulties[$1];
+			return $l4d_difficulties{$1};
 		}
     }
   }

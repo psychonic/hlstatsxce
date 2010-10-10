@@ -261,6 +261,7 @@ sub buildEventInsertData
 	{
 		$g_eventtable_data{$table}{queue} = [];
 		$g_eventtable_data{$table}{nullallowed} = 0;
+		$g_eventtable_data{$table}{lastflush} = time();
 		$g_eventtable_data{$table}{query} = "
 		INSERT$insertType INTO
 			hlstats_Events_$table
@@ -308,23 +309,32 @@ sub recordEvent
 	}
 	$value .= ")";
 	
-	my $evcount = scalar(@{$g_eventtable_data{$table}{queue}});
-	if (($evcount > $g_event_queue_size) || ($g_last_event_flush + 30) < time())
+	push(@{$g_eventtable_data{$table}{queue}}, $value);
+	
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) > $g_event_queue_size)
 	{
-		my $query = $g_eventtable_data{$table}{query};
-		foreach (@{$g_eventtable_data{$table}{queue}})
-		{
-			$query .= $_.",";
-		}
-		$query .= $value;
-		execNonQuery($query);
-		$g_last_event_flush = time();
-		$g_eventtable_data{$table}{queue} = [];
-		
+		flushEventTable($table);
+	}
+}
+
+sub flushEventTable
+{
+	my ($table) = @_;
+	
+	if (scalar(@{$g_eventtable_data{$table}{queue}}) == 0)
+	{
 		return;
 	}
 	
-	push(@{$g_eventtable_data{$table}{queue}}, $value);
+	my $query = $g_eventtable_data{$table}{query};
+	foreach (@{$g_eventtable_data{$table}{queue}})
+	{
+		$query .= $_.",";
+	}
+	$query =~ s/,$//;
+	execNonQuery($query);
+	$g_eventtable_data{$table}{lastflush} = time();
+	$g_eventtable_data{$table}{queue} = [];
 }
 
 
@@ -1384,18 +1394,7 @@ sub flushAll
 	{
 		while ( my ($table, $colsref) = each(%g_eventTables) )
 		{
-			if (scalar(@{$g_eventtable_data{$table}{queue}}) == 0)
-			{
-				next;
-			}
-			
-			my $query = $g_eventtable_data{$table}{query};
-			foreach (@{$g_eventtable_data{$table}{queue}})
-			{
-				$query .= $_.",";
-			}
-			$query =~ s/,$//;
-			execNonQuery($query);
+			flushEventTable($table);
 		}
 	}
 	
@@ -1464,8 +1463,6 @@ $g_log_chat_admins = 0;
 $g_global_chat = 0;
 $g_ranktype = "skill";
 $g_gi = undef;
-$g_next_server_flush = 0;
-$g_last_event_flush = time();
 
 my %dysweaponcodes = (
 	"1" => "Light Katana",
@@ -1529,6 +1526,8 @@ a MySQL database.
                                     data, instead of the current time on the
                                     database server, when recording events
       --notimestamp               disables above
+      --event-queue-size=SIZE     manually set event queue size to control flushing
+                                    (recommend 100+ for STDIN)
 
 Long options can be abbreviated, where such abbreviation is not ambiguous.
 Default values for options are indicated in square brackets [...].
@@ -1764,7 +1763,8 @@ GetOptions(
 	"server-ip=s"		=> \$copts{g_server_ip},
 	"server-port=i"		=> \$copts{g_server_port},
 	"timestamp!"		=> \$copts{g_timestamp},
-	"t"					=> \$copts{g_timestamp}
+	"t"					=> \$copts{g_timestamp},
+	"event-queue-size"  => \$copts{g_event_queue_size}
 ) or die($usage);
 
 
@@ -1901,6 +1901,8 @@ if ($g_global_chat == 1) {
 } else {
 	&printEvent("HLSTATSX", "Broadcasting public chat is disabled", 1);
 }
+
+&printEvent("HLSTATSX", "Event queue size is set to ".$g_event_queue_size, 1);
 
 
 %g_servers = ();
@@ -2635,9 +2637,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 						&getProperties($ev_properties)
 					);
 				}
@@ -2650,9 +2652,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 				        &getProperties($ev_properties)
 					);
 				}
@@ -2802,7 +2804,7 @@ while ($loop = &getLine()) {
 				my $ipAddr = $ev_obj_a;
 				my $playerinfo;
 				
-				if ($ipAddr =~ /([\d.]+):(\d+)/) {
+				if ($ipAddr =~ /([\d\.]+):(\d+)/) {
 					$ipAddr = $1;
 				}
 				
@@ -2928,9 +2930,9 @@ while ($loop = &getLine()) {
 							$playerinfo->{"userid"},
 							$playerinfo->{"uniqueid"},
 							$ev_obj_a,
-							$ev_l4dXcoord,
-							$ev_l4dYcoord,
-							$ev_l4dZcoord,
+							undef,
+							undef,
+							undef,
 							%ev_properties
 						);
 					}
@@ -2946,9 +2948,9 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a,
-						$ev_l4dXcoord,
-						$ev_l4dYcoord,
-						$ev_l4dZcoord,
+						undef,
+						undef,
+						undef,
 						%ev_properties
 					);
 				}
@@ -3495,13 +3497,12 @@ EOT
 			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
 		}
 		
-		if (time() > $g_next_server_flush)
+		if (time() > $g_servers{$server}->{next_flush}
+			&& $g_servers{$server}->{needsupdate}
+			)
 		{
-			if ($g_servers{$server}->{needsupdate}) {
-				$g_servers{$server}->flushDB();
-			}
-			
-			$g_next_server_flush = time() + 20;
+			$g_servers{$server}->flushDB();
+			$g_servers{$server}->{next_flush} = time() + 20;
 		}
 	}
 
@@ -3523,11 +3524,19 @@ EOT
 				$server->track_server_load();
 			}
 		}
-	}
-	
-	if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
-		if (($g_servers{$s_addr}->{map} eq "") && (($timeout > 0) && ($timeout % 60 == 0))) {
-			$g_servers{$s_addr}->get_map();
+		
+		while( my($table) = each(%g_eventtable_data))
+		{
+			if ($g_eventtable_data{$table}{lastflush} + 30 < time())
+			{
+				flushEventTable($table);
+			}
+		}
+		
+		if (defined($g_servers{$s_addr})) {
+			if (($g_servers{$s_addr}->{map} eq "") && (($timeout > 0) && ($timeout % 60 == 0))) {
+				$g_servers{$s_addr}->get_map();
+			}
 		}
 	}  
 	

@@ -109,7 +109,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<link rel="stylesheet" type="text/css" href="hlstats.css" />
 	<link rel="stylesheet" type="text/css" href="styles/<?php echo $selectedStyle; ?>" />
 	<link rel="stylesheet" type="text/css" href="css/SqueezeBox.css" />
-	<!-- UR A SMACKHEAD -->
+	<!-- U R A SMACKHEAD -->
 <?php
 	if ($mode == 'players')
 	{

@@ -978,7 +978,7 @@ function name_history_checked()
 <p align="middle" />
 		Are you sure you want to reset the above? (All other admin settings will be retained.)<br /><br />
 
-<strong>Note</strong> You should kill <strong>hlstats.pl</strong> before resetting the stats. You can restart it after they are reset.<br /><br />
+<strong>Note</strong> You should <a href="<?php echo $g_options['scripturl'] . "?mode=admin&amp;task=tools_perlcontrol"; ?>" style="text-decoration:underline;font-weight:bold">stop the HLX:CE daemon</a> before resetting the stats. You can restart it after the reset completes.<br /><br />
 
 <input type="hidden" name="confirm" value="1" />
 

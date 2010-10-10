@@ -402,7 +402,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			else
 				echo IMAGE_PATH . '/game.gif';
 			echo "\" alt=\"$game\" />&nbsp;";
-			echo "<b><a href=\"" . $g_options['scripturl'] . "?mode=servers&amp;server_id=$server_id&amp;game=$game\" style=\"text-decoration:none;\">" . $rowdata['name'] . "</a></b>";
+			echo "<b><a href=\"" . $g_options['scripturl'] . "?mode=servers&amp;server_id=$server_id&amp;game=$game\" style=\"text-decoration:none;\">" . htmlspecialchars($rowdata['name']) . "</a></b>";
 	?></td>
 						<td class="game-table-cell"><?php
 			echo "$addr <a href=\"steam://connect/$addr\" style=\"color:black\">(Join)</a>";
