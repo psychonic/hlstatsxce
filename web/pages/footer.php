@@ -49,8 +49,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br />
 <br />
 	<div id="footer">
-			<a href="http://www.hlxcommunity.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/footer-small.png" alt="HLstatsX Community Edition" border="0" /></a><br/>
-			an <a href="http://www.interwavestudios.com" target="_blank" class="footer_link">InterWave Studios</a> community project
+			<a href="http://www.hlxce.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/footer-small.png" alt="HLstatsX Community Edition" border="0" /></a>
 	</div>
 <br />
 <div class="fSmall" style="text-align:center;">
@@ -59,7 +58,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if($_SESSION['nojs'] == 1) {
 		echo 'You are currently viewing the basic version of this page, please enable JavaScript and reload the page to access full functionality.<br />';
 	}
-	echo 'Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a>';
+	echo 'Generated in real-time by <a href="http://www.hlxce.com" target="_blank">HLstatsX Community Edition '.$g_options['version'].'</a>';
 	if ($g_options['showqueries'] == 1) {
 		echo '
 			<br />
