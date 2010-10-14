@@ -30,7 +30,7 @@
 #include <cstrike>
 #include <clientprefs>
  
-#define VERSION "1.6.11"
+#define VERSION "1.6.11.1"
 #define HLXTAG "HLstatsX:CE"
 
 enum GameType {
@@ -235,7 +235,10 @@ public OnPluginStart()
 	HookConVarChange(hlx_message_prefix, OnMessagePrefixChange);
 	HookConVarChange(hlx_protect_address, OnProtectAddressChange);
 	HookConVarChange(hlx_server_tag, OnServerTagChange);
-	HookConVarChange(sv_tags, OnSVTagsChange);
+	if (sv_tags != INVALID_HANDLE)
+	{
+		HookConVarChange(sv_tags, OnSVTagsChange);
+	}
 	
 	RegServerCmd("log", ProtectLoggingChange);
 	RegServerCmd("logaddress_del", ProtectForwardingChange);
