@@ -188,6 +188,7 @@ function stop_daemon {
 	if [ $? -ne 0 ]; then
 		# Daemon is not running, purge the PID.
 		remove_pidfile ${PORT}
+		echo ""
 		return 3
 	else
 		# Found running PID -- perform a quick check before entering loop
@@ -565,7 +566,7 @@ case "$1" in
 		if [ ${PORT} -ne 0 ]; then
 			stop_daemon ${PORT}
 			case $? in
-				0 | 1)
+				0 | 1 | 3)
 					start_daemon ${PORT}
 					if [ $? -eq 0 ]; then
 						echo "Daemon successfully restarted on port ${PORT}"
@@ -579,10 +580,6 @@ case "$1" in
 					echo "WARNING: Daemon could not be stopped on port ${port}"
 					exit 1
 				;;
-				3)
-					echo "No daemon running on port ${port} or PID file is missing."
-					exit 1
-				;;
 			esac
 		fi
 		
@@ -592,7 +589,7 @@ case "$1" in
 			for port in ${PORTS} ; do
 				stop_daemon ${port}
 				case $? in
-					0 | 1)
+					0 | 1 | 3)
 						start_daemon ${port}
 						if [ $? -eq 0 ]; then
 							echo "Daemon successfully restarted on port ${port}"
@@ -602,10 +599,6 @@ case "$1" in
 					;;
 					2)
 						echo "WARNING: Daemon could not be stopped on port ${port}"
-						exit 1
-					;;
-					3)
-						echo "No daemon running on port ${port} or PID file is missing."
 						exit 1
 					;;
 				esac
