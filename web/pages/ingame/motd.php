@@ -189,6 +189,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				hlstats_Players.clan=hlstats_Clans.clanId
 			WHERE
 				hlstats_Clans.game='$game'
+				AND hlstats_Clans.hidden <> 1
 				AND hlstats_Players.hideranking = 0
 				AND IF(".$g_options['MinActivity']." > (UNIX_TIMESTAMP() - hlstats_Players.last_event), ((100/".$g_options['MinActivity'].") * (".$g_options['MinActivity']." - (UNIX_TIMESTAMP() - hlstats_Players.last_event))), -1) >= 0
 			GROUP BY
