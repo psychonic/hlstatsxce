@@ -43,6 +43,14 @@ var Tabs = new Class({
 		}
 	},
 	loadTab: function(toggler, idx) {
+
+                // chrome has its own version of .bind() which passes the values as an array rather than arguments
+                // so we only want to do this if we don't have normal looking parameters 
+                if(typeof toggler == 'object' && typeof idx != 'number') {
+                        idx = toggler[1];
+                        toggler = toggler[0];
+                }
+
 		var tab = toggler.id.replace(/^tab_/, '');
 		//Current tab?  Just return
 		if ( this.currentTab == tab && this.container.hasChild(this.elements[idx]) )
