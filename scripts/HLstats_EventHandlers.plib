@@ -716,11 +716,15 @@ sub doEvent_Suicide
 	{
 		$desc = "(IGNORED) BonusRound: ";
 	}
+	elsif (!$player)
+	{
+		$desc = "(IGNORED) NOPLAYERINFO: ";
+	}
 	elsif ($player->{last_team_change}+2 > $ev_remotetime)
 	{
 		$desc = "(IGNORED) TEAMSWITCH: ";
 	}
-	elsif ($player)
+	else
 	{
 		if (($g_servers{$s_addr}->{ignore_bots} == 1) && ($player->{is_bot} == 1))
 		{
@@ -770,10 +774,6 @@ sub doEvent_Suicide
 			$g_servers{$s_addr}->increment("total_suicides");
 			$player->updateDB();
 		}
-	}
-	else
-	{
-		$desc = "(IGNORED) NOPLAYERINFO: ";
 	}
 	
 	return $desc . $playerstr . " committed suicide with \"$weapon\"";
