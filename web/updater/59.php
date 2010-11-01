@@ -16,12 +16,15 @@
 	
 	foreach ($tfgames as $game)
 	{
-
 		$db->query("
 			INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
 				('O','$game','hit_by_train', 'Flattened', 'deaths from train'),
 				('O','$game','headshot', 'Headache', 'headshots'),
 				('W','$game','suicide', 'Doctor Assited Suicide', 'suicides');
+		");
+		$db->query("
+			INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
+				('$game', 'headtaker', 'Horseless Headless Horsemann''s Headtaker', 2.0);
 		");
 	}
 	
