@@ -5505,6 +5505,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'glovesurgent', 'Gloves of Running Urgently', 2.00),
 ('tf', 'blackbox', 'The Black Box', 1.00),
 ('tf', 'sydneysleeper', 'The Sydney Sleeper', 1.00),
+('tf', 'headtaker', 'Horseless Headless Horsemann''s Headtaker', 2.0),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
