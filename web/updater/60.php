@@ -87,8 +87,37 @@
 					('bear_claws', $awardCount, 0, '$game', '" . $ribbon_count . "_bear_claws.png', '$color Warrior''s Spirit'),
 					('candy_cane', $awardCount, 0, '$game', '" . $ribbon_count . "_candy_cane.png', '$color Candy Cane'),
 					('wrench_jag', $awardCount, 0, '$game', '" . $ribbon_count . "_wrench_jag.png', '$color Jag');
-			");		
+			");	
 		}
+		
+		$weapons = array(
+			'claidheamohmor',
+			'back_scratcher',
+			'boston_basher',
+			'steel_fists',
+			'amputator',
+			'tf_projectile_healing_bolt',
+			'ullapool_caber',
+			'lochnload',
+			'brassbeast',
+			'bear_claws',
+			'candy_cane',
+			'wrench_jag'
+		);
+
+		$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE game = '$game'");
+		while ($rowdata = $db->fetch_row($result))
+		{ 
+			array_push($tfservers, $db->escape($rowdata[0]));
+		}
+		if (count($tfservers) > 0)
+		{
+			$serverstring = implode (',', $tfservers);
+			foreach ($weapons as $weapon) {
+				$db->query("UPDATE hlstats_Weapons SET `kills` = `kills` + (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = '$weapon' AND `serverId` IN ($serverstring))),0) WHERE `code` = '$weapon'");
+			}
+		}
+
 	}
 	
 	$db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
