@@ -52,7 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 ?>
 		<div style="float:left;margin-left:40px;">
-		<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" name="auth">
+		<form method="post" name="auth">
 	
 			<table class="data-table">
 				<tr style="vertical-align:middle;">
