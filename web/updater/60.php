@@ -7,6 +7,25 @@
 	$dbversion = 60;
 	$version = "1.6.12";
 
+	$insgames = array();
+	$result = $db->query("SELET code FROM hlstats_Games WHERE realgame = 'insmod'");
+	while ($rowdata = $db->fetch_row($result))
+	{
+		array_push($insgames, $db->escape($rowdata[0]));
+	}
+	
+	foreach ($insgames as $game)
+	{
+		$db->query("
+			INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES		
+				('$game', 'captured_a', 0, 5, '', 'Captured Objective A', '', '', '1', ''),
+				('$game', 'captured_b', 0, 5, '', 'Captured Objective B', '', '', '1', ''),
+				('$game', 'captured_c', 0, 5, '', 'Captured Objective C', '', '', '1', ''),
+				('$game', 'captured_d', 0, 5, '', 'Captured Objective D', '', '', '1', ''),
+				('$game', 'captured_e', 0, 5, '', 'Captured Objective E', '', '', '1', '');
+		");
+	}
+	
 	$tfgames = array();
 	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
 	while ($rowdata = $db->fetch_row($result))
