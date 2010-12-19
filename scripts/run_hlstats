@@ -310,7 +310,7 @@ function get_status {
 	if [ $1 ]; then
 		local PID=`get_pid ${1}`
 		if [ "${PID}" != "" ]; then
-			kill -0 ${PID}
+			kill -0 ${PID} &> /dev/null
 			if [ $? -eq 0 ]; then
 				return 0
 			else
