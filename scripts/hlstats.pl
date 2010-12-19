@@ -1672,7 +1672,13 @@ sub readDatabaseConfig()
 	if ($g_geoip_binary > 0 && $geotell == -1) {
 		my $geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
 		if (-r $geoipfile) {
-			$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+			eval "use Geo::IP::PurePerl"; my $hasGeoIP = $@ ? 0 : 1;
+			if ($hasGeoIP) {
+				$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+			} else {
+				&printEvent("ERROR", "GeoIP method set to binary file lookup but Geo::IP::PurePerl module NOT FOUND", 1);
+				$g_gi = undef;
+			}
 		} else {
 			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
 			$g_gi = undef;
