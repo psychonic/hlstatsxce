@@ -36,7 +36,9 @@
 				('W', '$game', 'brassbeast', 'Brass Beast', 'Brass Beast kills'),
 				('W', '$game', 'bear_claws', 'Warrior''s Spirit', 'Warrior''s Spirit kills'),
 				('W', '$game', 'candy_cane', 'Candy Cane', 'Candy Cane kills'),
-				('W', '$game', 'wrench_jag', 'Jag', 'Jag kills');
+				('W', '$game', 'wrench_jag', 'Jag', 'Jag kills'),
+				('W', '$game', 'iron_curtain', 'Iron Curtain', 'Iron Curtain kills'),
+				('W', '$game', 'headtaker', 'Horseless Headless Horseman''s Headtaker', 'Horseless Headless Horseman''s Headtaker kills');
 			;
 		");
 		
@@ -53,7 +55,9 @@
 				('$game', 'brassbeast', 'The Brass Beast', 1.0),
 				('$game', 'bear_claws', 'The Warrior''s Spirit', 2.0),
 				('$game', 'candy_cane', 'The Candy Cane', 2.0),
-				('$game', 'wrench_jag', 'The Jag', 2.0);
+				('$game', 'wrench_jag', 'The Jag', 2.0),
+				('$game', 'iron_curtain', 'The Iron Curtain', 1.0),
+				('$game', 'headtaker', 'The Horseless Headless Horseman''s Headtaker', 2.0);
 		");
 		
 		for ($ribbon_count = 1; $ribbon_count <= 3; $ribbon_count++) {
@@ -86,7 +90,9 @@
 					('brassbeast', $awardCount, 0, '$game', '" . $ribbon_count . "_brassbeast.png', '$color Brass Beast'),
 					('bear_claws', $awardCount, 0, '$game', '" . $ribbon_count . "_bear_claws.png', '$color Warrior''s Spirit'),
 					('candy_cane', $awardCount, 0, '$game', '" . $ribbon_count . "_candy_cane.png', '$color Candy Cane'),
-					('wrench_jag', $awardCount, 0, '$game', '" . $ribbon_count . "_wrench_jag.png', '$color Jag');
+					('wrench_jag', $awardCount, 0, '$game', '" . $ribbon_count . "_wrench_jag.png', '$color Jag'),
+					('iron_curtain', $awardCount, 0, '$game', '" . $ribbon_count . "_iron_curtain.png', '$color Iron Curtain'),
+					('headtaker', $awardCount, 0, '$game', '" . $ribbon_count . "_headtaker.png', '$color Horseless Headless Horseman''s Headtaker');
 			");	
 		}
 		
@@ -102,7 +108,9 @@
 			'brassbeast',
 			'bear_claws',
 			'candy_cane',
-			'wrench_jag'
+			'wrench_jag',
+			'iron_curtain',
+			'headtaker'
 		);
 
 		$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE game = '$game'");
