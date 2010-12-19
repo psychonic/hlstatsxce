@@ -19,7 +19,8 @@
 	
 		$db->query("
 			INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
-				('$game', 'steak', 0, 0, '', 'Ate a Buffalo Steak Sandvich', '1', '0', '0', '0');
+				('$game', 'steak', 0, 0, '', 'Ate a Buffalo Steak Sandvich', '1', '0', '0', '0'),
+				('$game', 'madmilk', 0, 0, '', 'Mad Milk', '0', '1', '0', '0');
 		")
 		
 		$db->query("
@@ -38,7 +39,8 @@
 				('W', '$game', 'candy_cane', 'Candy Cane', 'Candy Cane kills'),
 				('W', '$game', 'wrench_jag', 'Jag', 'Jag kills'),
 				('W', '$game', 'iron_curtain', 'Iron Curtain', 'Iron Curtain kills'),
-				('W', '$game', 'headtaker', 'Horseless Headless Horseman''s Headtaker', 'Horseless Headless Horseman''s Headtaker kills');
+				('W', '$game', 'headtaker', 'Horseless Headless Horseman''s Headtaker', 'Horseless Headless Horseman''s Headtaker kills'),
+				('P', '$game', 'madmilk', 'Mad Milk', 'Mad Milk hits');
 			;
 		");
 		
@@ -92,7 +94,8 @@
 					('candy_cane', $awardCount, 0, '$game', '" . $ribbon_count . "_candy_cane.png', '$color Candy Cane'),
 					('wrench_jag', $awardCount, 0, '$game', '" . $ribbon_count . "_wrench_jag.png', '$color Jag'),
 					('iron_curtain', $awardCount, 0, '$game', '" . $ribbon_count . "_iron_curtain.png', '$color Iron Curtain'),
-					('headtaker', $awardCount, 0, '$game', '" . $ribbon_count . "_headtaker.png', '$color Horseless Headless Horseman''s Headtaker');
+					('headtaker', $awardCount, 0, '$game', '" . $ribbon_count . "_headtaker.png', '$color Horseless Headless Horseman''s Headtaker'),
+					('madmilk', $awardCount, 0, '$game', '" . $ribbon_count . "_mad_milk.png', '$color Mad Milk');
 			");	
 		}
 		
