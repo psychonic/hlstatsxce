@@ -158,9 +158,8 @@ sub printNotice
 
 sub track_hlstats_trend
 {
-	my $new_timestamp  = time();
 	if ($last_trend_timestamp > 0) {
-		if ($last_trend_timestamp+299 < $new_timestamp) {
+		if ($last_trend_timestamp+299 < $ev_daemontime) {
 			my $result = &doQuery("SELECT COUNT(*), a.game FROM hlstats_Players a INNER JOIN (SELECT game FROM hlstats_Servers GROUP BY game) AS b ON a.game=b.game GROUP BY a.game");
 			my $insvalues = "";
 			while ( my($total_players, $game) = $result->fetchrow_array) {
@@ -204,11 +203,11 @@ sub track_hlstats_trend
 						VALUES $insvalues
 				");
 			}
-			$last_trend_timestamp = $new_timestamp;
+			$last_trend_timestamp = $ev_daemontime;
 			&::printEvent("HLSTATSX", "Insert new server trend timestamp", 1);
 		}
 	} else {
-		$last_trend_timestamp = $new_timestamp;
+		$last_trend_timestamp = $ev_daemontime;
 	}  
 }
 
@@ -261,7 +260,7 @@ sub buildEventInsertData
 	{
 		$g_eventtable_data{$table}{queue} = [];
 		$g_eventtable_data{$table}{nullallowed} = 0;
-		$g_eventtable_data{$table}{lastflush} = time();
+		$g_eventtable_data{$table}{lastflush} = $ev_daemontime;
 		$g_eventtable_data{$table}{query} = "
 		INSERT$insertType INTO
 			hlstats_Events_$table
@@ -333,7 +332,7 @@ sub flushEventTable
 	}
 	$query =~ s/,$//;
 	execNonQuery($query);
-	$g_eventtable_data{$table}{lastflush} = time();
+	$g_eventtable_data{$table}{lastflush} = $ev_daemontime;
 	$g_eventtable_data{$table}{queue} = [];
 }
 
@@ -534,7 +533,7 @@ sub rewardTeam
 		if (($g_servers{$s_addr}->{ignore_bots} == 1) && (($player->{is_bot} == 1) || ($player->{userid} <= 0))) {
 			$desc = "(IGNORED) BOT: ";
 		} else {
-			if (($ev_unixtime - $player_timestamp < 180) && ($player_team eq $team)) {
+			if ($player_team eq $team) {
 				if ($g_debug > 2) {
 					&printNotice("Rewarding " . $player->getInfoString() . " with \"$reward\" skill for action \"$actionid\"");
 				}
@@ -1266,7 +1265,7 @@ sub getPlayerInfo
 		
 		if (&botidcheck($uniqueid)) {
 			$md5 = Digest::MD5->new;
-			$md5->add(time());
+			$md5->add($ev_daemontime);
 			$md5->add($s_addr);
 			$uniqueid = "BOT:" . $md5->hexdigest;
 			$bot = 1;
@@ -1281,7 +1280,7 @@ sub getPlayerInfo
 		my $bot      = 0;
 		if (&botidcheck($uniqueid)) {
 			$md5 = Digest::MD5->new;
-			$md5->add(time());
+			$md5->add($ev_daemontime);
 			$md5->add($s_addr);
 			$uniqueid = "BOT:" . $md5->hexdigest;
 			$bot = 1;
@@ -1673,7 +1672,13 @@ sub readDatabaseConfig()
 	if ($g_geoip_binary > 0 && $geotell == -1) {
 		my $geoipfile = "$opt_libdir/GeoLiteCity/GeoLiteCity.dat";
 		if (-r $geoipfile) {
-			$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+			eval "use Geo::IP::PurePerl"; my $hasGeoIP = $@ ? 0 : 1;
+			if ($hasGeoIP) {
+				$g_gi = Geo::IP::PurePerl->open($geoipfile, "GEOIP_STANDARD");
+			} else {
+				&printEvent("ERROR", "GeoIP method set to binary file lookup but Geo::IP::PurePerl module NOT FOUND", 1);
+				$g_gi = undef;
+			}
 		} else {
 			&printEvent("ERROR", "GeoIP method set to binary file lookup but $geoipfile NOT FOUND", 1);
 			$g_gi = undef;
@@ -1844,6 +1849,7 @@ $g_debug = 0 if ($g_debug < 0);
 my ($sec,$min,$hour,$mday,$mon,$year) = localtime(time());
 $ev_timestamp = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 $ev_unixtime  = time();
+$ev_daemontime = $ev_unixtime;
 
 # Startup
 
@@ -1939,16 +1945,17 @@ while ($loop = &getLine()) {
     my ($sec,$min,$hour,$mday,$mon,$year) = localtime(time());
     $ev_timestamp = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 	$ev_unixtime  = time();
+	$ev_daemontime = $ev_unixtime; #time()
 
 	if ($g_stdin) {
 		$s_output = $loop;
 		if (($import_logs_count > 0) && ($import_logs_count % 500 == 0)) {
-			$parse_time = time() - $start_parse_time;
+			$parse_time = $ev_unixtime - $start_parse_time;
 			if ($parse_time == 0) {
 				$parse_time++;
 			}
 			print ". [".($parse_time)." sec (".sprintf("%.3f", (500 / $parse_time)).")]\n";
-			$start_parse_time = time();
+			$start_parse_time = $ev_unixtime;
 		}
 	} else {
 		if(IO::Select->new($s_socket)->can_read(2)) {  # 2 second timeout
@@ -2306,6 +2313,10 @@ while ($loop = &getLine()) {
 			if ($g_timestamp) {
 				$ev_timestamp = "$ev_year-$ev_month-$ev_day $ev_time";
 				$ev_unixtime  = $ev_remotetime;
+				if ($g_stdin)
+				{
+					$ev_daemontime = $ev_unixtime;
+				}
 			}
 		} else {
 			&printEvent(998, "MALFORMED DATA: " . $s_output);
@@ -2824,7 +2835,7 @@ while ($loop = &getLine()) {
 								ipaddress => $ipAddr,
 								name => $p_name,
 								server => $s_addr,
-								timestamp => time()
+								timestamp => $ev_daemontime
 							};
 						}   
 					} else {
@@ -3425,7 +3436,7 @@ EOT
 			}
 		}
 		
-		if (!$g_stdin && defined($g_servers{$s_addr}) && time() > $g_servers{$s_addr}->{next_plyr_flush}) {
+		if (!$g_stdin && defined($g_servers{$s_addr}) && $ev_daemontime > $g_servers{$s_addr}->{next_plyr_flush}) {
 			&printEvent("MYSQL", "Flushing player updates to database...",1);
 			if ($g_servers{$s_addr}->{"srv_players"}) {
 				while ( my($pl, $player) = each(%{$g_servers{$s_addr}->{"srv_players"}}) ) {
@@ -3436,7 +3447,7 @@ EOT
 			}
 			&printEvent("MYSQL", "Flushing player updates to database is complete.",1);
 			
-			$g_servers{$s_addr}->{next_plyr_flush} = time() + 15+int(rand(15));
+			$g_servers{$s_addr}->{next_plyr_flush} = $ev_daemontime + 15+int(rand(15));
 		}
 
 		if (($g_stdin == 0) && defined($g_servers{$s_addr})) {
@@ -3465,7 +3476,7 @@ EOT
 
 	while( my($server) = each(%g_servers))
 	{	
-		if($g_servers{$server}->{next_timeout}<$ev_unixtime)
+		if($g_servers{$server}->{next_timeout}<$ev_daemontime)
 		{
 			#print "checking $ev_unixtime\n";
 			# Clean up
@@ -3483,26 +3494,26 @@ EOT
 					#}  
 					my $userid = $player->{userid};
 					my $uniqueid = $player->{uniqueid};
-					if ( ($ev_unixtime - $player->{timestamp}) > $timeout ) {
+					if ( ($ev_daemontime - $player->{timestamp}) > $timeout ) {
 						#printf("%s - %s %s\n",$server, $player->{userid}, $player->{uniqueid});
 						# we delete any player who is inactive for over $timeout sec
 						# - they probably disconnected silently somehow.
 						if (($player->{is_bot} == 0) || ($g_stdin)) {
-							&printEvent(400, "Auto-disconnecting " . $player->getInfoString() ." for idling (" . ($ev_unixtime - $player->{timestamp}) . " sec) on server (".$server.")");
+							&printEvent(400, "Auto-disconnecting " . $player->getInfoString() ." for idling (" . ($ev_daemontime - $player->{timestamp}) . " sec) on server (".$server.")");
 							removePlayer($server, $userid, $uniqueid);
 						}
 					}
 				}
 			}
-			$g_servers{$server}->{next_timeout}=$ev_unixtime+30+rand(30);
+			$g_servers{$server}->{next_timeout}=$ev_daemontime+30+rand(30);
 		}
 		
-		if (time() > $g_servers{$server}->{next_flush}
+		if ($ev_daemontime > $g_servers{$server}->{next_flush}
 			&& $g_servers{$server}->{needsupdate}
 			)
 		{
 			$g_servers{$server}->flushDB();
-			$g_servers{$server}->{next_flush} = time() + 20;
+			$g_servers{$server}->{next_flush} = $ev_daemontime + 20;
 		}
 	}
 
@@ -3527,7 +3538,7 @@ EOT
 		
 		while( my($table) = each(%g_eventtable_data))
 		{
-			if ($g_eventtable_data{$table}{lastflush} + 30 < time())
+			if ($g_eventtable_data{$table}{lastflush} + 30 < $ev_daemontime)
 			{
 				flushEventTable($table);
 			}
