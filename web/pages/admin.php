@@ -1197,12 +1197,6 @@ if (!$selTask || !$admintasks[$selTask])
 <?php
 		}
 	}
-
-	$current_release = trim(file_get_contents('http://master.hlxcommunity.com/updatecheck/'));
-	$oncurrent = true;
-	if ($current_release && ($current_release != $g_options['version'])) {
-		$oncurrent = false;
-	}
 ?>
 	<li><strong>Version Check</strong><br />
 	<div id="updatecheck">Checking for update... <img src="<?php echo IMAGE_PATH."/../css/spinner.gif"; ?>" /></div>

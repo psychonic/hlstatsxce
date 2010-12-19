@@ -44,12 +44,11 @@ if ( !defined('IN_HLSTATS') )
 ?>
 <div style="clear:both;"></div>
 <div id="footer">
-	<a href="http://www.hlxcommunity.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/footer-small.png" alt="HLstatsX Community Edition" border="0" /></a><br/>
-	an <a href="http://www.interwavestudios.com" target="_blank" class="footer_link">InterWave Studios</a> community project
+	<a href="http://www.hlxce.com" target="_blank"><img src="<?php echo IMAGE_PATH; ?>/footer-small.png" alt="HLstatsX Community Edition" border="0" /></a>
 </div>
 <br />
 <div class="fSmall" style="text-align:center;">
-	Generated in real-time by <a href="http://www.hlxcommunity.com" target="_blank">HLstatsX Community Edition <?php echo $g_options['version']; ?></a>
+	Generated in real-time by <a href="http://www.hlxce.com" target="_blank">HLstatsX Community Edition <?php echo $g_options['version']; ?></a>
 	<br />
 	All images are copyrighted by their respective owners.
 	
