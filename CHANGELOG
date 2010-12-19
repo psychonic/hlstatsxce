@@ -1,3 +1,16 @@
+HLstatsX Community Edition 1.6.12
+December 19, 2010
++ GameSupport: Added TF2 Australian Christmas support and missing weapons/actions (thorrr, psychonic, Packhead)
+	(requires SuperLogs:TF2 for some weapons to track independently)
+? Daemon: Cleaned up some output from run_hlstats (#1336) (Packhead)
+! Daemon: Fixed a local-variable being declared outside a function (#1306) (Packhead)
+! Plugin: Fixed a missing handle check (#1307) (psychonic)
+! Web: Fixed zoom out button being covered up by Google logo on map page (#1317) (Azelphur)
+! Web: Fixed hidden clans appearing on ingame browser (#1309) (Packhead)
+! Web: Fixed incorrectly named TF2 ribbon images (#1319) (Packhead)
+
+
+
 HLstatsX Community Edition 1.6.11
 October 10, 2010
 
