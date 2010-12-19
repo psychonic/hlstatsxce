@@ -179,7 +179,7 @@ sub set
 	if (defined($self->{$key}))
 	{
 		if ($no_updatetime == 0) {
-			$self->{timestamp} = $::ev_unixtime;
+			$self->{timestamp} = $::ev_daemontime;
 		}
 		
 		if ($self->{$key} eq $value)
@@ -844,7 +844,7 @@ sub updateTimestamp
 	my ($self, $timestamp) = @_;
 	$timestamp = $::ev_unixtime
 		unless ($timestamp);
-	$self->{timestamp} = $timestamp;
+	$self->{timestamp} = $::ev_daemontime;
 	return $timestamp;
 }
 
