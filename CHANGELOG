@@ -5,9 +5,10 @@ December 19, 2010
 ? Daemon: Cleaned up some output from run_hlstats (#1336) (Packhead)
 ! Daemon: Fixed a local-variable being declared outside a function (#1306) (Packhead)
 ! Plugin: Fixed a missing handle check (#1307) (psychonic)
-! Web: Fixed zoom out button being covered up by Google logo on map page (#1317) (Azelphur)
 ! Web: Fixed hidden clans appearing on ingame browser (#1309) (Packhead)
+! Web: Fixed zoom out button being covered up by Google logo on map page (#1317) (Azelphur)
 ! Web: Fixed incorrectly named TF2 ribbon images (#1319) (Packhead)
+! Web: Fixed admin login form not working correctly in certain situations (#1340) (octo-dhd)
 
 
 
