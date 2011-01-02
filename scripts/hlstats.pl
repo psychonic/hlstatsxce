@@ -175,7 +175,7 @@ sub track_hlstats_trend
 				}
 				$insvalues .= "
 					(
-						$new_timestamp,
+						$ev_daemontime,
 						'".&quoteSQL($game)."',
 						$total_players,
 						$total_kills,
