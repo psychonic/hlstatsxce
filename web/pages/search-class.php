@@ -232,7 +232,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 					ON
 						hlstats_Players.playerId = hlstats_PlayerNames.playerId
 					WHERE
-						hlstats_PlayerNames.name LIKE '%$sr_query%'
+						hlstats_Games.hidden = '0'
+						AND hlstats_PlayerNames.name LIKE '%$sr_query%'
 						$andgame
 				");
 				list($numitems) = $db->fetch_row($resultCount);
