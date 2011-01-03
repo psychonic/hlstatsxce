@@ -1209,6 +1209,11 @@ if (!$selTask || !$admintasks[$selTask])
 </tr>
 
 </table>
+
+<?php
+if (!$selTask || !$admintasks[$selTask])
+{
+?>
 <script type="text/javascript">
 /* <![CDATA[ */
 
@@ -1248,5 +1253,6 @@ if (!$selTask || !$admintasks[$selTask])
 /* ]]> */
 </script>
 <?php
+}
 echo $footerscript;
 ?>
