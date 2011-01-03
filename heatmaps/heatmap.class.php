@@ -248,37 +248,38 @@ class Heatmap {
 			$num_kills = ($num_kills) ? $num_kills : 1;
 
 			show::Event("CREATE", "Game: $code, Map: $map, Kills: $num_kills", 1);
-			$opacity = intval((250 / $num_kills) * 100);
+			$opacity = intval((500 / $num_kills) * 100);
+
+      
+      if ($opacity > 40) $opacity = 40;
+      if ($opacity < 1) $opacity = 2;
 
 
-			// This part still need some work, not finished
-			if ($num_kills < 100000) {
-				$opacity = $opacity * 7;
-				if ($opacity > 40) $opacity = 40;
-				if ($opacity < 1) $opacity = 2;
-			} else {
-				if ($opacity > 40) $opacity = 40;
-				if ($opacity < 1) $opacity = 2;
-			}
+      $max_red = 0;
+      $i = 0;
+      while ($row = DB::getAssoc($result)) {
+              if ($row['eventTime'] < $firstdata) $firstdata = $row['eventTime'];
 
-			$i = 0;
-			while ($row = DB::getAssoc($result)) {
-				if ($row['eventTime'] < $firstdata) $firstdata = $row['eventTime'];
+              if ($mapinfo[$code][$map]['flipx']) $row['pos_x'] = $row['pos_x'] * -1;
+              if ($mapinfo[$code][$map]['flipy']) $row['pos_y'] = $row['pos_y'] * -1;
 
-				if ($mapinfo[$code][$map]['flipx']) $row['pos_x'] = $row['pos_x'] * -1;
-				if ($mapinfo[$code][$map]['flipy']) $row['pos_y'] = $row['pos_y'] * -1;
+              $x = ($row['pos_x'] + $mapinfo[$code][$map]['xoffset']) / $mapinfo[$code][$map]['scale'];
+              $y = ($row['pos_y'] + $mapinfo[$code][$map]['yoffset']) / $mapinfo[$code][$map]['scale'];
 
-				$x = ($row['pos_x'] + $mapinfo[$code][$map]['xoffset']) / $mapinfo[$code][$map]['scale'];
-				$y = ($row['pos_y'] + $mapinfo[$code][$map]['yoffset']) / $mapinfo[$code][$map]['scale'];
-			
-				
-				// Rotate the image
-				if ($rotate) {
-					self::printHeatDot($overlay, $brush, $y - ($brushsize / 2), $x - ($brushsize / 2), 0, 0, $brushsize, $brushsize, $opacity);
-				} else {
-					self::printHeatDot($overlay, $brush, $x - ($brushsize / 2), $y - ($brushsize / 2), 0, 0, $brushsize, $brushsize, $opacity);
-				}
-			}
+              $rgb = imagecolorat($overlay, $x, $y);
+              $colors = imagecolorsforindex($overlay, $rgb);
+
+              if ($colors['red'] > $max_red) $max_red = $colors['red'];
+
+              if ($colors['red'] <= 200) {
+                      // Rotate the image
+                      if ($rotate) {
+                              self::printHeatDot($overlay, $brush, $y - ($brushsize / 2), $x - ($brushsize / 2), 0, 0, $brushsize, $brushsize, $opacity);
+                      } else {
+                              self::printHeatDot($overlay, $brush, $x - ($brushsize / 2), $y - ($brushsize / 2), 0, 0, $brushsize, $brushsize, $opacity);
+                      }
+              }
+      }
 
 			imagedestroy($brush);
 
