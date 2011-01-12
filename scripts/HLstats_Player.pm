@@ -86,6 +86,9 @@ sub new
 	$self->{headshots}         = 0;
 	$self->{shots}             = 0;
 	$self->{hits}              = 0;
+	$self->{teamkills}         = 0;
+	$self->{kill_streak}	   = 0;
+	$self->{death_streak}	   = 0;
 	
 	$self->{auto_command}      = "";
 	$self->{auto_type}         = "";
@@ -124,8 +127,6 @@ sub new
 	$self->{last_exit_build}  = 0;
 	$self->{last_team_change}  = "";
 	$self->{deaths_in_a_row}   = 0;
-	$self->{kill_streak}	   = 0;
-	$self->{death_streak}	   = 0;
 	$self->{trackable}         = 0;
 	$self->{needsupdate}       = 0;
 	
@@ -311,7 +312,7 @@ sub setUniqueId
 		# An existing player. Get their skill rating.
 		my $query = "
 			SELECT
-				skill, kills, displayEvents, kill_streak, death_streak, flag
+				skill, kills, displayEvents, flag
 			FROM
 				hlstats_Players
 			WHERE
@@ -319,7 +320,7 @@ sub setUniqueId
 		";
 		my $result = &::doQuery($query);
 		if ($result->rows > 0) {
-			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{kill_streak},$self->{death_streak},$self->{flag}) = $result->fetchrow_array;
+			($self->{skill}, $self->{total_kills}, $self->{display_events},$self->{flag}) = $result->fetchrow_array;
 		} else {
 			# Have record in hlstats_PlayerUniqueIds but not in hlstats_Players
 			$self->insertPlayer($tempPlayerId);
@@ -574,6 +575,7 @@ sub flushDB
 	my $headshots = $self->{headshots};
 	my $shots     = $self->{shots};
 	my $hits      = $self->{hits};
+	my $teamkills = $self->{teamkills};
 	
 	my $team          = $self->{team};
 	my $map_kills     = $self->{map_kills};
@@ -671,13 +673,14 @@ sub flushDB
 				headshots=headshots + ?,
 				shots=shots + ?,
 				hits=hits + ?,
+				teamkills=teamkills + ?,
 				last_event=?,
 				hideranking=1
 			WHERE
 				playerId=?
 		";
 		my @vals = ($add_connect_time, $name, $kills, $deaths, $suicides, $headshots, 
-			$shots, $hits, $::ev_unixtime, $playerid);
+			$shots, $hits, $teamkills, $::ev_unixtime, $playerid);
 		&::execCached("player_flushdb_player_1", $query, @vals);
 	} else {
 		# Update player details
@@ -695,18 +698,19 @@ sub flushDB
 				headshots=headshots + ?,
 				shots=shots + ?,
 				hits=hits + ?,
+				teamkills=teamkills + ?
 				last_event=?,
 				last_skill_change=?,
-				death_streak=?,
-				kill_streak=?,
+				death_streak=IF(?>death_streak,?,death_streak),
+				kill_streak=IF(?>kill_streak,?,kill_streak),
 				hideranking=IF(hideranking=3,0,hideranking),
 				activity = 100
 			WHERE
 				playerId=?
 		";
 		my @vals = ($add_connect_time, $name, $clan, $kills, $deaths, $suicides, $skill, 
-			$headshots, $shots, $hits, $::ev_unixtime, $last_skill_change, $death_streak,
-			$kill_streak, $playerid);
+			$headshots, $shots, $hits, $teamkills, $::ev_unixtime, $last_skill_change, $death_streak,
+			$death_streak, $kill_streak, $kill_streak, $playerid);
 		&::execCached("player_flushdb_player_2", $query, @vals);
 
 		if ($::g_stdin == 0 || $::g_timestamp > 0) {
@@ -723,6 +727,9 @@ sub flushDB
 					headshots=headshots + ?,
 					shots=shots + ?,
 					hits=hits + ?,
+					teamkills=teamkills + ?,
+					death_streak=IF(?>death_streak,?,death_streak),
+					kill_streak=IF(?>kill_streak,?,kill_streak),
 					skill_change=skill_change + ?
 				WHERE
 					playerId=?
@@ -730,8 +737,8 @@ sub flushDB
 					AND game=?
 			";
 			my @vals = ($add_connect_time, $kills, $deaths, $suicides, $skill, $headshots,
-				$shots, $hits, $add_history_skill, $playerid, $date, 
-				$::g_servers{$srv_addr}->{game});
+				$shots, $hits, $teamkills, $death_streak, $death_streak, $kill_streak,
+				$kill_streak, $add_history_skill, $playerid, $date, $::g_servers{$srv_addr}->{game});
 			&::execCached("player_flushdb_history_2", $query, @vals);
 		}
 	}
@@ -781,6 +788,7 @@ sub flushDB
 	$self->set("headshots", 0, 1);
 	$self->set("shots",     0, 1);
 	$self->set("hits",      0, 1);
+	$self->set("teamkills", 0, 1);
 	
 	if (($is_bot == 1) && ($::g_servers{$server_address}->{ignore_bots} == 1)) {
 		$skill        = 0;
