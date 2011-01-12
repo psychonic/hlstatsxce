@@ -105,6 +105,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			IFNULL(headshots/kills, '-') AS hpk,
 			hlstats_Players.shots,
 			hlstats_Players.hits,
+			hlstats_Players.teamkills,
 			hlstats_Players.kill_streak,
 			hlstats_Players.death_streak,
 			IFNULL(ROUND((hits / shots * 100), 1), 0.0) AS acc,
@@ -321,16 +322,34 @@ For support and installation notes visit http://www.hlxcommunity.com
 			?></td>
 		</tr>
 		<tr class="bg1">
+			<td style="width:45%;" class="fSmall">Teammate Kills:</td>
+			<td colspan="2" style="width:55%;" class="fSmall"><?php
+				echo number_format($playerdata['teamkills']);
+				$db->query("
+					SELECT
+						COUNT(*)
+					FROM
+						hlstats_Events_Teamkills
+					LEFT JOIN hlstats_Servers ON
+						hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
+					WHERE
+						hlstats_Servers.game='$game' AND killerId='$player'
+				");
+				list($realteamkills) = $db->fetch_row();
+				echo ' ('.number_format($realteamkills).')';
+			?></td>
+		</tr>
+		<tr class="bg2">
 			<td class="fSmall">Longest Kill Streak:</td>
 			<td colspan="2" class="fSmall"><?php
 				echo number_format($playerdata['kill_streak']);
 			?></td>
-		<tr class="bg2">
+		<tr class="bg1">
 			<td class="fSmall">Longest Death Streak:</td>
 			<td colspan="2" class="fSmall"><?php
 				echo number_format($playerdata['death_streak']);
 			?></td>
-		<tr class="bg1">
+		<tr class="bg2">
 			<td class="fSmall">Total Connection Time:</td>
 			<td colspan="2" class="fSmall"><?php
 				echo timestamp_to_str($playerdata['connection_time']);
