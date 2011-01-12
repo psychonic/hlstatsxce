@@ -1074,7 +1074,7 @@ sub doEvent_Frag
 						$victim->set("death_streak", $victim->{"deaths_in_a_row"});
 					}
 
-					# we don't need to update the kills death_streak since it was done when he is a victim	
+					# we don't need to update the killer's death_streak since it was done when he is a victim	
 					$killer->{"deaths_in_a_row"} = 0;
 					
 					&endKillStreak($victim);
@@ -1292,6 +1292,7 @@ sub doEvent_Frag
 
 				$killer->increment("skill", $tk_penalty);
 				$killer->increment("session_skill", $tk_penalty);
+				$killer->increment('teamkills');
 
 				$k_name = $killer->{name};
 				$k_skill = $killer->{skill};
