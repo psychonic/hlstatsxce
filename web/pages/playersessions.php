@@ -108,7 +108,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			(
 				'eventTime',
 				'Date',
-				'width=17'
+				'width=11'
 			),
 			new TableColumn
 			(
@@ -126,44 +126,56 @@ For support and installation notes visit http://www.hlxcommunity.com
 			(
 				'connection_time',
 				'Time',
-				'width=15&align=right&type=timestamp'
+				'width=13&align=right&type=timestamp'
 			),
 			new TableColumn
 			(
 				'kills',
 				'Kills',
-				'width=8&align=right'
+				'width=7&align=right'
 			),
 			new TableColumn
 			(
 				'deaths',
 				'Deaths',
-				'width=8&align=right'
+				'width=7&align=right'
 			),
 			new TableColumn
 			(
 				'kpd',
 				'K:D',
-				'width=8&align=right'
+				'width=7&align=right'
 			),
 			new TableColumn
 			(
 				'headshots',
-				'Headshots',
-				'width=8&align=right'
+				'HS',
+				'width=7&align=right'
 			),
 			new TableColumn
 			(
 				'hpk',
 				'HS:K',
-				'width=8&align=right'
+				'width=7&align=right'
 			),
 			new TableColumn
 			(
 				'suicides',
 				'Suicides',
-				'width=8&align=right'
-			)
+				'width=7&align=right'
+			),
+			new TableColumn
+			(
+				'teamkills',
+				'TKs',
+				'width=7&align=right'
+			),
+			new TableColumn
+			(
+				'kill_streak',
+				'Kill Strk',
+				'width=7&align=right'
+			),
 		),
 		'eventTime',
 		'eventTime',
@@ -188,6 +200,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Players_History.connection_time,
 			ROUND(hlstats_Players_History.kills/(IF(hlstats_Players_History.deaths = 0, 1, hlstats_Players_History.deaths)), 2) AS kpd,
 			ROUND(hlstats_Players_History.headshots/(IF(hlstats_Players_History.kills = 0, 1, hlstats_Players_History.kills)), 2) AS hpk,
+			hlstats_Players_History.teamkills,
+			hlstats_Players_History.kill_streak,
+			hlstats_Players_History.death_streak,
 			hlstats_Players_History.skill_change AS last_skill_change
 		FROM
 			hlstats_Players_History

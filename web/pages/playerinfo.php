@@ -107,6 +107,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			IFNULL(headshots / kills, '-') AS hpk,
 			hlstats_Players.shots,
 			hlstats_Players.hits,
+			hlstats_Players.teamkills,
 			IFNULL(ROUND((hits / shots * 100), 1), 0) AS acc,
 			CONCAT(hlstats_Clans.name) AS clan_name,
 			activity
@@ -169,7 +170,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->query
 	("
 		SELECT
-			COUNT(*)
+			COUNT(hlstats_Events_Frags.killerId)
 		FROM
 			hlstats_Events_Frags
 		LEFT JOIN
@@ -185,7 +186,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->query
 	("
 		SELECT
-			COUNT(*)
+			COUNT(hlstats_Events_Frags.killerId)
 		FROM
 			hlstats_Events_Frags
 		LEFT JOIN
@@ -200,7 +201,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->query
 	("
 		SELECT
-			COUNT(*)
+			COUNT(hlstats_Events_Frags.victimId)
 		FROM
 			hlstats_Events_Frags
 		LEFT JOIN
@@ -212,6 +213,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 			AND hlstats_Events_Frags.victimId = '$player'
 	");
 	list($realdeaths) = $db->fetch_row();
+	$db->query
+	("
+		SELECT
+			COUNT(hlstats_Events_Teamkills.killerId)
+		FROM
+			hlstats_Events_Teamkills
+		LEFT JOIN
+			hlstats_Servers
+		ON
+			hlstats_Servers.serverId = hlstats_Events_Teamkills.serverId
+		WHERE
+			hlstats_Servers.game = '$game'
+			AND hlstats_Events_Teamkills.killerId = '$player'
+	");
+	list($realteamkills) = $db->fetch_row();
 	if(!isset($_GET['killLimit']))
 		$killLimit = 5;
 	else 
