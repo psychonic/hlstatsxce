@@ -42,7 +42,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$edlist = new EditList("awardId", "hlstats_Awards", "award");
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("awardType", "Type", 0, true, "hidden", "W");
-	$edlist->columns[] = new EditListColumn("code", "Weapon", 0, true, "select", "hlstats_Weapons.name/code/game='$gamecode';latency/*Latency;mostkills/*Most Kills;bonuspoints/*Bonus Points;suicide/*Suicides;teamkills/*Team Kills;allsentrykills/*All Sentry Kills (TF2)");
+	$edlist->columns[] = new EditListColumn("code", "Weapon", 0, true, "select", "hlstats_Weapons.name/code/game='$gamecode';latency/*Latency;mostkills/*Most Kills;bonuspoints/*Bonus Points;suicide/*Suicides;teamkills/*Team Kills;connectiontime/*Connection Time;killstreak/*Kill Streak;deathstreak/*Death Streak;allsentrykills/*All Sentry Kills (TF2)");
 	$edlist->columns[] = new EditListColumn("name", "Award Name", 20, true, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("verb", "Verb Plural", 20, true, "text", "", 64);
 	

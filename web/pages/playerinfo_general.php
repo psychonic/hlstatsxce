@@ -625,25 +625,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 					</td>
 				</tr>
 				<tr class="bg1">
-					<td style="width:45%;">Teammate Kills:*</td>
+					<td style="width:45%;">Teammate Kills:</td>
 					<td style="width:55%;" colspan="2">
 						<?php
-							$db->query
-							("
-								SELECT
-									COUNT(*)
-								FROM
-									hlstats_Events_Teamkills
-								LEFT JOIN
-									hlstats_Servers
-								ON
-									hlstats_Servers.serverId = hlstats_Events_Teamkills.serverId
-								WHERE
-									hlstats_Servers.game = '$game'
-									AND hlstats_Events_Teamkills.killerId = '$player'
-							");
-							list($playerdata['teamkills']) = $db->fetch_row();
-							echo $playerdata['teamkills'];
+							echo number_format($playerdata['teamkills']);
+							echo ' ('.number_format($realteamkills).'*)';
 						?>
 					</td>
 				</tr>
