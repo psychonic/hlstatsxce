@@ -40,7 +40,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("ribbonId", "hlstats_Ribbons", "game");
+	$edlist = new EditList("ribbonId", "hlstats_Ribbons", "game", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 //	$edlist->columns[] = new EditListColumn("ribbonId", "Ribbon", 0, true, "select", "hlstats_Ribbons.ribbonName/ribbonId/game='$gamecode'");
 	$edlist->columns[] = new EditListColumn("ribbonName", "Ribbon Name", 30, false, "text", "name", 64);
