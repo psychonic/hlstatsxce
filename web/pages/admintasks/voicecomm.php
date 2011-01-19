@@ -39,7 +39,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	if ($auth->userdata['acclevel'] < 80) die ('Access denied!');
 
-	$edlist = new EditList('serverId', 'hlstats_Servers_VoiceComm', '');
+	$edlist = new EditList('serverId', 'hlstats_Servers_VoiceComm', '', false);
 	$edlist->columns[] = new EditListColumn('name', 'Server Name', 45, true, 'text', '', 64);
 	$edlist->columns[] = new EditListColumn('addr', 'Server IP or Hostname', 20, true, 'text', '', 64);
 	$edlist->columns[] = new EditListColumn('password', 'Password', 20, false, 'text', '', 64);

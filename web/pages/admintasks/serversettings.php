@@ -96,7 +96,7 @@ function setdefaults($key)
 	while ($r = $db->fetch_array())
 		$helptexts[strtolower($r['parameter'])] = $r['description'];
 	
-	$edlist = new EditList('serverConfigId', 'hlstats_Servers_Config','');
+	$edlist = new EditList('serverConfigId', 'hlstats_Servers_Config','', false);
 	
 	$footerscript = $edlist->setHelp('helpdiv','parameter',$helptexts);
 
