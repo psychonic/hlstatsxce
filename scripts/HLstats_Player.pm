@@ -698,7 +698,7 @@ sub flushDB
 				headshots=headshots + ?,
 				shots=shots + ?,
 				hits=hits + ?,
-				teamkills=teamkills + ?
+				teamkills=teamkills + ?,
 				last_event=?,
 				last_skill_change=?,
 				death_streak=IF(?>death_streak,?,death_streak),
