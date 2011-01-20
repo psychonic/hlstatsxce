@@ -511,15 +511,15 @@ sub DoAwards
 		} elsif ($code eq "mostkills") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					kills
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.kills
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					kills DESC
 				LIMIT 1
@@ -540,15 +540,15 @@ sub DoAwards
 		elsif ($code eq "suicide") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					suicides
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.suicides
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					suicides DESC
 				LIMIT 1
@@ -568,15 +568,15 @@ sub DoAwards
 		} elsif ($code eq "teamkills") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					teamkills
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.teamkills
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					teamkills DESC
 				LIMIT 1
@@ -700,15 +700,15 @@ sub DoAwards
 		} elsif ($code eq "connectiontime") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					connection_time
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.connection_time
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					connection_time DESC
 				LIMIT 1
@@ -728,15 +728,15 @@ sub DoAwards
 		} elsif ($code eq "killstreak") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					kill_streak
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.kill_streak
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					kill_streak DESC
 				LIMIT 1
@@ -756,15 +756,15 @@ sub DoAwards
 		} elsif ($code eq "deathstreak") {
 			$resultDaily = &doQuery("
 				SELECT
-					playerId,
-					death_streak
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.death_streak
 				FROM
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = '$date_base'
+					AND eventTime = $date_base
 				ORDER BY
 					death_streak DESC
 				LIMIT 1
