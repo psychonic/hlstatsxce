@@ -6,6 +6,8 @@ January, 2011
 + General: Added more new special award possibilities, "connectiontime", "killsteak", and "deathstreak" (psychonic)
 + Web: Added teamkills to ingame statsme webpage (psychonic)
 ? GameSupport: Updated many recently-changed TF2 weapon codes (psychonic)
+? Daemon: Updated run_hlstats to now automatically change to the directory it's in (no longer do you have to CD before using script in cron!) (Packhead)
+? Daemon: Updated run_hlstats to verify shebang line in hlstats.pl is formatted correctly and binary exists (Packhead)
 ? Daemon: Moved connect message from Connect event to EnterGame event (to prevent display when banned users connect) (psychonic)
 ? Heatmaps: Greatly improved output quality of heat data (msleeper)
 ? General: Improved speed of generating awards for "mostkill", "suicides", "teamkills" (psychonic)
