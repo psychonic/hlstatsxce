@@ -231,6 +231,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 						hlstats_Players
 					ON
 						hlstats_Players.playerId = hlstats_PlayerNames.playerId
+					LEFT JOIN
+						hlstats_Games
+					ON
+						hlstats_Games.code = hlstats_Players.game
 					WHERE
 						hlstats_Games.hidden = '0'
 						AND hlstats_PlayerNames.name LIKE '%$sr_query%'

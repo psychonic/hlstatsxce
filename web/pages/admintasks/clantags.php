@@ -40,7 +40,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("id", "hlstats_ClanTags", "clan", true);
+	$edlist = new EditList("id", "hlstats_ClanTags", "clan", false);
 	$edlist->columns[] = new EditListColumn("pattern", "Pattern", 40, true, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("position", "Match Position", 0, true, "select", "EITHER/EITHER;START/START only;END/END only");
 	

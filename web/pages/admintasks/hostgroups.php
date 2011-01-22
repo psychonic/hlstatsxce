@@ -40,7 +40,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 	
-	$edlist = new EditList("id", "hlstats_HostGroups", "server");
+	$edlist = new EditList("id", "hlstats_HostGroups", "server", false);
 	$edlist->columns[] = new EditListColumn("pattern", "Host Pattern", 30, true, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("name", "Group Name", 30, true, "text", "", 128);
 	

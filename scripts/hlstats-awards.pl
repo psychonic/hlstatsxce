@@ -511,135 +511,87 @@ sub DoAwards
 		} elsif ($code eq "mostkills") {
 			$resultDaily = &doQuery("
 				SELECT
-					hlstats_Events_Frags.killerId,
-					count(hlstats_Events_Frags.killerId) AS av_mostkills
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.kills
 				FROM
-					hlstats_Events_Frags
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Frags.killerId
-					AND hlstats_Players.hideranking=0
+					hlstats_Players_History,
+					hlstats_Players
 				WHERE
-					hlstats_Events_Frags.eventTime < $date_base
-					AND hlstats_Events_Frags.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				GROUP BY
-					hlstats_Events_Frags.killerId
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
 				ORDER BY
-					av_mostkills DESC
-				LIMIT 1"
-			);
+					kills DESC
+				LIMIT 1
+			");
 			$resultGlobal = &doQuery("
 				SELECT
-					hlstats_Events_Frags.killerId,
-					count(hlstats_Events_Frags.killerId) AS av_mostkills
+					playerId,
+					kills
 				FROM
-					hlstats_Events_Frags
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Frags.killerId
-					AND hlstats_Players.hideranking=0
-				GROUP BY
-					hlstats_Events_Frags.killerId
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
 				ORDER BY
-					av_mostkills DESC
-				LIMIT 1 
+					kills DESC
+				LIMIT 1
 			");
 		}
 		elsif ($code eq "suicide") {
 			$resultDaily = &doQuery("
 				SELECT
-					hlstats_Events_Suicides.playerId,
-					count(hlstats_Events_Suicides.playerId) AS av_suicides
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.suicides
 				FROM
-					hlstats_Events_Suicides
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Suicides.playerId
-					AND hlstats_Players.hideranking=0
+					hlstats_Players_History,
+					hlstats_Players
 				WHERE
-					hlstats_Events_Suicides.eventTime < $date_base
-					AND hlstats_Events_Suicides.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				GROUP BY
-					hlstats_Events_Suicides.playerId
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
 				ORDER BY
-					av_suicides DESC
-				LIMIT 1       
+					suicides DESC
+				LIMIT 1
 			");
 			$resultGlobal = &doQuery("
 				SELECT
-					hlstats_Events_Suicides.playerId,
-					count(hlstats_Events_Suicides.playerId) AS av_suicides
+					playerId,
+					suicides
 				FROM
-					hlstats_Events_Suicides
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Suicides.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Suicides.playerId
-					AND hlstats_Players.hideranking=0
-				GROUP BY
-					hlstats_Events_Suicides.playerId
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
 				ORDER BY
-					av_suicides DESC
-				LIMIT 1       
+					suicides DESC
+				LIMIT 1
 			");
 		} elsif ($code eq "teamkills") {
 			$resultDaily = &doQuery("
 				SELECT
-					hlstats_Events_Teamkills.killerId,
-					count(hlstats_Events_Teamkills.killerId) AS av_teamkills
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.teamkills
 				FROM
-					hlstats_Events_Teamkills
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
-					AND hlstats_Players.hideranking=0
+					hlstats_Players_History,
+					hlstats_Players
 				WHERE
-					hlstats_Events_Teamkills.eventTime < $date_base
-					AND hlstats_Events_Teamkills.eventTime > DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
-				GROUP BY
-					hlstats_Events_Teamkills.killerId
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
 				ORDER BY
-					av_teamkills DESC
-				LIMIT 1       
+					teamkills DESC
+				LIMIT 1
 			");
 			$resultGlobal = &doQuery("
 				SELECT
-					hlstats_Events_Teamkills.killerId,
-					count(hlstats_Events_Teamkills.killerId) AS av_teamkills
+					playerId,
+					teamkills
 				FROM
-					hlstats_Events_Teamkills
-				INNER JOIN
-					hlstats_Servers ON
-					hlstats_Servers.serverId=hlstats_Events_Teamkills.serverId
-					AND hlstats_Servers.game='".&quoteSQL($game)."'
-				INNER JOIN
-					hlstats_Players	ON
-					hlstats_Players.playerId = hlstats_Events_Teamkills.killerId
-					AND hlstats_Players.hideranking=0
-				GROUP BY
-					hlstats_Events_Teamkills.killerId
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
 				ORDER BY
-					av_teamkills DESC
-				LIMIT 1       
+					teamkills DESC
+				LIMIT 1
 			");
 		} elsif ($code eq "bonuspoints") {
 			$resultDaily = &doQuery("
@@ -743,6 +695,90 @@ sub DoAwards
 				ORDER BY
 					awardcount DESC,
 					hlstats_Players.skill DESC
+				LIMIT 1
+			");
+		} elsif ($code eq "connectiontime") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.connection_time
+				FROM
+					hlstats_Players_History,
+					hlstats_Players
+				WHERE
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
+				ORDER BY
+					connection_time DESC
+				LIMIT 1
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					playerId,
+					connection_time
+				FROM
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
+				ORDER BY
+					connection_time DESC
+				LIMIT 1
+			");
+		} elsif ($code eq "killstreak") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.kill_streak
+				FROM
+					hlstats_Players_History,
+					hlstats_Players
+				WHERE
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
+				ORDER BY
+					kill_streak DESC
+				LIMIT 1
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					playerId,
+					kill_streak
+				FROM
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
+				ORDER BY
+					kill_streak DESC
+				LIMIT 1
+			");
+		} elsif ($code eq "deathstreak") {
+			$resultDaily = &doQuery("
+				SELECT
+					hlstats_Players_History.playerId,
+					hlstats_Players_History.death_streak
+				FROM
+					hlstats_Players_History,
+					hlstats_Players
+				WHERE
+					hlstats_Players.playerId = hlstats_Players_History.playerId
+					AND hlstats_Players.hideranking=0
+					AND eventTime = $date_base
+				ORDER BY
+					death_streak DESC
+				LIMIT 1
+			");
+			$resultGlobal = &doQuery("
+				SELECT
+					playerId,
+					death_streak
+				FROM
+					hlstats_Players
+				WHERE
+					hlstats_Players.hideranking=0
+				ORDER BY
+					death_streak DESC
 				LIMIT 1
 			");
 		} else {
