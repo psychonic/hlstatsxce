@@ -40,7 +40,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("rankId", "hlstats_Ranks", "");
+	$edlist = new EditList("rankId", "hlstats_Ranks", "", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("image", "Image file", 45, true, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("minKills", "Minimum kills", 15, true, "text", "", 64);

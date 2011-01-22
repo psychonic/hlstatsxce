@@ -40,7 +40,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	 
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("weaponId", "hlstats_Weapons", "gun");
+	$edlist = new EditList("weaponId", "hlstats_Weapons", "gun", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("code", "Weapon Code", 15, true, "text", "", 32);
 	$edlist->columns[] = new EditListColumn("name", "Weapon Name", 25, true, "text", "", 64);

@@ -96,12 +96,12 @@ function setdefaults($key)
 	while ($r = $db->fetch_array())
 		$helptexts[strtolower($r['parameter'])] = $r['description'];
 	
-	$edlist = new EditList('serverConfigId', 'hlstats_Servers_Config','');
+	$edlist = new EditList('serverConfigId', 'hlstats_Servers_Config','', false);
 	
 	$footerscript = $edlist->setHelp('helpdiv','parameter',$helptexts);
 
 	$edlist->columns[] = new EditListColumn('serverId', 'Server ID', 0, true, 'hidden', $key);
-	$edlist->columns[] = new EditListColumn('parameter', 'Server parameter name', 30, true, 'text', '', 50);
+	$edlist->columns[] = new EditListColumn('parameter', 'Server parameter name', 30, true, 'readonly', '', 50);
 	$edlist->columns[] = new EditListColumn('value', 'Parameter value', 60, false, 'text', '', 128);
 	
 	if ($_POST)

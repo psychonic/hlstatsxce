@@ -754,13 +754,18 @@ class EditList
 
 					echo '<center><input type="checkbox" name="' . $keyval . "_$col->name\" value=\"$selectedval\"$selected /></center>";
 					break;
-				case 'readonly':
-					echo html_entity_decode($rowdata[$col->name]);
-					break;
-
+					
 				case 'hidden':
 					echo '<input type="hidden" name="' . $keyval . "_$col->name\" value=\"" . htmlspecialchars($col->datasource) . '" />';
 					break;
+					
+				case 'readonly':
+					if (!$new)
+					{
+						echo html_entity_decode($rowdata[$col->name]);
+						break;
+					}
+					/* else fall through to default */
 
 				default:
 					if ($col->type == 'password')

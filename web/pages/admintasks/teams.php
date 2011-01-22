@@ -39,7 +39,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("teamId", "hlstats_Teams", "team");
+	$edlist = new EditList("teamId", "hlstats_Teams", "team", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("code", "Team Code", 20, true, "text", "", 32);
 	$edlist->columns[] = new EditListColumn("name", "Team Name", 20, true, "text", "", 64);

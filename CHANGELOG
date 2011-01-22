@@ -1,3 +1,20 @@
+HLstatsX Community Edition 1.6.13
+January, 2011
++ GameSupport: Added missing headshot action and award to HL2DM (psychonic)
++ General: Added total teamkills to player tracking (psychonic)
++ General: Added teamkills and kill/death streaks to player session tracking (psychonic)
++ General: Added more new special award possibilities, "connectiontime", "killsteak", and "deathstreak" (psychonic)
++ Web: Added teamkills to ingame statsme webpage (psychonic)
+? GameSupport: Updated many recently-changed TF2 weapon codes (psychonic)
+? Daemon: Moved connect message from Connect event to EnterGame event (to prevent display when banned users connect) (psychonic)
+? Heatmaps: Greatly improved output quality of heat data (msleeper)
+? General: Improved speed of generating awards for "mostkill", "suicides", "teamkills" (psychonic)
+? Web: Server configuration parameter names are now read-only to avoid accidental changes (psychonic)
+? Web: Id column is now hidden on most admin pages with EditTables as it serves little purpose to the user (psychonic)
+! Web: Fixed paging issue on search page (psychonic)
+! Web: Fixed JS error when selecting an admin task (psychonic)
+! Web: Fixed lack of input box when adding new row in readonly EditListColumns (psychonic)
+
 HLstatsX Community Edition 1.6.12
 December 19, 2010
 + GameSupport: Added TF2 Australian Christmas support and missing weapons/actions (thorrr, psychonic, Packhead)
