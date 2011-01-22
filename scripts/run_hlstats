@@ -34,34 +34,73 @@
 # 
 # For support and installation notes visit http://www.hlxcommunity.com
 
-# If you wish to run this script as a daemon script (in /etc/init.d, etc.)
-# you must configure the "confdir" variable below.
-# The other variables are optional and really should not be modified.
+#------------------------------------------------------------------------------
+# Usage
+# Information on how to use this script can be found on our wiki:
+# http://wiki.hlxce.com
+#------------------------------------------------------------------------------
 
-# SCRIPTPATH: File system path to daemon and supporting files
-# If you are using this script in your /etc/init.d/ you need to configure this.
-# Default: . (current directory)
-# Example: /opt/hlxce/scripts/
+#------------------------------------------------------------------------------
+# Script Configuration
+# These parameters allow you to adjust various functions of the daemon.
+# In general, they should not need to be modified.
+# Please visit our wiki for more information: http://wiki.hlxce.com
+
+#------------------------------------------------------------------------------
+# SCRIPTPATH:
+# File system path to daemon and supporting files
+# NOTE: This is only needed if the other scripts files will be in another directory.
+# In general, NO TOUCHY! :)
 SCRIPTPATH=.
+#------------------------------------------------------------------------------
 
-# The following should not need to be modified.
+#------------------------------------------------------------------------------
+# CONFFILE:
+# Specifies the configuration file (relative to SCRIPTPATH) to use for the daemon
 CONFFILE=hlstats.conf
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# DAEMON:
+# Specifies the daemon Perl script to be used
 DAEMON=hlstats.pl
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# LOGDIR:
+# Specifies the location to store logs
 LOGDIR=${SCRIPTPATH}/logs
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# LOGDATE:
+# Specifies the date format to use in log file names
 LOGDATE_FORMAT=%Y-%m-%d_%H-%M-%S
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# PIDDIR:
+# Specifies location to store daemon PID files
 PIDDIR=${SCRIPTPATH}
+#------------------------------------------------------------------------------
 
 
+#------------------------------------------------------------------------------
 # Nothing to modify below here
 WEBSITE=http://www.hlxce.com
 WIKI=http://wiki.hlxce.com
 
-echo ""
+# Start output
+echo 
 echo "HLstatsX:CE daemon control"
 echo "${WEBSITE}"
 echo "---------------------------"
 
-# Sanity checks on script path, daemon and logs path.
+# Change to directory of script
+cd `dirname ${0}`
+
+# Perform some initial checks before we encounter later errors
+# Check if we can write to the SCRIPTPATH
 if [ ! -w ${SCRIPTPATH} ]; then
 	echo "CRITICAL ERROR: Could not write to SCRIPTPATH: ${SCRIPTPATH}"
 	echo "Verify you have write access to this directory."
@@ -69,6 +108,7 @@ if [ ! -w ${SCRIPTPATH} ]; then
 	exit 1
 fi
 
+# Check if the daemon perl script exists
 if [ ! -f ${SCRIPTPATH}/${DAEMON} ]; then
 	echo "CRITICAL ERROR: Cannot access the daemon: ${DAEMON}"
 	echo "Verify that the daemon, and corresponding files, exist in ${SCRIPTPATH}"
@@ -76,10 +116,32 @@ if [ ! -f ${SCRIPTPATH}/${DAEMON} ]; then
 	exit 1
 fi
 
+# Verify shebang line in daemon
+SHEBANG=`head -n1 ${SCRIPTPATH}/${DAEMON}`
+if [[ ${SHEBANG} =~ ^#! ]]; then
+  SHEBANG_BINARY=`echo "${SHEBANG}" | sed 's/^#!//'`
+  if [ ! -f ${SHEBANG_BINARY} ]; then
+    echo "CRITICAL ERROR: The path to Perl is incorrect in ${DAEMON}."
+    echo "Current Perl path in shebang: ${SHEBANG_BINARY}"
+    echo "Visit our wiki for more information: ${WIKI}."
+    echo 
+    echo "Potential paths for Perl: "
+    echo `which perl`
+    exit 1
+  fi
+else
+    echo "CRITICAL ERROR: The shebang line is incorrectly configured.  Please verify that your the shebang line is correct in ${DAEMON}."
+    echo "Current shebang line: ${SHEBANG}"
+    echo "Visit our wiki for more information: ${WIKI}."
+    exit 1
+fi
+
+# Create logdir if needed
 if [ ! -d ${LOGDIR} ]; then
 	mkdir ${LOGDIR}
 fi
 
+# Make sure we can write to logdir
 if [ ! -w ${LOGDIR} ]; then
 	echo "CRITICAL ERROR: Could not write to the log folder: ${LOGDIR}"
 	echo "Verify that you have write access to the log folder."
