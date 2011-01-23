@@ -1,6 +1,6 @@
 HLstatsX Community Edition 1.6.13
-January, 2011
-+ GameSupport: Added missing headshot action and award to HL2DM (psychonic)
+January 22, 2011
++ GameSupport: Added missing headshot action, awards, and ribbons to HL2DM (psychonic)
 + General: Added total teamkills to player tracking (psychonic)
 + General: Added teamkills and kill/death streaks to player session tracking (psychonic)
 + General: Added more new special award possibilities, "connectiontime", "killsteak", and "deathstreak" (psychonic)
