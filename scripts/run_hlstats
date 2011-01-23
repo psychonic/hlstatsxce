@@ -130,7 +130,7 @@ if [[ ${SHEBANG} =~ ^#! ]]; then
     exit 1
   fi
 else
-    echo "CRITICAL ERROR: The shebang line is incorrectly configured.  Please verify that your the shebang line is correct in ${DAEMON}."
+    echo "CRITICAL ERROR: The shebang line is incorrectly configured.  Please verify that your shebang line is correct in ${DAEMON}."
     echo "Current shebang line: ${SHEBANG}"
     echo "Visit our wiki for more information: ${WIKI}."
     exit 1
