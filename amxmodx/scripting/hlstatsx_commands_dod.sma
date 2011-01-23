@@ -33,7 +33,7 @@
 #include <cellarray>
 #include <fakemeta>
 
-#define VERSION "1.6.12 (HL1)"
+#define VERSION "1.6.13 (HL1)"
 
 new g_hlx_block_commands
 new g_hlx_message_prefix
