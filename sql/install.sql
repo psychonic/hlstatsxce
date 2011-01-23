@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="63";
-SET @VERSION="1.6.12";
+SET @DBVERSION="64";
+SET @VERSION="1.6.13";
 
 -- --------------------------------------------------------
 
@@ -3960,6 +3960,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('latency',3,0,'hl2mp','1_latency.png','Award of Lowpinger'),
 ('mostkills',3,0,'hl2mp','1_mostkills.png','Award of Most Kills'),
 ('suicide',3,0,'hl2mp','1_suicide.png','Award of Most Suicides'),
+('headshot',3,0,'hl2mp','1_headshotaward.png','Award of Most Headshots'),
 ('357',7,0,'hl2mp','2_357award.png','Bronze 357'),
 ('ar2',7,0,'hl2mp','2_ar2award.png','Bronze AR2'),
 ('combine_ball',7,0,'hl2mp','2_combine_ballaward.png','Bronze Combine Ball'),
@@ -3978,6 +3979,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('latency',7,0,'hl2mp','2_latency.png','Bronze Lowpinger'),
 ('mostkills',7,0,'hl2mp','2_mostkills.png','Most Kills - Bronze'),
 ('suicide',7,0,'hl2mp','2_suicide.png','Most Suicides - Bronze'),
+('headshot',7,0,'hl2mp','2_headshotaward.png','Most Headshots - Bronze'),
 ('ar2',12,0,'hl2mp','3_ar2award.png','Silver AR2'),
 ('357',12,0,'hl2mp','3_357award.png','Silver 357'),
 ('combine_ball',12,0,'hl2mp','3_combine_ballaward.png','Silver Combine Ball'),
@@ -3996,6 +3998,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('latency',12,0,'hl2mp','3_latency.png','Silver Lowpinger'),
 ('mostkills',12,0,'hl2mp','3_mostkills.png','Most Kills - Silver'),
 ('suicide',12,0,'hl2mp','3_suicide.png','Most Suicdes - Silver'),
+('headshot',12,0,'hl2mp','3_headshotaward.png','Most Headshots - Silver'),
 ('357',17,0,'hl2mp','x_357supreme.png','Supreme 357'),
 ('ar2',17,0,'hl2mp','x_ar2supreme.png','Supreme AR2'),
 ('combine_ball',17,0,'hl2mp','x_combine_ballsupreme.png','Supreme Combine Ball'),
@@ -4011,6 +4014,7 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('smg1_grenade',17,0,'hl2mp','x_smg1_grenadesupreme.png','Supreme SMG Grenade'),
 ('smg1',17,0,'hl2mp','x_smg1supreme.png','Supreme SMG'),
 ('stunstick',17,0,'hl2mp','x_stunsticksupreme.png','Supreme Stunstick'),
+('headshot',17,0,'hl2mp','x_headshotaward.png','Supreme Headshotter'),
 ('*total connection hours*',504,2,'hl2mp','3waward.png','Connection Time 3 Weeks '),
 ('*total connection hours*',672,2,'hl2mp','x_swaward.png','Connection Time - Supreme'),
 ('latency',17,0,'hl2mp','x_latency.png','Supreme Lowpinger'),

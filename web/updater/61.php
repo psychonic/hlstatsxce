@@ -66,7 +66,7 @@
 			('W', '$game', 'ullapool_caber', 'Boom Sticka', 'Caber BOOM kills')");
 		
 		$db->query("INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`, `kills`) VALUES
-			('$game', 'ullapool_caber_explosion', 'The Ullapool Caber BOOM', 2.0, (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = 'ullapool_caber_explosion' AND `serverId` IN ($serverstring)),0)))");
+			('$game', 'ullapool_caber_explosion', 'The Ullapool Caber BOOM', 2.0, (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = 'ullapool_caber_explosion' AND $serverclause),0)))");
 		
 		$db->query("INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES
 			('ullapool_caber_explosion', 1, 0, '$game', '1_ullapool_caber_explosion.png', 'Bronze Ullapool Caber BOOM'),
