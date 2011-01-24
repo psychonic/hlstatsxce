@@ -504,8 +504,9 @@ sub doEvent_EnterGame
 			}
 			if ($g_stdin == 0 && $g_servers{$s_addr}->{connect_announce} > 0)
 			{
+				my $player_rank = $player->getRank();
 				if ($player->{country} ne "")
-				{
+				{					
 					my $msg = "";
 					if ($player_rank == 0)
 					{
