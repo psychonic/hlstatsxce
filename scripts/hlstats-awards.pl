@@ -519,7 +519,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					kills DESC
 				LIMIT 1
@@ -548,7 +548,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					suicides DESC
 				LIMIT 1
@@ -576,7 +576,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					teamkills DESC
 				LIMIT 1
@@ -708,7 +708,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					connection_time DESC
 				LIMIT 1
@@ -736,7 +736,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					kill_streak DESC
 				LIMIT 1
@@ -764,7 +764,7 @@ sub DoAwards
 				WHERE
 					hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
-					AND eventTime = $date_base
+					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
 					death_streak DESC
 				LIMIT 1
