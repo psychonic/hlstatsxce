@@ -1063,7 +1063,7 @@ sub doEvent_Frag
 				$desc = "NOT A TEAM KILL - RECENT TEAM SWITCH";
 				$was_tk=0;
 			}
-			if (($was_tk==0) || (($was_tk==1) && ($g_servers{$s_addr}->{game_type} == 1))) {
+			if (($was_tk==0) || ($g_servers{$s_addr}->{game_type} == 1)) {
 				# Frag
 				
 				if($isfake == 0) {
