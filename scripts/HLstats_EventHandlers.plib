@@ -2126,15 +2126,14 @@ sub doEvent_Chat
 				WHERE
 					playerId=" . $player->{playerid}
 			);
-			if ($g_servers{$s_addr}->{player_events} == 1) {
-				if ($player->{display_events} == 1) {
-					$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("'$playerName' is now $hidedesc the rankings");
-				}  
-				$g_servers{$s_addr}->dorcon($cmd_str);
-			}
+			
+			if ($player->{display_events} == 1) {
+				$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("'$playerName' is now $hidedesc the rankings");
+			}  
+			$g_servers{$s_addr}->dorcon($cmd_str);
 		}
 		
-		if (($g_servers{$s_addr}->{player_events} == 1) && (($message =~ /^\/?hlx_auto ([^ ]+) ([^ ]+)$/i) || ($message =~ /^\/?hlx_auto_cmd ([^ ]+) ([^ ]+)$/i))) {
+		if (($message =~ /^\/?hlx_auto ([^ ]+) ([^ ]+)$/i) || ($message =~ /^\/?hlx_auto_cmd ([^ ]+) ([^ ]+)$/i)) {
 			my $type = lc($1);
 			my $cmd  = lc($2);
 			
@@ -2162,28 +2161,26 @@ sub doEvent_Chat
 					$player->{"auto_command"}    = $cmd;
 					$player->{"auto_time"}       = $time;
 					$player->{"auto_time_count"} = 0;
-					if ($g_servers{$s_addr}->{player_events} == 1) {
-						if ($player->{display_events} == 1) {
-							$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("Set auto command to ".$player->{"auto_command"}." on ".$player->{"auto_type"}."!");
-						}  
-						$g_servers{$s_addr}->dorcon($cmd_str);
-					}
+
+					if ($player->{display_events} == 1) {
+						$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("Set auto command to ".$player->{"auto_command"}." on ".$player->{"auto_type"}."!");
+					}  
+					$g_servers{$s_addr}->dorcon($cmd_str);
 				}
 			}
 		}
 		if ($message =~ /^\/?hlx_auto clear$/i) {
 			$player->{"auto_type"}    = "";
 			$player->{"auto_command"} = "";
-			if ($g_servers{$s_addr}->{player_events} == 1) {
-				if ($player->{display_events} == 1) {
-					$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("Auto command is disabled!");
-				}  
-				$g_servers{$s_addr}->dorcon($cmd_str);
-			}
+
+			if ($player->{display_events} == 1) {
+				$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("Auto command is disabled!");
+			}  
+			$g_servers{$s_addr}->dorcon($cmd_str);
 		}
 
 		### Begin switching team balance
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && ($message =~ /^\/?hlx_teams([ ][0-9])?$/i)) {
+		elsif ($message =~ /^\/?hlx_teams([ ][0-9])?$/i) {
 			my $steamid  = $player->{uniqueid};
 			my $mode = -1;
 			if (($1 eq " 0") || ($1 eq " 1")) {
@@ -2217,7 +2214,7 @@ sub doEvent_Chat
 		}
 
 		### Disabling hlx output
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && ($message =~ /^\/?hlx_display\s?([01])$/i)) {
+		elsif ($message =~ /^\/?hlx_display\s?([01])$/i) {
 			my $mode = 0;
 			$mode = $1;
 			
@@ -2233,7 +2230,7 @@ sub doEvent_Chat
 		}
 
 		### Disabling hlx global chat output
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && ($message =~ /^\/?hlx_chat\s?([01])$/i)) {
+		elsif ($message =~ /^\/?hlx_chat\s?([01])$/i) {
 			my $mode = 0;
 			$mode = $1;
 			
@@ -2248,7 +2245,7 @@ sub doEvent_Chat
 		}
 
 		### Skill Addon
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && (($message =~ /^\/?skill([ ][0-9]+)?$/i) || ($message =~ /^\/?rank([ ][0-9]+)?$/i) || ($message =~ /^\/?points([ ][0-9]+)?$/i) || ($message =~ /^\/?place([ ][0-9]+)?$/i))) {
+		elsif (($message =~ /^\/?skill([ ][0-9]+)?$/i) || ($message =~ /^\/?rank([ ][0-9]+)?$/i) || ($message =~ /^\/?points([ ][0-9]+)?$/i) || ($message =~ /^\/?place([ ][0-9]+)?$/i)) {
 			my $error = 0;
 			if ($1 ne "") {
 				$userid   = substr($1, 1, length($1)-1);
@@ -2312,7 +2309,7 @@ sub doEvent_Chat
 		### End of Skill Addon
 
 		### Begin of Kill-Death Ratio
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && (($message =~ /^\/?kdratio([ ][0-9]+)?$/i) || ($message =~ /^\/?kdeath([ ][0-9]+)?$/i) || ($message =~ /^\/?kpd([ ][0-9]+)?$/i))) {
+		elsif (($message =~ /^\/?kdratio([ ][0-9]+)?$/i) || ($message =~ /^\/?kdeath([ ][0-9]+)?$/i) || ($message =~ /^\/?kpd([ ][0-9]+)?$/i)) {
 			my $userid = 0;
 			my $found = 0;
 			if ($1 eq "") {
@@ -2368,7 +2365,7 @@ sub doEvent_Chat
 		### End of Kill-Death Ratio
 
 		### Begin of Session stats
-		elsif (($g_servers{$s_addr}->{player_events} == 1) && (($message =~ /^\/?session([ ][0-9]+)?$/i) || ($message =~ /^\/?session_data([ ][0-9]+)?$/i))) {
+		elsif (($message =~ /^\/?session([ ][0-9]+)?$/i) || ($message =~ /^\/?session_data([ ][0-9]+)?$/i)) {
 			my $error = 0;
 			if ($1 ne "") {
 				$userid   = substr($1, 1, length($1)-1);
