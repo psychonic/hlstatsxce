@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="64";
+SET @DBVERSION="65";
 SET @VERSION="1.6.13";
 
 -- --------------------------------------------------------
@@ -870,6 +870,8 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'wrench_jag', 'Jag''d Off', 'Jag kills'),
 ('W', 'tf', 'iron_curtain', 'In Soviet Russia Iron Curtain Owns You', 'Iron Curtain kills'),
 ('W', 'tf', 'headtaker', 'Horseless Headless Horseman''s Headtaker', 'Horseless Headless Horseman''s Headtaker kills'),
+('W', 'tf', 'lava_axe', 'Immolator', 'Sharpened Volcano Fragment kills'),
+('W', 'tf', 'lava_bat', 'Flamer Hater', 'Sun-On-A-Stick kills'),
 ('P', 'tf', 'madmilk', 'Creamed', 'Mad Milk hits'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
@@ -5578,11 +5580,11 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'southern_hospitality', 'Southern Hospitality', 2.00),
 ('tf', 'taunt_guitar_kill', 'Engineer Taunt (Guitar)', 2.00),
 ('tf', 'wrangler_kill', 'Wrangler', 1.00),
-('tf', 'battleneedle', 'The Vita-Saw', 1.00),
-('tf', 'powerjack', 'The Powerjack', 1.00),
+('tf', 'battleneedle', 'The Vita-Saw', 2.00),
+('tf', 'powerjack', 'The Powerjack', 2.00),
 ('tf', 'degreaser', 'The Degreaser', 1.00),
 ('tf', 'short_stop', 'The Shortstop', 1.00),
-('tf', 'holy_mackerel', 'The Holy Mackerel', 1.00),
+('tf', 'holy_mackerel', 'The Holy Mackerel', 2.00),
 ('tf', 'letranger', 'L''Etranger', 1.00),
 ('tf', 'eternal_reward', 'Your Eternal Reward', 2.00),
 ('tf', 'fryingpan', 'Frying Pan', 2.00),
@@ -5598,13 +5600,15 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'amputator', 'The Amputator', 1.0),
 ('tf', 'crusaders_crossbow', 'The Crusader''s Crossbow', 1.0),
 ('tf', 'ullapool_caber', 'The Ullapool Caber', 2.0),
-('tf', 'ullapool_caber_explosion', 'The Ullapool Caber BOOM', 2.0),
+('tf', 'ullapool_caber_explosion', 'The Ullapool Caber BOOM', 1.2),
 ('tf', 'loch_n_load', 'The Loch-n-Load', 1.0),
 ('tf', 'brass_beast', 'The Brass Beast', 1.0),
 ('tf', 'warrior_spirit', 'The Warrior''s Spirit', 2.0),
 ('tf', 'candy_cane', 'The Candy Cane', 2.0),
 ('tf', 'wrench_jag', 'The Jag', 2.0),
 ('tf', 'iron_curtain', 'The Iron Curtain', 1.0),
+('tf', 'lava_axe', 'Sharpened Volcano Fragment', 2.0),
+('tf', 'lava_bat', 'Sun-On-A-Stick', 2.0),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
