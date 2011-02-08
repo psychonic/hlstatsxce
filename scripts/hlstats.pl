@@ -1179,7 +1179,10 @@ sub getPlayerInfo
 		if ($haveplayer) {
 			my $player = lookupPlayer($s_addr, $userid, $uniqueid);
 			if ($player) {
-				if ($player->{team} ne $team) {
+				#  The only time team should go /back/ to unassigned ("") is on mapchange
+				#  (which is already handled in the ChangeMap handler)
+				#  So ignore when team is blank (<>) from lazy log lines
+				if ($team ne "" && $player->{team} ne $team) {
 					&doEvent_TeamSelection(
 						$userid,
 						$uniqueid,
