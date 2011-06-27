@@ -20,157 +20,157 @@
       "code" => "atomizer",
       "name" => "Atomizer",
       "verb" => "Atomizer kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Atoms Split"),
     array(
       "code" => "bazaar_bargain",
       "name" => "Bazaar Bargain",
       "verb" => "Bazaar Bargain kills",
-      "modifier" => 1.00,
+      "modifier" => "1.00",
       "award_name" => "Bargins Earned"),
     array(
       "code" => "demokatana",
       "name" => "Half-Zatoichi",
       "verb" => "Half-Zatoichi kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Samurai Swipes"),
     array(
       "code" => "detonator",
       "name" => "Detonator",
       "verb" => "Detonator kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Detonations Served"),
     array(
       "code" => "disciplinary_action",
       "name" => "Disciplinary Action",
       "verb" => "Disciplinary Action kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Disciplined to Death"),
     array(
       "code" => "enforcer",
       "name" => "Enforcer",
       "verb" => "Enforcer kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Deaths Enforced"),
     array(
       "code" => "eviction_notice",
       "name" => "Eviction Notice",
       "verb" => "Eviction Notice kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Souls Evicted"),
     array(
       "code" => "family_business",
       "name" => "Family Business",
       "verb" => "Family Business kills",
-      "modifier" => 1.00,
+      "modifier" => "1.00",
       "award_name" => "Cement Shoes Dispensed"),
     array(
       "code" => "kunai",
       "name" => "Conniver's Kunai",
       "verb" => "Conniver's Kunai kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Spikes Implanted"),
     array(
       "code" => "lava_axe",
       "name" => "Sharpened Volcano Fragment",
       "verb" => "Sharpened Volcano Fragment kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Fragments Fragged"),
     array(
       "code" => "lava_bat",
       "name" => "Sun-on-a-Stick",
       "verb" => "Sun-on-a-Stick kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Afterlives Brightened"),
     array(
       "code" => "liberty_launcher",
       "name" => "Liberty Launcher",
       "verb" => "Liberty Launcher kills",
-      "modifier" => 1.00,
+      "modifier" => "1.00",
       "award_name" => "Lives Liberated"),
     array(
       "code" => "mantreads",
       "name" => "Mantreads",
       "verb" => "Mantreads kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Goombas Stomped"),
     array(
       "code" => "market_gardener",
       "name" => "Market Gardener",
       "verb" => "Market Gardener kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Garden Graves Dug"),
     array(
       "code" => "persian_persuader",
       "name" => "Persian Persuader",
       "verb" => "Persian Persuader kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Persons Persuaded"),
     array(
       "code" => "proto_syringe",
       "name" => "Overdose",
       "verb" => "Overdose kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Patients Overdosed"),
     array(
       "code" => "reserve_shooter",
       "name" => "Reserve Shooter",
       "verb" => "Reserve Shooter kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Reservations Made"),
     array(
       "code" => "scout_sword",
       "name" => "Three-Rune Blade",
       "verb" => "Three-Rune Blade kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Rune Slices Served"),
     array(
       "code" => "shahanshah",
       "name" => "Shahanshah",
       "verb" => "Shahanshah kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Shahaha UR Dead"),
     array(
       "code" => "soda_popper",
       "name" => "Soda Popper",
       "verb" => "Soda Popper kills",
-      "modifier" => 1.25,
+      "modifier" => "1.25",
       "award_name" => "Souls Popped"),
     array(
       "code" => "solemn_vow",
       "name" => "Solemn Vow",
       "verb" => "Solemn Vow kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Busts Busted"),
     array(
       "code" => "the_maul",
       "name" => "Maul",
       "verb" => "Maul kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Men Mauled"),
     array(
       "code" => "the_winger",
       "name" => "Winger",
       "verb" => "Winger kills",
-      "modifier" => 1.00,
+      "modifier" => "1.00",
       "award_name" => "Warriors Winged"),
     array(
       "code" => "tomislav",
       "name" => "Tomislav",
       "verb" => "Tomislav kills",
-      "modifier" => 1.00,
+      "modifier" => "1.00",
       "award_name" => "Tomis Tapped"),
     array(
       "code" => "warfan",
       "name" => "Fan O'War",
       "verb" => "Fan O'War kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Fans Made"),
     array(
       "code" => "big_earner",
       "name" => "Big Earner",
       "verb" => "Big Earner kills",
-      "modifier" => 2.00,
+      "modifier" => "2.00",
       "award_name" => "Suckers Stuck")
   );
 	
@@ -231,7 +231,7 @@
         }    
         $query .= "('$code', $award_count, 0, '$game', '" . $ribbon_count . "_" . $code . ".png', '$color $name')" .
           // Finish query line -- Check if this is the last index.  If so, add a semi-colon.  Otherwise, colon.
-          ($key == count($weapons)-1 ? ";" : ",");
+          ($key == count($weapons)-1 && $ribbon_count == 3 ? ";" : ",");
       }
     }
     $db->query($query);
