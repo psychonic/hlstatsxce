@@ -34,6 +34,11 @@
 			array_push($tfservers, $db->escape($rowdata[0]));
 		}
 		$cnt = count($tfservers);
+		if ($cnt == 0)
+		{
+			break;
+		}
+		
 		if ($cnt == 1)
 		{
 			$serverclause = 'serverId='.$tfservers[0];
