@@ -1,19 +1,19 @@
 <?php
-	if ( !defined('IN_UPDATER') )
-	{
-		die('Do not access this file directly.');
-	}		
+  if ( !defined('IN_UPDATER') )
+  {
+    die('Do not access this file directly.');
+  }    
 
-	$dbversion = 65;
-	$version = "1.6.14";
+  $dbversion = 65;
+  $version = "1.6.14";
 
   // Tracker #1421 - New TF2 weapons - Uber Update
   $tfgames = array();
-	$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
-	while ($rowdata = $db->fetch_row($result))
-	{ 
-		array_push($tfgames, $db->escape($rowdata[0]));
-	}
+  $result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
+  while ($rowdata = $db->fetch_row($result))
+  { 
+    array_push($tfgames, $db->escape($rowdata[0]));
+  }
 
   $weapons = array(
     array(
@@ -171,20 +171,50 @@
       "name" => "Big Earner",
       "verb" => "Big Earner kills",
       "modifier" => "2.00",
-      "award_name" => "Suckers Stuck")
+      "award_name" => "Suckers Stuck"),
+    array(
+      "code" => "saxxy",
+      "name" => "Saxxy",
+      "verb" => "Saxxy kills",
+      "modifier" => "2.00",
+      "award_name" => "Hale No"),
+    array(
+      "code" => "splendid_screen",
+      "name" => "Splendid Screen",
+      "verb" => "Splendid Screen kills",
+      "modifier" => "2.00",
+      "award_name" => "Full Speed Ahead"),
+    array(
+      "code" => "taunt_soldier_lumbricus",
+      "name" => "Kamikaze (Lumbricus Lid)",
+      "verb" => "Kamikaze (Lumbricus Lid) kills",
+      "modifier" => "5.00",
+      "award_name" => "Hallelujah!"),
+    array(
+      "code" => "nessieclub",
+      "name" => "Nessie's Nine Iron",
+      "verb" => "Nessie's Nine Iron kills",
+      "modifier" => "2.00",
+      "award_name" => "Hole in One"),
+    array(
+      "code" => "mailbox",
+      "name" => "Postal Pummeler",
+      "verb" => "Postal Pummeler kills",
+      "modifier" => "2.00",
+      "award_name" => "Mail's Here")
   );
-	
-	foreach ($tfgames as $game)
-	{
+  
+  foreach ($tfgames as $game)
+  {
   
     // Insert new awards
     $query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
     foreach ($weapons as $key => $weapon)
     {
       $code = $db->escape($weapon['code']);
-      $name = $db->escape($weapon['name']);
+      $award_name = $db->escape($weapon['award_name']);
       $verb = $db->escape($weapon['verb']);
-      $query .= "('W', '$game', '$code', '$name', '$verb')" .
+      $query .= "('W', '$game', '$code', '$award_name', '$verb')" .
       // Finish query line -- Check if this is the last index.  If so, add a semi-colon.  Otherwise, colon.
       ($key == count($weapons)-1 ? ";" : ",");
     }
@@ -240,21 +270,21 @@
     
     // Update kill count for new weapons
     $tfservers = array();
-		
-		$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE game = '$game'");
-		while ($rowdata = $db->fetch_row($result))
-		{ 
-			array_push($tfservers, $db->escape($rowdata[0]));
-		}
-		if (count($tfservers) > 0)
-		{
-			$serverstring = implode (',', $tfservers);
-			foreach ($weapons as $weapon) {
+    
+    $result = $db->query("SELECT serverId FROM hlstats_Servers WHERE game = '$game'");
+    while ($rowdata = $db->fetch_row($result))
+    { 
+      array_push($tfservers, $db->escape($rowdata[0]));
+    }
+    if (count($tfservers) > 0)
+    {
+      $serverstring = implode (',', $tfservers);
+      foreach ($weapons as $weapon) {
         $code = $db->escape($weapon['code']);
-				$db->query("UPDATE hlstats_Weapons SET `kills` = `kills` + (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = '$code' AND `serverId` IN ($serverstring)),0)) WHERE `code` = '$code' AND `game` = '$game'");
-			}
+        $db->query("UPDATE hlstats_Weapons SET `kills` = `kills` + (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = '$code' AND `serverId` IN ($serverstring)),0)) WHERE `code` = '$code' AND `game` = '$game'");
+      }
       unset($weapon);
-		}
+    }
   }
   
   // Tracker #1421 - End
@@ -276,7 +306,7 @@
   $db->query("UPDATE hlstats_Weapons SET `name` = 'Stickybomb Launcher' WHERE `code` = 'tf_projectile_pipe_remote' AND `name` = 'Remote Pipe'");
   $db->query("UPDATE hlstats_Weapons SET `name` = 'Flamethower' WHERE `code` = 'flamethrower' AND `name` = 'Flame'");
   // Tracker #1423 - End
-	
-	$db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
-	$db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
+  
+  $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
+  $db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
