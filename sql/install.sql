@@ -870,8 +870,6 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'wrench_jag', 'Jag''d Off', 'Jag kills'),
 ('W', 'tf', 'iron_curtain', 'In Soviet Russia Iron Curtain Owns You', 'Iron Curtain kills'),
 ('W', 'tf', 'headtaker', 'Horseless Headless Horseman''s Headtaker', 'Horseless Headless Horseman''s Headtaker kills'),
-('W', 'tf', 'lava_axe', 'Immolator', 'Sharpened Volcano Fragment kills'),
-('W', 'tf', 'lava_bat', 'Flamer Hater', 'Sun-On-A-Stick kills'),
 ('P', 'tf', 'madmilk', 'Creamed', 'Mad Milk hits'),
 ('W', 'tf', 'atomizer', 'Atoms Split', 'Atomizer kills'),
 ('W', 'tf', 'bazaar_bargain', 'Bargins Earned', 'Bazaar Bargain kills'),
