@@ -307,6 +307,19 @@
   $db->query("UPDATE hlstats_Weapons SET `name` = 'Flamethower' WHERE `code` = 'flamethrower' AND `name` = 'Flame'");
   // Tracker #1423 - End
   
+  // Tracker #1397 - Add an extinguished teammate for scout action
+  foreach ($tfgames as $game)
+  {
+			$db->query("INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES ('$game', 'scout_extinguish', 1, 0, '', 'Extinguished Teammate (Scout)', '1', '', '', '');");
+      $db->query("INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ('O','$game','scout_extinguish', 'Milk - does a body good', 'extinguishes with Mad Milk');");
+      $db->query("INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES 
+        ('scout_extinguish', 1, 0, '$game', '1_scout_extinguish.png', 'Bronze Scout Extinguish'),
+        ('scout_extinguish', 5, 0, '$game', '2_scout_extinguish.png', 'Silver Scout Extinguish'),
+        ('scout_extinguish', 10, 0, '$game', '3_scout_extinguish.png', 'Gold Scout Extinguish');
+      ");
+  }
+  
+  // Tracker #1397 - End
   $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
   $db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
