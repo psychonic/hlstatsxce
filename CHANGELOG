@@ -3,10 +3,12 @@ July 15, 2011
 + GameSupport: Added 31 new weapons for Team Fortress 2 (#1421, #1429) (Packhead, psychonic, octo-dhd, bug, Rakshot, soolshock, solarpowered)
 + GameSupport: Added new TF2 player action to log scout extinguishes with the Mad Milk (#1397) (Packhead)
 ! Daemon: Player position was not printing at initial release of 1.6.13 (#1425) (psychonic)
-! Daemon: Chat commands are no longer reliant on player events being enabled (psychonic)
-! Daemon: Lazy log line format no longer clears player's team (psychonic)
-! Daemon: Removed some redundant logic in EventHandlers.plib (psychonic)
-! GameSupport: Renamed 14 Team Fortress 2 weapons to align them with the TF2 wiki (#1423) (Packhead)
+! Daemon: Updated the GeoLite_Import.sh script due to change in release cycle of Max Mind (#1438) (aubergine)
+? Daemon: Chat commands are no longer reliant on player events being enabled (psychonic)
+? Daemon: Lazy log line format no longer clears player's team (psychonic)
+? Daemon: Removed some redundant logic in EventHandlers.plib (psychonic)
+? GameSupport: Renamed 14 Team Fortress 2 weapons to align them with the TF2 wiki (#1423) (Packhead)
+
 
 HLstatsX Community Edition 1.6.13
 January 22, 2011
