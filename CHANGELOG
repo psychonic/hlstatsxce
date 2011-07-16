@@ -1,5 +1,5 @@
 HLstatsX Community Edition 1.6.14
-July 6, 2011
+July 15, 2011
 + GameSupport: Added 31 new weapons for Team Fortress 2 (#1421, #1429) (Packhead, psychonic, octo-dhd, bug, Rakshot, soolshock, solarpowered)
 + GameSupport: Added new TF2 player action to log scout extinguishes with the Mad Milk (#1397) (Packhead)
 ! Daemon: Player position was not printing at initial release of 1.6.13 (#1425) (psychonic)
