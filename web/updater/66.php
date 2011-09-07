@@ -7,7 +7,7 @@
   $dbversion = 66;
   $version = "1.6.15";
 
-  // Tracker #1439 - New TF2 weapons - Uber Update
+  // Tracker #1439/1447 - New TF2 weapons - Victory Pack and Manno-Technology pack
   $tfgames = array();
   $result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
   while ($rowdata = $db->fetch_row($result))
@@ -33,6 +33,30 @@
       "name" => "Deflected Cow Mangler Shot",
       "verb" => "Deflected Cow Mangler Shot kills",
       "modifier" => "5.00",
+      "award_name" => ""),
+    array(
+      "code" => "machina",
+      "name" => "Machina",
+      "verb" => "Machina kills",
+      "modifier" => "2.00",
+      "award_name" => ""),
+    array(
+      "code" => "diamondback",
+      "name" => "The Diamondback",
+      "verb" => "Diamondback kills",
+      "modifier" => "2.00",
+      "award_name" => ""),
+    array(
+      "code" => "widowmaker",
+      "name" => "The Widowmaker",
+      "verb" => "Widowmaker kills",
+      "modifier" => "2.00",
+      "award_name" => ""),
+    array(
+      "code" => "short_circuit",
+      "name" => "The Short Circuit",
+      "verb" => "Short Circuit kills",
+      "modifier" => "2.00",
       "award_name" => "")
   );
   
