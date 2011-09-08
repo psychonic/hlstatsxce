@@ -21,43 +21,43 @@
       "name" => "Cow Mangler 5000",
       "verb" => "Cow Mangler 5000 kills",
       "modifier" => "1.00",
-      "award_name" => ""),
+      "award_name" => "Cows Mangled"),
     array(
       "code" => "righteous_bison",
       "name" => "Righteous Bison",
       "verb" => "Righteous Bison kills",
       "modifier" => "2.00",
-      "award_name" => ""),
+      "award_name" => "Bisons Blasted"),
     array(
       "code" => "tf_projectile_energy_ball",
       "name" => "Deflected Cow Mangler Shot",
       "verb" => "Deflected Cow Mangler Shot kills",
       "modifier" => "5.00",
-      "award_name" => ""),
+      "award_name" => "Save A Cow, Eat mor Chikin"),
     array(
       "code" => "machina",
       "name" => "Machina",
       "verb" => "Machina kills",
       "modifier" => "2.00",
-      "award_name" => ""),
+      "award_name" => "Problems Solved"),
     array(
       "code" => "diamondback",
       "name" => "The Diamondback",
       "verb" => "Diamondback kills",
       "modifier" => "2.00",
-      "award_name" => ""),
+      "award_name" => "Souls Rattled"),
     array(
       "code" => "widowmaker",
       "name" => "The Widowmaker",
       "verb" => "Widowmaker kills",
       "modifier" => "2.00",
-      "award_name" => ""),
+      "award_name" => "Widows Made"),
     array(
       "code" => "short_circuit",
       "name" => "The Short Circuit",
       "verb" => "Short Circuit kills",
       "modifier" => "2.00",
-      "award_name" => "")
+      "award_name" => "Circuits Shorted")
   );
   
   foreach ($tfgames as $game)
