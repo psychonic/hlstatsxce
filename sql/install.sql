@@ -165,6 +165,7 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('tf', 'steak', 0, 0, '', 'Ate a Buffalo Steak Sandvich', '1', '0', '0', '0'),
 ('tf', 'madmilk', 0, 0, '', 'Mad Milking a player', '0', '1', '0', '0'),
 ('tf', 'scout_extinguish', 1, 0, '', 'Extinguished Teammate (Scout)', '1', '', '', ''),
+('tf', 'player_penetration', 4, 0, '', 'Player Penetration', '1', '', '', ''),
 ('css','Begin_Bomb_Defuse_Without_Kit',0,0,'CT','Start Defusing the Bomb Without a Defuse Kit','1','','',''),
 ('css','Begin_Bomb_Defuse_With_Kit',0,0,'CT','Start Defusing the Bomb With a Defuse Kit','1','','',''),
 ('css','Planted_The_Bomb',10,2,'TERRORIST','Plant the Bomb','1','','',''),

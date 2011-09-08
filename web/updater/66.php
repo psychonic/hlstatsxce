@@ -135,15 +135,26 @@
     if (count($tfservers) > 0)
     {
       $serverstring = implode (',', $tfservers);
+        // Change all player_penetration weapon kill lines in event Frags to machina before doing our calculation.
+        $db->query("UPDATE hlstats_Events_Frags SET `weapon` = 'machina' WHERE `weapon` = 'player_penetration' AND `serverId` in ($serverstring)");
+
       foreach ($weapons as $weapon) {
         $code = $db->escape($weapon['code']);
         $db->query("UPDATE hlstats_Weapons SET `kills` = `kills` + (IFNULL((SELECT count(weapon) FROM hlstats_Events_Frags WHERE `weapon` = '$code' AND `serverId` IN ($serverstring)),0)) WHERE `code` = '$code' AND `game` = '$game'");
       }
       unset($weapon);
     }
+    
+    // Handle the new player_penetration HLXCE action -- player_penetration weapon is captured and provided as an action.  Kill line occurs for machina instead.
+    $db->query("INSERT INTO hlstats_Actions (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+      ('$game', 'player_penetration', 4, 0, '', 'Player Penetration', '1', '', '', '');
+    ");
+    
   }
   
-  // Tracker #1439 - End
+  // Tracker #1439/1447 - End
+  
+  
   
   $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
   $db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
