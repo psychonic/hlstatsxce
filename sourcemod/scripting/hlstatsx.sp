@@ -52,9 +52,6 @@ enum GameType {
 
 new GameType:gamemod = Game_Unknown;
 
-// hack for busted a2s_rules response on linux
-new Handle: hlxce_version, Handle: hlxce_plugin_version, Handle:hlxce_webpage;
-
 new Handle: hlx_block_chat_commands;
 new Handle: hlx_message_prefix;
 new Handle: hlx_protect_address;
@@ -209,9 +206,10 @@ public OnPluginStart()
 		}
 	}
 	
-	hlxce_plugin_version = CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
-	hlxce_version = CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
-	hlxce_webpage = CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	
 	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_PLUGIN);
 	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message", FCVAR_PLUGIN);
 	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
@@ -283,25 +281,6 @@ public OnMapStart()
 		}
 	}
 }
-
-// hax for busted a2s_rules resposne on linux
-public OnConfigsExecuted()
-{
-	if (GuessSDKVersion() != SOURCE_SDK_EPISODE2VALVE)
-		return;
-	
-	decl String:buffer[128];
-	
-	GetConVarString(hlxce_version, buffer, sizeof(buffer));
-	SetConVarString(hlxce_version, buffer);
-	
-	GetConVarString(hlxce_plugin_version, buffer, sizeof(buffer));
-	SetConVarString(hlxce_plugin_version, buffer);
-	
-	GetConVarString(hlxce_webpage, buffer, sizeof(buffer));
-	SetConVarString(hlxce_webpage, buffer);
-}
-//
 
 stock MyAddServerTag(const String:tag[])
 {
