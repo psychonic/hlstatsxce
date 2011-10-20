@@ -216,13 +216,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 									DATE_FORMAT(eventTime, '%a. %b. %D, %Y @ %T')
 								FROM
 									hlstats_Events_Connects
-								LEFT JOIN
-									hlstats_Servers
-								ON
-									hlstats_Servers.serverId = hlstats_Events_Connects.serverId
 								WHERE
-									hlstats_Servers.game = '$game'
-									AND hlstats_Events_Connects.playerId = '$player'
+									hlstats_Events_Connects.playerId = '$player'
 								ORDER BY
 									id desc
 								LIMIT
@@ -253,13 +248,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 									ROUND(ROUND(SUM(hlstats_Events_Latency.ping) / COUNT(ping), 0) / 2, 0) AS av_latency
 								FROM
 									hlstats_Events_Latency
-								LEFT JOIN
-									hlstats_Servers
-								ON
-									hlstats_Servers.serverId = hlstats_Events_Latency.serverId
 								WHERE 
-									hlstats_Servers.game = '$game'
-									AND hlstats_Events_Latency.playerId = '$player'
+									hlstats_Events_Latency.playerId = '$player'
 							");
 							list($av_ping, $av_latency) = $db->fetch_row();
 							if ($av_ping)
@@ -273,6 +263,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					<td>Favorite Server:*</td>
 					<td>
 						<?php
+							// leave this one
 							$db->query
 							("
 								SELECT
@@ -286,8 +277,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								ON
 									hlstats_Servers.serverId = hlstats_Events_Entries.serverId
 								WHERE 
-									hlstats_Servers.game = '$game'
-									AND hlstats_Events_Entries.playerId = '$player'
+									hlstats_Events_Entries.playerId = '$player'
 								GROUP BY
 									hlstats_Events_Entries.serverId
 								ORDER BY
@@ -341,7 +331,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								ON
 									hlstats_Weapons.code = hlstats_Events_Frags.weapon
 								WHERE
-									hlstats_Events_Frags.killerId=$player AND hlstats_Weapons.game='$game'
+									hlstats_Events_Frags.killerId=$player
 								GROUP BY
 									hlstats_Events_Frags.weapon
 								ORDER BY
@@ -467,16 +457,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 								SELECT
 									IFNULL(ROUND(SUM(hlstats_Events_Frags.killerId = '$player') / IF(SUM(hlstats_Events_Frags.victimId = '$player') = 0, 1, SUM(hlstats_Events_Frags.victimId = '$player')), 2), '-')
 								FROM
-									hlstats_Events_Frags,
-									hlstats_Servers
+									hlstats_Events_Frags
 								WHERE
-									hlstats_Servers.serverId = hlstats_Events_Frags.serverId
-									AND
 									(
 										hlstats_Events_Frags.killerId = '$player'
 										OR hlstats_Events_Frags.victimId = '$player'
 									)
-									AND hlstats_Servers.game = '$game'
 							");
 							list($realkpd) = $db->fetch_row();
 							echo $playerdata['kpd'];
@@ -494,13 +480,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 									IFNULL(SUM(hlstats_Events_Frags.headshot=1) / COUNT(*), '-')
 								FROM
 									hlstats_Events_Frags
-								LEFT JOIN
-									hlstats_Servers
-								ON
-									hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 								WHERE
-									hlstats_Servers.game = '$game'
-									AND hlstats_Events_Frags.killerId = '$player'
+									hlstats_Events_Frags.killerId = '$player'
 							");
 							list($realhpk) = $db->fetch_row();
 							echo $playerdata['hpk'];
@@ -521,13 +502,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 									SUM(hlstats_Events_Statsme.kills) AS kills
 								FROM
 									hlstats_Events_Statsme
-								LEFT JOIN
-									hlstats_Servers
-								ON
-									hlstats_Servers.serverId = hlstats_Events_Statsme.serverId
 								WHERE
-									hlstats_Servers.game='$game'
-									AND hlstats_Events_Statsme.playerId='$player'
+									hlstats_Events_Statsme.playerId='$player'
 							");
 							list($playerdata['accuracy'], $sm_shots, $sm_hits, $sm_kills) = $db->fetch_row();
 							if ($sm_kills > 0)
@@ -591,8 +567,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								FROM
 									hlstats_Players
 								WHERE
-									hlstats_Players.game = '$game'
-									AND hlstats_Players.playerId = '$player'
+									hlstats_Players.playerId = '$player'
 							");
 							list($kill_streak) = $db->fetch_row();
 							echo number_format($kill_streak);
@@ -610,8 +585,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								FROM
 									hlstats_Players
 								WHERE
-									hlstats_Players.game = '$game'
-									AND hlstats_Players.playerId = '$player'
+									hlstats_Players.playerId = '$player'
 							");
 							list($death_streak) = $db->fetch_row();
 							echo number_format($death_streak);

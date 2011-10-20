@@ -89,13 +89,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_PlayerActions
 		ON
 			hlstats_Events_PlayerActions.actionId = hlstats_Actions.id
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_PlayerActions.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_PlayerActions.playerId = $player
+			hlstats_Events_PlayerActions.playerId = $player
 		GROUP BY
 			hlstats_Actions.id
 		)
@@ -112,13 +107,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_PlayerPlayerActions
 		ON
 			hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_PlayerPlayerActions.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_PlayerPlayerActions.playerId = $player
+			hlstats_Events_PlayerPlayerActions.playerId = $player
 		GROUP BY
 			hlstats_Actions.id
 		)
@@ -186,13 +176,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_PlayerPlayerActions
 		ON
 			hlstats_Events_PlayerPlayerActions.actionId = hlstats_Actions.id
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_PlayerPlayerActions.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_PlayerPlayerActions.victimId = $player
+			hlstats_Events_PlayerPlayerActions.victimId = $player
 		GROUP BY
 			hlstats_Actions.id
 		ORDER BY

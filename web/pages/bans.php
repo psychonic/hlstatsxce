@@ -154,7 +154,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Players.playerId,
 			FROM_UNIXTIME(last_event,'%Y.%m.%d %T') as ban_date,
 			hlstats_Players.flag,
-			hlstats_Players.lastName,
+                        unhex(replace(hex(hlstats_Players.lastName), 'E280AE', '')) as lastName,
 			hlstats_Players.skill,
 			hlstats_Players.kills,
 			hlstats_Players.deaths,

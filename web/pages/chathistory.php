@@ -46,7 +46,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->query
 	("
 		SELECT
-			hlstats_Players.lastName,
+			unhex(replace(hex(hlstats_Players.lastName), 'E280AE', '')) as lastName,
 			hlstats_Players.game
 		FROM
 			hlstats_Players
