@@ -89,35 +89,30 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(*)
 		FROM
 			hlstats_Events_ChangeTeam
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_ChangeTeam.serverId
 		WHERE
 			hlstats_Events_ChangeTeam.playerId = $player 
-			AND hlstats_Servers.game = '$game'
 	");
 	list($numteamjoins) = $db->fetch_row();
+
+	if($numteamjoins == 0) {
+		$numteamjoins = 1;
+	}
+
 	$result = $db->query
 	("
 		SELECT
 			IFNULL(hlstats_Teams.name, hlstats_Events_ChangeTeam.team) AS name,
 			COUNT(hlstats_Events_ChangeTeam.id) AS teamcount,
-			ROUND(COUNT(hlstats_Events_ChangeTeam.id) / IF($numteamjoins = 0, 1, $numteamjoins) * 100, 2) AS percent
+			ROUND((COUNT(hlstats_Events_ChangeTeam.id) / $numteamjoins) * 100, 2) AS percent
 		FROM
 			hlstats_Events_ChangeTeam
 		LEFT JOIN
 			hlstats_Teams
 		ON
 			hlstats_Events_ChangeTeam.team = hlstats_Teams.code
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_ChangeTeam.serverId
 		WHERE
-			hlstats_Teams.game = '$game' 
-			AND hlstats_Servers.game = '$game' 
-			AND hlstats_Events_ChangeTeam.playerId = $player 
+			hlstats_Teams.game = '$game'
+			AND hlstats_Events_ChangeTeam.playerId = $player
 			AND
 			(
 				hidden <> '1'
@@ -245,13 +240,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.killerRole
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE 
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.killerId = $player
+			hlstats_Events_Frags.killerId = $player
 	");
 	$db->query
 	("
@@ -268,13 +258,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.victimRole
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE 
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.victimId = $player 
+			hlstats_Events_Frags.victimId = $player 
 	");
 	$db->query
 	("
@@ -315,13 +300,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(*)
 		FROM
 			hlstats_Events_ChangeRole
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_ChangeRole.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_ChangeRole.playerId = $player
+			hlstats_Events_ChangeRole.playerId = $player
 	");
 	list($numrolejoins) = $db->fetch_row();
 	$result = $db->query
@@ -341,16 +321,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 		ON
 			hlstats_Events_ChangeRole.role = hlstats_Roles.code
 		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_ChangeRole.serverId
-		LEFT JOIN
 			hlstats_Frags_as_res
 		ON
 			hlstats_Frags_as_res.role = hlstats_Events_ChangeRole.role
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_ChangeRole.playerId = $player
+			hlstats_Events_ChangeRole.playerId = $player
 			AND
 			(
 				hidden <> '1'

@@ -114,6 +114,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
+
+	// leave the join on this one, we do groupings..
 	$result = $db->query("
 		SELECT
 			hlstats_Servers.name AS server,

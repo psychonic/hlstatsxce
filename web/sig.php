@@ -197,7 +197,7 @@ if ($player_id > 0) {
 			FROM_UNIXTIME((last_event), '%a %D %b %k:%H') as lastevent, 
 			connection_time,
 			last_skill_change,
-			lastName,
+                        unhex(replace(hex(lastName), 'E280AE', '')) as lastName,
 			country,
 			flag,
 			kills, 

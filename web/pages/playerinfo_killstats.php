@@ -166,12 +166,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.killerId,
 			hlstats_Events_Frags.headshot
 		FROM
-			hlstats_Events_Frags,
-			hlstats_Servers
+			hlstats_Events_Frags
 		WHERE
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
-			AND hlstats_Servers.game = '$game' 
-			AND hlstats_Events_Frags.killerId = $player
+			hlstats_Events_Frags.killerId = $player
 		GROUP BY
 			hlstats_Events_Frags.id
 	");
@@ -187,12 +184,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.killerId,
 			hlstats_Events_Frags.victimId
 		FROM
-			hlstats_Events_Frags,
-			hlstats_Servers
+			hlstats_Events_Frags
 		WHERE
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
-			AND hlstats_Servers.game = '$game' 
-			AND hlstats_Events_Frags.victimId = $player
+			hlstats_Events_Frags.victimId = $player
 	");
 	$result = $db->query
 	("
