@@ -143,13 +143,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			ROUND(CONCAT(SUM(hlstats_Events_Frags.killerId = $player AND hlstats_Events_Frags.headshot = 1)) / $realheadshots * 100, 2) AS hpercent
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.killerId = '$player'
+			hlstats_Events_Frags.killerId = '$player'
 			OR hlstats_Events_Frags.victimId = '$player'
 		GROUP BY
 			hlstats_Events_Frags.map

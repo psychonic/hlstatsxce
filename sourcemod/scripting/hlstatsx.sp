@@ -52,9 +52,6 @@ enum GameType {
 
 new GameType:gamemod = Game_Unknown;
 
-// hack for busted a2s_rules response on linux
-new Handle: hlxce_version, Handle: hlxce_plugin_version, Handle:hlxce_webpage;
-
 new Handle: hlx_block_chat_commands;
 new Handle: hlx_message_prefix;
 new Handle: hlx_protect_address;
@@ -209,9 +206,10 @@ public OnPluginStart()
 		}
 	}
 	
-	hlxce_plugin_version = CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
-	hlxce_version = CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
-	hlxce_webpage = CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_plugin_version", VERSION, "HLstatsX:CE Ingame Plugin", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_version", "", "HLstatsX:CE", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	CreateConVar("hlxce_webpage", "http://www.hlxcommunity.com", "http://www.hlxcommunity.com", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	
 	hlx_block_chat_commands = CreateConVar("hlx_block_commands", "1", "If activated HLstatsX commands are blocked from the chat area", FCVAR_PLUGIN);
 	hlx_message_prefix = CreateConVar("hlx_message_prefix", "", "Define the prefix displayed on every HLstatsX ingame message", FCVAR_PLUGIN);
 	hlx_protect_address = CreateConVar("hlx_protect_address", "", "Address to be protected for logging/forwarding", FCVAR_PLUGIN);
@@ -283,25 +281,6 @@ public OnMapStart()
 		}
 	}
 }
-
-// hax for busted a2s_rules resposne on linux
-public OnConfigsExecuted()
-{
-	if (GuessSDKVersion() != SOURCE_SDK_EPISODE2VALVE)
-		return;
-	
-	decl String:buffer[128];
-	
-	GetConVarString(hlxce_version, buffer, sizeof(buffer));
-	SetConVarString(hlxce_version, buffer);
-	
-	GetConVarString(hlxce_plugin_version, buffer, sizeof(buffer));
-	SetConVarString(hlxce_plugin_version, buffer);
-	
-	GetConVarString(hlxce_webpage, buffer, sizeof(buffer));
-	SetConVarString(hlxce_webpage, buffer);
-}
-//
 
 stock MyAddServerTag(const String:tag[])
 {
@@ -497,7 +476,7 @@ get_server_mod()
 
 public OnClientPostAdminCheck(client)
 {
-	if (g_bGameCanDoMotd && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if (g_bGameCanDoMotd && !IsFakeClient(client))
 	{
 		QueryClientConVar(client, "cl_disablehtmlmotd", motdQuery);
 	}
@@ -665,7 +644,7 @@ find_player_team_slot(team_index)
 		ColorSlotArray[team_index] = -1;
 		for(new i = 1; i <= MaxClients; i++)
 		{
-			if (IsClientInGame(i) && IsClientConnected(i) && GetClientTeam(i) == team_index)
+			if (IsClientInGame(i) && GetClientTeam(i) == team_index)
 			{
 				ColorSlotArray[team_index] = i;
 				break;
@@ -682,7 +661,7 @@ stock validate_team_colors()
 		new color_client = ColorSlotArray[i];
 		if (color_client > 0)
 		{
-			if (IsClientInGame(color_client) && IsClientConnected(color_client) && GetClientTeam(color_client) != color_client)
+			if (IsClientInGame(color_client) && GetClientTeam(color_client) != color_client)
 			{
 				find_player_team_slot(i);
 			}
@@ -699,7 +678,7 @@ stock validate_team_colors()
 
 public OnClientDisconnect(client)
 {
-	if (g_bTrackColors4Chat && client > 0 && IsClientInGame(client) && IsClientConnected(client))
+	if (g_bTrackColors4Chat && client > 0 && IsClientInGame(client))
 	{
 		new team_index = GetClientTeam(client);
 		if (client == ColorSlotArray[team_index])
@@ -794,7 +773,7 @@ color_all_players(String: message[192])
 			for(new i = 1; i <= MaxClients; i++)
 			{
 				new client = i;
-				if (IsClientInGame(client) && IsClientConnected(client))
+				if (IsClientInGame(client))
 				{
 					decl String: client_name[32];
 					GetClientName(client, client_name, sizeof(client_name));
@@ -1038,7 +1017,7 @@ display_menu(player_index, time, String: full_message[1024], need_handler = 0)
 public InternalMenuHandler(Handle:menu, MenuAction:action, param1, param2)
 {
 	new client = param1;
-	if (IsClientInGame(client) && IsClientConnected(client))
+	if (IsClientInGame(client))
 	{
 		if (action == MenuAction_Select)
 		{
@@ -1143,7 +1122,7 @@ public Action:hlx_sm_psay(args)
 					PopStackCell(message_recipients, recipient_client);
 
 					new player_index = GetClientOfUserId(recipient_client);
-					if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+					if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index))
 					{
 						if (setupColorForRecipients == true)
 						{
@@ -1271,7 +1250,7 @@ public Action:hlx_sm_psay2(args)
 				PopStackCell(message_recipients, recipient_client);
 
 				new player_index = GetClientOfUserId(recipient_client);
-				if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+				if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index))
 				{
 					// thanks to Fyren and IceMatrix for help with this
 					new Handle:hBf;
@@ -1407,7 +1386,7 @@ public Action:hlx_sm_msay(args)
 	if (client > 0)
 	{
 		new player_index = GetClientOfUserId(client);
-		if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index) && strcmp(client_message, "") != 0)
+		if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && strcmp(client_message, "") != 0)
 		{
 			display_menu(player_index, time, client_message, need_handler);
 		}	
@@ -1438,7 +1417,7 @@ public Action:hlx_sm_tsay(args)
 	if ((client > 0) && (strcmp(client_message, "") != 0))
 	{
 		new player_index = GetClientOfUserId(client);
-		if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+		if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index))
 		{
 			new Handle:values = CreateKeyValues("msg");
 			KvSetString(values, "title", client_message);
@@ -1509,7 +1488,7 @@ public Action:hlx_sm_browse(args)
 			PopStackCell(message_recipients, recipient_client);
 
 			new player_index = GetClientOfUserId(recipient_client);
-			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index))
 			{
 				if (g_bGameCanDoMotd)
 				{
@@ -1555,7 +1534,7 @@ public Action:hlx_sm_swap(args)
 	if (client > 0)
 	{
 		new player_index = GetClientOfUserId(client);
-		if (player_index > 0 && IsClientInGame(player_index) && IsClientConnected(player_index))
+		if (player_index > 0 && IsClientInGame(player_index))
 		{
 			swap_player(player_index);
 		}
@@ -1593,7 +1572,7 @@ public Action:hlx_sm_redirect(args)
 			PopStackCell(message_recipients, recipient_client);
 
 			new player_index = GetClientOfUserId(recipient_client);
-			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index) && IsClientConnected(player_index))
+			if (player_index > 0 && !IsFakeClient(player_index) && IsClientInGame(player_index))
 			{
 				new Handle:top_values = CreateKeyValues("msg");
 				KvSetString(top_values, "title", redirect_reason);
@@ -1750,7 +1729,7 @@ public Action:hlx_block_commands(client, args)
 				new command_blocked = is_command_blocked(user_command[start_index]);
 				if (command_blocked > 0)
 				{
-					if (IsClientInGame(client) && IsClientConnected(client))
+					if (IsClientInGame(client))
 					{
 						if ((strcmp("hlx_menu", user_command[start_index]) == 0) ||
 							(strcmp("hlx", user_command[start_index]) == 0) ||
@@ -1773,7 +1752,7 @@ public Action:hlx_block_commands(client, args)
 			}
 			else
 			{
-				if ((IsClientInGame(client) && IsClientConnected(client)) &&
+				if (IsClientInGame(client) &&
 					(strcmp("hlx_menu", user_command[start_index]) == 0
 					|| strcmp("hlx", user_command[start_index]) == 0
 					|| strcmp("hlstatsx", user_command[start_index]) == 0))
@@ -1815,7 +1794,7 @@ public Action: HLstatsX_Event_PlyTeamChange(Handle:event, const String:name[], b
 
 swap_player(player_index)
 {
-	if (IsClientInGame(player_index) && IsClientConnected(player_index))
+	if (IsClientInGame(player_index))
 	{
 		switch (GetClientTeam(player_index))
 		{
@@ -1938,7 +1917,7 @@ public HLstatsXMainCommandHandler(Handle:menu, MenuAction:action, param1, param2
 {
 	if (action == MenuAction_Select)
 	{
-		if (IsClientInGame(param1) && IsClientConnected(param1))
+		if (IsClientInGame(param1))
 		{
 			if (!g_bGameCanDoMotd)
 			{
@@ -2003,7 +1982,7 @@ public HLstatsXAutoCommandHandler(Handle:menu, MenuAction:action, param1, param2
 {
 	if (action == MenuAction_Select)
 	{
-		if (IsClientInGame(param1) && IsClientConnected(param1))
+		if (IsClientInGame(param1))
 		{
 			switch (param2)
 			{
@@ -2025,7 +2004,7 @@ public HLstatsXEventsCommandHandler(Handle:menu, MenuAction:action, param1, para
 {
 	if (action == MenuAction_Select)
 	{
-		if (IsClientInGame(param1) && IsClientConnected(param1))
+		if (IsClientInGame(param1))
 		{
 			switch (param2)
 			{
@@ -2067,7 +2046,7 @@ stock PrintToChatRecipients(const String:message[])
 		PopStackCell(message_recipients, recipient_client);
 
 		new client = GetClientOfUserId(recipient_client);
-		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client) && IsClientConnected(client))
+		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client))
 		{
 			PrintToChat(client, "%s", message);
 		}
@@ -2082,7 +2061,7 @@ stock PrintToChatRecipientsFF(const String:message[])
 		PopStackCell(message_recipients, recipient_client);
 
 		new client = GetClientOfUserId(recipient_client);
-		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client) && IsClientConnected(client))
+		if (client > 0 && !IsFakeClient(client) && IsClientInGame(client))
 		{	
 			new Handle:hBf;
 			hBf = StartMessageOne("SayText", client);
