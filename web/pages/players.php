@@ -293,7 +293,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					SQL_CALC_FOUND_ROWS
 					hlstats_Players.playerId,
 					hlstats_Players.connection_time,
-					hlstats_Players.lastName,
+                                        unhex(replace(hex(hlstats_Players.lastName), 'E280AE', '')) as lastName,
 					hlstats_Players.flag,
 					hlstats_Players.country,
 					hlstats_Players.skill,

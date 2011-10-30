@@ -60,7 +60,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 				hlstats_PlayerUniqueIds
 			WHERE
 				hlstats_PlayerUniqueIds.uniqueId = '$uniqueid'
-				AND hlstats_PlayerUniqueIds.game = '$game'
 		");
 		if ($db->num_rows() > 1)
 		{
@@ -86,7 +85,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		SELECT
 			hlstats_Players.playerId,
 			hlstats_Players.connection_time,
-			hlstats_Players.lastName,
+			unhex(replace(hex(hlstats_Players.lastName), 'E280AE', '')) as lastName,
 			hlstats_Players.country,
 			hlstats_Players.city,
 			hlstats_Players.flag,
@@ -173,13 +172,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(hlstats_Events_Frags.killerId)
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.killerId = '$player'
+			hlstats_Events_Frags.killerId = '$player'
 			AND hlstats_Events_Frags.headshot = 1
 	");
 	list($realheadshots) = $db->fetch_row();
@@ -189,13 +183,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(hlstats_Events_Frags.killerId)
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.killerId = '$player'
+			hlstats_Events_Frags.killerId = '$player'
 	");
 	list($realkills) = $db->fetch_row();
 	$db->query
@@ -204,13 +193,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(hlstats_Events_Frags.victimId)
 		FROM
 			hlstats_Events_Frags
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.victimId = '$player'
+			hlstats_Events_Frags.victimId = '$player'
 	");
 	list($realdeaths) = $db->fetch_row();
 	$db->query
@@ -219,13 +203,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			COUNT(hlstats_Events_Teamkills.killerId)
 		FROM
 			hlstats_Events_Teamkills
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Teamkills.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Teamkills.killerId = '$player'
+			hlstats_Events_Teamkills.killerId = '$player'
 	");
 	list($realteamkills) = $db->fetch_row();
 	if(!isset($_GET['killLimit']))

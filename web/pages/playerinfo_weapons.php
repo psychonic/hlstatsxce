@@ -145,13 +145,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Weapons
 		ON
 			hlstats_Weapons.code = hlstats_Events_Frags.weapon
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Frags.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Frags.killerId = $player
+			hlstats_Events_Frags.killerId = $player
 			AND
 			(
 				hlstats_Weapons.game = '$game'
@@ -268,13 +263,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			ROUND(((IF(SUM(hlstats_Events_Statsme.kills) = 0, 0, SUM(hlstats_Events_Statsme.shots))) / (IF(SUM(hlstats_Events_Statsme.kills) = 0, 1, SUM(hlstats_Events_Statsme.kills) ))), 1) as smspk
 		FROM
 			hlstats_Events_Statsme
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Statsme.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Statsme.PlayerId = $player
+			hlstats_Events_Statsme.PlayerId = $player
 		GROUP BY
 			hlstats_Events_Statsme.weapon
 		HAVING
@@ -459,13 +449,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			IFNULL(ROUND((SUM(hlstats_Events_Statsme2.head) + SUM(hlstats_Events_Statsme2.chest) + SUM(hlstats_Events_Statsme2.stomach)) / (SUM(hlstats_Events_Statsme2.head) + SUM(hlstats_Events_Statsme2.chest) + SUM(hlstats_Events_Statsme2.stomach) + SUM(hlstats_Events_Statsme2.leftarm ) + SUM(hlstats_Events_Statsme2.rightarm) + SUM(hlstats_Events_Statsme2.leftleg) + SUM(hlstats_Events_Statsme2.rightleg)) * 100, 1), 0.0) AS smmiddle
 		FROM
 			hlstats_Events_Statsme2
-		LEFT JOIN
-			hlstats_Servers
-		ON
-			hlstats_Servers.serverId = hlstats_Events_Statsme2.serverId
 		WHERE
-			hlstats_Servers.game = '$game'
-			AND hlstats_Events_Statsme2.PlayerId = $player
+			hlstats_Events_Statsme2.PlayerId = $player
 		GROUP BY
 			hlstats_Events_Statsme2.weapon
 		HAVING

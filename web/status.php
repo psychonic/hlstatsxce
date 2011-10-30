@@ -534,7 +534,7 @@ if ($server_data['addr'] != '')  {
 		$db->query("
 			SELECT 
 				playerId, 
-				lastName, 
+                                unhex(replace(hex(lastName), 'E280AE', '')) as lastName,
 				flag, 
 				country, 
 				skill, 
