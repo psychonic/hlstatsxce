@@ -511,21 +511,27 @@ sub track_server_load
 		{
 			if ($last_timestamp+299 < $new_timestamp)
 			{
-				#        print "\ntrying rcon to get fps & uptime...\n";
 				# fetch fps and uptime via rcon
+				
+				# Old style stats output:
 				#$string = "          0.00  0.00  0.00      54     1  249.81       0 dhjdsk";
+
+				# New style stats output:
+				#CPU    In (KB/s)  Out (KB/s)  Uptime  Map changes  FPS      Players  Connects
+				#0.00   0.00       0.00        68      0            66.70    0        3
+
+
 				$string = $self->dorcon("stats");
-	
+
 				#		$string =~ /.*\n(.*)\Z/;
 				$string =~ /CPU.*\n(.*)\n*L{0,1}.*\Z/;
 				$string = $1;
 				$string =~ s/[\s\s]{2,10}/ /g;
-				$string =~ /([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+) ([^ ]+)+/;
+
+				$string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)+/;
 				$uptime = $4;
 				$fps = $6;
-			
-				#        print "fps=$fps, uptime=$uptime\n";
-      
+
 				my $act_players  = $self->{numplayers};
 				my $max_players  = $self->{maxplayers};
 				if ($max_players > 0) {
