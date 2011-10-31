@@ -145,7 +145,7 @@
 					unset($weapon);
 				}
 				
-				// Handle the new player_penetration HLXCE action -- player_penetration weapon is captured and provided as an action.		Kill line occurs for machina instead.
+				// Handle the new player_penetration HLXCE action -- player_penetration weapon is captured and provided as an action.  Kill line occurs for machina instead.
 				$db->query("INSERT INTO hlstats_Actions (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
 					('$game', 'player_penetration', 4, 0, '', 'Player Penetration', '1', '', '', '');
 				");

@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="65";
-SET @VERSION="1.6.14";
+SET @DBVERSION="66";
+SET @VERSION="1.6.15";
 
 -- --------------------------------------------------------
 
@@ -905,6 +905,13 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'nessieclub', 'Hole in One', 'Nessie\'s Nine Iron kills'),
 ('W', 'tf', 'mailbox', 'Mail\'s Here', 'Postal Pummeler kills'),
 ('O', 'tf', 'scout_extinguish', 'Milk - does a body good', 'extinguishes with Mad Milk'),
+('W', 'tf', 'cow_mangler', '', 'Cow Mangler 5000 kills'),
+('W', 'tf', 'righteous_bison', '', 'Righteous Bison kills'),
+('W', 'tf', 'tf_projectile_energy_ball', '', 'Deflected Cow Mangler Shot kills'),
+('W', 'tf', 'machina', '', 'Machina kills'),
+('W', 'tf', 'diamondback', '', 'Diamondback kills'),
+('W', 'tf', 'widowmaker', '', 'Widowmaker kills'),
+('W', 'tf', 'short_circuit', '', 'Short Circuit kills'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
@@ -4771,6 +4778,27 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('scout_extinguish', 1, 0, 'tf', '1_scout_extinguish.png', 'Bronze Scout Extinguish'),
 ('scout_extinguish', 5, 0, 'tf', '2_scout_extinguish.png', 'Silver Scout Extinguish'),
 ('scout_extinguish', 10, 0, 'tf', '3_scout_extinguish.png', 'Gold Scout Extinguish'),
+('cow_mangler', 1, 0, 'tf', '1_cow_mangler.png', 'Bronze Cow Mangler 5000'),
+('cow_mangler', 5, 0, 'tf', '2_cow_mangler.png', 'Silver Cow Mangler 5000'),
+('cow_mangler', 10, 0, 'tf', '3_cow_mangler.png', 'Gold Cow Mangler 5000'),
+('righteous_bison', 1, 0, 'tf', '1_righteous_bison.png', 'Bronze Righteous Bison'),
+('righteous_bison', 5, 0, 'tf', '2_righteous_bison.png', 'Silver Righteous Bison'),
+('righteous_bison', 10, 0, 'tf', '3_righteous_bison.png', 'Gold Righteous Bison'),
+('tf_projectile_energy_ball', 1, 0, 'tf', '1_tf_projectile_energy_ball.png', 'Bronze Deflected Cow Mangler Shot'),
+('tf_projectile_energy_ball', 5, 0, 'tf', '2_tf_projectile_energy_ball.png', 'Silver Deflected Cow Mangler Shot'),
+('tf_projectile_energy_ball', 10, 0, 'tf', '3_tf_projectile_energy_ball.png', 'Gold Deflected Cow Mangler Shot'),
+('machina', 1, 0, 'tf', '1_machina.png', 'Bronze Machina'),
+('machina', 5, 0, 'tf', '2_machina.png', 'Silver Machina'),
+('machina', 10, 0, 'tf', '3_machina.png', 'Gold Machina'),
+('diamondback', 1, 0, 'tf', '1_diamondback.png', 'Bronze The Diamondback'),
+('diamondback', 5, 0, 'tf', '2_diamondback.png', 'Silver The Diamondback'),
+('diamondback', 10, 0, 'tf', '3_diamondback.png', 'Gold The Diamondback'),
+('widowmaker', 1, 0, 'tf', '1_widowmaker.png', 'Bronze The Widowmaker'),
+('widowmaker', 5, 0, 'tf', '2_widowmaker.png', 'Silver The Widowmaker'),
+('widowmaker', 10, 0, 'tf', '3_widowmaker.png', 'Gold The Widowmaker'),
+('short_circuit', 1, 0, 'tf', '1_short_circuit.png', 'Bronze The Short Circuit'),
+('short_circuit', 5, 0, 'tf', '2_short_circuit.png', 'Silver The Short Circuit'),
+('short_circuit', 10, 0, 'tf', '3_short_circuit.png', 'Gold The Short Circuit'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
@@ -5766,6 +5794,13 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'mailbox', 'Postal Pummeler', 2.00),
 ('tf', 'lava_axe', 'Sharpened Volcano Fragment', 2.00),
 ('tf', 'lava_bat', 'Sun-on-a-Stick', 2.00),
+('tf', 'cow_mangler', 'Cow Mangler 5000', 1.00),
+('tf', 'righteous_bison', 'Righteous Bison', 2.00),
+('tf', 'tf_projectile_energy_ball', 'Deflected Cow Mangler Shot', 5.00),
+('tf', 'machina', 'Machina', 2.00),
+('tf', 'diamondback', 'The Diamondback', 2.00),
+('tf', 'widowmaker', 'The Widowmaker', 2.00),
+('tf', 'short_circuit', 'The Short Circuit', 2.00),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
