@@ -518,16 +518,16 @@ sub track_server_load
 
 				# New style stats output:
 				#CPU    In (KB/s)  Out (KB/s)  Uptime  Map changes  FPS      Players  Connects
-				#0.00   0.00       0.00        68      0            66.70    0        3
+				#0.00   0.00       0.00        0      0            00.00    0        0
 
 
 				$string = $self->dorcon("stats");
 
-				#		$string =~ /.*\n(.*)\Z/;
+				# Remove first line of output
 				$string =~ /CPU.*\n(.*)\n*L{0,1}.*\Z/;
 				$string = $1;
-				$string =~ s/[\s\s]{2,10}/ /g;
 
+				# Grab FPS and Uptime from the output
 				$string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)+/;
 				$uptime = $4;
 				$fps = $6;
