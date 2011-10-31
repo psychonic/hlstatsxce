@@ -539,19 +539,26 @@ sub track_server_load
 						$act_players = $max_players;
 					}
 				}
-				&::execNonQuery("
-					INSERT IGNORE INTO
-						hlstats_server_load
-					SET
-						server_id=".$self->{id}.",
-						timestamp=$new_timestamp,
-						act_players=$act_players,
-						min_players=".$self->{minplayers}.",
-						max_players=$max_players,
-						map='".$self->{map}."',
-						uptime=".(($uptime)?$uptime:0).",
-						fps=".(($fps)?$fps:0)."
-				");
+				&::execCached("flush_server_load",
+					"INSERT IGNORE INTO hlstats_server_load
+						SET 
+							server_id=?,
+							timestamp=?,
+							act_players=?,
+							min_players=?,
+							max_players=?,
+							map=?,
+							uptime=?,
+							fps=?",
+					$self->{id},
+					$new_timestamp,
+					$act_players,
+					$self->{minplayers},
+					$max_players,
+					$self->{map},
+					(($uptime)?$uptime:0),
+					(($fps)?$fps:0)
+				);
 				$self->set("track_server_timestamp", $new_timestamp);
 				&::printEvent("SERVER", "Insert new server load timestamp", 1);
 			}   
