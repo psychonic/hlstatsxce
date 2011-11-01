@@ -153,6 +153,8 @@ if (!$game)
 	$_SESSION['game'] = $game;
 }
 
+$_SESSION['realgame'] = getRealGame($game);
+
 $mode = isset($_GET['mode'])?$_GET['mode']:'';
 
 $valid_modes = array(
