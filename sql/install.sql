@@ -3573,7 +3573,7 @@ INSERT INTO `hlstats_Options` (`keyname`, `value`, `opttype`) VALUES
 ('rankingtype', 'skill',1),
 ('bannerfile', 'hlxcebanner.jpg',2),
 ('bannerdisplay', '0',2),
-('awarddailycols', '4',2),
+('awarddailycols', '5',2),
 ('awardglobalcols', '5',2),
 ('awardrankscols', '5',2),
 ('awardribbonscols', '5',2),
