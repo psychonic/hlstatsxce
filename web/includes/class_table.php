@@ -308,11 +308,16 @@ class Table
 
 					case 'roleimg':
 						$image = getImage("/games/$game/roles/".strtolower($colval));
-						// check if image exists
+						// check if image exists for game -- otherwise check realgame
 						if ($image)
 						{
 							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
 						}
+						elseif ($image = getImage("/games/$realgame/roles/".strtolower($colval)))
+						{
+							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
+						}
+						
 						if ($col->fname[$colval] != '')
 						{
 							$cellbody .= '<b>'.$col->fname[$colval].'</b>';
@@ -370,7 +375,7 @@ class Table
 						$heatmapthumb = getImage("/games/$game/heatmaps/$colval-kill-thumb");
 
 						if ($heatmap) {
-							$cellbody .= "<center><a href=\"" . $heatmap['url'] . "\" rel=\"boxed\"><img width=\"20\" height=\"16\" src=\"" . $heatmapthumb['url'] . "\" /></a></center>";
+							$cellbody .= "<span style=\"text-align: center;\"><a href=\"" . $heatmap['url'] . "\" rel=\"boxed\"><img width=\"20\" height=\"16\" src=\"" . $heatmapthumb['url'] . "\" /></a></span>";
 						} else {
 							$cellbody .= "&nbsp;";
 						}
