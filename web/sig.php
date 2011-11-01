@@ -139,6 +139,18 @@ function f_num($number) {
 
 		$steam_id_escaped=$db->escape($steam_id);
 		$game_escaped=$db->escape($game);
+		
+		// Obtain realgame from hlstats_Games
+		$db->query("
+			SELECT
+				realgame
+			FROM
+				hlstats_Games
+			WHERE
+				code = '$game_escaped'
+		");
+		$realgame = $db->fetch_row();
+		
 		// Obtain player_id from the steam_id and game code
 		$db->query("
 			SELECT
@@ -210,9 +222,9 @@ if ($player_id > 0) {
 			IFNULL(kills/deaths, '-') AS kpd, 
 			IFNULL(ROUND((hits / shots * 100), 1), 0.0) AS acc, 
 			activity, 
-			hideranking 
+			hideranking
 		FROM 
-			hlstats_Players 
+			hlstats_Players
 		WHERE 
 			playerId='$player_id'
 	");
@@ -278,6 +290,10 @@ if ($player_id > 0) {
 	
 	$hlx_sig_image = getImage('/games/'.$playerdata['game'].'/sig/'.$background);
 	if ($hlx_sig_image)
+	{
+		$hlx_sig = $hlx_sig_image['path'];
+	}
+	elseif ($hlx_sig_image = getImage('/games/'.$realgame.'/sig/'.$background))
 	{
 		$hlx_sig = $hlx_sig_image['path'];
 	}
