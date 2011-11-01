@@ -155,12 +155,17 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br /><br />
 <div class="block">
 <?php // figure out URL and absolute path of image
-	$mapimg = getImage("/games/{$game}/maps/{$map}");
-	if (!file_exists($mapimg['path'])) {
-		$mapimg = getImage("/games/{$game}/maps/default");
-		if (!file_exists($mapimg['path'])) {
-			$mapimg = getImage("/nomap");
-		}
+	if ($mapimg = getImage("/games/$game/maps/$map"))
+	{
+		$mapimg = $mapimg['url'];
+	}
+	elseif ($mapimg = getImage("/games/$realgame/maps/$map"))
+	{
+		$mapimg = $mapimg['url'];
+	}
+	else
+	{
+		$mapimg = IMAGE_PATH."/nomap.png";
 	}
 	
 	$heatmap = getImage("/games/$game/heatmaps/$map-kill");
@@ -177,7 +182,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 			if ($mapimg)
 			{
-				echo '<img src="' . $mapimg['url'] . "\" alt=\"$map\" />";
+				echo "<img src=\"$mapimg\" alt=\"$map\" />";
 			}
 
 			if ($g_options['map_dlurl'])
