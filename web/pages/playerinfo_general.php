@@ -895,7 +895,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$ribbonName=$result['ribbonName'];
 		if(!isset($awards_done[$ribbonCode]))
 		{
-			$ribbonList .= '<img src="'.IMAGE_PATH."/games/$game/ribbons/".$result['image'].'" style="border:0px;" alt="'.$result['ribbonName'].'" title="'.$result["ribbonName"].'" /> ';
+			if (file_exists(IMAGE_PATH."/games/$game/ribbons/".$result['image']))
+			{
+				$image = IMAGE_PATH."/games/$game/ribbons/".$result['image'];
+			}
+			elseif (file_exists(IMAGE_PATH."/games/$realgame/ribbons/".$result['image']))
+			{
+				$image = IMAGE_PATH."/games/$realgame/ribbons/".$result['image'];
+			}
+			else
+			{
+				$image = IMAGE_PATH."/award.png";
+			}		
+			$ribbonList .= '<img src="'.$image.'" style="border:0px;" alt="'.$result['ribbonName'].'" title="'.$result["ribbonName"].'" /> ';
 			$awards_done[$ribbonCode]=$ribbonCode;
 		}
 	}
@@ -933,16 +945,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$GlobalAwardsList = '';
 	foreach ($awards as $a)
 	{
-		$image = getImage("/games/$game/gawards/".strtolower($a->aType."_$a->code"));
-		if ($image)
+		if ($image = getImage("/games/$game/gawards/".strtolower($a->aType."_$a->code")))
 		{
-			$img = $image['url'];
+			$image = $image['url'];
+		}
+		elseif ($image = getImage("/games/$realgame/gawards/".strtolower($a->aType."_$a->code")))
+		{
+			$image = $image['url'];
 		}
 		else
 		{
-			$img = IMAGE_PATH.'/award.png';
-		}
-		$GlobalAwardsList .= "<img src=\"$img\" alt=\"$a->ribbonName\" title=\"$a->ribbonName\" /> ";
+			$image = IMAGE_PATH."/award.png";
+		}		
+		$GlobalAwardsList .= "<img src=\"$image\" alt=\"$a->ribbonName\" title=\"$a->ribbonName\" /> ";
 	}
 	if ($ribbonList != '' || $GlobalAwardsList != '')
 	{
