@@ -72,7 +72,7 @@ if ( !defined('IN_HLSTATS') )
 	$cols = $g_options['awardglobalcols'];
 	if ($cols<1 || $cols>10)
 	{
-		$cols = 4;
+		$cols = 5;
 	}
 	$colwidth = round(100/$cols);
 	while ($r = $db->fetch_array($resultAwards))
@@ -86,8 +86,11 @@ if ( !defined('IN_HLSTATS') )
 			echo '<tr class="bg1">';
 		}
    
-		$image = getImage("/games/$game/gawards/".strtolower($r['awardType'].'_'.$r['code']));
-		if ($image)
+		if ($image = getImage("/games/$game/gawards/".strtolower($r['awardType'].'_'.$r['code'])))
+		{
+			$img = $image['url'];
+		}
+		elseif ($image = getImage("/games/$realgame/gawards/".strtolower($r['awardType'].'_'.$r['code'])))
 		{
 			$img = $image['url'];
 		}
