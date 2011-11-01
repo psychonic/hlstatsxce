@@ -117,7 +117,19 @@ if ( !defined('IN_HLSTATS') )
 		}
    
 		$link = '<a href="hlstats.php?mode=ribboninfo&amp;ribbon='.$r['ribbonId']."&amp;game=$game\">";
-		$image = '<img src="'.IMAGE_PATH."/games/$game/ribbons/".$r['image'].'" alt="'.$r['image'].'" />';
+		if (file_exists(IMAGE_PATH."/games/$game/ribbons/".$r['image']))
+		{
+			$image = IMAGE_PATH."/games/$game/ribbons/".$r['image'];
+		}
+		elseif (file_exists(IMAGE_PATH."/games/$realgame/ribbons/".$r['image']))
+		{
+			$image = IMAGE_PATH."/games/$realgame/ribbons/".$r['image'];
+		}
+		else
+		{
+			$image = IMAGE_PATH."/award.png";
+		}
+		$image = '<img src="'.$image.'" alt="'.$r['ribbonName'].'" />';
 		$achvd = '';
 		if ($r['achievedcount'] > 0)
 		{
