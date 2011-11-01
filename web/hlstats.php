@@ -149,11 +149,17 @@ $game = valid_request(isset($_GET['game'])?$_GET['game']:'', 0);
 if (!$game)
 {
 	$game = isset($_SESSION['game'])?$_SESSION['game']:'';
-} else {
+}
+else
+{
 	$_SESSION['game'] = $game;
 }
 
-$_SESSION['realgame'] = getRealGame($game);
+if (!$realgame && $game)
+{
+	$realgame = getRealGame($game);
+	$_SESSION['realgame'] = $realgame;
+}
 
 $mode = isset($_GET['mode'])?$_GET['mode']:'';
 
