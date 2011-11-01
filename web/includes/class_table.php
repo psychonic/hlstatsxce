@@ -128,7 +128,7 @@ class Table
 	
 	function start($numitems, $width=100, $align='center')
 	{
-		global $g_options, $game, $db;
+		global $g_options, $game, $realgame, $db;
 		$numpages = ceil($numitems / $this->numperpage);
 ?>
 
@@ -177,7 +177,7 @@ class Table
 	
 	function draw ($result, $numitems, $width=100, $align='center')
 	{
-		global $g_options, $game, $db;
+		global $g_options, $game, $realgame, $db;
 		$numpages = ceil($numitems / $this->numperpage);
 ?>
 
@@ -324,9 +324,13 @@ class Table
 						break;
 					  
 					case 'weaponimg':
-						$image = getImage("/games/$game/weapons/".strtolower($colval));
-						// check if image exists
+						// Check if game has the image -- if not, failback to real game.  If not, no image.
+						$image = getImage("/games/$realgame/weapons/".strtolower($colval));
 						if ($image)
+						{
+							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="'.$col->fname[$colval].'" title="'.$col->fname[$colval].'" />';
+						}
+						elseif ($image = getImage("/games/$realgame/weapons/".strtolower($colval)))
 						{
 							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="'.$col->fname[$colval].'" title="'.$col->fname[$colval].'" />';
 						}
