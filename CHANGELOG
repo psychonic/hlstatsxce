@@ -1,3 +1,15 @@
+HLstatsX Community Edition 1.6.15
+October 31, 2011
+
++ GameSupport: Added many new weapons for TF2, including the Victory Pack (#1439, #1447, #1448) (Packhead)
+! Daemon: Fixed FPS and Uptime tracking post-TF2 stats output fix (#1458) (Packhead)
+! Daemon: Converted server load DB updates to cached queries to reduce load (Packhead)
+! GameSupport: Corrected typos and added two missing TF2 weapons (#1446) (Bluthund)
+? Plugin: Removed old hack to fix cvars on a2s_rules response (psychonic)
+? Plugin: Removed a large number of redundant client checks (psychonic)
+? Web: Removed unnecessary joins from multiple pages (octo-dhd)
+
+
 HLstatsX Community Edition 1.6.14
 July 15, 2011
 + GameSupport: Added 31 new weapons for Team Fortress 2 (#1421, #1429) (Packhead, psychonic, octo-dhd, bug, Rakshot, soolshock, solarpowered)
