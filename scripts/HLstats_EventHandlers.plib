@@ -1033,6 +1033,18 @@ sub doEvent_Frag
 							$krole
 						);
 					}
+				} 
+				if (defined($properties{victimclass})) {
+					my $vrole = $properties{victimclass};
+					if ($vrole ne "" && $vrole ne $victim->{role})
+					{
+						&doEvent_RoleSelection(
+							$victim->{"userid"},
+							$victim->{"uniqueid"},
+							$vrole
+						);
+					}
+				}
 			} elsif ($g_servers{$s_addr}->{play_game} == TF()) {
 				# Change weapon code for player_penetration to machina and log an action
 				if ($weapon eq "player_penetration") {
@@ -1045,17 +1057,6 @@ sub doEvent_Frag
 						$y,
 						$z
 					);
-				}
-				if (defined($properties{victimclass})) {
-					my $vrole = $properties{victimclass};
-					if ($vrole ne "" && $vrole ne $victim->{role})
-					{
-						&doEvent_RoleSelection(
-							$victim->{"userid"},
-							$victim->{"uniqueid"},
-							$vrole
-						);
-					}
 				}
 			}
 			
