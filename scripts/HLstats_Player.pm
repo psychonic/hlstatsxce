@@ -1023,7 +1023,7 @@ sub getRank
 	my ($self) = @_;
 	
 	my $srv_addr  = $self->{server};
-	my $result = &::doQuery("
+	$query = "
 		SELECT
 			kills,
 			deaths,
@@ -1031,8 +1031,10 @@ sub getRank
 		FROM
 			hlstats_Players
 		WHERE
-			playerId=" . $self->{playerid}
-	);
+			playerId=?
+	";
+	my $result = &::execCached("get_player_rank_stats", $query, $self->{playerid});
+		
 	my ($kills, $deaths, $hideranking) = $result->fetchrow_array;
 	$result->finish;
 	
@@ -1051,41 +1053,55 @@ sub getRank
 			return 0;
 		}
 		
-		my $rankresult = &::doQuery("
+		my $query = "
 			SELECT
 				COUNT(*)
 			FROM
 				hlstats_Players
 			WHERE
-				game='".&::quoteSQL($self->{game})."'
+				game=?
 				AND hideranking = 0
 				AND kills >= 1
 				AND (
-						(skill > ".$self->{skill}.") OR (
-							(skill = ".$self->{skill}.") AND ((kills/IF(deaths=0,1,deaths)) > $kpd)
+						(skill > ?) OR (
+							(skill = ?) AND ((kills/IF(deaths=0,1,deaths)) > ?)
 						)
 				)
-		");
+		";
+		my @vals = (
+			&::quoteSQL($self->{game}),
+			$self->{skill},
+			$self->{skill},
+			$kpd
+		);
+		my $rankresult = &::execCached("get_player_skill_value", $query, @vals);
 		($rank) = $rankresult->fetchrow_array;
 		$rankresult->finish;
 		$rank++;
 	}
 	else
 	{
-		my $rankresult = &::doQuery("
+		my $query ="
 			SELECT
 				COUNT(*)
 			FROM
 				hlstats_Players
 			WHERE
-				game='".&::quoteSQL($self->{game})."'
+				game=?
 				AND hideranking = 0
 				AND (
-						(kills > $kills) OR (
-							(kills = $kills) AND ((kills/IF(deaths=0,1,deaths)) > $kpd)
+						(kills > ?) OR (
+							(kills = ?) AND ((kills/IF(deaths=0,1,deaths)) > ?)
 						)
 				)
-		");
+		";
+		my @vals = (
+			&::quoteSQL($self->{game}),
+			$kills,
+			$kills,
+			$kpd
+		);
+		my $rankresult = &::execCached("get_player_rank_value", $query, @vals);
 		($rank) = $rankresult->fetchrow_array;
 		$rankresult->finish;
 		$rank++;

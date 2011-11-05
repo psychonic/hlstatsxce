@@ -84,18 +84,17 @@ sub getTotalPlayers
 {
 	my ($self) = @_;
 	
-	my $sqlTotalPlayers = "
+	my $query = "
 		SELECT 
 			COUNT(*) 
 		FROM 
 			hlstats_Players
 		WHERE
-			game='".&::quoteSQL($self->{game})."'
+			game=?
 			AND hideranking = 0
 			AND kills >= 1
 	";
-	
-	my $resultTotalPlayers = &::doQuery($sqlTotalPlayers);
+	my $resultTotalPlayers = &::execCached("get_game_total_players", $query, &::quoteSQL($self->{game}));
 	my ($totalplayers) = $resultTotalPlayers->fetchrow_array;
 	$resultTotalPlayers->finish;
 	
