@@ -1079,20 +1079,29 @@ sub flushDB
 
     if ($self->{total_kills} == 0)
     {
-		my $result = &::doQuery("
-			SELECT kills, headshots, suicides, rounds, ct_shots+ts_shots as shots, ct_hits+ts_hits as hits
-			FROM hlstats_Servers
-			WHERE	serverId=$serverid
-		");
+		my $result = &::execCached(
+			"get_server_player_info",
+			"SELECT
+				kills,
+				headshots,
+				suicides,
+				rounds,
+				ct_shots+ts_shots as shots,
+				ct_hits+ts_hits as hits
+			FROM
+				hlstats_Servers
+			WHERE
+				serverId=?",
+			$self->{id}
+			);
 		($self->{total_kills}, $self->{total_headshots}, $self->{total_suicides},$self->{total_rounds},$self->{total_shots},$self->{total_hits}) = $result->fetchrow_array();
 		$result->finish;
 	}   
 
-	my $result = &::doQuery("
-		SELECT count(*) as players
-		FROM hlstats_Players
-		WHERE game='".&::quoteSQL($self->{game})."' and hideranking<>2
-	");
+	my $result = &::execCached(
+		"get_player_count",
+		"SELECT count(*) as players FROM hlstats_Players WHERE game=? and hideranking<>2",
+		&::quoteSQL($self->{game}));
 	$self->{players} = $result->fetchrow_array();
 	$result->finish;
 	
@@ -1102,37 +1111,67 @@ sub flushDB
 		UPDATE
 			hlstats_Servers
 		SET  
-			name='".&::quoteSQL($self->{name})."',
-		    rounds=rounds + ".$self->{rounds}.",
-			kills=kills + ".$self->{kills}.",
-			suicides=suicides + ".$self->{suicides}.",
-			headshots=headshots + ".$self->{headshots}.",
-			bombs_planted=bombs_planted + ".$self->{bombs_planted}.",
-			bombs_defused=bombs_defused + ".$self->{bombs_defused}.",
-			players=".$self->{players}.",
-			ct_wins=ct_wins + ".$self->{ct_wins}.",
-			ts_wins=ts_wins + ".$self->{ts_wins}.",
-			act_players=".$self->{numplayers}.",
-			max_players=".$self->{maxplayers}.",
-			act_map='".&::quoteSQL($self->{map})."',
-			map_rounds=".$self->{map_rounds}.",
-			map_ct_wins=".$self->{map_ct_wins}.",
-			map_ts_wins=".$self->{map_ts_wins}.",
-			map_started=".$self->{map_started}.",
-			map_changes=map_changes+".$self->{map_changes}.",
-			ct_shots=ct_shots + ".$self->{ct_shots}.",
-			ct_hits=ct_hits + ".$self->{ct_hits}.",
-			ts_shots=ts_shots + ".$self->{ts_shots}.",
-			ts_hits=ts_hits + ".$self->{ts_hits}.",
-			map_ct_shots=".$self->{map_ct_shots}.",
-			map_ct_hits=".$self->{map_ct_hits}.",
-			map_ts_shots=".$self->{map_ts_shots}.",
-			map_ts_hits=".$self->{map_ts_hits}.",
-			last_event=$::ev_unixtime
+			name=?,
+			rounds=rounds + ?,
+			kills=kills + ?,
+			suicides=suicides + ?,
+			headshots=headshots + ?,
+			bombs_planted=bombs_planted + ?,
+			bombs_defused=bombs_defused + ?,
+			players=?,
+			ct_wins=ct_wins + ?,
+			ts_wins=ts_wins + ?,
+			act_players=?,
+			max_players=?,
+			act_map=?,
+			map_rounds=?,
+			map_ct_wins=?,
+			map_ts_wins=?,
+			map_started=?,
+			map_changes=map_changes + ?,
+			ct_shots=ct_shots + ?,
+			ct_hits=ct_hits + ?,
+			ts_shots=ts_shots + ?,
+			ts_hits=ts_hits + ?,
+			map_ct_shots=?,
+			map_ct_hits=?,
+			map_ts_shots=?,
+			map_ts_hits=?,
+			last_event=?
 		WHERE
-			serverId=$serverid
+			serverId=?
 	";
-	&::execNonQuery($query);
+	my @vals = (
+		&::quoteSQL($self->{name}),
+		$self->{rounds},
+		$self->{kills},
+		$self->{suicides},
+		$self->{headshots},
+		$self->{bombs_planted},
+		$self->{bombs_defused},
+		$self->{players},
+		$self->{ct_wins},
+		$self->{ts_wins},
+		$self->{numplayers},
+		$self->{maxplayers},
+		&::quoteSQL($self->{map}),
+		$self->{map_rounds},
+		$self->{map_ct_wins},
+		$self->{map_ts_wins},
+		$self->{map_started},
+		$self->{map_changes},
+		$self->{ct_shots},
+		$self->{ct_hits},
+		$self->{ts_shots},
+		$self->{ts_hits},
+		$self->{map_ct_shots},
+		$self->{map_ct_hits},
+		$self->{map_ts_shots},
+		$self->{map_ts_hits},
+		$::ev_unixtime,
+		$serverid
+	);
+	&::execCached("update_server_stats", $query, @vals);
 
 	$self->set("rounds", 0);
 	$self->set("kills", 0);

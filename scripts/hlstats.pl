@@ -160,10 +160,42 @@ sub track_hlstats_trend
 {
 	if ($last_trend_timestamp > 0) {
 		if ($last_trend_timestamp+299 < $ev_daemontime) {
-			my $result = &doQuery("SELECT COUNT(*), a.game FROM hlstats_Players a INNER JOIN (SELECT game FROM hlstats_Servers GROUP BY game) AS b ON a.game=b.game GROUP BY a.game");
+			my $query = "
+				SELECT 
+					COUNT(*),
+					a.game
+				FROM
+					hlstats_Players a
+				INNER JOIN
+					(
+						SELECT
+							game
+						FROM
+							hlstats_Servers
+						GROUP BY
+							game
+					) AS b 
+				ON
+					a.game = b.game
+				GROUP BY
+					a.game
+			";
+			my $result = &execCached("get_total_player_counts", $query);
 			my $insvalues = "";
 			while ( my($total_players, $game) = $result->fetchrow_array) {
-				my $data = &doQuery("SELECT SUM(kills), SUM(headshots), COUNT(serverId), SUM(act_players), SUM(max_players) FROM hlstats_Servers WHERE game='".&quoteSQL($game)."'");
+				my $query = "
+					SELECT
+						SUM(kills),
+						SUM(headshots),
+						COUNT(serverId),
+						SUM(act_players),
+						SUM(max_players)
+					FROM
+						hlstats_Servers
+					WHERE
+						game=?
+				";
+				my $data = &execCached("get_game_stat_counts", $query, &quoteSQL($game));
 				my ($total_kills, $total_headshots, $total_servers, $act_slots, $max_slots) = $data->fetchrow_array;
 				if ($max_slots > 0) {
 					if ($act_slots > $max_slots) {
@@ -774,10 +806,14 @@ sub getServer
 		FROM
 			hlstats_Servers a LEFT JOIN hlstats_Servers_Config b on a.serverId = b.serverId AND b.`parameter` = 'GameEngine' LEFT JOIN `hlstats_Games` c ON a.game = c.code
 		WHERE
-			address='$address' AND
-			port='$port' LIMIT 1
+			address=? AND
+			port=? LIMIT 1
 		";
-	my $result = &doQuery($query);
+	my @vals = (
+		$address,
+		$port
+	);
+	my $result = &execCached("get_server_information", $query, @vals);
 
 	if ($result->rows) {
 		my ($serverId, $game, $name, $rcon_pass, $publicaddress, $gameengine, $realgame, $maxplayers) = $result->fetchrow_array;
