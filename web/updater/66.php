@@ -7,7 +7,7 @@
 		$dbversion = 66;
 		$version = "1.6.15";
 
-		// Tracker #1439/1447 - New TF2 weapons - Victory Pack and Manno-Technology pack
+		// Tracker #1439/1447/1462 - New TF2 weapons - Victory Pack and Manno-Technology pack
 		$tfgames = array();
 		$result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
 		while ($rowdata = $db->fetch_row($result))
@@ -57,9 +57,45 @@
 					"name" => "The Short Circuit",
 					"verb" => "Short Circuit kills",
 					"modifier" => "2.00",
-					"award_name" => "Circuits Shorted")
-		);
-		
+					"award_name" => "Circuits Shorted"),
+				array(
+					"code" => "quake_rl",
+					"name" => "Original",
+					"verb" => "Original kills",
+					"modifier" => "2.00",
+					"award_name" => "Boots Quaked"),
+				array(
+					"code" => "scotland_shard",
+					"name" => "Scottish Handshake",
+					"verb" => "Scottish Handshake kills",
+					"modifier" => "2.00",
+					"award_name" => "Hands Shook"),
+				array(
+					"code" => "nonnonviolent_protest",
+					"name" => "Conscientious Objector",
+					"verb" => "Conscientious Objector kills",
+					"modifier" => "2.00",
+					"award_name" => "Signed Petitioners"),
+				array(
+					"code" => "deflect_flare_detonator",
+					"name" => "Deflected Flare (Detonator)",
+					"verb" => "Deflected Flare (Detonator) kills",
+					"modifier" => "2.00",
+					"award_name" => "Reflected Detonation"),
+				array(
+					"code" => "deflect_huntsman_flyingburn",
+					"name" => "Deflect Huntsman Burning Arrow",
+					"verb" => "Deflect Huntsman Burning Arrow kills",
+					"modifier" => "2.00",
+					"award_name" => "Reflected Burn"),
+				array(
+					"code" => "unarmed_combat",
+					"name" => "Unarmed Combat",
+					"verb" => "Unarmed Combat kills",
+					"modifier" => "2.00",
+					"award_name" => "Armed Robbery")
+				);
+
 		foreach ($tfgames as $game)
 		{
 		
