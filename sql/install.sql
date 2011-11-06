@@ -918,6 +918,11 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'deflect_flare_detonator', 'Reflected Detonation', 'Defected Flare (Detonator) kills'),
 ('W', 'tf', 'deflect_huntsman_flyingburn', 'Reflected Burn', 'Defected Huntsman Burning Arrow kills'),
 ('W', 'tf', 'unarmed_combat', 'Armed Robbery', 'Unarmed Combat kills'),
+('O', 'tf', 'player_penetration', 'In and Out', 'players penetrated'),
+('O', 'tf', 'builtobject_obj_teleporter', 'Proceed to android hell', 'teleporters built'),
+('O', 'tf', 'death_sawblade', 'Blades of Glory', 'deaths to a sawblade'),
+('O', 'tf', 'killedobject_obj_attachment_sapper', 'Sap This!', 'sappers removed'),
+('O', 'tf', 'killedobject_obj_teleporter', 'Take a walk!', 'teleporters killed'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
@@ -2133,7 +2138,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Events_PlayerPlayerActions` (
   `pos_victim_z` MEDIUMINT default NULL,
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`),
-  KEY `actionId` (`actionId`)
+  KEY `actionId` (`actionId`),
+	KEY `victimId` (`victimId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -4823,6 +4829,21 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('unarmed_combat', 1, 0, 'tf', '1_unarmed_combat.png', 'Bronze Unarmed Combat'),
 ('unarmed_combat', 5, 0, 'tf', '2_unarmed_combat.png', 'Silver Unarmed Combat'),
 ('unarmed_combat', 10, 0, 'tf', '3_unarmed_combat.png', 'Gold Unarmed Combat'),
+('player_penetration', 1, 0, 'tf', '1_player_penetration.png', 'Bronze Player Penetration'),
+('player_penetration', 5, 0, 'tf', '2_player_penetration.png', 'Silver Player Penetration'),
+('player_penetration', 10, 0, 'tf', '3_player_penetration.png', 'Gold Player Penetration'),
+('builtobject_obj_teleporter', 1, 0, 'tf', '1_builtobject_obj_teleporter.png', 'Bronze Teleporters Built'),
+('builtobject_obj_teleporter', 5, 0, 'tf', '2_builtobject_obj_teleporter.png', 'Silver Teleporters Built'),
+('builtobject_obj_teleporter', 10, 0, 'tf', '3_builtobject_obj_teleporter.png', 'Gold Teleporters Built'),
+('death_sawblade', 1, 0, 'tf', '1_death_sawblade.png', 'Bronze Deaths to Sawblade'),
+('death_sawblade', 5, 0, 'tf', '2_death_sawblade.png', 'Silver Deaths to Sawblade'),
+('death_sawblade', 10, 0, 'tf', '3_death_sawblade.png', 'Gold Deaths to Sawblade'),
+('killedobject_obj_attachment_sapper', 1, 0, 'tf', '1_killedobject_obj_attachment_sapper.png', 'Bronze Sappers Removed'),
+('killedobject_obj_attachment_sapper', 5, 0, 'tf', '2_killedobject_obj_attachment_sapper.png', 'Silver Sappers Removed'),
+('killedobject_obj_attachment_sapper', 10, 0, 'tf', '3_killedobject_obj_attachment_sapper.png', 'Gold Sappers Removed'),
+('killedobject_obj_teleporter', 1, 0, 'tf', '1_killedobject_obj_teleporter.png', 'Bronze Teleporters Killed'),
+('killedobject_obj_teleporter', 5, 0, 'tf', '2_killedobject_obj_teleporter.png', 'Silver Teleporters Killed'),
+('killedobject_obj_teleporter', 10, 0, 'tf', '3_killedobject_obj_teleporter.png', 'Gold Teleporters Killed'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
