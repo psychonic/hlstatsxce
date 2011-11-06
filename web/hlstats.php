@@ -205,8 +205,10 @@ if (file_exists('./updater') && $mode != 'updater')
 {
 	pageHeader(array('Update Notice'), array('Update Notice' => ''));
 	echo "<div class=\"warning\">\n" . 
-	"<span class=\"warning-heading\">Warning:</span><br />\n" .
-	"<span class=\"warning-text\">The updater folder was detected in your web directory.  Please finish the database update at <a href=\"{$g_options['scripturl']}?mode=updater\">{$g_options['scripturl']}?mode=updater</a> <strong>and/or remove the updater directory</strong>.</span>\n</div>";
+	"<span class=\"warning-heading\"><img src=\"".IMAGE_PATH."/warning.gif\" alt=\"Warning\"> Warning:</span><br />\n" .
+	"<span class=\"warning-text\">The updater folder was detected in your web directory.<br />
+	To perform a Database Update, please go to <strong><a href=\"{$g_options['scripturl']}?mode=updater\">HLX:CE Database Updater</a></strong> to perform the database update.<br /><br />
+	<strong>If you have already performed the database update, <strong>you must delete the \"updater\" folder from your web folder.</span>\n</div>";
 	pageFooter();
 	die();
 }

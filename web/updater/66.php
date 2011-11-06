@@ -8,11 +8,17 @@
 	$version = "1.6.15";
 
 	// Tracker #1466 - Add index to PlayerPlayerActions table
-	$db->query("
-		ALTER IGNORE TABLE
-			hlstats_Events_PlayerPlayerActions
-			ADD KEY `victimId` (`victimId`);
-	");
+	$result = $db->query("SHOW INDEX FROM hlstats_Events_PlayerPlayerActions WHERE Key_name = 'victimId'", 0, 1);
+	$result = $db->calc_rows($result);
+	if ($result < 1)
+	{
+	print "Adding additional database indexes.<br />";
+		$db->query("
+			ALTER IGNORE TABLE
+				hlstats_Events_PlayerPlayerActions
+				ADD KEY `victimId` (`victimId`);
+		");
+	}
 
 	
 	// Tracker #1439/1447/1462 - New TF2 weapons - Victory Pack and Manno-Technology pack
@@ -185,6 +191,7 @@
 		if (!empty($serverstring))
 		{
 			// Change all player_penetration weapon kill lines in event Frags to machina before doing our calculation.
+			print "Updating player_penetration weapon kills to machina kills for game $game.<br />";
 			$db->query("
 				UPDATE IGNORE
 					hlstats_Events_Frags
@@ -198,6 +205,7 @@
 
 		
 		// Insert actions
+		print "Adding new actions for game $game.<br />";
 		if (isset($actions) && count($actions) > 0)
 		{
 			$action_query = "INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES ";
@@ -270,6 +278,7 @@
 		}
 
 		// Insert awards
+		print "Adding new awards for game $game.<br />";
 		if (isset($awards) && count($awards) > 0)
 		{
 			$award_query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
@@ -322,6 +331,7 @@
 		}
 
 		// Insert weapons
+		print "Adding new weapons for game $game.<br />";
 		if (isset($weapons) && count($weapons) > 0)
 		{
 			$award_query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
@@ -378,6 +388,7 @@
 				}
 				
 				// Update kill count for any weapons just added
+				print "Updating weapon count for ".$db->escape($weapon['weapon_code'])." in game $game<br />";
 				if (!empty($serverstring))
 				{
 					$weapon_kill_query .= "
@@ -417,6 +428,7 @@
 	// Tracker #1439/1447 - End
 
 	// Perform database schema update notification
+	print "Updating database and verion schema numbers.<br />";
 	$db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
 	$db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
