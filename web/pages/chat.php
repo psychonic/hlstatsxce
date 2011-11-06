@@ -102,6 +102,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<input type="hidden" name="game" value="<?php echo $game; ?>" />
 				<strong>&#8226;</strong> Show Chat from
 				<?php
+/*
 					$result = $db->query
 					("
 						SELECT
@@ -122,6 +123,26 @@ For support and installation notes visit http://www.hlxcommunity.com
 							0,
 							50
 					");
+*/
+
+					$result = $db->query
+					("
+						SELECT
+							hlstats_Servers.serverId,
+							hlstats_Servers.name
+						FROM
+							hlstats_Servers
+						WHERE
+							hlstats_Servers.game='$game'
+						ORDER BY
+							hlstats_Servers.sortorder,
+							hlstats_Servers.name,
+							hlstats_Servers.serverId ASC
+						LIMIT
+							0,
+							50
+					");
+
 					echo '<select name="server_id"><option value="0">All Servers</option>';
 					$dates = array ();
 					$serverids = array();
@@ -237,9 +258,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 				$whereclause2="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
 			}
 			$surl = $g_options['scripturl'];
+
 			$result = $db->query
 			("
-				SELECT 
+				SELECT SQL_NO_CACHE 
 					hlstats_Events_Chat.eventTime,
 					unhex(replace(hex(hlstats_Players.lastName), 'E280AE', '')) as lastName,
 					IF(hlstats_Events_Chat.message_mode=2, CONCAT('(Team) ', hlstats_Events_Chat.message), hlstats_Events_Chat.message) AS message,
@@ -265,11 +287,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->startitem,
 					$table->numperpage;
 			", true, false);
-			if($showserver != 0) {
-				$countclause = "in (".implode($serverids,',').")";
+/*
+    			$whereclause = "hlstats_Events_Chat.serverId ";
+
+			if($showserver == 0) {
+				$whereclause .= "in (".implode($serverids,',').")";
 			} else {
-				$countclause = "= $showserver";
+				$whereclause .= "= $showserver";
 			}
+*/
+
 			$db->query
 			("
 				SELECT
