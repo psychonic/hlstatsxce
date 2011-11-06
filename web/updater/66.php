@@ -391,13 +391,12 @@
 				print "Updating weapon count for ".$db->escape($weapon['weapon_code'])." in game $game<br />";
 				if (!empty($serverstring))
 				{
-					$weapon_kill_query .= "
+					$db->query("
 						UPDATE IGNORE
 							hlstats_Weapons
 						SET
 							`kills` = `kills` + (
-								IFNULL(
-									(
+								IFNULL((
 									SELECT count(weapon)
 										FROM
 											hlstats_Events_Frags
@@ -405,24 +404,20 @@
 											`weapon` = '".$db->escape($weapon['weapon_code'])."'
 										AND
 											`serverId` IN ($serverstring)
-									),
-									0
-								)
+									),0)
 							)
 						WHERE
 							`code` = '".$db->escape($weapon['weapon_code'])."'
 						AND
-							`game` = '$game';";
+							`game` = '$game';");
 				}
 			}
 			$db->query($weapon_query);
 			$db->query($award_query);
 			$db->query($ribbon_query);
-			if (!empty($weapon_kill_query)) { $db->query($weapon_kill_query); }
 			unset($weapon_query);
 			unset($award_query);
 			unset($ribbon_query);
-			unset($weapon_kill_query);
 		}
 	}
 	// Tracker #1439/1447 - End
