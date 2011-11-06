@@ -174,7 +174,7 @@
 		$result = $db->query("SELECT serverId FROM hlstats_Servers WHERE game = '$game'");
 		while ($rowdata = $db->fetch_row($result))
 		{
-			array_push($tfservers, $db->$db->escape($rowdata[0]));
+			array_push($tfservers, $db->escape($rowdata[0]));
 		}
 		if (count($tfservers) > 0)
 		{
