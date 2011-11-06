@@ -1,15 +1,18 @@
 HLstatsX Community Edition 1.6.15
 Who knows!
 
-+ GameSupport: Added many new weapons for TF2, including the Victory Pack (#1439, #1447, #1448) (Packhead)
++ GameSupport: Added many new weapons for TF2, including the Victory Pack, Manno-Technology and Halloween update (#1439, #1447, #1448) (Packhead)
++ GameSupport: Added awards and ribbons for four existing actions (#1467) (Packhead)
 + GameSupport: Captured player_penetration weapon event and changed to action for TF2 (weapon logged as machina) (Packhead)
 + Web: Awards, Maps, Ribbons, Roles and Weapon images now failback to "realgame" directory if not present in "game" directory (#1461) (Packhead)
 ! Daemon: Fixed FPS and Uptime tracking post-TF2 stats output fix (#1458) (Packhead)
 ! Daemon: Converted server load DB updates to cached queries to reduce load (Packhead)
+! Daemon: Converted almost all daemon queries to use MySQL Prepared Statements to help reduce DB load (Packhead)
 ! GameSupport: Corrected typos and added two missing TF2 weapons (#1446) (Bluthund)
 ? Plugin: Removed old hack to fix cvars on a2s_rules response (psychonic)
 ? Plugin: Removed a large number of redundant client checks (psychonic)
 ? Web: Removed unnecessary joins from multiple pages (octo-dhd)
+? Web: Additional index added to speed up PlayerPlayerAction transactions (octo-dhd)
 
 
 HLstatsX Community Edition 1.6.14
