@@ -918,6 +918,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'deflect_flare_detonator', 'Reflected Detonation', 'Defected Flare (Detonator) kills'),
 ('W', 'tf', 'deflect_huntsman_flyingburn', 'Reflected Burn', 'Defected Huntsman Burning Arrow kills'),
 ('W', 'tf', 'unarmed_combat', 'Armed Robbery', 'Unarmed Combat kills'),
+('O', 'tf', 'player_penetration', 'In and Out', 'players penetrated'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
@@ -2133,7 +2134,8 @@ CREATE TABLE IF NOT EXISTS `hlstats_Events_PlayerPlayerActions` (
   `pos_victim_z` MEDIUMINT default NULL,
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`),
-  KEY `actionId` (`actionId`)
+  KEY `actionId` (`actionId`),
+	`victimId` (`victimId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -4823,6 +4825,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('unarmed_combat', 1, 0, 'tf', '1_unarmed_combat.png', 'Bronze Unarmed Combat'),
 ('unarmed_combat', 5, 0, 'tf', '2_unarmed_combat.png', 'Silver Unarmed Combat'),
 ('unarmed_combat', 10, 0, 'tf', '3_unarmed_combat.png', 'Gold Unarmed Combat'),
+('player_penetration', 1, 0, 'tf', '1_player_penetration.png', 'Bronze Player Penetration'),
+('player_penetration', 5, 0, 'tf', '2_player_penetration.png', 'Silver Player Penetration'),
+('player_penetration', 10, 0, 'tf', '3_player_penetration.png', 'Gold Player Penetration'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
