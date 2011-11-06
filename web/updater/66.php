@@ -182,7 +182,7 @@
 		}
 		
 		// Perform additional modifications to database before inserting new lines
-		if ($serverstring)
+		if (!empty($serverstring))
 		{
 			// Change all player_penetration weapon kill lines in event Frags to machina before doing our calculation.
 			$db->query("
@@ -198,7 +198,7 @@
 
 		
 		// Insert actions
-		if ($actions)
+		if (isset($actions) && count($actions) > 0)
 		{
 			$action_query = "INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES ";
 			$award_query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
@@ -270,7 +270,7 @@
 		}
 
 		// Insert awards
-		if ($awards)
+		if (isset($awards) && count($awards) > 0)
 		{
 			$award_query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
 			$ribbon_query = "INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES ";
@@ -322,7 +322,7 @@
 		}
 
 		// Insert weapons
-		if ($weapons)
+		if (isset($weapons) && count($weapons) > 0)
 		{
 			$award_query = "INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES ";
 			$ribbon_query = "INSERT IGNORE INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `image`, `ribbonName`) VALUES ";
@@ -378,7 +378,7 @@
 				}
 				
 				// Update kill count for any weapons just added
-				if ($serverstring)
+				if (!empty($serverstring))
 				{
 					$weapon_kill_query .= "
 						UPDATE IGNORE
@@ -407,7 +407,7 @@
 			$db->query($weapon_query);
 			$db->query($award_query);
 			$db->query($ribbon_query);
-			if ($weapon_kill_query) { $db->query($weapon_kill_query); }
+			if (!empty($weapon_kill_query)) { $db->query($weapon_kill_query); }
 			unset($weapon_query);
 			unset($award_query);
 			unset($ribbon_query);
