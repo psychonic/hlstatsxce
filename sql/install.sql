@@ -2139,7 +2139,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Events_PlayerPlayerActions` (
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`),
   KEY `actionId` (`actionId`),
-	`victimId` (`victimId`)
+	KEY `victimId` (`victimId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
