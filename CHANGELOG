@@ -1,5 +1,5 @@
 HLstatsX Community Edition 1.6.15
-Who knows!
+November 8th, 2011
 
 + GameSupport: Added many new weapons for TF2, including the Victory Pack, Manno-Technology and Halloween update (#1439, #1447, #1448) (Packhead)
 + GameSupport: Added awards and ribbons for four existing actions (#1467) (Packhead)
@@ -13,6 +13,7 @@ Who knows!
 ? Plugin: Removed a large number of redundant client checks (psychonic)
 ? Web: Removed unnecessary joins from multiple pages (octo-dhd)
 ? Web: Additional index added to speed up PlayerPlayerAction transactions (octo-dhd)
+? Web: Updater has been enhanced to provide more output (Packhead)
 
 
 HLstatsX Community Edition 1.6.14
