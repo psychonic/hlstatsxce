@@ -2705,13 +2705,11 @@ sub doEvent_Chat
 						AND kills >= 1
 					ORDER BY
 						 ? DESC, kpd DESC
-					LIMIT 0, ?
-				";
+					LIMIT 0, " . $limit;
 				my @vals = (
 					$g_ranktype,
 					&quoteSQL($player->{game}),
-					$g_ranktype,
-					$limit
+					$g_ranktype
 				);
 				my $result = &execCached("get_top_players", $query, @vals);
 				my $rankword = "";
