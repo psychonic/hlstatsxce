@@ -2704,7 +2704,7 @@ sub doEvent_Chat
 						AND hideranking = 0        
 						AND kills >= 1
 					ORDER BY
-						 DESC, kpd DESC
+						 ? DESC, kpd DESC
 					LIMIT 0, ?
 				";
 				my @vals = (
