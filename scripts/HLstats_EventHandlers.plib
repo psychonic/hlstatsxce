@@ -2693,25 +2693,19 @@ sub doEvent_Chat
 				$limit = $1;
 			}
 			if ($g_servers{$s_addr}->{player_command_osd} ne "") {
-				my $query = "
+				my $result = &doQuery("
 					SELECT
-						?, lastName, 
+						$g_ranktype, lastName, 
 						kills / IF(deaths=0,1,deaths) AS kpd
 					FROM
 						hlstats_Players
 					WHERE
-						game=?
+						game='" . &quoteSQL($player->{game}) . "'
 						AND hideranking = 0        
 						AND kills >= 1
 					ORDER BY
-						 ? DESC, kpd DESC
-					LIMIT 0, " . $limit;
-				my @vals = (
-					$g_ranktype,
-					&quoteSQL($player->{game}),
-					$g_ranktype
-				);
-				my $result = &execCached("get_top_players", $query, @vals);
+						 $g_ranktype DESC, kpd DESC
+					LIMIT 0, " . $limit);
 				my $rankword = "";
 				if ($g_ranktype eq "kills") {
 					$rankword = " kills";
