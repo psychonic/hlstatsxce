@@ -141,16 +141,16 @@ sub get_next_ranks
 {
 	my ($player)  = @_;
 
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			$g_ranktype,
 			kills / IF(deaths=0,1,deaths) AS kpd
 		FROM
 			hlstats_Players
 		WHERE
-			playerId=?
-	";
-	my $result = &execCached("get_next_rank", $query, $player->{playerid});
+			playerId=" . $player->{playerid}
+	);
+	
 	my ($base, $kpd) = $result->fetchrow_array;
 	$result->finish;
 	my $playerName = $player->{name};
@@ -167,35 +167,26 @@ sub get_next_ranks
 	}
 	my $osd_message = "->1 - Next Players\\n".sprintf("   %02d  %s%s        -      %s", $ranknumber, &number_format($base), $rankword, $playerName)."\\n";
    
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			playerId,
 			lastName,
-			?,
+			$g_ranktype,
 			kills / IF(deaths=0,1,deaths) AS kpd
 		FROM
 			hlstats_Players
 		WHERE
-			game = ?
-			AND ? = ?
+			game='".&quoteSQL($player->{game})."' 
+			AND $g_ranktype = $base
 			AND hideranking = 0
 			AND kills >= 1
-			AND playerId <> ?
+			AND playerId <> ".$player->{playerid}."
 		HAVING
-			kpd >= ?
-		ORDER BY ?, kpd
+			kpd >= $kpd
+		ORDER BY $g_ranktype, kpd
 		LIMIT 0,10
-	";
-	my @vals = (
-		$g_ranktype,
-		&quoteSQL($player->{game}),
-		$g_ranktype,
-		$base,
-		$player->{playerid},
-		$kpd,
-		$g_ranktype
-	);
-	my $result = &execCached("get_next_ranked_players", $query, @vals);
+	");
+	
 	my $player_count = 0;   
 	my $i = $ranknumber;
 	while (($player_count < 11) && (my ($playerId, $lastName, $p_base, $kpd) = $result->fetchrow_array)) {
@@ -209,32 +200,24 @@ sub get_next_ranks
 	$result->finish;
 
 	if ($player_count < 11)  {
-		my $query = "
+		my $result = &doQuery("
 			SELECT
 				playerId,
 				lastName,
-				?,
+				$g_ranktype,
 				kills / IF(deaths=0,1,deaths) AS kpd
 			FROM
 				hlstats_Players
 			WHERE
-				game=?
+				game='".&quoteSQL($player->{game})."'
 				AND hideranking = 0
-				AND ? > ?
+				AND $g_ranktype > $base
 				AND kills >= 1
 			ORDER BY
-				?,
+				$g_ranktype,
 				kpd
 			LIMIT 0,10
-		";
-		my @vals = (
-			$g_ranktype,
-			&quoteSQL($player->{game}),
-			$g_ranktype,
-			$base,
-			$g_ranktype
-		);
-		my $result = &execCached("get_next_ranked_players2", $query, @vals);
+		");
       
 		while (($player_count < 11) && (my ($playerId, $lastName, $p_base, $kpd) = $result->fetchrow_array)) {
 			$i--;
