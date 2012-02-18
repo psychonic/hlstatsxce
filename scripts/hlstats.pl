@@ -378,120 +378,120 @@ sub flushEventTable
 
 sub calcSkill
 {
-	my ($skill_mode, $killerSkill, $killerKills, $victimSkill, $victimKills, $weapon, $killerTeam) = @_;
-	my @newSkill;
-	
-	# ignored bots never do a "comeback"
-	return ($killerSkill, $victimSkill) if ($killerSkill < 1);
-	return ($killerSkill, $victimSkill)	if ($victimSkill < 1);
-	
-	if ($g_debug > 2) {
-		&printNotice("Begin calcSkill: killerSkill=$killerSkill");
-		&printNotice("Begin calcSkill: victimSkill=$victimSkill");
-	}
+  my ($skill_mode, $killerSkill, $killerKills, $victimSkill, $victimKills, $weapon, $killerTeam) = @_;
+  my @newSkill;
+  
+  # ignored bots never do a "comeback"
+  return ($g_skill_minchange, $victimSkill) if ($killerSkill < 1);
+  return ($killerSkill + $g_skill_minchange, $victimSkill) if ($victimSkill < 1);
+  
+  if ($g_debug > 2) {
+    &printNotice("Begin calcSkill: killerSkill=$killerSkill");
+    &printNotice("Begin calcSkill: victimSkill=$victimSkill");
+  }
 
-	my $modifier = 1.00;
-	# Look up the weapon's skill modifier
-	if (defined($g_games{$g_servers{$s_addr}->{game}}{weapons}{$weapon})) {
-		$modifier = $g_games{$g_servers{$s_addr}->{game}}{weapons}{$weapon}{modifier};
-	}
+  my $modifier = 1.00;
+  # Look up the weapon's skill modifier
+  if (defined($g_games{$g_servers{$s_addr}->{game}}{weapons}{$weapon})) {
+    $modifier = $g_games{$g_servers{$s_addr}->{game}}{weapons}{$weapon}{modifier};
+  }
 
-	# Calculate the new skills
-	
-	my $killerSkillChange = 0;
-	if ($g_skill_ratio_cap > 0) {
-		# SkillRatioCap, from *XYZ*SaYnt
-		#
-		# dgh...we want to cap the ratio between the victimkill and killerskill.  For example, if the number 1 player
-		# kills a newbie, he gets 1000/5000 * 5 * 1 = 1 points.  If gets killed by the newbie, he gets 5000/1000 * 5 *1
-		# = -25 points.   Not exactly fair.  To fix this, I'm going to cap the ratio to 1/2 and 2/1.
-		# these numbers are designed such that an excellent player will have to get about a 2:1 ratio against noobs to
-		# hold steady in points.
-		my $lowratio = 0.7;
-		my $highratio = 1.0 / $lowratio;
-		my $ratio = ($victimSkill / $killerSkill);
-		if ($ratio < $lowratio) { $ratio = $lowratio; }
-		if ($ratio > $highratio) { $ratio = $highratio; }
-		$killerSkillChange = $ratio * 5 * $modifier;
-	} else {
-		$killerSkillChange = ($victimSkill / $killerSkill) * 5 * $modifier;
-	}
+  # Calculate the new skills
+  
+  my $killerSkillChange = 0;
+  if ($g_skill_ratio_cap > 0) {
+    # SkillRatioCap, from *XYZ*SaYnt
+    #
+    # dgh...we want to cap the ratio between the victimkill and killerskill.  For example, if the number 1 player
+    # kills a newbie, he gets 1000/5000 * 5 * 1 = 1 points.  If gets killed by the newbie, he gets 5000/1000 * 5 *1
+    # = -25 points.   Not exactly fair.  To fix this, I'm going to cap the ratio to 1/2 and 2/1.
+    # these numbers are designed such that an excellent player will have to get about a 2:1 ratio against noobs to
+    # hold steady in points.
+    my $lowratio = 0.7;
+    my $highratio = 1.0 / $lowratio;
+    my $ratio = ($victimSkill / $killerSkill);
+    if ($ratio < $lowratio) { $ratio = $lowratio; }
+    if ($ratio > $highratio) { $ratio = $highratio; }
+    $killerSkillChange = $ratio * 5 * $modifier;
+  } else {
+    $killerSkillChange = ($victimSkill / $killerSkill) * 5 * $modifier;
+  }
 
-	if ($killerSkillChange > $g_skill_maxchange) {
-		&printNotice("Capping killer skill change of $killerSkillChange to $g_skill_maxchange") if ($g_debug > 2);
-		$killerSkillChange = $g_skill_maxchange;
-	}
-	
-	my $victimSkillChange = $killerSkillChange;
+  if ($killerSkillChange > $g_skill_maxchange) {
+    &printNotice("Capping killer skill change of $killerSkillChange to $g_skill_maxchange") if ($g_debug > 2);
+    $killerSkillChange = $g_skill_maxchange;
+  }
+  
+  my $victimSkillChange = $killerSkillChange;
 
-	if ($skill_mode == 1)
-	{
-		$victimSkillChange = $killerSkillChange * 0.75;
-	}
-	elsif ($skill_mode == 2)
-	{
-		$victimSkillChange = $killerSkillChange * 0.5;
-	}
-	elsif ($skill_mode == 3)
-	{
-		$victimSkillChange = $killerSkillChange * 0.25;
-	}
-	elsif ($skill_mode == 4)
-	{
-		$victimSkillChange = 0;
-	}
-	elsif ($skill_mode == 5)
-	{
-		#Zombie Panic: Source only
-		#Method suggested by heimer. Survivor's lose half of killer's gain when dying, but Zombie's only lose a quarter. 
-		if ($killerTeam eq "Undead")
-		{
-			$victimSkillChange = $killerSkillChange * 0.5;
-		}
-		elsif ($killerTeam eq "Survivor")
-		{
-			$victimSkillChange = $killerSkillChange * 0.25;
-		}
-	}
-	
-	if ($victimSkillChange > $g_skill_maxchange) {
-		&printNotice("Capping victim skill change of $victimSkillChange to $g_skill_maxchange") if ($g_debug > 2);
-		$victimSkillChange = $g_skill_maxchange;
-	}
-	
-	if ($g_skill_maxchange >= $g_skill_minchange) {
-		if ($killerSkillChange < $g_skill_minchange) {
-			&printNotice("Capping killer skill change of $killerSkillChange to $g_skill_minchange") if ($g_debug > 2);
-			$killerSkillChange = $g_skill_minchange;
-		} 
-	
-		if (($victimSkillChange < $g_skill_minchange) && ($skill_mode != 4)) {
-			&printNotice("Capping victim skill change of $victimSkillChange to $g_skill_minchange") if ($g_debug > 2);
-			$victimSkillChange = $g_skill_minchange;
-		}
-	}
-	if (($killerKills < $g_player_minkills ) || ($victimKills < $g_player_minkills )) {
-		$killerSkillChange = $g_skill_minchange;
-		if ($skill_mode != 4) {
-			$victimSkillChange = $g_skill_minchange;
-		} else {
-			$victimSkillChange = 0;
-		}  
-	}
-	
-	$killerSkill += $killerSkillChange;
-	$victimSkill -= $victimSkillChange;
-	
-	# we want int not float
-	$killerSkill = sprintf("%d", $killerSkill + 0.5);
-	$victimSkill = sprintf("%d", $victimSkill + 0.5);
-	
-	if ($g_debug > 2) {
-		&printNotice("End calcSkill: killerSkill=$killerSkill");
-		&printNotice("End calcSkill: victimSkill=$victimSkill");
-	}
+  if ($skill_mode == 1)
+  {
+    $victimSkillChange = $killerSkillChange * 0.75;
+  }
+  elsif ($skill_mode == 2)
+  {
+    $victimSkillChange = $killerSkillChange * 0.5;
+  }
+  elsif ($skill_mode == 3)
+  {
+    $victimSkillChange = $killerSkillChange * 0.25;
+  }
+  elsif ($skill_mode == 4)
+  {
+    $victimSkillChange = 0;
+  }
+  elsif ($skill_mode == 5)
+  {
+    #Zombie Panic: Source only
+    #Method suggested by heimer. Survivor's lose half of killer's gain when dying, but Zombie's only lose a quarter. 
+    if ($killerTeam eq "Undead")
+    {
+      $victimSkillChange = $killerSkillChange * 0.5;
+    }
+    elsif ($killerTeam eq "Survivor")
+    {
+      $victimSkillChange = $killerSkillChange * 0.25;
+    }
+  }
+  
+  if ($victimSkillChange > $g_skill_maxchange) {
+    &printNotice("Capping victim skill change of $victimSkillChange to $g_skill_maxchange") if ($g_debug > 2);
+    $victimSkillChange = $g_skill_maxchange;
+  }
+  
+  if ($g_skill_maxchange >= $g_skill_minchange) {
+    if ($killerSkillChange < $g_skill_minchange) {
+      &printNotice("Capping killer skill change of $killerSkillChange to $g_skill_minchange") if ($g_debug > 2);
+      $killerSkillChange = $g_skill_minchange;
+    } 
+  
+    if (($victimSkillChange < $g_skill_minchange) && ($skill_mode != 4)) {
+      &printNotice("Capping victim skill change of $victimSkillChange to $g_skill_minchange") if ($g_debug > 2);
+      $victimSkillChange = $g_skill_minchange;
+    }
+  }
+  if (($killerKills < $g_player_minkills ) || ($victimKills < $g_player_minkills )) {
+    $killerSkillChange = $g_skill_minchange;
+    if ($skill_mode != 4) {
+      $victimSkillChange = $g_skill_minchange;
+    } else {
+      $victimSkillChange = 0;
+    }  
+  }
+  
+  $killerSkill += $killerSkillChange;
+  $victimSkill -= $victimSkillChange;
+  
+  # we want int not float
+  $killerSkill = sprintf("%d", $killerSkill + 0.5);
+  $victimSkill = sprintf("%d", $victimSkill + 0.5);
+  
+  if ($g_debug > 2) {
+    &printNotice("End calcSkill: killerSkill=$killerSkill");
+    &printNotice("End calcSkill: victimSkill=$victimSkill");
+  }
 
-	return ($killerSkill, $victimSkill);
+  return ($killerSkill, $victimSkill);
 }
 
 sub calcL4DSkill
