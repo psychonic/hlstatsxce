@@ -243,13 +243,14 @@ if (0 == ($opt_player_activity + $opt_awards + $opt_ribbons + $opt_geoip + $opt_
 
 print "++ HLstatsX:CE Awards & Maintenance script version $g_version starting...\n\n";
 
+DoPruning() if ($opt_prune);
+DoOptimize() if ($opt_optimize);
 DoInactive() if ($opt_player_activity);
 DoAwards() if ($opt_awards);
 DoRibbons() if ($opt_ribbons);
 DoGeoIP() if ($opt_geoip);
 DoClans() if ($opt_clans);
-DoPruning() if ($opt_prune);
-DoOptimize() if ($opt_optimize);
+
 
 print "\n++ HLstatsX:CE Awards & Maintenance script finished.\n\n";
 
