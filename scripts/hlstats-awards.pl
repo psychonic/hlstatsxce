@@ -518,7 +518,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='".&quoteSQL($game)."'
+					AND	hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -532,7 +533,8 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='".&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					kills DESC
 				LIMIT 1
@@ -547,7 +549,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='"&quoteSQL($game)."'
+					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -561,7 +564,8 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='".&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					suicides DESC
 				LIMIT 1
@@ -575,7 +579,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='"&quoteSQL($game)."'
+					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -589,7 +594,8 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='".&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					teamkills DESC
 				LIMIT 1
@@ -707,7 +713,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='"&quoteSQL($game)."'
+					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -721,7 +728,8 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='"&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					connection_time DESC
 				LIMIT 1
@@ -735,7 +743,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='"&quoteSQL($game)."'
+					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -749,12 +758,14 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='"&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					kill_streak DESC
 				LIMIT 1
 			");
 		} elsif ($code eq "deathstreak") {
+		print "in deathstreak";
 			$resultDaily = &doQuery("
 				SELECT
 					hlstats_Players_History.playerId,
@@ -763,7 +774,8 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players.playerId = hlstats_Players_History.playerId
+					hlstats_Players_History.game='"&quoteSQL($game)."'
+					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
 				ORDER BY
@@ -777,7 +789,8 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.hideranking=0
+					hlstats_Players.game='"&quoteSQL($game)."'
+					AND hlstats_Players.hideranking=0
 				ORDER BY
 					death_streak DESC
 				LIMIT 1
