@@ -459,20 +459,16 @@
   
   $db->query("
 		INSERT IGNORE INTO `hlstats_Roles` (`game`, `code`, `name`, `hidden`) VALUES
-			('nd', '#ND_Consortium_Assault', 'Consortium Assault', '0'),
-      ('nd', '#ND_Consortium_Exo', 'Consortium Exo', '0'),
-      ('nd', '#ND_Consortium_Stealth', 'Consortium Stealth', '0'),
-      ('nd', '#ND_Consortium_Support', 'Consortium Support', '0'),
-      ('nd', '#ND_Empire_Assault', 'Empire Assault', '0'),
-      ('nd', '#ND_Empire_Exo', 'Empire Exo', '0'),
-      ('nd', '#ND_Empire_Stealth', 'Empire Stealth', '0'),
-      ('nd', '#ND_Empire_Support', 'Empire Support', '0');	
+			('nd', 'ASSAULT', 'Assault', '0'),
+      ('nd', 'EXO', 'Exo', '0'),
+      ('nd', 'STEALTH', 'Stealth', '0'),
+      ('nd', 'SUPPORT', 'Support', '0');	
 	");	
   
 	$db->query("
 		INSERT IGNORE INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcolor`, `playerlist_color`, `playerlist_index`) VALUES
-			('nd', 'Consortium', 'Consortium', '0', '#63B6EF', '#072D52', 1),
-      ('nd', 'Empire', 'Empire', '0', '#FA3232', '#680E10', 2);	
+			('nd', 'CONSORTIUM', 'Consortium', '0', '#63B6EF', '#072D52', 1),
+      ('nd', 'EMPIRE', 'Empire', '0', '#FA3232', '#680E10', 2);	
 	");	
 	
 	$db->query("
