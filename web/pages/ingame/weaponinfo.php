@@ -42,10 +42,6 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$weapon = valid_request($_GET['weapon'], 0)
 		or error('No weapon ID specified.');  
         
-	$game = 'css';  
-	if ((isset($_GET['game'])) && (is_string($_GET['game'])))
-		$game = $_GET['game'];
-	
 	$db->query("
 		SELECT
 			name

@@ -40,11 +40,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$server_id = 1;
 	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
 		$server_id = valid_request($_GET['server_id'], 1);
-    
-	$game = 'css';  
-	if ((isset($_GET['game'])) && (is_string($_GET['game'])))
-		$game = valid_request($_GET['game'], 0);
-
 ?>
 	<strong>&nbsp;<a href="http://www.hlxcommunity.com">HLstatsX Community Edition</a> <?php echo $g_options['version']; ?></strong><br /><br />
 	<table style="width:100%;border:0;padding:1px;border-spacing:0;">
