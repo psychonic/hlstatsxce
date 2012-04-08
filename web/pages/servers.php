@@ -52,7 +52,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
     $server_id = 1;
     if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-      $server_id = valid_request($_GET['server_id'], 1);
+    {
+      $server_id = valid_request($_GET['server_id'], 1)
+    }
+    else
+    {
+        error("Invalid server ID provided.");
+        pageFooter();
+        die();
+    }
+
 
     $query= "
             SELECT
