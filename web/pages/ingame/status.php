@@ -39,11 +39,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	require(PAGE_PATH.'/livestats.php');
 
-	$game = 'css';
-	if ((isset($_GET['game'])) && (is_string($_GET['game'])))
-		$game = valid_request($_GET['game'], 0);
-
-
 	$server_id = 1;
 	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
 		$server_id = valid_request($_GET['server_id'], 1);

@@ -53,10 +53,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 	// General
 	//
   
-	$game = 'css';
-	if ((isset($_GET['game'])) && (is_string($_GET['game'])))
-		$game = valid_request($_GET['game'], 0);
-
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
 	if ($db->num_rows() < 1) error("No such game '$game'.");
 	
