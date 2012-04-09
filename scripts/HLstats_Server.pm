@@ -528,7 +528,7 @@ sub track_server_load
 				$string = $1;
 
 				# Grab FPS and Uptime from the output
-				$string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)+/;
+				$string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s*([^ ]*)/;
 				$uptime = $4;
 				$fps = $6;
 
