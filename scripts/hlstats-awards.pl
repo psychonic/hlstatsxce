@@ -1253,6 +1253,15 @@ sub DoPruning
 		WHERE
 			timestamp < (UNIX_TIMESTAMP() - 172800)
 	");
+    
+	print "done\n++ Cleaning up database: deleting server load history older than one year... ";
+	&execNonQuery("
+        DELETE FROM
+            hlstats_server_load
+        WHERE
+            timestamp < (UNIX_TIMESTAMP(CURRENT_TIMESTAMP() - INTERVAL 1 YEAR))
+	");
+    
 	print "done\n";
 }
 
