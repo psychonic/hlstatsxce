@@ -2,8 +2,10 @@ HLstatsX Community Edition 1.6.16
 May 12, 2012
 
 + Daemon: Added a task to purge out old entries in hlstats_server_load table. (#1545)
++ GameSupport: Added 8 new weapons for TF2. (#1546 #1547)
 + GameSupport: Support for Nuclear Dawn added. (#1487)
-! Daemon: Fixed awards being given to players of different games (#1440)
+    SuperLogs is available for Nuclear Dawn.  More info at http://wiki.hlxce.com/wiki/SuperLogs
+! Daemon: Fixed awards being given to players of different games. (#1440)
 ! Daemon: Fixed daemon awarding no points when you kill a player with no points. (#1227)
 ! Daemon: Fixed regression causing the 'next' command to have garbage output. (#1479)
 ! Daemon: Fixed uptime regex calculation due to format change in Team Fortress 2. (#1497)
