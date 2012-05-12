@@ -47,7 +47,8 @@ enum GameType {
 	Game_FOF,
 	Game_GES,
 	Game_PVKII,
-	Game_CSP
+	Game_CSP,
+	Game_ND
 };
 
 new GameType:gamemod = Game_Unknown;
@@ -101,7 +102,8 @@ new const String: modnamelist[][] = {
 	"Fistful of Frags",
 	"GoldenEye: Source",
 	"Pirates, Vikings, and Knights",
-	"CSPromod"
+	"CSPromod",
+	"Nuclear Dawn"
 };
 
 new String: message_prefix[32];
@@ -181,7 +183,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII, Game_ND:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -402,6 +404,10 @@ get_server_mod()
 	{
 		gamemod = Game_CSP;
 	}
+	else if (StrContains(game_description, "Nuclear Dawn", false) != -1)
+	{
+		gamemod = Game_ND;
+	}
 	
 	// game mod could not detected, try further
 	if (gamemod == Game_Unknown)
@@ -460,6 +466,10 @@ get_server_mod()
 		else if (StrContains(game_folder, "cspromod", false) != -1)
 		{
 			gamemod = Game_CSP;
+		}
+		else if (StrContains(game_folder, "nucleardawn", false) != -1)
+		{
+			gamemod = Game_ND;
 		}
 		else
 		{
@@ -994,6 +1004,26 @@ color_team_entities(String:message[192])
 				}
 			}
 		}
+		case Game_ND:
+		{
+			if (strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "EMPIRE ", "\x03Empire\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "CONSORTIUM ", "\x03Consortium\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+			}
+		}
 	}
 
 	return -1;
@@ -1078,7 +1108,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP, Game_ND:
 		{
 			if (is_colored > 0)
 			{
