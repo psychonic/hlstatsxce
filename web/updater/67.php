@@ -8,7 +8,7 @@
     $version = "1.6.15";
 
     // Tracker #1487 - Add Nuclear Dawn support
-    print "Adding Nuclear Dawn game support.<br />";
+    print "#1487 - Adding Nuclear Dawn game support.<br />";
     $db->query("
         INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
             ('nd', 'headshot', 1, 0, '', 'Headshot', '1', '0', '0', '0'),
