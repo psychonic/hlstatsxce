@@ -8,7 +8,7 @@
     $version = "1.6.15";
 
     // Tracker #1487 - Add Nuclear Dawn support
-    print "Updating Nuclear Dawn game support.<br />";
+    print "#1487 - Updating Nuclear Dawn game support.<br />";
     $db->query("DELETE FROM `hlstats_Ranks` WHERE `game` = 'nd';");
     $db->query("OPTIMIZE TABLE `hlstats_Ranks`;");
     $db->query("
@@ -116,7 +116,11 @@
         INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
             ('nd', 'sonic turret', 'Sonic Turrent', 0.40),
             ('nd', 'world', 'World', 1.00);
-    ");    
+    ");
+    
+    // Tracker #1456 - hlstats_server_load table alter
+    print "#1456 - Updating hlstats_server_load types<br />";
+    $db->query("ALTER IGNORE TABLE `hlstats_server_load` MODIFY `server_id` INTEGER(10);");
 
     // Perform database schema update notification
     print "Updating database and verion schema numbers.<br />";
