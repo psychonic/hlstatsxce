@@ -5,7 +5,7 @@
     }
 
     $dbversion = 68;
-    $version = "1.6.15";
+    $version = "1.6.16";
 
     // Tracker #1487 - Add Nuclear Dawn support
     print "#1487 - Updating Nuclear Dawn game support.<br />";
