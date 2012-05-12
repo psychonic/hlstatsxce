@@ -3555,7 +3555,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_HostGroups` (
 
 CREATE TABLE IF NOT EXISTS `hlstats_Livestats` (
   `player_id` int(10) NOT NULL default '0',
-  `server_id` int(4) NOT NULL default '0',
+  `server_id` int(10) NOT NULL default '0',
   `cli_address` varchar(32) NOT NULL default '',
   `cli_city` varchar(64) NOT NULL default '',
   `cli_country` varchar(64) NOT NULL default '',

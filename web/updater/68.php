@@ -118,9 +118,10 @@
             ('nd', 'world', 'World', 1.00);
     ");
     
-    // Tracker #1456 - hlstats_server_load table alter
-    print "#1456 - Updating hlstats_server_load types<br />";
+    // Tracker #1456 - Change all instances of server_id to INT(10) to standardize across database.
+    print "#1456 - Updating server_id columns<br />";
     $db->query("ALTER IGNORE TABLE `hlstats_server_load` MODIFY `server_id` INTEGER(10);");
+    $db->query("ALTER IGNORE TABLE `hlstats_Livestats` MODIFY `server_id` INTEGER(10);");
 
     // Perform database schema update notification
     print "Updating database and verion schema numbers.<br />";
