@@ -5542,7 +5542,7 @@ CREATE TABLE IF NOT EXISTS `hlstats_Servers_VoiceComm` (
 --
 
 CREATE TABLE IF NOT EXISTS `hlstats_server_load` (
-  `server_id` tinyint(4) NOT NULL default '0',
+  `server_id` int(10) NOT NULL default '0',
   `timestamp` int(11) NOT NULL default '0',
   `act_players` tinyint(2) NOT NULL default '0',
   `min_players` tinyint(2) NOT NULL default '0',
