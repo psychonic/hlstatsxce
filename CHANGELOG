@@ -1,3 +1,17 @@
+HLstatsX Community Edition 1.6.16
+May 12, 2012
+
++ Daemon: Added a task to purge out old entries in hlstats_server_load table. (#1545)
++ GameSupport: Support for Nuclear Dawn added. (#1487)
+! Daemon: Fixed awards being given to players of different games (#1440)
+! Daemon: Fixed daemon awarding no points when you kill a player with no points. (#1227)
+! Daemon: Fixed regression causing the 'next' command to have garbage output. (#1479)
+! Daemon: Fixed uptime regex calculation due to format change in Team Fortress 2. (#1497)
+! Daemon: Updated geoip.py to use correct MaxMind URL for GeoLiteCity.CSV file. (#1521)
+! General: Standardized typing for server_id columns in all tables. (#1456)
+! Web: Removed legacy which could be used for XSS and SQL injection attacks.
+
+
 HLstatsX Community Edition 1.6.15
 November 8th, 2011
 
