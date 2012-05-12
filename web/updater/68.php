@@ -136,49 +136,49 @@
             "weapon_name" => "Eureka Effect",
             "award_verb" => "Eureka Effect kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Eureka!"),
         array(
             "weapon_code" => "holiday_punch",
             "weapon_name" => "Holiday Punch",
             "award_verb" => "Holiday Punch kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "The Gift of Punch"),
         array(
             "weapon_code" => "manmelter",
             "weapon_name" => "Manmelter",
             "award_verb" => "Manmelter kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Melted Men"),
         array(
             "weapon_code" => "phlogistinator",
             "weapon_name" => "Phlogistinator",
             "award_verb" => "Phlogistinator kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Phlogged"),
         array(
             "weapon_code" => "pomson",
             "weapon_name" => "Pomson 6000",
             "award_verb" => "Pomson 6000 kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Convenient Radiation"),
         array(
             "weapon_code" => "spy_cicle",
             "weapon_name" => "Spy-cicle",
             "award_verb" => "Spy-cicle kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Cold as ice"),
         array(
             "weapon_code" => "thirddegree",
             "weapon_name" => "Third Degree",
             "award_verb" => "Third Degree kills",
             "modifier" => "2.00",
-            "award_name" => ""),
+            "award_name" => "Ooooh burn!"),
         array(
             "weapon_code" => "wrap_assassin",
             "weapon_name" => "Wrap Assassin",
-            "award_verb" => "Original kills",
+            "award_verb" => "Wrap Assassin kills",
             "modifier" => "2.00",
-            "award_name" => "")
+            "award_name" => "Wrapping Machine")
     );
 
     foreach ($tfgames as $game)
