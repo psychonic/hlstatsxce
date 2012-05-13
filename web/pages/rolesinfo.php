@@ -95,7 +95,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			),
 			new TableColumn(
 				'frags',
-				ucfirst($role) . ' kills',
+				ucfirst($role_name) . ' kills',
 				'width=35&align=right'
 			),
 		),
@@ -150,17 +150,17 @@ For support and installation notes visit http://www.hlxcommunity.com
 	<div class="subblock">
 <?php // figure out URL and absolute path of image
 
-    $wep_content = "<strong>$role_name</strong>: ";    
+    $wep_content = "<strong>".htmlspecialchars($role_name)."</strong>: ";    
     $image = getImage("/games/$game/roles/$role");
     if ($image)
     {
-		$wep_content .= '<img src="' . str_replace('#','%23',$image['url']) ."\" alt=\"$role\" />";   
+		$wep_content .= '<img src="' . str_replace('#','%23',$image['url']) ."\" alt=\"".htmlspecialchars($role_name)."\" />";   
     }
 ?>
 		<div style="float:left;">
 			<?php echo $wep_content ?>
 			&nbsp;From a total of <b><?php echo number_format(intval($totalkills)); ?></b> kills as <?php 
-				echo $role;
+				echo htmlspecialchars($role_name);
 				if($totalheadshots > 0 || $role=='sniper')
 				{
 					echo ' with <b>' . number_format($totalheadshots) . '</b> headshots ';
