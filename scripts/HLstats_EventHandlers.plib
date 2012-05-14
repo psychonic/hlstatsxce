@@ -38,7 +38,7 @@ sub get_fav_weapon  {
 	my ($player)  = @_;
 	my $p_connect_time = $player->{connect_time};
    
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			hlstats_Events_Frags.weapon,
 			COUNT(hlstats_Events_Frags.weapon) AS kills,
@@ -47,42 +47,31 @@ sub get_fav_weapon  {
 			hlstats_Events_Frags,hlstats_Servers
 		WHERE
 			hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-			AND hlstats_Servers.game=? AND hlstats_Events_Frags.killerId=?
-			GROUP BY
+			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Frags.killerId=".$player->{playerid}."
+		GROUP BY
 			hlstats_Events_Frags.weapon
 		ORDER BY
 			kills desc, headshots desc
-		LIMIT 1
-	";
-	my @vals = (
-		&quoteSQL($g_servers{$s_addr}->{game}),
-		$player->{playerid}
-	);
-	my $result = &execCached("get_favorite_weapon", $query, @vals);
+		LIMIT 1	
+	");
 	my ($fav_weapon, $fav_weapon_kills, $fav_weapon_headshots) = $result->fetchrow_array;
 	$result->finish;
 
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			IFNULL(ROUND((SUM(hlstats_Events_Statsme.hits) / SUM(hlstats_Events_Statsme.shots) * 100), 0), 0) AS acc
 		FROM
 			hlstats_Events_Statsme, hlstats_Servers
 		WHERE
 			hlstats_Servers.serverId=hlstats_Events_Statsme.serverId
-			AND hlstats_Servers.game=? AND hlstats_Events_Statsme.PlayerId=?
-			AND hlstats_Events_Statsme.weapon=?
-		LIMIT 0,1
-	";
-	my @vals = (
-		&quoteSQL($g_servers{$s_addr}->{game}),
-		$player->{playerid},
-		&quoteSQL($fav_weapon)
-	);
-	my $result = &execCached("get_favorite_weapon_accuracy", $query, @vals);
+			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Statsme.PlayerId=".$player->{playerid}."
+			AND hlstats_Events_Statsme.weapon='".&quoteSQL($fav_weapon)."'
+		LIMIT 0,1	
+	");
 	my ($fav_weapon_sm_acc) = $result->fetchrow_array;
 	$result->finish;
 
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			hlstats_Events_Frags.weapon,
 			COUNT(hlstats_Events_Frags.weapon) AS kills,
@@ -91,45 +80,32 @@ sub get_fav_weapon  {
 			hlstats_Events_Frags,hlstats_Servers
 		WHERE
 			hlstats_Servers.serverId=hlstats_Events_Frags.serverId
-			AND hlstats_Servers.game=? AND hlstats_Events_Frags.killerId=?
-			AND (hlstats_Events_Frags.eventTime > FROM_UNIXTIME(?))
+			AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Frags.killerId='".$player->{playerid}."'
+			AND (hlstats_Events_Frags.eventTime > FROM_UNIXTIME(".$p_connect_time."))
 		GROUP BY
 			hlstats_Events_Frags.weapon
 		ORDER BY
 			kills desc, headshots desc
 		LIMIT 0, 1	
-	";
-	my @vals = (
-		&quoteSQL($g_servers{$s_addr}->{game}),
-		$player->{playerid},
-		$p_connect_time
-	);
-	my $result = &execCached("get_favorite_weapon_kill_stats", $query, @vals);
+	");
 
 	my ($s_fav_weapon, $s_fav_weapon_kills, $s_fav_weapon_headshots) = $result->fetchrow_array;
 	$result->finish;
 	my $s_fav_weapon_sm_acc = 0;
    
 	if (($s_fav_weapon ne "") && ($s_fav_weapon_kills > 0)) {
-		my $query = "
+		my $result = &doQuery("
 			SELECT
 				IFNULL(ROUND((SUM(hlstats_Events_Statsme.hits) / SUM(hlstats_Events_Statsme.shots) * 100), 0), 0) AS acc
 			FROM
 				hlstats_Events_Statsme, hlstats_Servers
 			WHERE
 				hlstats_Servers.serverId=hlstats_Events_Statsme.serverId
-				AND hlstats_Servers.game=? AND hlstats_Events_Statsme.PlayerId=?
-				AND hlstats_Events_Statsme.weapon=?
-				AND (hlstats_Events_Statsme.eventTime > FROM_UNIXTIME(?))
-			LIMIT 0,1
-		";
-		my @vals = (
-			&quoteSQL($g_servers{$s_addr}->{game}),
-			$player->{playerid},
-			&quoteSQL($s_fav_weapon),
-			$p_connect_time
-		);
-		my $result = &execCached("get_favorite_weapon_accuracy2", $query, @vals);
+				AND hlstats_Servers.game='".&quoteSQL($g_servers{$s_addr}->{game})."' AND hlstats_Events_Statsme.PlayerId='".$player->{playerid}."'
+				AND hlstats_Events_Statsme.weapon='".&quoteSQL($s_fav_weapon)."'
+				AND (hlstats_Events_Statsme.eventTime > FROM_UNIXTIME(".$p_connect_time."))
+			LIMIT 0,1	
+		");
 		($s_fav_weapon_sm_acc) = $result->fetchrow_array;
 		$result->finish;
 	}
@@ -150,7 +126,6 @@ sub get_next_ranks
 		WHERE
 			playerId=" . $player->{playerid}
 	);
-	
 	my ($base, $kpd) = $result->fetchrow_array;
 	$result->finish;
 	my $playerName = $player->{name};
@@ -176,17 +151,17 @@ sub get_next_ranks
 		FROM
 			hlstats_Players
 		WHERE
-			game='".&quoteSQL($player->{game})."' 
+			game='".&quoteSQL($player->{game})."'
 			AND $g_ranktype = $base
 			AND hideranking = 0
 			AND kills >= 1
-			AND playerId <> ".$player->{playerid}."
+			AND playerId <> " . $player->{playerid} . "
 		HAVING
-			kpd >= $kpd
+			kpd>=$kpd
 		ORDER BY $g_ranktype, kpd
 		LIMIT 0,10
 	");
-	
+
 	my $player_count = 0;   
 	my $i = $ranknumber;
 	while (($player_count < 11) && (my ($playerId, $lastName, $p_base, $kpd) = $result->fetchrow_array)) {
@@ -209,7 +184,7 @@ sub get_next_ranks
 			FROM
 				hlstats_Players
 			WHERE
-				game='".&quoteSQL($player->{game})."'
+				game='".&quoteSQL($player->{game})."' 
 				AND hideranking = 0
 				AND $g_ranktype > $base
 				AND kills >= 1
@@ -253,7 +228,7 @@ sub get_player_data
 {
 	my ($player, $get_rank)  = @_;
 
-	my $query = "
+	my $result = &doQuery("
 		SELECT
 			skill, kills, deaths, suicides, headshots,
 			IFNULL(ROUND((hits / shots * 100), 0), 0) AS acc,
@@ -261,9 +236,8 @@ sub get_player_data
 		FROM
 			hlstats_Players
 		WHERE
-			playerId=?
-	";
-	my $result = &execCached("get_player_statistics", $query, $player->{playerid});
+			playerId='" . $player->{playerid} . "'
+	");
     my ($skill, $kills, $deaths, $suicides, $headshots, $acc, $connection_time) = $result->fetchrow_array;
 	$result->finish;
 	
@@ -681,28 +655,13 @@ sub doEvent_Disconnect
 				$desc = "(IGNORED) VAC BANNED PLAYER [".$playerUniqueId."]: ";
 				my $playerid = &getPlayerId($playerUniqueId);
 				if ($playerid) {
-					my $query = "
-						SELECT
-							lastName,
-							hideranking
-						FROM
-							hlstats_Players
-						WHERE
-							playerId=?
-					";
-					my $result = &execCached("get_vacd_player", $query, $playerid);
+					my $query = "SELECT lastName, hideranking FROM hlstats_Players WHERE playerId=$playerid";
+					my $result = &doQuery($query);
 					($lastName, $hideranking) = $result->fetchrow_array;
 					$result->finish;
 					if ($hideranking < 2)  {
-						my $query = "
-							UPDATE
-								hlstats_Players
-							SET
-								last_event = UNIX_TIMESTAMP(),
-								hideranking=2
-							WHERE
-								playerId = ?";
-						&execCached("update_vacd_player_history", $query, $playerid);
+						my $query = "UPDATE hlstats_Players SET last_event=UNIX_TIMESTAMP(), hideranking=2 WHERE playerId=$playerid";
+						&execNonQuery($query);
 						$desc = "HIDING VAC BANNED PLAYER [".$playerUniqueId.", ".$lastName."]: ";
 					} else {
 						$desc = "VAC BANNED PLAYER [".$playerUniqueId.", ".$lastName."] ALREADY HIDDEN: ";
@@ -712,28 +671,13 @@ sub doEvent_Disconnect
 				$desc = "(IGNORED) STEAMBANS BANNED PLAYER [".$playerUniqueId."]: ";
 				my $playerid = &getPlayerId($playerUniqueId);
 				if ($playerid) {
-					my $query = "
-						SELECT
-							lastName,
-							hideranking
-						FROM
-							hlstats_Players
-						WHERE
-							playerId = ?";
-					my $result = &execCached("get_steamban_player", $query, $playerid);
+					my $query      = "SELECT lastName, hideranking FROM hlstats_Players WHERE playerId=$playerid";
+					my $result     = &doQuery($query);
 					($lastName, $hideranking) = $result->fetchrow_array;
 					$result->finish;
 					if ($hideranking < 2)  {
-						my $query = "
-							UPDATE
-								hlstats_Players
-							SET
-								last_event = UNIX_TIMESTAMP(),
-								hideranking=2
-							WHERE
-								playerId = ?
-						";
-						&execCached("update_steamban_player_history", $query, $playerid);
+						my $query = "UPDATE hlstats_Players SET last_event=UNIX_TIMESTAMP(), hideranking=2 WHERE playerId=$playerid";
+						&execNonQuery($query);
 						$desc = "HIDING STEAMBANS BANNED PLAYER [".$playerUniqueId.", ".$lastName."]: ";
 					} else {
 						$desc = "STEANBANS BANNED PLAYER [".$playerUniqueId.", ".$lastName."] ALREADY HIDDEN: ";
@@ -2166,15 +2110,14 @@ sub doEvent_Chat
 				my $region = "";
 			}
 		} elsif ($message =~ /^\/?hlx_hideranking$/i) {
-			my $query = "
+			my $result = &doQuery("
 				SELECT
 					hideranking
 				FROM
 					hlstats_Players
 				WHERE
-					playerId = ?
-			";
-			my $result = &execCached("get_player_hideranking_value", $query, $player->{playerid});
+					playerId = " . $player->{playerid}
+			);
 			my ($hideranking) = $result->fetchrow_array;
 			$result->finish;
 			
@@ -2188,15 +2131,15 @@ sub doEvent_Chat
 				$hidedesc = "VISIBLE on";
 			}
 			my $playerName = &abbreviate($player->{name});
-			my $query = "
+			&execNonQuery("
 				UPDATE
 					hlstats_Players
 				SET
 					hideranking='$hideranking'
 				WHERE
-					playerId= ?
-			";
-			&execCached("set_player_hideranking_value", $query, $player->{playerid});
+					playerId=" . $player->{playerid}
+			);
+			
 			if ($player->{display_events} == 1) {
 				$cmd_str = $rcmd." $p_userid ".$g_servers{$s_addr}->quoteparam("'$playerName' is now $hidedesc the rankings");
 			}  
@@ -2683,12 +2626,13 @@ sub doEvent_Chat
 					FROM
 						hlstats_Players
 					WHERE
-						game='" . &quoteSQL($player->{game}) . "'
+						game='".&quoteSQL($player->{game})."' 
 						AND hideranking = 0        
 						AND kills >= 1
 					ORDER BY
-						 $g_ranktype DESC, kpd DESC
-					LIMIT 0, " . $limit);
+						$g_ranktype DESC, kpd DESC
+					LIMIT 0, ".$limit);
+					
 				my $rankword = "";
 				if ($g_ranktype eq "kills") {
 					$rankword = " kills";

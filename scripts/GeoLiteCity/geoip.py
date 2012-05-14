@@ -69,7 +69,7 @@ def fetch_geodata():
    FILE = FIL + ".zip"
    system("rm *.csv > /dev/null")
    if not os.path.exists(FILE):
-      system("wget http://www.maxmind.com/download/geoip/database/GeoLiteCity_CSV/" + FILE)
+      system("wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/" + FILE)
    system("unzip -o " + FILE)
 
    system("mv %s/GeoLiteCity-Blocks.csv geoLiteCity_Blocks.csv"%FIL)
