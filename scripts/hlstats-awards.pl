@@ -549,7 +549,7 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players_History.game='"&quoteSQL($game)."'
+					hlstats_Players_History.game='".&quoteSQL($game)."'
 					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
@@ -579,7 +579,7 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players_History.game='"&quoteSQL($game)."'
+					hlstats_Players_History.game='".&quoteSQL($game)."'
 					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
@@ -713,7 +713,7 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players_History.game='"&quoteSQL($game)."'
+					hlstats_Players_History.game='".&quoteSQL($game)."'
 					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
@@ -728,7 +728,7 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.game='"&quoteSQL($game)."'
+					hlstats_Players.game='".&quoteSQL($game)."'
 					AND hlstats_Players.hideranking=0
 				ORDER BY
 					connection_time DESC
@@ -743,7 +743,7 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players_History.game='"&quoteSQL($game)."'
+					hlstats_Players_History.game='".&quoteSQL($game)."'
 					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
@@ -758,7 +758,7 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.game='"&quoteSQL($game)."'
+					hlstats_Players.game='".&quoteSQL($game)."'
 					AND hlstats_Players.hideranking=0
 				ORDER BY
 					kill_streak DESC
@@ -774,7 +774,7 @@ sub DoAwards
 					hlstats_Players_History,
 					hlstats_Players
 				WHERE
-					hlstats_Players_History.game='"&quoteSQL($game)."'
+					hlstats_Players_History.game='".&quoteSQL($game)."'
 					AND hlstats_Players.playerId = hlstats_Players_History.playerId
 					AND hlstats_Players.hideranking=0
 					AND eventTime = DATE_SUB($date_base, INTERVAL $opt_numdays DAY)
@@ -789,7 +789,7 @@ sub DoAwards
 				FROM
 					hlstats_Players
 				WHERE
-					hlstats_Players.game='"&quoteSQL($game)."'
+					hlstats_Players.game='".&quoteSQL($game)."'
 					AND hlstats_Players.hideranking=0
 				ORDER BY
 					death_streak DESC
