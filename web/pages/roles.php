@@ -71,14 +71,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	while ($rowdata = $db->fetch_row($result))
 	{ 
 		$code = $rowdata[0];
-		
-		$fname[$code] = "";
-		$image = getImage("/games/$game/roles/$code");
-		if ($image)
-		{
-			$fname[$code] .= '<img src="' . str_replace('#','%23',$image['url']) ."\" alt=\"".htmlspecialchars($rowdata[1])."\" />";   
-		}
-		$fname[$code] .= "<strong>".htmlspecialchars($rowdata[1])."</strong>";
+		$fname[$code] = htmlspecialchars($rowdata[1]);
 	}
 	$tblRoles = new Table
 	(
