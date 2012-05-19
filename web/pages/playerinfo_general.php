@@ -87,7 +87,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 							$pagedata=fetchpage($page);
 							if( preg_match('/Location: (.*)/', $pagedata, $location) )
 							{
-								$page = trim($location[1]) . "?xml=1\n";
+								$page = trim($location[1]) . "?xml=1";
 								$pagedata = fetchpage($page);
 							}
 							preg_match('/<onlineState>(.*?)<\/onlineState>/', $pagedata, $results);
