@@ -286,7 +286,7 @@ function printMapCenter($country)
 	switch (strtoupper($country))
 	{
 		case 'EUROPE':
-			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 4;";
+			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 3;";
 			break;
 		case 'NORTH AMERICA':
 			echo "var mapLatLng = new google.maps.LatLng(45.0, -97.0);\nvar mapZoom = 3;";
@@ -388,7 +388,7 @@ function printMapCenter($country)
 			echo "var mapLatLng = new google.maps.LatLng(25.0, 8.5);\nvar mapZoom = 2;";
 			break;
 		default:
-			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 4;";
+			echo "var mapLatLng = new google.maps.LatLng(48.8, 8.5);\nvar mapZoom = 3;";
 			break;
 	}
 	echo "\n";
