@@ -121,8 +121,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 				'width=17'
 			),
 			new TableColumn(
-				'code',
-				'Code',
+				'name',
+				'Name',
 				'width=23'
 			),
 			new TableColumn(
@@ -138,7 +138,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		),
 		'awardId',
 		'awardTime',
-		'code',
+		'name',
 		false,
 		50,
 		'page',
@@ -152,7 +152,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		("
 			SELECT
 				hlstats_Players_Awards.awardTime,
-				hlstats_Awards.code,
+                hlstats_Awards.Name,
 				hlstats_Awards.verb,
 				hlstats_Players_Awards.count,
 				hlstats_Awards.awardId
@@ -189,7 +189,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		("
 			SELECT
 				MAX(hlstats_Players_Awards.awardTime) AS awardTime,
-				hlstats_Awards.code,
+				hlstats_Awards.name,
 				hlstats_Awards.verb,
 				COUNT(verb) AS count,
 				hlstats_Awards.awardId
@@ -202,7 +202,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			WHERE
 				hlstats_Players_Awards.playerId = $player
 			GROUP BY
-				hlstats_Awards.code,
+				hlstats_Awards.name,
 				hlstats_Awards.verb
 			ORDER BY
 				$table->sort $table->sortorder,
