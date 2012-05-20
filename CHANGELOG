@@ -10,11 +10,14 @@ May 20, 2012
 ! Daemon: Fixed regression causing the 'next' command to have garbage output. (#1479)
 ! Daemon: Fixed uptime regex calculation due to format change in Team Fortress 2. (#1497)
 ! Daemon: Updated geoip.py to use correct MaxMind URL for GeoLiteCity.CSV file. (#1521)
+! Daemon: Fixed install_binary.sh not installing GeoLiteCity to correct location. (#1532)
 ! General: Standardized typing for server_id columns in all tables. (#1456)
 ! Web: Removed legacy which could be used for XSS and SQL injection attacks.
 ! Web: Fixed Status and Avatar not working for players with custom URLs in their Steam profile. (#1525)
 ! Web: Fixed various locations where role code was displayed instead of role name. (#1548)
 ! Web: Added missing TF2 award and ribbon images. (#1449 #1468)
+! Web: Fixed a syntax issue on tools_perlcontrol.php that caused the page to not load on PHP 5.4 (#1544)
+? Web: Changed the default zoom level for the EUROPE region by 1.  (#1426)
 
 
 HLstatsX Community Edition 1.6.15
