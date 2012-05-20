@@ -41,8 +41,11 @@ URL=http://geolite.maxmind.com/download/geoip/database/
 # File is the file to download from the server above, as well as what to store it as locally.
 FILE=GeoLiteCity.dat.gz
 
-
 # ***** NOTHING TO CONFIGURE BELOW HERE *****
+
+# Change to directory where installer is
+cd `dirname $0`
+
 echo Downloading a new copy of GeoLiteCity, if needed.
 wget -N -q $URL$FILE
 echo Uncompressing database
