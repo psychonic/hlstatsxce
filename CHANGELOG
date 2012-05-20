@@ -1,5 +1,5 @@
 HLstatsX Community Edition 1.6.16
-May 12, 2012
+May 20, 2012
 
 + Daemon: Added a task to purge out old entries in hlstats_server_load table. (#1545)
 + GameSupport: Added 8 new weapons for TF2. (#1546 #1547)
@@ -12,6 +12,9 @@ May 12, 2012
 ! Daemon: Updated geoip.py to use correct MaxMind URL for GeoLiteCity.CSV file. (#1521)
 ! General: Standardized typing for server_id columns in all tables. (#1456)
 ! Web: Removed legacy which could be used for XSS and SQL injection attacks.
+! Web: Fixed Status and Avatar not working for players with custom URLs in their Steam profile. (#1525)
+! Web: Fixed various locations where role code was displayed instead of role name. (#1548)
+! Web: Added missing TF2 award and ribbon images. (#1449 #1468)
 
 
 HLstatsX Community Edition 1.6.15
