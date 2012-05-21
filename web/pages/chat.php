@@ -282,7 +282,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				WHERE
 					$whereclause $whereclause2
 				ORDER BY
-					hlstats_Events_Chat.eventTime $table->sortorder
+					hlstats_Events_Chat.id $table->sortorder
 				LIMIT
 					$table->startitem,
 					$table->numperpage;
