@@ -19,6 +19,7 @@ May 20, 2012
 ! Web: Fixed a syntax issue on tools_perlcontrol.php that caused the page to not load on PHP 5.4 (#1544)
 ? Web: Changed the default zoom level for the EUROPE region by 1.  (#1426)
 ? Web: Changed the table on player award history page to use the award name instead of award code. (#1556)
+? Web: Changed the query on the Chat page to sort by the ID instead of Event Time, which would have required an index.  (#1083)
 
 
 HLstatsX Community Edition 1.6.15
