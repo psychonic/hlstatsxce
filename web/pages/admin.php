@@ -1259,5 +1259,5 @@ if (!$selTask || !$admintasks[$selTask])
 </script>
 <?php
 }
-
+echo $footerscript;
 ?>
