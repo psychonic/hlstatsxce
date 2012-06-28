@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="69";
-SET @VERSION="1.6.16";
+SET @DBVERSION="70";
+SET @VERSION="1.6.17";
 
 -- --------------------------------------------------------
 
@@ -966,6 +966,14 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'spy_cicle', 'Cold as ice', 'Spy-cicle kills'),
 ('W', 'tf', 'thirddegree', 'Ooooh burn!', 'Third Degree kills'),
 ('W', 'tf', 'wrap_assassin', 'Wrapping Machine', 'Wrap Assassin kills'),
+('W', 'tf', 'pep_pistol', 'Lookin Good', 'Pretty Boy\'s Pocket Pistol kills'),
+('W', 'tf', 'pep_brawlerblaster', 'Baby Face', 'Baby Face\'s Blaster kills'),
+('W', 'tf', 'dumpster_device', 'Don\'t Beg', 'Beggar\'s Bazooka kills'),
+('W', 'tf', 'pro_smg', 'Cleaning Time', 'The Cleaner\'s Carbine kills'),
+('W', 'tf', 'pro_rifle', 'Making Heat', 'The Hitman\'s Heatmaker kills'),
+('W', 'tf', 'rainblower', 'The Rainman', 'The Rainblower kills'),
+('W', 'tf', 'lollichop', 'Free Candy', 'The Lollichop kills'),
+('W', 'tf', 'scorchshot', 'Scorcher', 'The Scorch Shot kills'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
@@ -5072,6 +5080,30 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('wrap_assassin', 1, 0, 'tf', '1_wrap_assassin.png', 'Bronze Wrap Assassin'),
 ('wrap_assassin', 5, 0, 'tf', '2_wrap_assassin.png', 'Silver Wrap Assassin'),
 ('wrap_assassin', 10, 0, 'tf', '3_wrap_assassin.png', 'Gold Wrap Assassin'),
+('pep_pistol', 1, 0, 'tf', '1_pep_pistol.png', 'Bronze Pretty Boy\'s Pocket Pistol '),
+('pep_pistol', 5, 0, 'tf', '2_pep_pistol.png', 'Silver Pretty Boy\'s Pocket Pistol '),
+('pep_pistol', 10, 0, 'tf', '3_pep_pistol.png', 'Gold Pretty Boy\'s Pocket Pistol '),
+('pep_brawlerblaster', 1, 0, 'tf', '1_pep_brawlerblaster.png', 'Bronze Baby Face\'s Blaster'),
+('pep_brawlerblaster', 5, 0, 'tf', '2_pep_brawlerblaster.png', 'Silver Baby Face\'s Blaster'),
+('pep_brawlerblaster', 10, 0, 'tf', '3_pep_brawlerblaster.png', 'Gold Baby Face\'s Blaster'),
+('dumpster_device', 1, 0, 'tf', '1_dumpster_device.png', 'Bronze Beggar\'s Bazooka'),
+('dumpster_device', 5, 0, 'tf', '2_dumpster_device.png', 'Silver Beggar\'s Bazooka'),
+('dumpster_device', 10, 0, 'tf', '3_dumpster_device.png', 'Gold Beggar\'s Bazooka'),
+('pro_smg', 1, 0, 'tf', '1_pro_smg.png', 'Bronze The Cleaner\'s Carbine'),
+('pro_smg', 5, 0, 'tf', '2_pro_smg.png', 'Silver The Cleaner\'s Carbine'),
+('pro_smg', 10, 0, 'tf', '3_pro_smg.png', 'Gold The Cleaner\'s Carbine'),
+('pro_rifle', 1, 0, 'tf', '1_pro_rifle.png', 'Bronze The Hitman\'s Heatmaker'),
+('pro_rifle', 5, 0, 'tf', '2_pro_rifle.png', 'Silver The Hitman\'s Heatmaker'),
+('pro_rifle', 10, 0, 'tf', '3_pro_rifle.png', 'Gold The Hitman\'s Heatmaker'),
+('rainblower', 1, 0, 'tf', '1_rainblower.png', 'Bronze The Rainblower'),
+('rainblower', 5, 0, 'tf', '2_rainblower.png', 'Silver The Rainblower'),
+('rainblower', 10, 0, 'tf', '3_rainblower.png', 'Gold The Rainblower'),
+('lollichop', 1, 0, 'tf', '1_lollichop.png', 'Bronze The Lollichop'),
+('lollichop', 5, 0, 'tf', '2_lollichop.png', 'Silver The Lollichop'),
+('lollichop', 10, 0, 'tf', '3_lollichop.png', 'Gold The Lollichop'),
+('scorchshot', 1, 0, 'tf', '1_scorchshot.png', 'Bronze The Scorch Shot'),
+('scorchshot', 5, 0, 'tf', '2_scorchshot.png', 'Silver The Scorch Shot'),
+('scorchshot', 10, 0, 'tf', '3_scorchshot.png', 'Gold The Scorch Shot'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
@@ -6346,6 +6378,14 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'spy_cicle', 'Spy-cicle', 2.00),
 ('tf', 'thirddegree', 'Third Degree', 2.00),
 ('tf', 'wrap_assassin', 'Wrap Assassin', 2.00),
+('tf', 'pep_pistol', 'Pretty Boy\'s Pocket Pistol ', 1.50),
+('tf', 'pep_brawlerblaster', 'Baby Face\'s Blaster', 1.00),
+('tf', 'dumpster_device', 'Beggar\'s Bazooka', 1.00),
+('tf', 'pro_smg', 'The Cleaner\'s Carbine', 1.00),
+('tf', 'pro_rifle', 'The Hitman\'s Heatmaker', 1.00),
+('tf', 'rainblower', 'The Rainblower', 1.00),
+('tf', 'lollichop', 'The Lollichop', 2.00),
+('tf', 'scorchshot', 'The Scorch Shot', 2.00),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
