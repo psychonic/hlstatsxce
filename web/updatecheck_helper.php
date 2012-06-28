@@ -1,3 +1,3 @@
 <?php
-	echo file_get_contents('http://master.hlxcommunity.com/updatecheck/');
+	echo file_get_contents('http://master.hlxce.com/updatecheck/');
 ?>
