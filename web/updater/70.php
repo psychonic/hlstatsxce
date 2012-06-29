@@ -236,7 +236,7 @@
                     'W',
                     '$game',
                     '".$db->escape($weapon['weapon_code'])."',
-                    '".$db->escape($weapon['weapon_name'])."',
+                    '".$db->escape($weapon['award_name'])."',
                     '".$db->escape($weapon['award_verb'])."')" .
                     // Check to see if we're on the last key -- if so finish the SQL statement, otherwise leave it open to append
                     ($key == count($weapons)-1 ? ";" : ",");
