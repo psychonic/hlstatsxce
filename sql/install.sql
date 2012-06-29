@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="71";
+SET @DBVERSION="72";
 SET @VERSION="1.6.17";
 
 -- --------------------------------------------------------
@@ -974,6 +974,7 @@ INSERT INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUE
 ('W', 'tf', 'rainblower', 'The Rainman', 'The Rainblower kills'),
 ('W', 'tf', 'lollichop', 'Free Candy', 'The Lollichop kills'),
 ('W', 'tf', 'scorchshot', 'Scorcher', 'The Scorch Shot kills'),
+('W', 'tf', 'unique_pickaxe_escape', 'The Great Escape', 'The Escape Plan kills'),
 ('O','hl2mp','headshot','Headshot King','headshot kills'),
 ('W','hl2mp','crowbar','01. (Crowbar) Rebel for Life','guys slaughtered and some more fleshwounds'),
 ('W','hl2mp','physics','04. (Physics) Bummsmaster','kills with the Zeropoint Energyfield Manipulator'),
@@ -5104,6 +5105,9 @@ INSERT INTO `hlstats_Ribbons` (`awardCode`, `awardCount`, `special`, `game`, `im
 ('scorchshot', 1, 0, 'tf', '1_scorchshot.png', 'Bronze The Scorch Shot'),
 ('scorchshot', 5, 0, 'tf', '2_scorchshot.png', 'Silver The Scorch Shot'),
 ('scorchshot', 10, 0, 'tf', '3_scorchshot.png', 'Gold The Scorch Shot'),
+('unique_pickaxe_escape', 1, 0, 'tf', '1_unique_pickaxe_escape.png', 'Bronze The Escape Plan'),
+('unique_pickaxe_escape', 5, 0, 'tf', '2_unique_pickaxe_escape.png', 'Silver The Escape Plan'),
+('unique_pickaxe_escape', 10, 0, 'tf', '3_unique_pickaxe_escape.png', 'Gold The Escape Plan'),
 ('*total connection hours*',168,2,'insmod','1waward.png','Connection Time 1 Week '),
 ('weapon_makarov',5,0,'insmod','rs_makarov.png','Silver Makarov'),
 ('weapon_m9',5,0,'insmod','rs_m9.png','Silver 9mm Beretta'),
@@ -6386,6 +6390,7 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('tf', 'rainblower', 'The Rainblower', 1.00),
 ('tf', 'lollichop', 'The Lollichop', 2.00),
 ('tf', 'scorchshot', 'The Scorch Shot', 2.00),
+('tf', 'unique_pickaxe_escape', 'The Escape Plan', 1.00),
 ('csp', 'knife', 'Bundeswehr Advanced Combat Knife', 2.00),
 ('csp', 'usp', 'H&K USP .45 Tactical', 1.40),
 ('csp', 'glock', 'Glock 18 Select Fire', 1.40),
