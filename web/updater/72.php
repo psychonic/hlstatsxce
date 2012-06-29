@@ -5,7 +5,7 @@
     }
 
     $dbversion = 72;
-    $version = "1.6.18-dev";
+    $version = "1.6.17";
     $tfgames = array();
     $result = $db->query("SELECT code FROM hlstats_Games WHERE realgame = 'tf'");
     while ($rowdata = $db->fetch_row($result))
@@ -17,11 +17,11 @@
     foreach ($tfgames as $game)
     {
         print "Fixing award names for TF2 gamecode $game.<br />";
-        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Lookin Good' WHERE `game` = '$game' AND `name` = 'Pretty Boy's Pocket Pistol'");
-        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Baby Face' WHERE `game` = '$game' AND `name` = 'Baby Face's Blaster'");
-        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Don't Beg' WHERE `game` = '$game' AND `name` = 'Beggar's Bazooka'");
-        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Cleaning Time' WHERE `game` = '$game' AND `name` = 'The Cleaner's Carbine'");
-        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Making Heat' WHERE `game` = '$game' AND `name` = 'The Hitman's Heatmaker'");
+        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Lookin Good' WHERE `game` = '$game' AND `name` = 'Pretty Boy\'s Pocket Pistol'");
+        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Baby Face' WHERE `game` = '$game' AND `name` = 'Baby Face\'s Blaster'");
+        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Don\'t Beg' WHERE `game` = '$game' AND `name` = 'Beggar\'s Bazooka'");
+        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Cleaning Time' WHERE `game` = '$game' AND `name` = 'The Cleaner\'s Carbine'");
+        $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Making Heat' WHERE `game` = '$game' AND `name` = 'The Hitman\'s Heatmaker'");
         $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'The Rainman' WHERE `game` = '$game' AND `name` = 'The Rainblower'");
         $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Free Candy' WHERE `game` = '$game' AND `name` = 'The Lollichop'");
         $db->query("UPDATE IGNORE `hlstats_Awards` SET `name` = 'Scorcher' WHERE `game` = '$game' AND `name` = 'The Scorch Shot'");
