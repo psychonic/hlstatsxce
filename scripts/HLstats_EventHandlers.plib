@@ -2062,7 +2062,9 @@ sub doEvent_Chat
 				if (($hlx_command == 0) && ($log == 1)) {
 					my $saytype = 1;
 					if ($msg_type eq "say_team") {
-						$saytype++;
+						$saytype = 2;
+					} elsif ($msg_type eq "say_squad") {
+						$saytype = 3;
 					}
 					&recordEvent(
 						"Chat", 

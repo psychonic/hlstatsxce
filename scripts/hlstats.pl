@@ -3008,27 +3008,14 @@ while ($loop = &getLine()) {
 						%ev_properties
 					);
 				}
-			} elsif ($ev_verb eq "say") {
+			} elsif ($ev_verb eq "say" || $ev_verb eq "say_team" || $ev_verb eq "say_squad") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				
 				$ev_type = 14;
 				
 				if ($playerinfo) {
 					$ev_status = &doEvent_Chat(
-						"say",
-						$playerinfo->{"userid"},
-						$playerinfo->{"uniqueid"},
-						$ev_obj_a
-					);
-				}
-			} elsif ($ev_verb eq "say_team") {
-				my $playerinfo = &getPlayerInfo($ev_player, 1);
-				
-				$ev_type = 14;
-				
-				if ($playerinfo) {
-					$ev_status = &doEvent_Chat(
-						"say_team",
+						$ev_verb,
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a
