@@ -178,16 +178,7 @@ stock LogKillLoc(attacker, victim)
 
 stock LogRoleChange(client, const String:role[], const String:properties[] = "")
 {
-	if (IsValidPlayer(client))
-	{
-		decl String:player_authid[32];
-		if (!GetClientAuthString(client, player_authid, sizeof(player_authid)))
-		{
-			strcopy(player_authid, sizeof(player_authid), "UNKNOWN");
-		}
-		
-		LogToGame("\"%N<%d><%s><%s>\" changed role to \"%s\"%s", client, GetClientUserId(client), player_authid, g_team_list[GetClientTeam(client)], role, properties);
-	}
+	LogPlayerEvent( client, "changed role to", role, false, properties );
 }
 
 stock LogMapLoad()
