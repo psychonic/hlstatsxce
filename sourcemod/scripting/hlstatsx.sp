@@ -48,7 +48,8 @@ enum GameType {
 	Game_GES,
 	Game_PVKII,
 	Game_CSP,
-	Game_ND
+	Game_ND,
+	Game_DDD,
 };
 
 new GameType:gamemod = Game_Unknown;
@@ -103,7 +104,8 @@ new const String: modnamelist[][] = {
 	"GoldenEye: Source",
 	"Pirates, Vikings, and Knights",
 	"CSPromod",
-	"Nuclear Dawn"
+	"Nuclear Dawn",
+	"Dino D-Day"
 };
 
 new String: message_prefix[32];
@@ -128,22 +130,14 @@ public Plugin:myinfo = {
 };
 
 
-#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-#else
-public bool:AskPluginLoad(Handle:myself, bool:late, String:error[], err_max)
-#endif
 {
 	g_bLateLoad = late;
 	MarkNativeAsOptional("CS_SwitchTeam");
 	MarkNativeAsOptional("CS_RespawnPlayer");
 	MarkNativeAsOptional("SetCookieMenuItem");
 	
-#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 3
 	return APLRes_Success;
-#else
-	return true;
-#endif
 }
 
 
@@ -183,7 +177,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII, Game_ND:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII, Game_ND, Game_DDD:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -254,7 +248,7 @@ public OnPluginStart()
 
 public OnAllPluginsLoaded()
 {
-	if (GetExtensionFileStatus("clientprefs.ext") == 1)
+	if (LibraryExists("clientprefs"))
 	{
 		SetCookieMenuItem(HLXSettingsMenu, 0, "HLstatsX:CE Settings");
 	}
@@ -284,9 +278,14 @@ public OnMapStart()
 	}
 }
 
+bool:BTagsSupported()
+{
+	return (sv_tags != INVALID_HANDLE && (g_iSDKVersion == SOURCE_SDK_EPISODE2 || g_iSDKVersion == SOURCE_SDK_EPISODE2VALVE || gamemod == Game_ND));
+}
+
 stock MyAddServerTag(const String:tag[])
 {
-	if (sv_tags == INVALID_HANDLE || (g_iSDKVersion != SOURCE_SDK_EPISODE2 && g_iSDKVersion != SOURCE_SDK_EPISODE2VALVE))
+	if (!BTagsSupported())
 	{
 		// game doesn't support sv_tags
 		return;
@@ -323,7 +322,7 @@ stock MyAddServerTag(const String:tag[])
 
 stock MyRemoveServerTag(const String:tag[])
 {
-	if (sv_tags == INVALID_HANDLE || (g_iSDKVersion != SOURCE_SDK_EPISODE2 && g_iSDKVersion != SOURCE_SDK_EPISODE2VALVE))
+	if (!BTagsSupported())
 	{
 		// game doesn't support sv_tags
 		return;
@@ -470,6 +469,10 @@ get_server_mod()
 		else if (StrContains(game_folder, "nucleardawn", false) != -1)
 		{
 			gamemod = Game_ND;
+		}
+		else if (StrContains(game_folder, "dinodday", false) != -1)
+		{
+			gamemod = Game_DDD;
 		}
 		else
 		{
@@ -1024,6 +1027,26 @@ color_team_entities(String:message[192])
 				}
 			}
 		}
+		case Game_DDD:
+		{
+			if (g_bTeamPlay && strcmp(message, "") != 0)
+			{
+				if (ColorSlotArray[2] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Allies ", "\x03Allies\x01 ") > 0)
+					{
+						return ColorSlotArray[2];
+					}
+				}
+				if (ColorSlotArray[3] > -1)
+				{
+					if (ReplaceString(message, sizeof(message), "Axis ", "\x03Axis\x01 ") > 0)
+					{
+						return ColorSlotArray[3];
+					}
+				}
+			}
+		}
 	}
 
 	return -1;
@@ -1108,7 +1131,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP, Game_ND:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP, Game_ND, Game_DDD:
 		{
 			if (is_colored > 0)
 			{
