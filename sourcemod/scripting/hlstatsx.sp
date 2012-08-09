@@ -171,15 +171,15 @@ public OnPluginStart()
 
 	if (gamemod == Game_INSMOD)
 	{
-		RegConsoleCmd("say",                 hlx_block_commands);
-		RegConsoleCmd("say2",                hlx_block_commands);
-		RegConsoleCmd("say_team",            hlx_block_commands);
+		AddCommandListener(hlx_block_commands, "say2");
 	}
-	else
+	else if (gamemod == Game_ND)
 	{
-		RegConsoleCmd("say",                 hlx_block_commands);
-		RegConsoleCmd("say_team",            hlx_block_commands);
+		AddCommandListener(hlx_block_commands, "say_squad");
 	}
+	
+	AddCommandListener(hlx_block_commands, "say");
+	AddCommandListener(hlx_block_commands, "say_team");
 	
 	switch (gamemod)
 	{
@@ -1701,7 +1701,7 @@ is_command_blocked(String: command[])
 }
 
 
-public Action:hlx_block_commands(client, args)
+public Action:hlx_block_commands(client, const String:command[], args)
 {
 	if (client)
 	{
