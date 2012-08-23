@@ -483,6 +483,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$insmod_models = array ('insmod1', 'insmod2');
 			$fof_models = array ('fof1', 'fof2');
 			$ges_models = array ('ges-bond', 'ges-boris');
+			$dinodday_models			= array('ddd_allies', 'ddd_axis');
+			$dinodday_allies_weapons	= array('garand', 'greasegun', 'thompson', 'shotgun', 'sten', 'carbine', 'bar', 'mosin', 'p38', 'piat', 'nagant', 'flechette', 'pistol', 'trigger');
+			$dinodday_axis_weapons		= array('mp40', 'k98', 'mp44', 'k98sniper', 'luger', 'stygimoloch', 'mg42', 'trex');
 			while ($rowdata = $db->fetch_array())
 			{
 				$weapon_data['total']['head'] += $rowdata['smhead'];
@@ -525,6 +528,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 					case 'fof':
 						$weapon_data[$rowdata['smweapon']]['model'] = 'fof1';
 						break;
+					case 'dinodday':
+						$weapon_data[$rowdata['smweapon']]['model'] = 'ddd_allies';
+						break;
 					default:
 						$weapon_data[$rowdata['smweapon']]['model'] = 'ct';
 				}
@@ -554,6 +560,17 @@ For support and installation notes visit http://www.hlxcommunity.com
 						$weapon_data[$rowdata['smweapon']]['model'] = $dods_models[0];
 					}
 				}
+				elseif ($realgame == 'dinodday')
+				{
+					if (in_array($rowdata['smweapon'], $dinodday_allies_weapons))
+					{
+						$weapon_data[$rowdata['smweapon']]['model'] = $dinodday_models[1];
+					}
+					elseif (in_array($rowdata['smweapon'], $dinodday_axis_weapons))
+					{
+						$weapon_data[$rowdata['smweapon']]['model'] = $dinodday_models[0];
+					}
+				}
 			}
 			switch ($realgame)
 			{
@@ -580,6 +597,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 					break;
 				case 'fof':
 					$start_model = $fof_models[array_rand($fof_models)];
+					break;
+				case 'dinodday':
+					$start_model = $dinodday_models[array_rand($dinoday_models)];
 					break;
 				default:
 					$start_model   = $css_models[array_rand($css_models)];

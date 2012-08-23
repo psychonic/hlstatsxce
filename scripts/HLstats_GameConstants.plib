@@ -23,7 +23,8 @@ use constant {
 	PVKII => 20,
 	CSP => 21,
 	VALVE => 22,
-	NUCLEARDAWN => 23
+	NUCLEARDAWN => 23,
+	DDD => 24,
 };
 
 %gamecode_to_game = (
@@ -50,5 +51,6 @@ use constant {
 	'pvkii'    => PVKII(),
 	'csp'      => CSP(),
 	'valve'    => VALVE(),
-	'nucleardawn' => NUCLEARDAWN()
+	'nucleardawn' => NUCLEARDAWN(),
+	'dinodday' => DDD()
 );

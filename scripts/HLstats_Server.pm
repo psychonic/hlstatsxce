@@ -270,6 +270,7 @@ sub get_game_mod_opts
 				|| $self->{play_game} == PVKII()
 				|| $self->{play_game} == CSP()
 				|| $self->{play_game} == NUCLEARDAWN()
+				|| $self->{play_game} == DDD()
 				)
 			)
 			|| ($self->{mod} eq "AMXX"
