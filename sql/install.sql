@@ -2,7 +2,7 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="72";
+SET @DBVERSION="74";
 SET @VERSION="1.6.17";
 
 -- --------------------------------------------------------
@@ -737,7 +737,20 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('nd', 'sonicturret_destroyed', 10, 0, '', 'Destroyed Consortium Sonic Turret', '1', '0', '0', '0'),
 ('nd', 'supply_destroyed', 10, 0, '', 'Destroyed Supply Station', '1', '0', '0', '0'),
 ('nd', 'transportgate_destroyed', 10, 0, '', 'Destroyed Transport Gate', '1', '0', '0', '0'),
-('nd', 'machineguneturret_destroyed', 10, 0, '', 'Destroyed Machinegun Turret', '1', '0', '0', '0');
+('nd', 'machineguneturret_destroyed', 10, 0, '', 'Destroyed Machinegun Turret', '1', '0', '0', '0'),
+('dinodday', 'headshot', 3, 0, '', 'Boom! Headshot!', '1', '0', '0', '0'),
+('dinodday', 'kill_goat', -10, 0, '', 'Defenseless Goat murdered', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0'),
+('dinodday', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0');
 
 
 -- --------------------------------------------------------
@@ -2459,7 +2472,8 @@ INSERT INTO `hlstats_Games` (`code`, `name`, `realgame`, `hidden`) VALUES
 ('pvkii', 'Pirates, Vikings, & Knights II', 'pvkii', '1'),
 ('csp', 'CSPromod', 'csp', '1'),
 ('valve', 'Half-Life 1 Multiplayer', 'valve', '1'),
-('nd', 'Nuclear Dawn', 'nd', '1');
+('nd', 'Nuclear Dawn', 'nd', '1'),
+('dinodday', 'Dino D-Day', 'dinodday', '1');
 
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hlstats_Games_Defaults` (
@@ -3090,7 +3104,32 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('nd', 'SwitchAdmins', '0'),
 ('nd', 'TKPenalty', '0'),
 ('nd', 'TrackServerLoad', '1'),
-('nd', 'UpdateHostname', '1');	
+('nd', 'UpdateHostname', '1'),
+('dinodday', 'Admins', ''),
+('dinodday', 'AutoBanRetry', '0'),
+('dinodday', 'AutoTeamBalance', '0'),
+('dinodday', 'BonusRoundIgnore', '1'),
+('dinodday', 'BonusRoundTime', '0'),
+('dinodday', 'BroadCastEvents', '1'),
+('dinodday', 'BroadCastPlayerActions', '1'),
+('dinodday', 'ConnectAnnounce', '1'),
+('dinodday', 'DefaultDisplayEvents', '1'),
+('dinodday', 'DisplayResultsInBrowser', '1'),
+('dinodday', 'EnablePublicCommands', '1'),
+('dinodday', 'GameEngine', '3'),
+('dinodday', 'GameType', '0'),
+('dinodday', 'HLStatsURL', 'http://yoursite.com/hlstats'),
+('dinodday', 'IgnoreBots', '1'),
+('dinodday', 'MinimumPlayersRank', '0'),
+('dinodday', 'MinPlayers', '4'),
+('dinodday', 'PlayerEvents', '1'),
+('dinodday', 'ShowStats', '1'),
+('dinodday', 'SkillMode', '0'),
+('dinodday', 'SuicidePenalty', '5'),
+('dinodday', 'SwitchAdmins', '0'),
+('dinodday', 'TKPenalty', '0'),
+('dinodday', 'TrackServerLoad', '1'),
+('dinodday', 'UpdateHostname', '1');
 
 
 CREATE TABLE IF NOT EXISTS `hlstats_Games_Supported` (
@@ -3127,7 +3166,8 @@ INSERT INTO `hlstats_Games_Supported` (`code`, `name`) VALUES
 ('nts','NeoTokyo'),
 ('pvkii', 'Pirates, Vikings, & Knights II'),
 ('valve', 'Half-Life 1 Multiplayer'),
-('nd', 'Nuclear Dawn');
+('nd', 'Nuclear Dawn'),
+('dinodday', 'Dino D-Day');
 
 CREATE TABLE IF NOT EXISTS `hlstats_Heatmap_Config` (
   `id` int(255) NOT NULL auto_increment,
@@ -5919,7 +5959,23 @@ INSERT INTO `hlstats_Roles` (`game`, `code`, `name`, `hidden`) VALUES
 ('nd', 'ASSAULT', 'Assault', '0'),
 ('nd', 'EXO', 'Exo', '0'),
 ('nd', 'STEALTH', 'Stealth', '0'),
-('nd', 'SUPPORT', 'Support', '0');
+('nd', 'SUPPORT', 'Support', '0'),
+('dinodday', '#class_blue_class2', 'Cpl. Joe Spencer', '0'),
+('dinodday', '#class_blue_class1', 'Cpt. Jack Hardgrave', '0'),
+('dinodday', '#class_red_class11', 'Microraptor', '0'),
+('dinodday', '#class_red_class10', 'Compsognathus', '0'),
+('dinodday', '#class_red_class7', 'Stygimoloch', '0'),
+('dinodday', '#class_red_class6', 'Dilophosaurus', '0'),
+('dinodday', '#class_red_class5', 'Desmatosuchus', '0'),
+('dinodday', '#class_red_class4', 'Velociraptor', '0'),
+('dinodday', '#class_red_class3', 'Hpt.Fw. Wolfgang von Graff', '0'),
+('dinodday', '#class_red_class2', 'OLt. Karl Hissmann', '0'),
+('dinodday', '#class_red_class1', 'Hptm. Kurt Streicher', '0'),
+('dinodday', '#class_blue_class3', 'Cpt. Nigel Blithe-Crossley', '0'),
+('dinodday', '#class_blue_class4', 'Ilona Vike', '0'),
+('dinodday', '#class_blue_class5', 'Camille Brun', '0'),
+('dinodday', '#class_blue_class6', 'Jakob Frank', '0'),
+('dinodday', '#class_blue_class7', 'Trigger', '0');
 
 -- --------------------------------------------------------
 
@@ -6159,7 +6215,9 @@ INSERT INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcol
 ('valve', 'scientist', 'Team robo', '0', '#D2E8F7', '#0080C0',1),
 ('valve', 'hgrunt', 'Team hgrunt', '0', '#FFD5D5', '#FF2D2D',2),
 ('nd', 'Consortium', 'Consortium', '0', '#63B6EF', '#072D52', 1),
-('nd', 'Empire', 'Empire', '0', '#FA3232', '#680E10', 2);
+('nd', 'Empire', 'Empire', '0', '#FA3232', '#680E10', 2),
+('dinodday', '#DDD_Team_Blue', 'Allies', '0', '#C1FFC1', '#006600', 2),
+('dinodday', '#DDD_Team_Red', 'Axis', '0', '#FFD5D5', '#FF2D2D', 1);
 
 -- --------------------------------------------------------
 
@@ -7055,4 +7113,56 @@ INSERT INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
 ('nd', 'sp5', 'SP-5 K1', 1.30),
 ('nd', 'u23 grenade', 'U23 POISON', 2.00),
 ('nd', 'world', 'World', 1.00),
-('nd', 'x01', 'X-01', 1.00);
+('nd', 'x01', 'X-01', 1.00),
+('dinodday', 'fists', 'Berserk Punch', 1.30),
+('dinodday', 'flechette', 'Flechette Gun', 1.40),
+('dinodday', 'jackrabbit', 'Jackrabbit', 1.40),
+('dinodday', 'flak30', 'Desmatosuchus Flak 30', 1.30),
+('dinodday', 'k98sniper', 'Karabiner 98 Sniper', 1.50),
+('dinodday', 'mg42', 'Maschinengewehr 42', 1.20),
+('dinodday', 'pterosaur', 'Pterosaur Strike', 1.30),
+('dinodday', 'claws', 'Claw Attack', 1.70),
+('dinodday', 'k98', 'Karabiner 98', 1.70),
+('dinodday', 'mosin', 'Mosin Nagant', 1.50),
+('dinodday', 'artillery', 'Artillery Strike', 1.20),
+('dinodday', 'piat', 'PIAT Mk I', 1.20),
+('dinodday', 'stickgrenade', 'Stielhandgranate 43', 1.40),
+('dinodday', 'luger', 'P08 Luger', 1.60),
+('dinodday', 'bar', 'Browning Automatic Rifle M1918', 1.20),
+('dinodday', 'garand', 'M1 Garand', 1.30),
+('dinodday', 'trenchknife', 'Kampfmesser', 1.70),
+('dinodday', 'kabar', 'KA-BAR Combat Knife', 1.70),
+('dinodday', 'pistol', 'Colt M1911', 1.60),
+('dinodday', 'grenade', 'Hand Grenade MKII', 1.40),
+('dinodday', 'shotgun', 'Trench Gun M1897', 1.40),
+('dinodday', 'thompson', 'M1 Thompson', 1.20),
+('dinodday', 'mp40', 'Maschinenpistole 40', 1.20),
+('dinodday', 'sticky', 'Sticky Bomb', 1.40),
+('dinodday', 'mp44', 'Sturmgewehr 44', 1.20),
+('dinodday', 'dilophosaurus', 'Dilophosaurus Claws', 1.70),
+('dinodday', 'satchel', 'Satchel Charge', 1.30),
+('dinodday', 'sten', 'Sten Mk II', 1.20),
+('dinodday', 'p38', 'Pistole 38', 1.60),
+('dinodday', 'nagant', 'Nagant M1894', 1.60),
+('dinodday', 'fistsregular', 'Fists', 1.70),
+('dinodday', 'styracosaur', 'Styracosaur', 1.30),
+('dinodday', 'trex', 'T-Rex Dual-MG42', 1.20),
+('dinodday', 'trexbomb', 'T-Rex Bomb Throw', 1.50),
+('dinodday', 'tankmine', 'Tankmine', 1.30),
+('dinodday', 'trigger', 'Trigger .30cal', 1.20),
+('dinodday', 'stygimoloch', 'Stygimoloch MG34', 1.20),
+('dinodday', 'compy', 'Compsognathus', 1.70),
+('dinodday', 'flamethrower', 'Flamethrower', 1.40),
+('dinodday', 'microraptor', 'Microraptor Claws', 1.70),
+('dinodday', 'carbine', 'M1 Carbine', 1.25),
+('dinodday', 'greasegun', 'M3 Grease Gun', 1.20),
+('dinodday', 'pounce', 'Velociraptor Pounce', 1.70),
+('dinodday', 'desmamelee', 'Desmatosuchus Melee', 1.70),
+('dinodday', 'body', 'Dilophosaurus Body Throw', 1.30),
+('dinodday', 'stygihead', 'Stygimoloch Headbutt', 1.70),
+('dinodday', 'suicide', 'Compsognathus Suicidebomb', 1.70),
+('dinodday', 'spit', 'Microraptor Acidspit', 1.70),
+('dinodday', 'triggerhead', 'Trigger Headbutt', 1.70),
+('dinodday', 'dinner', 'T-Rex Dinner', 1.70),
+('dinodday', 'stomp', 'T-Rex Stomp', 1.70),
+('dinodday', 'goat', 'Dilophosaurus Goat Throw', 1.90);
