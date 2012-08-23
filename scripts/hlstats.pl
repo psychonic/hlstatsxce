@@ -971,6 +971,8 @@ sub getServerMod
 		$playgame = "valve";
     } elsif ($gamedir =~ /^nucleardawn$/i) {
 		$playgame = "nucleardawn";
+	} elsif ($gamedir =~ /^dinodday$/i) {
+		$playgame = "dinodday";
 	} else {
 		# We didn't found our mod, giving up.
 		&printEvent("DETECT", "Failed to get Server Mod");
