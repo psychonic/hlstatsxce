@@ -7,7 +7,7 @@
     $dbversion = 74;
     $version = "1.6.18";
 
-    // Tracker #1552 - Add Counter-Strike: Global Offensive support & Dino Day
+    // Tracker #1552 - Add Counter-Strike: Global Offensive support
     print "Adding CSGO game support. (<a href=\"http://tracker.hlxce.com/issues/1552\">#1552</a>)<br />";
     $db->query("
         INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
