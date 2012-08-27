@@ -462,7 +462,193 @@
             ('csgo', 'm249', 'M249 PARA Light Machine Gun', 1.00),
             ('csgo', 'inferno', 'Incendiary Grenade', 1.80),
             ('csgo', 'taser', 'Zeus x27', 1.00);
-    "); 
+    ");
+    
+    // Tracker #1589 - Add Dino D-Day support
+    print "Adding Dino D-Day game support. (<a href=\"http://tracker.hlxce.com/issues/1589\">#1589</a>)<br />";
+    
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `team`, `description`, `for_PlayerActions`, `for_PlayerPlayerActions`, `for_TeamActions`, `for_WorldActions`) VALUES
+            ('dinodday', 'headshot', 3, 0, '', 'Boom! Headshot!', '1', '0', '0', '0'),
+            ('dinodday', 'kill_goat', -10, 0, '', 'Defenseless Goat murdered', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_2', 1, 0, '', 'Double Kill (2 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_3', 2, 0, '', 'Triple Kill (3 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_4', 3, 0, '', 'Domination (4 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_5', 4, 0, '', 'Rampage (5 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_6', 5, 0, '', 'Mega Kill (6 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_7', 6, 0, '', 'Ownage (7 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_8', 7, 0, '', 'Ultra Kill (8 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_9', 8, 0, '', 'Killing Spree (9 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_10', 9, 0, '', 'Monster Kill (10 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0'),
+            ('dinodday', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0');
+    ");
+    
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Games` (`code`, `name`, `realgame`, `hidden`) VALUES 
+            ('dinodday', 'Dino D-Day', 'dinodday', '1');
+    ");
+
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES    
+            ('dinodday', 'Admins', ''),
+            ('dinodday', 'AutoBanRetry', '0'),
+            ('dinodday', 'AutoTeamBalance', '0'),
+            ('dinodday', 'BonusRoundIgnore', '1'),
+            ('dinodday', 'BonusRoundTime', '0'),
+            ('dinodday', 'BroadCastEvents', '1'),
+            ('dinodday', 'BroadCastPlayerActions', '1'),
+            ('dinodday', 'ConnectAnnounce', '1'),
+            ('dinodday', 'DefaultDisplayEvents', '1'),
+            ('dinodday', 'DisplayResultsInBrowser', '1'),
+            ('dinodday', 'EnablePublicCommands', '1'),
+            ('dinodday', 'GameEngine', '3'),
+            ('dinodday', 'GameType', '0'),
+            ('dinodday', 'HLStatsURL', 'http://yoursite.com/hlstats'),
+            ('dinodday', 'IgnoreBots', '1'),
+            ('dinodday', 'MinimumPlayersRank', '0'),
+            ('dinodday', 'MinPlayers', '4'),
+            ('dinodday', 'PlayerEvents', '1'),
+            ('dinodday', 'ShowStats', '1'),
+            ('dinodday', 'SkillMode', '0'),
+            ('dinodday', 'SuicidePenalty', '5'),
+            ('dinodday', 'SwitchAdmins', '0'),
+            ('dinodday', 'TKPenalty', '0'),
+            ('dinodday', 'TrackServerLoad', '1'),
+            ('dinodday', 'UpdateHostname', '1');
+    ");
+
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Games_Supported` (`code`, `name`) VALUES
+            ('dinodday', 'Dino D-Day');
+    ");
+
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
+            ('dinodday', 'recruit', '0', '49', 'Recruit'),
+            ('dinodday', 'private', '50', '99', 'Private'),
+            ('dinodday', 'private-first-class', '100', '199', 'Private First Class'),
+            ('dinodday', 'lance-corporal', '200', '299', 'Lance Corporal'),
+            ('dinodday', 'corporal', '300', '399', 'Corporal'),
+            ('dinodday', 'sergeant', '400', '499', 'Sergeant'),
+            ('dinodday', 'staff-sergeant', '500', '599', 'Staff Sergeant'),
+            ('dinodday', 'gunnery-sergeant', '600', '699', 'Gunnery Sergeant'),
+            ('dinodday', 'master-sergeant', '700', '799', 'Master Sergeant'),
+            ('dinodday', 'first-sergeant', '800', '899', 'First Sergeant'),
+            ('dinodday', 'master-chief', '900', '999', 'Master Chief'),
+            ('dinodday', 'sergeant-major', '1000', '1199', 'Sergeant Major'),
+            ('dinodday', 'ensign', '1200', '1399', 'Ensign'),
+            ('dinodday', 'third-lieutenant', '1400', '1599', 'Third Lieutenant'),
+            ('dinodday', 'second-lieutenant', '1600', '1799', 'Second Lieutenant'),
+            ('dinodday', 'first-lieutenant', '1800', '1999', 'First Lieutenant'),
+            ('dinodday', 'captain', '2000', '2249', 'Captain'),
+            ('dinodday', 'group-captain', '2250', '2499', 'Group Captain'),
+            ('dinodday', 'senior-captain', '2500', '2749', 'Senior Captain'),
+            ('dinodday', 'lieutenant-major', '2750', '2999', 'Lieutenant Major'),
+            ('dinodday', 'major', '3000', '3499', 'Major'),
+            ('dinodday', 'group-major', '3500', '3999', 'Group Major'),
+            ('dinodday', 'lieutenant-commander', '4000', '4499', 'Lieutenant Commander'),
+            ('dinodday', 'commander', '4500', '4999', 'Commander'),
+            ('dinodday', 'group-commander', '5000', '5749', 'Group Commander'),
+            ('dinodday', 'lieutenant-colonel', '5750', '6499', 'Lieutenant Colonel'),
+            ('dinodday', 'colonel', '6500', '7249', 'Colonel'),
+            ('dinodday', 'brigadier', '7250', '7999', 'Brigadier'),
+            ('dinodday', 'brigadier-general', '8000', '8999', 'Brigadier General'),
+            ('dinodday', 'major-general', '9000', '9999', 'Major General'),
+            ('dinodday', 'lieutenant-general', '10000', '12499', 'Lieutenant General'),
+            ('dinodday', 'general', '12500', '14999', 'General'),
+            ('dinodday', 'commander-general', '15000', '17499', 'Commander General'),
+            ('dinodday', 'field-vice-marshal', '17500', '19999', 'Field Vice Marshal'),
+            ('dinodday', 'field-marshal', '20000', '22499', 'Field Marshal'),
+            ('dinodday', 'vice-commander-of-the-army', '22500', '24999', 'Vice Commander of the Army'),
+            ('dinodday', 'commander-of-the-army', '25000', '27499', 'Commander of the Army'),
+            ('dinodday', 'high-commander', '27500', '29999', 'High Commander'),
+            ('dinodday', 'supreme-commander', '30000', '34999', 'Supreme Commander'),
+            ('dinodday', 'terminator', '35000', '9999999', 'Terminator');
+    ");
+
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Roles` (`game`, `code`, `name`, `hidden`) VALUES
+            ('dinodday', '#class_blue_class2', 'Cpl. Joe Spencer', '0'),
+            ('dinodday', '#class_blue_class1', 'Cpt. Jack Hardgrave', '0'),
+            ('dinodday', '#class_red_class11', 'Microraptor', '0'),
+            ('dinodday', '#class_red_class10', 'Compsognathus', '0'),
+            ('dinodday', '#class_red_class7', 'Stygimoloch', '0'),
+            ('dinodday', '#class_red_class6', 'Dilophosaurus', '0'),
+            ('dinodday', '#class_red_class5', 'Desmatosuchus', '0'),
+            ('dinodday', '#class_red_class4', 'Velociraptor', '0'),
+            ('dinodday', '#class_red_class3', 'Hpt.Fw. Wolfgang von Graff', '0'),
+            ('dinodday', '#class_red_class2', 'OLt. Karl Hissmann', '0'),
+            ('dinodday', '#class_red_class1', 'Hptm. Kurt Streicher', '0'),
+            ('dinodday', '#class_blue_class3', 'Cpt. Nigel Blithe-Crossley', '0'),
+            ('dinodday', '#class_blue_class4', 'Ilona Vike', '0'),
+            ('dinodday', '#class_blue_class5', 'Camille Brun', '0'),
+            ('dinodday', '#class_blue_class6', 'Jakob Frank', '0'),
+            ('dinodday', '#class_blue_class7', 'Trigger', '0');   
+    ");   
+    
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Teams` (`game`, `code`, `name`, `hidden`, `playerlist_bgcolor`, `playerlist_color`, `playerlist_index`) VALUES
+            ('dinodday', '#DDD_Team_Blue', 'Allies', '0', '#C1FFC1', '#006600', 2),
+            ('dinodday', '#DDD_Team_Red', 'Axis', '0', '#FFD5D5', '#FF2D2D', 1);
+    ");
+
+    $db->query("
+        INSERT IGNORE INTO `hlstats_Weapons` (`game`, `code`, `name`, `modifier`) VALUES
+            ('dinodday', 'fists', 'Berserk Punch', 1.30),
+            ('dinodday', 'flechette', 'Flechette Gun', 1.40),
+            ('dinodday', 'jackrabbit', 'Jackrabbit', 1.40),
+            ('dinodday', 'flak30', 'Desmatosuchus Flak 30', 1.30),
+            ('dinodday', 'k98sniper', 'Karabiner 98 Sniper', 1.50),
+            ('dinodday', 'mg42', 'Maschinengewehr 42', 1.20),
+            ('dinodday', 'pterosaur', 'Pterosaur Strike', 1.30),
+            ('dinodday', 'claws', 'Claw Attack', 1.70),
+            ('dinodday', 'k98', 'Karabiner 98', 1.70),
+            ('dinodday', 'mosin', 'Mosin Nagant', 1.50),
+            ('dinodday', 'artillery', 'Artillery Strike', 1.20),
+            ('dinodday', 'piat', 'PIAT Mk I', 1.20),
+            ('dinodday', 'stickgrenade', 'Stielhandgranate 43', 1.40),
+            ('dinodday', 'luger', 'P08 Luger', 1.60),
+            ('dinodday', 'bar', 'Browning Automatic Rifle M1918', 1.20),
+            ('dinodday', 'garand', 'M1 Garand', 1.30),
+            ('dinodday', 'trenchknife', 'Kampfmesser', 1.70),
+            ('dinodday', 'kabar', 'KA-BAR Combat Knife', 1.70),
+            ('dinodday', 'pistol', 'Colt M1911', 1.60),
+            ('dinodday', 'grenade', 'Hand Grenade MKII', 1.40),
+            ('dinodday', 'shotgun', 'Trench Gun M1897', 1.40),
+            ('dinodday', 'thompson', 'M1 Thompson', 1.20),
+            ('dinodday', 'mp40', 'Maschinenpistole 40', 1.20),
+            ('dinodday', 'sticky', 'Sticky Bomb', 1.40),
+            ('dinodday', 'mp44', 'Sturmgewehr 44', 1.20),
+            ('dinodday', 'dilophosaurus', 'Dilophosaurus Claws', 1.70),
+            ('dinodday', 'satchel', 'Satchel Charge', 1.30),
+            ('dinodday', 'sten', 'Sten Mk II', 1.20),
+            ('dinodday', 'p38', 'Pistole 38', 1.60),
+            ('dinodday', 'nagant', 'Nagant M1894', 1.60),
+            ('dinodday', 'fistsregular', 'Fists', 1.70),
+            ('dinodday', 'styracosaur', 'Styracosaur', 1.30),
+            ('dinodday', 'trex', 'T-Rex Dual-MG42', 1.20),
+            ('dinodday', 'trexbomb', 'T-Rex Bomb Throw', 1.50),
+            ('dinodday', 'tankmine', 'Tankmine', 1.30),
+            ('dinodday', 'trigger', 'Trigger .30cal', 1.20),
+            ('dinodday', 'stygimoloch', 'Stygimoloch MG34', 1.20),
+            ('dinodday', 'compy', 'Compsognathus', 1.70),
+            ('dinodday', 'flamethrower', 'Flamethrower', 1.40),
+            ('dinodday', 'microraptor', 'Microraptor Claws', 1.70),
+            ('dinodday', 'carbine', 'M1 Carbine', 1.25),
+            ('dinodday', 'greasegun', 'M3 Grease Gun', 1.20),
+            ('dinodday', 'pounce', 'Velociraptor Pounce', 1.70),
+            ('dinodday', 'desmamelee', 'Desmatosuchus Melee', 1.70),
+            ('dinodday', 'body', 'Dilophosaurus Body Throw', 1.30),
+            ('dinodday', 'stygihead', 'Stygimoloch Headbutt', 1.70),
+            ('dinodday', 'suicide', 'Compsognathus Suicidebomb', 1.70),
+            ('dinodday', 'spit', 'Microraptor Acidspit', 1.70),
+            ('dinodday', 'triggerhead', 'Trigger Headbutt', 1.70),
+            ('dinodday', 'dinner', 'T-Rex Dinner', 1.70),
+            ('dinodday', 'stomp', 'T-Rex Stomp', 1.70),
+            ('dinodday', 'goat', 'Dilophosaurus Goat Throw', 1.90);
+    ");
+    
     
     // Perform database schema update notification
     print "Updating database and verion schema numbers.<br />";
