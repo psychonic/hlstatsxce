@@ -104,7 +104,7 @@
             ('csgo', 'BroadCastPlayerActions', '1'),
             ('csgo', 'ConnectAnnounce', '1'),
             ('csgo', 'DefaultDisplayEvents', '1'),
-            ('csgo', 'DisplayResultsInBrowser', '1'),
+            ('csgo', 'DisplayResultsInBrowser', '0'),
             ('csgo', 'EnablePublicCommands', '1'),
             ('csgo', 'GameEngine', '3'),
             ('csgo', 'GameType', '0'),
