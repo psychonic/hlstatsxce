@@ -43,14 +43,14 @@
             ('csgo', 'kill_streak_11', 10, 0, '', 'Unstoppable (11 kills)', '1', '0', '0', '0'),
             ('csgo', 'kill_streak_12', 11, 0, '', 'God Like (12+ kills)', '1', '0', '0', '0'),
             ('csgo', 'domination', 5, 0, '', 'Domination', '0', '1', '0', '0'),
-            ('csgo', 'revenge', 3, 0, '', 'Revenge', '0', '1', '0', '0')
+            ('csgo', 'revenge', 3, 0, '', 'Revenge', '0', '1', '0', '0');
         ");
     
     $db->query("
         INSERT IGNORE INTO `hlstats_Awards` (`awardType`, `game`, `code`, `name`, `verb`) VALUES
             ('W', 'csgo', 'ak47', 'AK47', 'kills with ak47'), 
             ('W', 'csgo', 'AUG', 'Aug', 'kills with aug'), 
-            ('W', 'csgo', 'awp', 'AWP', 'kills with awp'),    
+            ('W', 'csgo', 'awp', 'AWP', 'kills with awp'),
             ('W', 'csgo', 'deagle', 'Desert Eagle', 'kills with deagle'), 
             ('W', 'csgo', 'elite', 'Dual Berretta Elites', 'kills with elite'),
             ('W', 'csgo', 'famas', 'Fusil Automatique', 'kills with famas'),
@@ -94,6 +94,11 @@
     ");
     
     $db->query("
+        INSERT IGNORE INTO `hlstats_Games` (`code`, `name`, `realgame`, `hidden`) VALUES 
+            ('csgo','Counter-Strike: Global Offensive','csgo','1');
+    ");
+    
+    $db->query("
         INSERT IGNORE INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
             ('csgo', 'Admins', ''),
             ('csgo', 'AutoBanRetry', '0'),
@@ -125,8 +130,36 @@
     $db->query("
         INSERT IGNORE INTO `hlstats_Games_Supported` (`code`, `name`) VALUES
             ('csgo', 'Counter-Strike: Global Offensive');
-    ");    
-  
+    ");
+    
+    $db->query("
+        INSERT INTO `hlstats_Heatmap_Config` (`map`, `game`, `xoffset`, `yoffset`, `flipx`, `flipy`, `days`, `brush`, `scale`, `font`, `thumbw`, `thumbh`, `cropx1`, `cropy1`, `cropx2`, `cropy2`) VALUES
+            ('de_dust2', 'csgo', 3102, 3164, 0, 1, 30, 'small', 4.2, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_dust', 'csgo', 3798, 3947, 0, 1, 30, 'small', 6, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_train', 'csgo', 2212, 2193, 0, 1, 30, 'small', 4, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('cs_italy', 'csgo', 3156, 2632, 0, 1, 30, 'small', 4.5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_aztec', 'csgo', 3226, 2861, 0, 1, 30, 'small', 4.7, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_nuke', 'csgo', 2803, 1309, 0, 1, 30, 'small', 5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_inferno', 'csgo', 2577, 4184, 0, 1, 30, 'small', 5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('cs_office', 'csgo', 1931, 1183, 0, 1, 30, 'small', 3, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_dust2_se', 'csgo', 3121, 3551, 0, 1, 30, 'small', 4.5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_dust_se', 'csgo', 3359, 3773, 0, 1, 30, 'small', 5.5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_train_se', 'csgo', 2074, 1950, 0, 1, 30, 'small', 3.9, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('cs_italy_se', 'csgo', 2585, 2648, 0, 1, 30, 'small', 4.5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_aztec_se', 'csgo', 3226, 2861, 0, 1, 30, 'small', 4.7, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_nuke_se', 'csgo', 3023, 1493, 0, 1, 30, 'small', 5.3, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_inferno_se', 'csgo', 3173, 2682, 0, 1, 30, 'small', 4.8, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('cs_office_se', 'csgo', 1930, 1389, 0, 1, 30, 'small', 3.6, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('ar_baggage', 'csgo', 1913, 1701, 0, 1, 30, 'small', 3, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('ar_shoots', 'csgo', 1511, 1801, 0, 1, 30, 'small', 2.5, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_lake', 'csgo', 1478, 1115, 0, 1, 30, 'small', 3.7, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_bank', 'csgo', 2064, 1148, 0, 1, 30, 'small', 3.4, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_safehouse', 'csgo', 348, 2360, 0, 1, 30, 'small', 3.8, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_shorttrain', 'csgo', 2226, 2618, 0, 1, 30, 'small', 4.1, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_stmarc', 'csgo', 9206, 8383, 0, 1, 30, 'small', 3, 10, 0.170312, 0.170312, 0, 0, 0, 0),
+            ('de_sugarcane', 'csgo', 4204, 1359, 0, 1, 30, 'small', 4.3, 10, 0.170312, 0.170312, 0, 0, 0, 0);
+    ");
+    
     $db->query("
         INSERT IGNORE INTO `hlstats_Ranks` (`game`, `image`, `minKills`, `maxKills`, `rankName`) VALUES
             ('csgo', 'recruit', '0', '49', 'Recruit'),
