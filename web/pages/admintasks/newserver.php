@@ -48,7 +48,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 			message("warning", "Server [" . $row['name'] . "] already exists");
 		else
 		{
-			$db->query("SELECT `realgame` FROM `hlstats_Games` WHERE `code` = '" . $selGame . "'");
+			$db->query("SELECT `realgame` FROM `hlstats_Games` WHERE `code` = '" . $db->escape($selGame) . "'");
 			if ( list($game) = $db->fetch_row() )
 			{
 				$script_path = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")) ? 'https://' : 'http://';
@@ -79,7 +79,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 				
 				// psychonic - worst. redirect. ever.
 				//   but we can't just use header() since admin.php already started part of the page and hacking it in before would be even messier
-				echo "<script type=\"text/javascript\"> window.location.href=\"".$g_options['scripturl']."?mode=admin&game=$game&task=serversettings&key=$insert_id#startsettings\"; </script>";
+				echo "<script type=\"text/javascript\"> window.location.href=\"".$g_options['scripturl']."?mode=admin&game=$selGame&task=serversettings&key=$insert_id#startsettings\"; </script>";
 				exit;
 			}
 		}
