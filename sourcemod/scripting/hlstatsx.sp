@@ -50,6 +50,7 @@ enum GameType {
 	Game_CSP,
 	Game_ND,
 	Game_DDD,
+	Game_CSGO,
 };
 
 new GameType:gamemod = Game_Unknown;
@@ -105,7 +106,8 @@ new const String: modnamelist[][] = {
 	"Pirates, Vikings, and Knights",
 	"CSPromod",
 	"Nuclear Dawn",
-	"Dino D-Day"
+	"Dino D-Day",
+	"Counter-Strike: Global Offensive"
 };
 
 new String: message_prefix[32];
@@ -177,7 +179,7 @@ public OnPluginStart()
 	
 	switch (gamemod)
 	{
-		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII, Game_ND, Game_DDD:
+		case Game_CSS, Game_L4D, Game_TF, Game_HL2MP, Game_AOC, Game_FOF, Game_PVKII, Game_ND, Game_DDD, Game_CSGO:
 		{
 			g_bTrackColors4Chat = true;
 			HookEvent("player_team",  HLstatsX_Event_PlyTeamChange, EventHookMode_Pre);
@@ -473,6 +475,10 @@ get_server_mod()
 		else if (StrContains(game_folder, "dinodday", false) != -1)
 		{
 			gamemod = Game_DDD;
+		}
+		else if (StrContains(game_folder, "csgo", false) != -1)
+		{
+			gamemod = Game_CSGO;
 		}
 		else
 		{
@@ -837,7 +843,7 @@ color_team_entities(String:message[192])
 {
 	switch(gamemod)
 	{
-		case Game_CSS:
+		case Game_CSS, Game_CSGO:
 		{
 			if (strcmp(message, "") != 0)
 			{
@@ -1131,7 +1137,7 @@ public Action:hlx_sm_psay(args)
 
 	switch (gamemod)
 	{
-		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP, Game_ND, Game_DDD:
+		case Game_CSS, Game_DODS, Game_L4D, Game_TF, Game_HL2MP, Game_ZPS, Game_AOC, Game_FOF, Game_GES, Game_PVKII, Game_CSP, Game_ND, Game_DDD, Game_CSGO:
 		{
 			if (is_colored > 0)
 			{
@@ -1186,7 +1192,18 @@ public Action:hlx_sm_psay(args)
 						if (hBf != INVALID_HANDLE)
 						{
 							BfWriteByte(hBf, color_index); 
-							BfWriteByte(hBf, 0); 
+							BfWriteByte(hBf, 0);
+							
+							if (gamemod == Game_CSGO)
+							{
+								// hackhackhack...
+								// CS:GO won't print any colors unless you not only start with standard color (1)
+								// like in other games, but also have a 'printable' character following it. We will just
+								// use space. Luckily the slight shift in message position, while noticeable, isn't terrible.
+								BfWriteByte(hBf, 1);
+								BfWriteByte(hBf, ' ');
+							}
+							
 							BfWriteString(hBf, display_message);
 							EndMessage();
 						}
@@ -1574,7 +1591,7 @@ public Action:hlx_sm_swap(args)
 		return Plugin_Handled;
 	}
 
-	if (gamemod != Game_CSS)
+	if (gamemod != Game_CSS || gamemod != Game_CSGO)
 	{
 		PrintToServer("hlx_sm_swap is not supported by this game.");
 		return Plugin_Handled;
