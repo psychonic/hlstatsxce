@@ -1199,9 +1199,9 @@ public Action:hlx_sm_psay(args)
 								// hackhackhack...
 								// CS:GO won't print any colors unless you not only start with standard color (1)
 								// like in other games, but also have a 'printable' character following it. We will just
-								// use space. Luckily the slight shift in message position, while noticeable, isn't terrible.
+								// use an unused control code
 								BfWriteByte(hBf, 1);
-								BfWriteByte(hBf, ' ');
+								BfWriteByte(hBf, 11);
 							}
 							
 							BfWriteString(hBf, display_message);
