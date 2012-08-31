@@ -1,3 +1,10 @@
+HLstatsX Community Edition 1.6.18
+August 31, 2012
+
++ GameSupport: Added support for Dino D-Day and Counter-Strike: Global Offensive. (#1589, #1552)
+! Web: Fixed adding a new server to a duplicate game returning user to original game's server listing. (#1594)
+
+
 HLstatsX Community Edition 1.6.17
 June 27, 2012
 
@@ -5,7 +12,6 @@ June 27, 2012
 + Web: Added new map image for TF2 map sd_doomsday. (#1582)
 ! GameSupport: Corrected TF2 award names that were incorrectly updated. (#1558)
 ! Web: Updated updated check URL to hlxce.com domain. (#1581)
-
 
 
 HLstatsX Community Edition 1.6.16
