@@ -2,6 +2,7 @@ HLstatsX Community Edition 1.6.18
 August 31, 2012
 
 + GameSupport: Added support for Dino D-Day and Counter-Strike: Global Offensive. (#1589, #1552)
++ Web: Added additional chat logging support for Nuclear Dawn.
 ! Web: Fixed adding a new server to a duplicate game returning user to original game's server listing. (#1594)
 
 
