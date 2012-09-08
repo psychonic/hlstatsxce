@@ -2,8 +2,8 @@
 
 -- This file is only needed for new installations.
 
-SET @DBVERSION="75";
-SET @VERSION="1.6.19-pre1";
+SET @DBVERSION="76";
+SET @VERSION="1.6.19-pre2";
 
 -- --------------------------------------------------------
 
@@ -748,11 +748,11 @@ INSERT INTO `hlstats_Actions` (`game`, `code`, `reward_player`, `reward_team`, `
 ('csgo', 'Spawned_With_The_Bomb', 2, 0, 'TERRORIST', 'Spawn with the Bomb', '1', '0', '0', '0'),
 ('csgo', 'Got_The_Bomb', 2, 0, 'TERRORIST', 'Pick up the Bomb', '1', '0', '0', '0'),
 ('csgo', 'Dropped_The_Bomb', -2, 0, 'TERRORIST', 'Drop the Bomb', '1', '0', '0', '0'),
-('csgo', 'CTs_Win', 0, 2, 'CT', 'All Terrorists eliminated', '0', '0', '1', '0'),
-('csgo', 'Terrorists_Win', 0, 2, 'TERRORIST', 'All Counter-Terrorists eliminated', '0', '0', '1', '0'),
-('csgo', 'All_Hostages_Rescued', 0, 10, 'CT', 'Counter-Terrorists rescued all the hostages', '0', '0', '1', '0'),
-('csgo', 'Target_Bombed', 0, 5, 'TERRORIST', 'Terrorists bombed the target', '0', '0', '1', '0'),
-('csgo', 'Bomb_Defused', 0, 5, 'CT', 'Counter-Terrorists defused the bomb', '0', '0', '1', '0'),
+('csgo', 'SFUI_Notice_CTs_Win', 0, 2, 'CT', 'All Terrorists eliminated', '0', '0', '1', '0'),
+('csgo', 'SFUI_Notice_Terrorists_Win', 0, 2, 'TERRORIST', 'All Counter-Terrorists eliminated', '0', '0', '1', '0'),
+('csgo', 'SFUI_Notice_All_Hostages_Rescued', 0, 10, 'CT', 'Counter-Terrorists rescued all the hostages', '0', '0', '1', '0'),
+('csgo', 'SFUI_Notice_Target_Bombed', 0, 5, 'TERRORIST', 'Terrorists bombed the target', '0', '0', '1', '0'),
+('csgo', 'SFUI_Notice_Bomb_Defused', 0, 5, 'CT', 'Counter-Terrorists defused the bomb', '0', '0', '1', '0'),
 ('csgo', 'Escaped_As_VIP', 0, 10, 'CT', 'VIP escaped', '0', '0', '1', '0'),
 ('csgo', 'Assassinated_The_VIP', 0, 6, 'TERRORIST', 'Terrorists assassinated the VIP', '0', '0', '1', '0'),
 ('csgo', 'Became_VIP', 1, 0, 'CT', 'Become the VIP', '1', '0', '0', '0'),
