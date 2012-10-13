@@ -84,7 +84,7 @@
                 ('de_scorch_rc1', '$cssgame', -7897, 3704, 0, 1, 30, 'small', 8, 10, 0.170312, 0.170312, 0, 0, 0, 0),
                 ('de_rush_v2', '$cssgame', -2365, 2391, 0, 1, 30, 'small', 9, 10, 0.170312, 0.170312, 0, 0, 0, 0);
     ");
-    
+    }
     // Perform database schema update notification
     print "Updating database and verion schema numbers.<br />";
     $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
