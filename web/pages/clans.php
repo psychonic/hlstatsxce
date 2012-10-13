@@ -225,7 +225,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						$v = valid_request($v, 0); 
 						if ($k != "minmembers")
 						{
-							echo "<input type=\"hidden\" name=\"$k\" value=\"" . htmlspecialchars($v) . "\" />\n";
+							echo "<input type=\"hidden\" name=\"" . htmlspecialchars($k) . "\" value=\"" . htmlspecialchars($v) . "\" />\n";
 						}
 					}
 				?>
