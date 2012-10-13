@@ -1,3 +1,11 @@
+HLstatsX Community Edition 1.6.19
+October 13, 2012
+
++ Heatmaps: Added support for NTS, L4D2 and CSS Heatmap configurations. (#1602, #844)
+! GameSupport: Fixed some CS:GO actions that were incorrectly added in 1.6.18. (#1599)
+! Web: Fixed adding a new server to a duplicate game returning user to original game's server listing. (#1594)
+! Web: Fixed output that could be used as Cross-Site Scripting exploit (Reported by P.Whitton) (#1612)
+
 HLstatsX Community Edition 1.6.18
 August 31, 2012
 
