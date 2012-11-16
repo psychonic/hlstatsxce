@@ -2451,10 +2451,12 @@ while ($loop = &getLine()) {
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string with or without l4d-style location coords
+				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])
 				\skilled\s			# verb (ex. attacked, killed, triggered)
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string as above or action name
+				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])
 				\swith\s				# (ex. with, against)
 				"([^"]*)"
 				(.*)					#properties
@@ -2466,15 +2468,26 @@ while ($loop = &getLine()) {
 			#  8. Kills
 			
 			$ev_player = $1;
-			$ev_l4dXcoord = $2; # attacker/player coords (L4D)
-			$ev_l4dYcoord = $3;
-			$ev_l4dZcoord = $4;
-			$ev_obj_a  = $5; # victim
-			$ev_l4dXcoordKV = $6; # kill victim coords (L4D)
-			$ev_l4dYcoordKV = $7;
-			$ev_l4dZcoordKV = $8;
-			$ev_obj_b  = $9; # weapon
-			$ev_properties = $10;
+			$ev_Xcoord = $2; # attacker/player coords (L4D)
+			$ev_Ycoord = $3;
+			$ev_Zcoord = $4;
+			if( !defined($ev_Xcoord) ) {
+				# if we didn't get L4D style, overwrite with CSGO style (which we may still not have)
+				$ev_Xcoord = $5;
+				$ev_Ycoord = $6;
+				$ev_Zcoord = $7;
+			}
+			$ev_obj_a  = $8; # victim
+			$ev_XcoordKV = $9; # kill victim coords (L4D)
+			$ev_YcoordKV = $10;
+			$ev_ZcoordKV = $11;
+			if( !defined($ev_XcoordKV) ) {
+				$ev_XcoordKV = $12; # kill victim coords (CSGO)
+				$ev_YcoordKV = $13;
+				$ev_ZcoordKV = $14;
+			}
+			$ev_obj_b  = $15; # weapon
+			$ev_properties = $16;
 			%ev_properties_hash = &getProperties($ev_properties);
 			
 			my $killerinfo = &getPlayerInfo($ev_player, 1);
@@ -2520,12 +2533,12 @@ while ($loop = &getLine()) {
 					$victiminfo->{"uniqueid"},
 					$ev_obj_b,
 					$headshot,
-					$ev_l4dXcoord,
-					$ev_l4dYcoord,
-					$ev_l4dZcoord,
-					$ev_l4dXcoordKV,
-					$ev_l4dYcoordKV,
-					$ev_l4dZcoordKV,
+					$ev_Xcoord,
+					$ev_Ycoord,
+					$ev_Zcoord,
+					$ev_XcoordKV,
+					$ev_YcoordKV,
+					$ev_ZcoordKV,
 					%ev_properties_hash
 				);
 			} 
