@@ -2451,12 +2451,12 @@ while ($loop = &getLine()) {
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string with or without l4d-style location coords
-				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])
+				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])?
 				\skilled\s			# verb (ex. attacked, killed, triggered)
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string as above or action name
-				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])
+				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])?
 				\swith\s				# (ex. with, against)
 				"([^"]*)"
 				(.*)					#properties
